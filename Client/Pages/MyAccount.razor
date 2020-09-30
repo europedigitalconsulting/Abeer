@@ -1,0 +1,81 @@
+﻿@page "/MyAccount"
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@inject Microsoft.Extensions.Localization.IStringLocalizer<MyAccount> Loc
+<AuthorizationSwitcher>
+    <Authorized>
+        <div class="main-content">
+            
+            <div class="section">
+                <div class="section-header">
+                    <h1>@Loc["MyAccount"]</h1>
+                    <div class="section-header-breadcrumb">
+                        <div class="breadcrumb-item active"><a href="#">@Loc["Home"]</a></div>
+                        <div class="breadcrumb-item">@Loc["MyAccount"]</div>
+                    </div>
+                </div>
+                <ul class="list-group list-group-horizontal d-flex justify-content-center pb-3">
+                    <li class="list-group-item text-center "><a class="nav-link" href="profile" title="@Loc["MyProfile"]"><i style="color:#81d694" class="fa fa-2x fa-id-card"></i></a></li>
+                </ul>
+                <div class="section-body">
+                    <p class="section-lead">@Loc["MyAccountCatchPhrase"].</p>
+                    <div class="clearfix"></div>
+                    <div class="row">
+                        <div class="col-12">
+                            <WalletStatistics CurrentMonth="@CurrentMonth" Months="@Months"></WalletStatistics>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Liste des transactions</h5>
+                                </div>
+                                <div class="card-body p-1">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="panel p-2">
+                                                <div class="input-group">
+                                                    <input type="text" id="example-input1-group2" name="example-input1-group2" class="form-control" placeholder="@Loc["Search"]" @bind-value="SearchTerm">
+                                                    <span class="input-group-btn pl-1">
+                                                        <button type="button" class="btn btn-primary" @onclick="SearchButtonClick"><i class="fa fa-search"></i></button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="card mb-0">
+                                                <div class="card-body">
+                                                    <ul class="nav nav-pills">
+                                                        <li class="nav-item">
+                                                            <a class="nav-link active" href="#">@Loc["All"] <span class="badge badge-white">5</span></a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="nav-link" href="#">@Loc["Purchase"] <span class="badge badge-primary">3</span></a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="nav-link" href="#">@Loc["Send"] <span class="badge badge-primary">1</span></a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="nav-link" href="#">@Loc["Receive"] <span class="badge badge-primary">1</span></a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <TransactionTable></TransactionTable>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </Authorized>
+</AuthorizationSwitcher>

@@ -1,0 +1,30 @@
+﻿@namespace Abeer.Client.Pages
+@code
+{
+    [Parameter]
+    public string LabelTransactions { get; set; }
+    [Parameter]
+    public string LabelViewMore { get; set; }
+    [Parameter]
+    public string LabelPleaseLoginToSeeTransactionList { get; set; }
+    [Parameter]
+    public Microsoft.Extensions.Localization.IStringLocalizer<TransactionTable> Loc { get; set; }
+}
+<div class="card">
+    <div class="card-header">
+        <h4>@LabelTransactions</h4>
+        <div class="card-header-action">
+            <a href="#" class="btn btn-danger">@LabelViewMore<i class="fas fa-chevron-right"></i></a>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <AuthorizationSwitcher>
+            <Authorized>
+                <TransactionTable Loc="Loc"></TransactionTable>
+            </Authorized>
+            <NotAuthorized>
+                <div class="alert alert-danger">@LabelPleaseLoginToSeeTransactionList</div>
+            </NotAuthorized>
+        </AuthorizationSwitcher>
+    </div>
+</div>

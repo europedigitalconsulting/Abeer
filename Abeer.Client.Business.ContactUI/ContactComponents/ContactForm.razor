@@ -1,0 +1,157 @@
+﻿@namespace Abeer.Client.Pages
+@code{
+    [Parameter]
+    public string ById { get; set; }
+    [Parameter]
+    public string ByName { get; set; }
+    [Parameter]
+    public string LabelContactId { get; set; }
+    [Parameter]
+    public string Search { get; set; }
+    [Parameter]
+    public string LabelDisplayName { get; set; }
+    [Parameter]
+    public string LabelEmail { get; set; }
+    [Parameter]
+    public string SocialLinks { get; set; }
+    [Parameter]
+    public string LabelCity { get; set; }
+    [Parameter]
+    public string LabelCountry { get; set; }
+}
+<div class="simple-form">
+    <fieldset>
+        <div class="form-group">
+            <label>
+                <input type="radio" id="contactType" name="contactType" value="ById" checked="@(contactType == "ById")" @onchange="@(()=> { contactType = "ById"; })" />
+                @ById
+            </label>
+            <label>
+                <input type="radio" id="contactType" name="contactType" value="ByName" checked="@(contactType == "ByName")" @onchange="@(()=> { contactType = "ByName"; })" />
+                @ByName
+            </label>
+        </div>
+        @if (contactType == "ById")
+        {
+            <div class="form-group">
+                <label for="movie-name">@LabelContactId</label>
+                <input @bind="@Contact.UserId" type="text" class="form-control" />
+                <button class="btn btn-primary" type="button" @onclick="FillSuggestion">@Search</button>
+                @if (Suggestions?.Any() == true)
+                {
+                    <ul class="list-group">
+                        @foreach (var contact in Suggestions)
+                        {
+                            <li class="list-group-item">
+                                <button class="btn btn-lg btn-outline-light" @onclick="@(()=>AddContact(contact))">
+                                    <div class="col-sm-3">
+                                        <div class="panel">
+                                            <div class="panel-body p-t-10">
+                                                <div class="media-main">
+                                                    <a class="pull-left" href="#">
+                                                        <img class="thumb-lg img-circle bx-s" src="@contact.GravatarUrl()" alt="@contact.DisplayName">
+                                                    </a>
+                                                    <div class="info">
+                                                        <h4></h4>
+                                                        <p class="text-muted">@contact.DisplayName</p>
+                                                    </div>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                                <hr>
+                                                @if (!string.IsNullOrWhiteSpace(contact.FacebookUrl))
+                                                {
+                                                    <a class="fb-ic mr-3" role="button" title="@contact.FacebookUrl" href="@contact.FacebookUrl" target="_blank"><i class="fab fa-lg fa-facebook-f"></i></a>
+                                                }
+                                                @if (!string.IsNullOrWhiteSpace(contact.TwitterUrl))
+                                                {
+                                                    <a class="tw-ic mr-3" role="button" title="@contact.TwitterUrl" href="@contact.TwitterUrl" target="_blank"><i class="fab fa-lg fa-twitter"></i></a>
+                                                }
+                                                @if (!string.IsNullOrWhiteSpace(contact.LinkedInUrl))
+                                                {
+                                                    <a class="li-ic mr-3" role="button" title="@contact.TwitterUrl" href="@contact.TwitterUrl" target="_blank"><i class="fab fa-lg fa-linkedin-in"></i></a>
+                                                }
+                                                @if (!string.IsNullOrWhiteSpace(contact.SkypeUrl))
+                                                {
+                                                    <a class="li-ic mr-3" role="button" title="@contact.SkypeUrl" href="@contact.SkypeUrl" target="_blank"><i class="fab fa-skype"></i></a>
+                                                }
+                                                @if (!string.IsNullOrWhiteSpace(contact.WhatsAppUrl))
+                                                {
+                                                    <a class="whatsapp-ic" role="button" href="@contact.WhatsAppUrl" target="_blank"><i class="fab fa-lg fa-whatsapp"></i></a>
+                                                }
+                                                <a class="email-ic mr-3" role="button" title="@contact.Email" href="mailto://@contact.Email"><i class="far fa-lg fa-envelope"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </button>
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="form-group">
+                <label for="year">@LabelDisplayName</label>
+                <input @bind="@Contact.DisplayName" type="text" class="form-control" id="contact-displayname" />
+            </div>
+            <div class="form-group">
+                <label for="year">@LabelEmail</label>
+                <input @bind="@Contact.Email" type="email" class="form-control" id="contact-email" />
+            </div>
+        }
+    </fieldset>
+
+    <fieldset>
+        <h4>@SocialLinks</h4>
+        <a class="btn btn-lg btn-outline-primary"><input type="checkbox" @bind-value="@Facebook" @bind-value:event="onchange" /><i class="fab fa-facebook-square"></i></a>
+        <a class="btn btn-lg btn-outline-primary"><input type="checkbox" @bind-value="@WhatsApp" @bind-value:event="onchange" /><i class="fab fa-whatsapp-square"></i></a>
+        <a class="btn btn-lg btn-outline-primary"><input type="checkbox" @bind-value="@Twitter" @bind-value:event="onchange" /><i class="fab fa-twitter-square"></i></a>
+        <a class="btn btn-lg btn-outline-primary"><input type="checkbox" @bind-value="@LinkedIn" @bind-value:event="onchange" /><i class="fab fa-linkedin"></i></a>
+        <a class="btn btn-lg btn-outline-primary"><input type="checkbox" @bind-value="@Skype" @bind-value:event="onchange" /><i class="fab fa-skype"></i></a>
+
+        @if (Facebook)
+        {
+            <div class="form-group">
+                <label for="year">Contact Facebook</label>
+                <input @bind="@Contact.FacebookUrl" type="text" class="form-control" id="contact-FacebookUrl" />
+            </div>
+        }
+        @if (WhatsApp)
+        {
+            <div class="form-group">
+                <label for="year">Contact WhatsApp</label>
+                <input @bind="@Contact.WhatsAppUrl" type="text" class="form-control" id="contact-WhatsApp" />
+            </div>
+        }
+        @if (Twitter)
+        {
+            <div class="form-group">
+                <label for="year">Contact Twitter</label>
+                <input @bind="@Contact.TwitterUrl" type="text" class="form-control" id="contact-Twitter" />
+            </div>
+        }
+        @if (LinkedIn)
+        {
+            <div class="form-group">
+                <label for="year">Contact LinkedIn</label>
+                <input @bind="@Contact.LinkedInUrl" type="text" class="form-control" id="contact-LinkedInUrl" />
+            </div>
+        }
+        @if (Skype)
+        {
+            <div class="form-group">
+                <label for="year">Contact Skype</label>
+                <input @bind="@Contact.SkypeUrl" type="text" class="form-control" id="contact-SkypeUrl" />
+            </div>
+        }
+    </fieldset>
+    <div class="form-group">
+        <label for="year">@LabelCity</label>
+        <input @bind="@Contact.City" type="text" class="form-control" id="User-City" />
+    </div>
+    <div class="form-group">
+        <label for="year">@LabelCountry</label>
+        <input @bind="@Contact.Country" type="text" class="form-control" id="User-Country" />
+    </div>
+</div>

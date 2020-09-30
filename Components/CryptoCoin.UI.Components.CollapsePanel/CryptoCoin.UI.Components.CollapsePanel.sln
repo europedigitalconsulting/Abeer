@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30323.103
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoCoin.UI.Components.CollapsePanel.Server", "Server\CryptoCoin.UI.Components.CollapsePanel.Server.csproj", "{30417747-B00D-45DA-8780-EF94E3C714FA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoCoin.UI.Components.CollapsePanel.Client", "Client\CryptoCoin.UI.Components.CollapsePanel.Client.csproj", "{7002B35E-6589-41E5-922B-A10CBEE342D9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoCoin.UI.Components.CollapsePanel.Shared", "Shared\CryptoCoin.UI.Components.CollapsePanel.Shared.csproj", "{8F3B10CA-6BC1-4F94-825A-0E1E3D040310}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoCoin.UI.Components.CollapsePanel.lib", "Lib\CryptoCoin.UI.Components.CollapsePanel.lib.csproj", "{21785037-2E83-4B8F-AD20-BED81EA52ECC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{30417747-B00D-45DA-8780-EF94E3C714FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30417747-B00D-45DA-8780-EF94E3C714FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30417747-B00D-45DA-8780-EF94E3C714FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30417747-B00D-45DA-8780-EF94E3C714FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7002B35E-6589-41E5-922B-A10CBEE342D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7002B35E-6589-41E5-922B-A10CBEE342D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7002B35E-6589-41E5-922B-A10CBEE342D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7002B35E-6589-41E5-922B-A10CBEE342D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F3B10CA-6BC1-4F94-825A-0E1E3D040310}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F3B10CA-6BC1-4F94-825A-0E1E3D040310}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F3B10CA-6BC1-4F94-825A-0E1E3D040310}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F3B10CA-6BC1-4F94-825A-0E1E3D040310}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21785037-2E83-4B8F-AD20-BED81EA52ECC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21785037-2E83-4B8F-AD20-BED81EA52ECC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21785037-2E83-4B8F-AD20-BED81EA52ECC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21785037-2E83-4B8F-AD20-BED81EA52ECC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3E6DD462-D0C3-4261-B291-15510BC30A0C}
+	EndGlobalSection
+EndGlobal

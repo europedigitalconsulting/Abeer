@@ -1,0 +1,348 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Account" xml:space="preserve">
+    <value>Mon compte</value>
+  </data>
+  <data name="Action" xml:space="preserve">
+    <value>Action</value>
+  </data>
+  <data name="ArticlesforYourHelp" xml:space="preserve">
+    <value>Nos articles pour vous aider</value>
+  </data>
+  <data name="Balance" xml:space="preserve">
+    <value>Solde de votre compte</value>
+  </data>
+  <data name="BalanceCardTitle" xml:space="preserve">
+    <value>Le solde de votre compte</value>
+  </data>
+  <data name="Balances" xml:space="preserve">
+    <value>Solde</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="Contact" xml:space="preserve">
+    <value>Contact</value>
+  </data>
+  <data name="Createnewcontact" xml:space="preserve">
+    <value>Créer un nouveau contact</value>
+  </data>
+  <data name="Detail" xml:space="preserve">
+    <value>Détail</value>
+  </data>
+  <data name="Documentation" xml:space="preserve">
+    <value>Documentation</value>
+  </data>
+  <data name="hi" xml:space="preserve">
+    <value>Bonjour,</value>
+  </data>
+  <data name="History" xml:space="preserve">
+    <value>Historique</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Votre tableau de bord</value>
+  </data>
+  <data name="HourAgo" xml:space="preserve">
+    <value>Il y a {0}</value>
+  </data>
+  <data name="Incoming" xml:space="preserve">
+    <value>Reçus</value>
+  </data>
+  <data name="Increase" xml:space="preserve">
+    <value>Augmenter votre compte en achetant de nouveaux points</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Se connecter</value>
+  </data>
+  <data name="LoginToAccessTop5PartnersList" xml:space="preserve">
+    <value>Vous ne pouvez pas voir la liste de vos 5 meilleurs partenaires car vous n'êtes pas authentifié. Veuillez vous authentifier pour voir la liste</value>
+  </data>
+  <data name="LoginToSeeYourBalance" xml:space="preserve">
+    <value>Veuillez vous identifier pour voir votre solde</value>
+  </data>
+  <data name="LoginToSeeYourEvolution" xml:space="preserve">
+    <value>Veuillez vous identifier pour voir l'évolution de votre compte</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Se déconnecter</value>
+  </data>
+  <data name="ManagerStatistics" xml:space="preserve">
+    <value>Quelques informations sur l'utilisation des cartes</value>
+  </data>
+  <data name="MarketCap" xml:space="preserve">
+    <value>Information sur le marché</value>
+  </data>
+  <data name="MarketEvolution" xml:space="preserve">
+    <value>Evolution du marché</value>
+  </data>
+  <data name="MarketEvolutionCatchPhrase" xml:space="preserve">
+    <value>Car vous n'êtes pas encore authentifié vous voyez uniquement l'évolution du marché, lorsque vous vous identifiez vous avez accès à l'historique de votre compte.</value>
+  </data>
+  <data name="Mark_All_As_Read" xml:space="preserve">
+    <value>Tout marqué comme lu</value>
+  </data>
+  <data name="Month" xml:space="preserve">
+    <value>Mois</value>
+  </data>
+  <data name="MonthPeriod" xml:space="preserve">
+    <value>Ce mois</value>
+  </data>
+  <data name="MyContactList" xml:space="preserve">
+    <value>Ma liste des contacts</value>
+  </data>
+  <data name="MyContacts" xml:space="preserve">
+    <value>Mes contacts</value>
+  </data>
+  <data name="MyTransactions" xml:space="preserve">
+    <value>Mes Transactions</value>
+  </data>
+  <data name="MyWallet" xml:space="preserve">
+    <value>Mon compte</value>
+  </data>
+  <data name="NbOfCard" xml:space="preserve">
+    <value>Nombre de carte</value>
+  </data>
+  <data name="NbOfCardAvailable" xml:space="preserve">
+    <value>Nombre de cartes disponibles</value>
+  </data>
+  <data name="NbOfCardUsed" xml:space="preserve">
+    <value>Nombre de cartes utilisées</value>
+  </data>
+  <data name="NbOfTokenAvailable" xml:space="preserve">
+    <value>Nombre de jetons disponibles</value>
+  </data>
+  <data name="NbOfTokens" xml:space="preserve">
+    <value>Nombre de jetons</value>
+  </data>
+  <data name="NbOfTokensUsed" xml:space="preserve">
+    <value>Nombre de jetons utilisés</value>
+  </data>
+  <data name="Notifications" xml:space="preserve">
+    <value>Notifications</value>
+  </data>
+  <data name="OperatorStatistics" xml:space="preserve">
+    <value>Quelques informations sur les jetons</value>
+  </data>
+  <data name="Paid" xml:space="preserve">
+    <value>Payé</value>
+  </data>
+  <data name="Pay" xml:space="preserve">
+    <value>Payer</value>
+  </data>
+  <data name="Pending" xml:space="preserve">
+    <value>En cours</value>
+  </data>
+  <data name="PleaseLoginToSeeTransactionList" xml:space="preserve">
+    <value>Pour voir la liste des transactions de votre compte, veuillez vous identifier</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Mon profil</value>
+  </data>
+  <data name="Purchase" xml:space="preserve">
+    <value>Acheter</value>
+  </data>
+  <data name="Purchases" xml:space="preserve">
+    <value>Achat</value>
+  </data>
+  <data name="Receiving" xml:space="preserve">
+    <value>Recevoir</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>S'inscrire</value>
+  </data>
+  <data name="RegisterToSeeYourBalance" xml:space="preserve">
+    <value>Pour accéder à notre plateforme, vous pouvez créer un compte</value>
+  </data>
+  <data name="RegisterToSeeYourEvolution" xml:space="preserve">
+    <value>Vous pouvez également créer un compte qui vous permettra d'accéder à votre compte</value>
+  </data>
+  <data name="Replay" xml:space="preserve">
+    <value>Rejouer la transaction</value>
+  </data>
+  <data name="Sale" xml:space="preserve">
+    <value>Vendre</value>
+  </data>
+  <data name="Sales" xml:space="preserve">
+    <value>Vente</value>
+  </data>
+  <data name="SelectMonth" xml:space="preserve">
+    <value>Sélectionnez un mois</value>
+  </data>
+  <data name="SelectPeriod" xml:space="preserve">
+    <value>Sélectionnez une période à voire</value>
+  </data>
+  <data name="SendDate" xml:space="preserve">
+    <value>Date d'envoi</value>
+  </data>
+  <data name="Sending" xml:space="preserve">
+    <value>Envoi</value>
+  </data>
+  <data name="Sent" xml:space="preserve">
+    <value>Envoyé</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="ThisYear" xml:space="preserve">
+    <value>Cette année</value>
+  </data>
+  <data name="Today" xml:space="preserve">
+    <value>Aujourd'hui</value>
+  </data>
+  <data name="TokenBatches" xml:space="preserve">
+    <value>Lot de jetons</value>
+  </data>
+  <data name="Top5Partner" xml:space="preserve">
+    <value>Top 5 de vos partenaires</value>
+  </data>
+  <data name="Track" xml:space="preserve">
+    <value>Suivre </value>
+  </data>
+  <data name="TransactionHistoric" xml:space="preserve">
+    <value>Historique</value>
+  </data>
+  <data name="TransactionHistoTitle" xml:space="preserve">
+    <value>Vos transactions</value>
+  </data>
+  <data name="TransactionID" xml:space="preserve">
+    <value>Id Transaction</value>
+  </data>
+  <data name="Transactions" xml:space="preserve">
+    <value>Transactions</value>
+  </data>
+  <data name="Unpaid" xml:space="preserve">
+    <value>Non payé</value>
+  </data>
+  <data name="UsersList" xml:space="preserve">
+    <value>Liste des utilisateurs</value>
+  </data>
+  <data name="ViewAll" xml:space="preserve">
+    <value>Tout voir</value>
+  </data>
+  <data name="ViewMore" xml:space="preserve">
+    <value>Voir plus</value>
+  </data>
+  <data name="WalletStatistics" xml:space="preserve">
+    <value>Un petit apperçu sur votre compte</value>
+  </data>
+  <data name="Week" xml:space="preserve">
+    <value>Cette semaine</value>
+  </data>
+</root>

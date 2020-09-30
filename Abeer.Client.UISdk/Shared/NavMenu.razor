@@ -1,0 +1,83 @@
+﻿@namespace Abeer.Client.Shared
+
+@using System.Security.Claims
+
+@code 
+{
+    protected ClaimsPrincipal _user;
+
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    [Parameter]
+    public string LabelUserList { get; set; }
+
+    [Parameter]
+    public string LabelTokenBatches { get; set; }
+
+    [Parameter]
+    public string LabelCardList { get; set; }
+
+    [Parameter]
+    public string LabelContacts { get; set; }
+
+    [Parameter]
+    public string LabelDashboard { get; set; }
+
+    [Parameter]
+    public string LabelMyAccount { get; set; }
+
+    [Parameter]
+    public string LabelLogout { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+
+        var authState = await authenticationStateTask;
+
+        _user = authState.User;
+        Console.WriteLine($"User is Authenticated : {_user.Identity.IsAuthenticated} - navMenu for user {_user.FindFirstValue("displayname")}");
+        await InvokeAsync(StateHasChanged);
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        Console.WriteLine("nav menu on initialized called");
+    }
+}
+
+<nav class="nav navbar navbar-bg navbar-expand-lg">
+    <div class="nav navbar-header">
+        <a class="navbar-brand" href="/">Abeer</a>
+    </div>
+    <ul class="nav navbar-nav mr-auto">
+    </ul>
+    <ul class="nav navbar-nav  navbar-right">
+        @if (_user?.Identity.IsAuthenticated == true && _user?.HasClaim(ClaimTypes.Role, "admin") == true)
+        {
+            <li class="nav-item"><a class="nav-link" href="/Users" title="@LabelUserList"><i class="fas fa-users-cog"></i><span class="sr-only">@LabelUserList</span></a></li>
+        }
+        @if (_user?.Identity.IsAuthenticated == true && _user?.HasClaim(ClaimTypes.Role, "operator") == true || _user?.HasClaim(ClaimTypes.Role, "admin") == true)
+        {
+            <li class="nav-item"><a class="nav-link" href="/TokenBatches" title="@LabelTokenBatches"><i class="fas fa-coins"></i><span class="sr-only">@LabelTokenBatches</span></a></li>
+        }
+        @if (_user?.Identity.IsAuthenticated == true && _user?.HasClaim(ClaimTypes.Role, "manager") == true || _user?.HasClaim(ClaimTypes.Role, "admin") == true)
+        {
+            <li class="nav-item"><a class="nav-link" href="/Cards" title="@LabelCardList"><i class="fas fa-credit-card"></i><span class="sr-only">@LabelCardList</span></a></li>
+        }
+        <li class="nav-item">
+            <a class="nav-link" href="Contacts/List" title="@LabelContacts"><i style="color: #fff;" class="fa fa-user-friends"><span class="sr-only">@LabelContacts</span></i></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/" title="@LabelDashboard"><i style="color: #fff;" class="fa fa-tachometer-alt"><span class="sr-only">>@LabelDashboard</span></i></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/myaccount" title="@LabelMyAccount"><i style="color: #fff;" class="fa fa-user-circle"><span class="sr-only">>@LabelMyAccount</span></i></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="identity/account/logout?returnUrl=/" title="@LabelLogout"><i style="color: #fff;" class="fa fa-sign-out-alt"><span class="sr-only">@LabelLogout</span></i></a>
+        </li>
+    </ul>
+</nav>

@@ -1,0 +1,43 @@
+﻿@namespace Abeer.Client.Pages
+@using ChartJs.Blazor.Charts
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@code
+{
+    [Parameter]
+    public string LabelBalances { get; set; }
+    [Parameter]
+    public string LabelTransactionHistoric { get; set; }
+    [Parameter]
+    public string LabelMarketEvolution { get; set; }
+    [Parameter]
+    public string LabelMarketEvolutionCatchPhrase { get; set; }
+    [Parameter]
+    public string LabelLoginToSeeYourEvolution { get; set; }
+    [Parameter]
+    public string LabelRegisterToSeeYourEvolution { get; set; }
+}
+<div class="card">
+    <div class="card-header">
+        <h4>
+            <AuthorizationSwitcher @ref="_authorizationSwitcher">
+                <Authorized>@LabelTransactionHistoric</Authorized>
+                <NotAuthorized>@LabelMarketEvolution</NotAuthorized>
+            </AuthorizationSwitcher>
+        </h4>
+    </div>
+    <div class="card-body">
+        <AuthorizationSwitcher>
+            <Authorized>
+                <ChartJsBarChart @ref="_ChartJsBarChart" Config="barConfig" Height="158"></ChartJsBarChart>
+            </Authorized>
+            <NotAuthorized>
+                <div class="alert alert-info">
+                    @LabelMarketEvolutionCatchPhrase<br />
+                    <a class="btn btn-lg btn-primary" href="authentication/login"><i class="fas fa-lock-open"></i>@LabelLoginToSeeYourEvolution</a>
+                    <a class="btn btn-lg btn-success" href="authentication/register"><i class="fas fa-sign-in"></i>@LabelRegisterToSeeYourEvolution</a>
+                </div>
+                <ChartJsBarChart @ref="_ChartJsBarChart" Config="barConfig" Height="158"></ChartJsBarChart>
+            </NotAuthorized>
+        </AuthorizationSwitcher>
+    </div>
+</div>

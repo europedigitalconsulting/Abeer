@@ -1,0 +1,73 @@
+﻿@namespace Abeer.Client.Pages
+@code
+{
+    [Parameter]
+    public string CurrentMonth { get; set; }
+
+    [Parameter]
+    public IEnumerable<string> Months { get; set; }
+
+    [Parameter]
+    public string LabelWalletStatistics { get; set; }
+
+    [Parameter]
+    public string LabelPurchases { get; set; }
+
+    [Parameter]
+    public string LabelSales { get; set; }
+
+    [Parameter]
+    public string LabelSent { get; set; }
+
+    [Parameter]
+    public string LabelBalance { get; set; }
+
+    protected decimal Purchase { get; set; }
+    protected decimal Sale { get; set; }
+    protected decimal Send { get; set; }
+    protected decimal Balance { get; set; }
+}
+<AuthorizationSwitcher>
+    <Authorized>
+        <div class="card card-statistic-2">
+            <div class="card-stats">
+                <div class="card-stats-title">
+                    @LabelWalletStatistics -
+                    <div class="dropdown d-inline">
+                        <a class="font-weight-600 dropdown-toggle" data-toggle="dropdown" href="#" id="orders-month">@CurrentMonth</a>
+                    </div>
+                </div>
+                <div class="card-stats-items">
+                    <div class="card-stats-item">
+                        <div class="card-stats-item-label">@LabelPurchases</div>
+                        <div class="card-stats-item-count">@Purchase.FormatCurrency()</div>
+                    </div>
+                    <div class="card-stats-item">
+                        <div class="card-stats-item-label">@LabelSales</div>
+                        <div class="card-stats-item-count">@Sale.FormatCurrency()</div>
+                    </div>
+                    <div class="card-stats-item">
+                        <div class="card-stats-item-label">@LabelSent</div>
+                        <div class="card-stats-item-count">@Send.FormatCurrency()</div>
+                    </div>
+                </div>
+            </div>
+           
+            <div class="card-wrap">
+                <div class="card-icon shadow-primary bg-primary">
+                    <i class="fas fa-building"></i>
+                </div>
+                <div class="card-header">
+                    <h4>@LabelBalance</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-11 col-md-8">
+                            @Balance.FormatCurrency()
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </Authorized>
+</AuthorizationSwitcher>

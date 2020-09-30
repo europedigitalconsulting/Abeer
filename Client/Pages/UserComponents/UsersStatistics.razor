@@ -1,0 +1,30 @@
+﻿@namespace Abeer.Client.Pages
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Users> Loc
+@code
+{ 
+    [Parameter]
+    public string CurrentMonth { get; set; }
+
+    [Inject] HttpClient HttpClient { get; set; }
+
+    [Parameter] public int NbOfUsers { get; set; }
+    [Parameter] public int NbOfUsersOnline { get; set; } 
+}
+
+<div class="card card-statistic-2">
+    <div class="card-stats">
+        <div class="card-stats-title">
+            @Loc["UsersStatistics"]
+        </div>
+        <div class="card-stats-items p-2">
+            <div class="card-stats-item">
+                <div class="card-stats-item-count">@NbOfUsers</div>
+                <div class="card-stats-item-label">@Loc["NbOfUsers"]</div>
+            </div>
+            <div class="card-stats-item">
+                <div class="card-stats-item-count">@NbOfUsersOnline</div>
+                <div class="card-stats-item-label">@Loc["NbOfUsersOnline"]</div>
+            </div>
+        </div>
+    </div>
+</div>

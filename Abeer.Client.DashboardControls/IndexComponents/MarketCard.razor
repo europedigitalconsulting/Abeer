@@ -1,0 +1,24 @@
+﻿@namespace Abeer.Client.Pages
+@code
+{
+    [Parameter]
+    public decimal MarketValue { get; set; }
+    [Parameter]
+    public string CatchPhrase { get; set; }
+}
+<div class="card card-statistic-2">
+    <div class="card-chart">
+        <canvas id="sales-chart" height="80"></canvas>
+    </div>
+    <div class="card-icon shadow-primary bg-primary">
+        <i class="fas fa-bitcoin"></i>
+    </div>
+    <div class="card-wrap">
+        <div class="card-header">
+            <h4>@CatchPhrase</h4>
+        </div>
+        <div class="card-body">
+            @MarketValue.FormatCurrency()
+        </div>
+    </div>
+</div>

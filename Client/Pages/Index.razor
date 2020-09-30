@@ -1,0 +1,81 @@
+﻿@page "/"
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Resources> Loc
+@inject Microsoft.Extensions.Localization.IStringLocalizer<TransactionTable> TransactionListLoc
+@code
+{
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    public decimal MarketValue { get; set; } = 45678.5478M;
+    public decimal BalanceValue { get; set; } = 4564.5456M;
+}
+<!-- Main Content -->
+<AuthorizationSwitcher>
+    <Authorized>
+    <div class="main-content">
+        <section class="section">
+            <div class="row">
+                <div class="col-12">
+                    <CallToAction LabelPay="@Loc["Pay"]" LabelPurchase="@Loc["Purchase"]" LabelSale="@Loc["Sales"]" LabelTrack="@Loc["Track"]"></CallToAction>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-12">
+                    <BalanceCard BalanceValue="@BalanceValue" BalanceCardTitle="@Loc["BalanceCardTitle"]" LoginToSeeYourBalance="@Loc["LoginToSeeYourBalance"]"></BalanceCard>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-12">
+                    <WalletStatistics Months="@Months" CurrentMonth="@CurrentMonth" LabelBalance="@Loc["Balance"]" LabelPurchases="@Loc["Purchases"]" 
+                                      LabelSales="@Loc["Sales"]" LabelSent="@Loc["Sent"]" LabelWalletStatistics="@Loc["WalletStatistics"]"></WalletStatistics>
+                </div>
+                @if (User.Identity.IsAuthenticated && (User.HasClaim(System.Security.Claims.ClaimTypes.Role, "operator") || User.HasClaim(System.Security.Claims.ClaimTypes.Role, "admin")))
+                {
+                    <div class="col-lg-4 col-md-4 col-sm-12">
+                        <OperatorStatistics CurrentMonth="@CurrentMonth" LabelNbOfTokenAvailable="@Loc["NbOfTokenAvailable"]"
+                                            LabelNbOfTokens="@Loc["NbOfTokens"]" 
+                                            LabelNbOfTokensUsed="@Loc["NbOfTokensUsed"]"></OperatorStatistics>
+                    </div>
+                }
+                @if (User.Identity.IsAuthenticated && (User.HasClaim(System.Security.Claims.ClaimTypes.Role, "manager") || User.HasClaim(System.Security.Claims.ClaimTypes.Role, "admin")))
+                {
+                    <div class="col-lg-4 col-md-4 col-sm-12">
+                        <ManagerStatistics CurrentMonth="@CurrentMonth" LabelNbOfCard="@Loc["NbOfCard"]"
+                                           LabelNbOfCardAvailable="@Loc["NbOfCardAvailable"]" 
+                                           LabelNbOfCardUsed="@Loc["NbOfCardUsed"]" Title="@Loc["ManagerStatistics"]"></ManagerStatistics>
+                    </div>
+                }
+
+                <div class="col-lg-4 col-md-4 col-sm-12">
+                    <MarketCard MarketValue="@MarketValue" CatchPhrase="@Loc["MarketCap"]"></MarketCard>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8">
+                    <TransactionHisto LabelLoginToSeeYourEvolution="@Loc["LoginToSeeYourEvolution"]"
+                                      LabelMarketEvolution="@Loc["MarketEvolution"]"
+                                      LabelMarketEvolutionCatchPhrase="@Loc["MarketEvolutionCatchPhrase"]"
+                                      LabelRegisterToSeeYourEvolution="@Loc["RegisterToSeeYourEvolution"]"
+                                      LabelTransactionHistoric="@Loc["TransactionHistoric"]"></TransactionHisto>
+                </div>
+                <div class="col-lg-4">
+                    <Top5Partners LabelAddNewTransaction="@Loc["AddNewTransaction"]"
+                                  LabelReceiving="@Loc["Receiving"]"
+                                  LabelSending="@Loc["Sending"]"
+                                  LabelTransactions="@Loc["Transactions"]"
+                                  LoginToAccessTop5PartnersList="@Loc["LoginToAccessTop5PartnersList"]"
+                                  Title="@Loc["Top5Partner"]"></Top5Partners>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <TransactionList LabelPleaseLoginToSeeTransactionList="@Loc["PleaseLoginToSeeTransactionList"]"
+                                     LabelTransactions="@Loc["Transactions"]"
+                                     LabelViewMore="@Loc["ViewMore"]" Loc="TransactionListLoc"></TransactionList>
+                </div>
+                <div class="col-md-4">
+                    <Article LabelViewAll="@Loc["ViewAll"]"></Article>
+                </div>
+            </div>
+        </section>
+    </div>
+    </Authorized>
+</AuthorizationSwitcher>

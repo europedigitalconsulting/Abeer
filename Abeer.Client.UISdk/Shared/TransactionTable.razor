@@ -1,0 +1,76 @@
+﻿@namespace Abeer.Client.Shared
+@code{
+    [Parameter]
+    public Microsoft.Extensions.Localization.IStringLocalizer<TransactionTable> Loc { get; set; }
+}
+
+<div class="table-responsive table-invoice">
+    <table class="table table-striped">
+        <tr>
+            <th>@Loc["TransactionID"]</th>
+            <th>@Loc["Contact"]</th>
+            <th>@Loc["Status"]</th>
+            <th>@Loc["TransactionDate"]</th>
+            <th>@Loc["TransactionType"]</th>
+            <th>@Loc["TransactionAmount"]</th>
+            <th>@Loc["Action"]</th>
+        </tr>
+        <tr>
+            <td><a href="#">INV-87239</a></td>
+            <td class="font-weight-600">Kusnadi</td>
+            <td><div class="badge badge-info">@Loc["Pending"]</div></td>
+            <td>July 19, 2018</td>
+            <td>
+                <a href="#" class="btn btn-primary">@Loc["Detail"]</a>
+                <a href="#" class="btn btn-danger">@Loc["Cancel"]</a>
+            </td>
+            <td><span class="badge badge-warning">Sent</span></td>
+            <td><span style="color:darkorange">-583.54</span></td>
+        </tr>
+        <tr>
+            <td><a href="#">INV-48574</a></td>
+            <td class="font-weight-600">Hasan Basri</td>
+            <td><div class="badge badge-success">@Loc["Paid"]</div></td>
+            <td>July 21, 2018</td>
+            <td>
+                <a href="#" class="btn btn-primary">@Loc["Detail"]</a>
+                <a href="#" class="btn btn-success">@Loc["Replay"]</a>
+            </td>
+            <td><span class="badge badge-success">Purchased</span></td>
+            <td><span style="color:darkgreen">583.54</span></td>
+        </tr>
+        <tr>
+            <td><a href="#">INV-76824</a></td>
+            <td class="font-weight-600">Muhamad Nuruzzaki</td>
+            <td><div class="badge badge-warning">@Loc["Unpaid"]</div></td>
+            <td>July 22, 2018</td>
+            <td>
+                <a href="#" class="btn btn-primary">@Loc["Detail"]</a>
+            </td>
+            <td><span class="badge badge-warning">Sent</span></td>
+            <td><span style="color:darkorange">583.54</span></td>
+        </tr>
+        <tr>
+            <td><a href="#">INV-84990</a></td>
+            <td class="font-weight-600">Agung Ardiansyah</td>
+            <td><div class="badge badge-warning">@Loc["Unpaid"]</div></td>
+            <td>July 22, 2018</td>
+            <td>
+                <a href="#" class="btn btn-primary">@Loc["Detail"]</a>
+            </td>
+            <td><span class="badge badge-success">Received</span></td>
+            <td><span style="color:darkgreen">583.54</span></td>
+        </tr>
+        <tr>
+            <td><a href="#">INV-87320</a></td>
+            <td class="font-weight-600">Ardian Rahardiansyah</td>
+            <td><div class="badge badge-success">@Loc["Paid"]</div></td>
+            <td>July 28, 2018</td>
+            <td>
+                <a href="#" class="btn btn-primary">@Loc["Detail"]</a>
+            </td>
+            <td><span class="badge badge-success">Received</span></td>
+            <td><span style="color:darkgreen">583.54</span></td>
+        </tr>
+    </table>
+</div>

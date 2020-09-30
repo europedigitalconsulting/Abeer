@@ -1,0 +1,24 @@
+﻿@namespace Abeer.Client.Shared
+@using Microsoft.AspNetCore.Components.Authorization
+@inherits LayoutComponentBase
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Resources> Loc
+<div id="app">
+    <div class="main-wrapper">
+        <NavMenu LabelCardList="@Loc["CardList"]" 
+                 LabelContacts="@Loc["ContactList"]"
+                 LabelTokenBatches="@Loc["TokenBatches"]"
+                 LabelDashboard="@Loc["Dashboard"]"
+                 LabelLogout="@Loc["Logout"]"
+                 LabelMyAccount="@Loc["MyAccount"]"
+                 LabelUserList="@Loc["UserList"]"></NavMenu>
+        @Body
+        <footer class="main-footer">
+            <div class="footer-left">
+                Copyright &copy; 2020 <div class="bullet"></div> Design By <a href="https://francedigitalconsulting.eu/">France Digital Consulting</a>
+            </div>
+            <div class="footer-right">
+                @System.Reflection.Assembly.GetExecutingAssembly().GetName().Version
+            </div>
+        </footer>
+    </div>
+</div>

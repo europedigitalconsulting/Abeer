@@ -1,0 +1,13 @@
+﻿@page "/Contacts"
+@using Abeer.Client
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Contacts> Loc
+<ContactsList ById="@Loc["ById"]" ByName="@Loc["ByName"]" LabelAddContact="@Loc["AddContact"]" 
+              LabelCancel="@Loc["Cancel"]" LabelCity="@Loc["City"]" LabelConfirmDelete="@Loc["ConfirmDelete"]"
+              LabelContactId="@Loc["LabelContactId"]" LabelCountry="@Loc["Country"]" LabelDelete="@Loc["Delete"]"
+              LabelDeleteTitle="@Loc["DeleteTitle"]" LabelDisplayName="@Loc["DisplayName"]" LabelEmail="@Loc["Email"]"
+              LabelHome="@Loc["Home"]" LabelInsert="@Loc["Insert"]" LabelInsertTitle="@Loc["InsertTitle"]"
+              LabelMyContactList="@Loc["MyContactList"]" LabelMyContactListCatchPhrase="@Loc["MyContactListCatchPhrase"]"
+              LabelNoContactFound="@Loc["NoContactFound"]" LabelSearch="@Loc["Search"]" LabelSendTo="@Loc["SendTo"]"
+              LabelUpdate="@Loc["Update"]" LabelUpdateTitle="@Loc["UpdatTitle"]" Search="@Loc["Search"]" 
+              SocialLinks="@Loc["SocialLinks"]"></ContactsList>

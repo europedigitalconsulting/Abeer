@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <RazorLangVersion>3.0</RazorLangVersion>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ChartJs.Blazor.Fork" Version="0.10.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.8" />
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="3.1.8" />
+    <PackageReference Include="System.Net.Http.Json" Version="3.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Abeer.Client.DashboardControls\Abeer.Client.DashboardControls.csproj" />
+    <ProjectReference Include="..\Abeer.Client.UISdk\Abeer.Client.UISdk.csproj" />
+    <ProjectReference Include="..\Shared\Abeer.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,26 @@
+﻿@page "/"
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<CollapsePannel>
+    <CollapsePannelItem Title="First Pannel">
+        <h4>First Pannel</h4>
+        This is the first pannel.
+    </CollapsePannelItem>
+
+    <CollapsePannelItem Title="Second Pannel">
+        <h4>Second Pannel</h4>
+        <label>
+            This is the Second pannel.
+        </label>
+    </CollapsePannelItem>
+</CollapsePannel>
+
+<SurveyPrompt Title="How is Blazor working for you?" />
+
+@code{
+    CollapsePannel CollapsePannel;
+    bool showSecondPannel;
+}

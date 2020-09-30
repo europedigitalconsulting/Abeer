@@ -1,0 +1,28 @@
+﻿@namespace Abeer.Client.Pages
+@code
+{
+    [Parameter]
+    public string Title { get; set; }
+    [Parameter]
+    public decimal CurrentValue { get; set; }
+    [Parameter]
+    public string CurrentCurrency { get; set; }
+    [Parameter]
+    public string Icon { get; set; }
+}
+<div class="card card-statistic-2">
+    <div class="card-chart">
+        <h4>@Title</h4>
+    </div>
+    <div class="card-icon shadow-primary bg-primary">
+        <i class="fas @Icon fa-7x"></i>
+    </div>
+    <div class="card-wrap">
+        <div class="card-header">
+            <h4>@CurrentCurrency</h4>
+        </div>
+        <div class="card-body">
+            @CurrentValue.FormatCurrency()
+        </div>
+    </div>
+</div>

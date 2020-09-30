@@ -1,0 +1,18 @@
+﻿@namespace Abeer.Client.Shared
+@code
+{
+    [Parameter]
+    public string LabelTrack { get; set; }
+    [Parameter]
+    public string LabelSale { get; set; }
+    [Parameter]
+    public string LabelPurchase { get; set; }
+    [Parameter]
+    public string LabelPay { get; set; }
+}
+<ul class="list-group list-group-horizontal d-flex justify-content-center pb-3">
+    <li class="list-group-item text-center "><a class="nav-link" href="forms-editor.html" title="@LabelTrack"><i style="color:#81d694" class="fa fa-2x fa-exchange-alt"></i></a></li>
+    <li class="list-group-item text-center"><a class="nav-link" href="forms-editor.html" title="@LabelSale"><i style="color:#81d694" class="fa fa-2x fa-arrow-down"></i></a></li>
+    <li class="list-group-item text-center"><a class="nav-link" href="forms-validation.html" title="@LabelPurchase"><i style="color:#81d694" class="fa fa-2x fa-arrow-up"></i></a></li>
+    <li class="list-group-item text-center"><a class="nav-link" href="forms-advanced-form.html" title="@LabelPay"><i style="color:#81d694" class="fa fa-2x fa-cash-register"></i></a></li>
+</ul>

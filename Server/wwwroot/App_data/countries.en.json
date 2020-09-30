@@ -1,0 +1,362 @@
+﻿[
+  {
+    "gdp": 43.98441,
+    "faocode": "255",
+    "name": "Belgium",
+    "label": 0,
+    "eeacode": "BE",
+    "estatcode": "BE",
+    "nutscode": null
+  },
+  {
+    "gdp": 6.5014677,
+    "faocode": "27",
+    "name": "Bulgaria",
+    "label": 1,
+    "eeacode": "BG",
+    "estatcode": "BG",
+    "nutscode": null
+  },
+  {
+    "gdp": 18.133423,
+    "faocode": "167",
+    "name": "Czech Republic",
+    "label": 2,
+    "eeacode": "CZ",
+    "estatcode": "CZ",
+    "nutscode": null
+  },
+  {
+    "gdp": 55.783062,
+    "faocode": "54",
+    "name": "Denmark",
+    "label": 3,
+    "eeacode": "DK",
+    "estatcode": "DK",
+    "nutscode": null
+  },
+  {
+    "gdp": 40.461132,
+    "faocode": "79",
+    "name": "Germany",
+    "label": 4,
+    "eeacode": "DE",
+    "estatcode": "DE",
+    "nutscode": null
+  },
+  {
+    "gdp": 14.231171,
+    "faocode": "63",
+    "name": "Estonia",
+    "label": 5,
+    "eeacode": "EE",
+    "estatcode": "EE",
+    "nutscode": null
+  },
+  {
+    "gdp": 50.826176,
+    "faocode": "104",
+    "name": "Ireland",
+    "label": 6,
+    "eeacode": "IE",
+    "estatcode": "IE",
+    "nutscode": null
+  },
+  {
+    "gdp": 29.045162,
+    "faocode": "84",
+    "name": "Greece",
+    "label": 7,
+    "eeacode": "GR",
+    "estatcode": "EL",
+    "nutscode": null
+  },
+  {
+    "gdp": 31.691517,
+    "faocode": "203",
+    "name": "Spain",
+    "label": 8,
+    "eeacode": "ES",
+    "estatcode": "ES",
+    "nutscode": null
+  },
+  {
+    "gdp": 42.196472,
+    "faocode": "68",
+    "name": "France",
+    "label": 9,
+    "eeacode": "FR",
+    "estatcode": "FR",
+    "nutscode": null
+  },
+  {
+    "gdp": 34.89257,
+    "faocode": "106",
+    "name": "Italy",
+    "label": 10,
+    "eeacode": "IT",
+    "estatcode": "IT",
+    "nutscode": null
+  },
+  {
+    "gdp": 22.680254,
+    "faocode": "50",
+    "name": "Cyprus",
+    "label": 11,
+    "eeacode": "CY",
+    "estatcode": "CY",
+    "nutscode": null
+  },
+  {
+    "gdp": 11.631883,
+    "faocode": "119",
+    "name": "Latvia",
+    "label": 12,
+    "eeacode": "LV",
+    "estatcode": "LV",
+    "nutscode": null
+  },
+  {
+    "gdp": 11.193141,
+    "faocode": "126",
+    "name": "Lithuania",
+    "label": 13,
+    "eeacode": "LT",
+    "estatcode": "LT",
+    "nutscode": null
+  },
+  {
+    "gdp": 103.14793,
+    "faocode": "256",
+    "name": "Luxembourg",
+    "label": 14,
+    "eeacode": "LU",
+    "estatcode": "LU",
+    "nutscode": null
+  },
+  {
+    "gdp": 12.917068,
+    "faocode": "97",
+    "name": "Hungary",
+    "label": 15,
+    "eeacode": "HU",
+    "estatcode": "HU",
+    "nutscode": null
+  },
+  {
+    "gdp": 19.153477,
+    "faocode": "134",
+    "name": "Malta",
+    "label": 16,
+    "eeacode": "MT",
+    "estatcode": "MT",
+    "nutscode": null
+  },
+  {
+    "gdp": 47.681213,
+    "faocode": "150",
+    "name": "Netherlands",
+    "label": 17,
+    "eeacode": "NL",
+    "estatcode": "NL",
+    "nutscode": null
+  },
+  {
+    "gdp": 45.39957,
+    "faocode": "11",
+    "name": "Austria",
+    "label": 18,
+    "eeacode": "AT",
+    "estatcode": "AT",
+    "nutscode": null
+  },
+  {
+    "gdp": 11.235886,
+    "faocode": "173",
+    "name": "Poland",
+    "label": 19,
+    "eeacode": "PL",
+    "estatcode": "PL",
+    "nutscode": null
+  },
+  {
+    "gdp": 21.81285,
+    "faocode": "174",
+    "name": "Portugal",
+    "label": 20,
+    "eeacode": "PT",
+    "estatcode": "PT",
+    "nutscode": null
+  },
+  {
+    "gdp": 7.498371,
+    "faocode": "183",
+    "name": "Romania",
+    "label": 21,
+    "eeacode": "RO",
+    "estatcode": "RO",
+    "nutscode": null
+  },
+  {
+    "gdp": 23.880295,
+    "faocode": "198",
+    "name": "Slovenia",
+    "label": 22,
+    "eeacode": "SI",
+    "estatcode": "SI",
+    "nutscode": null
+  },
+  {
+    "gdp": 16.04577,
+    "faocode": "199",
+    "name": "Slovakia",
+    "label": 23,
+    "eeacode": "SK",
+    "estatcode": "SK",
+    "nutscode": null
+  },
+  {
+    "gdp": 44.359554,
+    "faocode": "67",
+    "name": "Finland",
+    "label": 24,
+    "eeacode": "FI",
+    "estatcode": "FI",
+    "nutscode": null
+  },
+  {
+    "gdp": 43.29126,
+    "faocode": "210",
+    "name": "Sweden",
+    "label": 25,
+    "eeacode": "SE",
+    "estatcode": "SE",
+    "nutscode": null
+  },
+  {
+    "gdp": 34.91987,
+    "faocode": "229",
+    "name": "United Kingdom",
+    "label": 26,
+    "eeacode": "GB",
+    "estatcode": "UK",
+    "nutscode": null
+  },
+  {
+    "gdp": 37.915627,
+    "faocode": "99",
+    "name": "Iceland",
+    "label": 27,
+    "eeacode": "IS",
+    "estatcode": "IS",
+    "nutscode": null
+  },
+  {
+    "gdp": 134.05556,
+    "faocode": "125",
+    "name": "Liechtenstein",
+    "label": 28,
+    "eeacode": "LI",
+    "estatcode": "LI",
+    "nutscode": null
+  },
+  {
+    "gdp": 78.18268,
+    "faocode": "162",
+    "name": "Norway",
+    "label": 29,
+    "eeacode": "NO",
+    "estatcode": "NO",
+    "nutscode": null
+  },
+  {
+    "gdp": 64.186325,
+    "faocode": "211",
+    "name": "Switzerland",
+    "label": 30,
+    "eeacode": "CH",
+    "estatcode": "CH",
+    "nutscode": null
+  },
+  {
+    "gdp": 14.316148,
+    "faocode": "98",
+    "name": "Croatia",
+    "label": 31,
+    "eeacode": "HR",
+    "estatcode": "HR",
+    "nutscode": null
+  },
+  {
+    "gdp": 4.474042,
+    "faocode": "154",
+    "name": "Former Yugoslav Republic of Macedonia",
+    "label": 32,
+    "eeacode": "MK",
+    "estatcode": "MK",
+    "nutscode": null
+  },
+  {
+    "gdp": 8.447919,
+    "faocode": "223",
+    "name": "Turkey",
+    "label": 33,
+    "eeacode": "TR",
+    "estatcode": "TR",
+    "nutscode": null
+  },
+  {
+    "gdp": 3.75,
+    "faocode": "3",
+    "name": "Albania",
+    "label": 34,
+    "eeacode": "AL",
+    "estatcode": "AL",
+    "nutscode": null
+  },
+  {
+    "gdp": 4.532447,
+    "faocode": "80",
+    "name": "Bosnia-Herzegovina",
+    "label": 35,
+    "eeacode": "BA",
+    "estatcode": "BA",
+    "nutscode": null
+  },
+  {
+    "gdp": 6.562599,
+    "faocode": "273",
+    "name": "Montenegro",
+    "label": 36,
+    "eeacode": "ME",
+    "estatcode": "ME",
+    "nutscode": null
+  },
+  {
+    "gdp": 4.3612013,
+    "faocode": "272",
+    "name": "Serbia",
+    "label": 37,
+    "eeacode": "RS",
+    "estatcode": "RS",
+    "nutscode": null
+  },
+  {
+    "gdp": null,
+    "faocode": null,
+    "name": "Japan",
+    "label": 38,
+    "eeacode": null,
+    "estatcode": "JP",
+    "nutscode": null
+  },
+  {
+    "gdp": null,
+    "faocode": null,
+    "name": "United States of America",
+    "label": 39,
+    "eeacode": null,
+    "estatcode": "US",
+    "nutscode": null
+  }
+]

@@ -1,0 +1,73 @@
+﻿@namespace Abeer.Client.Pages
+@code
+{
+    [Parameter]
+    public string CurrentMonth { get; set; }
+
+    [Inject] HttpClient HttpClient { get; set; }
+
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public string LabelNbOfTokens { get; set; }
+
+    [Parameter]
+    public string LabelNbOfTokensUsed { get; set; }
+
+    [Parameter]
+    public string LabelNbOfTokenAvailable { get; set; }
+
+    protected decimal NbOfTokens { get; set; }
+    protected decimal NbOfTokensUsed { get; set; }
+    protected decimal NbOfTokenAvailable { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+        var response = await HttpClient.GetAsync("/api/TokenBatches/Statistics");
+        response.EnsureSuccessStatusCode();
+        var json = await response.Content.ReadAsStringAsync();
+        var stat = Newtonsoft.Json.JsonConvert.DeserializeObject<TokenBatchStatisticsViewModel>(json);
+        NbOfTokens = stat.NbOfTokens;
+        NbOfTokensUsed = stat.NbOfTokenUsed;
+        NbOfTokenAvailable = stat.NbOfTokenAvailable;
+        await InvokeAsync(StateHasChanged);
+    }
+}
+
+<AuthorizationSwitcher>
+    <Authorized>
+        <div class="card card-statistic-2">
+            <div class="card-stats">
+                <div class="card-stats-title">
+                    @Title -
+                    <div class="dropdown d-inline">
+                        <a class="font-weight-600 dropdown-toggle" data-toggle="dropdown" href="#" id="orders-month">@CurrentMonth</a>
+                    </div>
+                </div>
+                <div class="card-stats-items">
+                    <div class="card-stats-item">
+                        <div class="card-stats-item-label">@LabelNbOfTokens</div>
+                        <div class="card-stats-item-count">@NbOfTokens</div>
+                    </div>
+                    <div class="card-stats-item">
+                        <div class="card-stats-item-label">@LabelNbOfTokensUsed</div>
+                        <div class="card-stats-item-count">@NbOfTokensUsed</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-icon shadow-primary bg-primary">
+                <i class="fas fa-building"></i>
+            </div>
+            <div class="card-wrap">
+                <div class="card-header">
+                    <h4>@LabelNbOfTokenAvailable</h4>
+                </div>
+                <div class="card-body">
+                    @NbOfTokenAvailable
+                </div>
+            </div>
+        </div>
+    </Authorized>
+</AuthorizationSwitcher>

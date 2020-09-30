@@ -1,0 +1,80 @@
+﻿@using ChartJs.Blazor.ChartJS.Common.Wrappers
+@using ChartJs.Blazor.ChartJS.LineChart
+@using ChartJs.Blazor.Util
+@namespace Abeer.Client.Pages
+@code
+{
+    [Parameter]
+    public decimal BalanceValue { get; set; }
+    [Parameter]
+    public string BalanceCardTitle { get; set; }
+    [Parameter]
+    public string LoginToSeeYourBalance { get; set; }
+    protected LineConfig _config;
+    protected ChartJsLineChart _ChartJsBarChart;
+    private Random rnd = new Random();
+    protected override async Task OnParametersSetAsync()
+    {
+
+
+        _config = new LineConfig
+        {
+            Options = new LineOptions
+            {
+                Responsive = true,
+                ShowLines =  false,
+                MaintainAspectRatio = true,
+                Title = new OptionsTitle
+                {
+                    Display = false,
+                }
+            }
+        };
+
+        var lineDataset = new LineDataset<DoubleWrapper>
+        {
+            BackgroundColor = ColorUtil.ColorString(255, 255, 255, 1.0),
+            BorderColor = ColorUtil.ColorString(0, 0, 255, 1.0),
+            Fill = false,
+            PointBackgroundColor = ColorUtil.ColorString(255, 255, 255, 1.0),
+            BorderWidth = 2,
+            PointRadius = 3,
+            PointBorderWidth = 1,
+            SteppedLine = SteppedLine.False
+        };
+
+        var data = new List<int> {2000, 2500, 3500, 2550, 3555, 5000, 6000};
+        var chartdata = data.Select(d => new DoubleWrapper(d)).ToArray();
+
+        lineDataset.AddRange(chartdata);
+
+        _config.Data.Datasets.Add(lineDataset);
+        _config.Data.Labels = new List<string> { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul" };
+    }
+
+    }
+<AuthorizationSwitcher>
+    <Authorized>
+        <div class="card card-statistic-2">
+            <div class="card-chart">
+                <ChartJsLineChart @ref="_ChartJsBarChart" Config="_config" Height="150" Width="150"></ChartJsLineChart>
+            </div>
+            <div class="card-icon shadow-primary bg-primary">
+                <i class="fas fa-dollar-sign"></i>
+            </div>
+            <div class="card-wrap">
+                <div class="card-header">
+                    <h4>@BalanceCardTitle</h4>
+                </div>
+                <div class="card-body">
+                    @BalanceValue.FormatCurrency()
+                </div>
+            </div>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <div class="card card-statistic-2">
+            <div class="alert alert-warning">@LoginToSeeYourBalance</div>
+        </div>
+    </NotAuthorized>
+</AuthorizationSwitcher>

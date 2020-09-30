@@ -1,0 +1,112 @@
+﻿@namespace Abeer.Client.Shared
+@code
+{
+    [Parameter]
+    public bool ShowModal { get; set; }
+    [Parameter]
+    public string Mode { get; set; }
+    [Parameter]
+    public string InsertDialogTitle { get; set; }
+    [Parameter]
+    public string UpdateDialogTitle { get; set; }
+    [Parameter]
+    public string DeleteDialogTitle { get; set; }
+    [Parameter]
+    public EventCallback ModalCancelClicked { get; set; }
+    [Parameter]
+    public RenderFragment InsertModalBody { get; set; }
+    [Parameter]
+    public RenderFragment UpdateModalBody { get; set; }
+    [Parameter]
+    public RenderFragment DeleteModalBody { get; set; }
+    [Parameter]
+    public string CancelLabel { get; set; }
+    [Parameter]
+    public EventCallback InsertClicked { get; set; }
+    [Parameter]
+    public string InsertLabel { get; set; }
+    [Parameter]
+    public EventCallback UpdateClicked { get; set; }
+    [Parameter]
+    public string UpdateLabel { get; set; }
+    [Parameter]
+    public EventCallback DeleteClicked { get; set; }
+    [Parameter]
+    public string DeleteLabel { get; set; }
+}
+@if (ShowModal)
+{
+    <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        @switch (Mode)
+                        {
+                            case "Insert":
+                                {
+                                    <span>@InsertDialogTitle</span>
+                                    break;
+                                }
+                            case "Update":
+                                {
+                                    <span>@UpdateDialogTitle</span>
+                                    break;
+                                }
+                            case "Delete":
+                                {
+                                    <span>@DeleteDialogTitle</span>
+                                    break;
+                                }
+                        }
+                    </h4>
+                    <button type="button" class="close" @onclick="@ModalCancelClicked">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                @switch (Mode)
+                {
+                    case "Insert":
+                        {
+                            <div class="modal-body">@InsertModalBody</div>
+                            break;
+                        }
+                    case "Update":
+                        {
+                            <div class="modal-body">@UpdateModalBody</div>
+                            break;
+                        }
+                    case "Delete":
+                        {
+                            <div class="modal-body">@DeleteModalBody</div>
+                            break;
+                        }
+                }
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn" @onclick="@ModalCancelClicked">@CancelLabel</button>
+                    @switch (Mode)
+                    {
+                        case "Insert":
+                            {
+                                <button @onclick="InsertClicked" class="btn btn-primary"><i class="fas fa-plus-square"></i> @InsertLabel</button>
+                                break;
+                            }
+                        case "Update":
+                            {
+                                <button @onclick="UpdateClicked" class="btn btn-primary"><i class="fas fa-save"></i> @UpdateLabel</button>
+                                break;
+                            }
+                        case "Delete":
+                            {
+                                <button @onclick="DeleteClicked" class="btn btn-primary"><i class="fas fa-user-times"></i> @DeleteLabel</button>
+                                break;
+                            }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
