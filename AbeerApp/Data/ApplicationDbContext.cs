@@ -25,6 +25,8 @@ namespace WebApplication1.Data
         public virtual DbSet<ApplicationUser> Utilisateurs { get; set; }
         public virtual DbSet<SocialLink> SocialLinks { get; set; }
 
+        public virtual DbSet<Annonce> Annonces { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<IdentityUserClaim<string>>().HasKey(p => new { p.Id });
