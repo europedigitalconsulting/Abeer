@@ -110,12 +110,8 @@ namespace AbeerContactShared.Controllers
         {
             try
             {
-
                 if (_context != null)
-                {
-                                   
-
-                    var xxxx = _context.Utilisateurs.ToList();
+                {            
                     var user = _context.Utilisateurs.Where(x => x.Id == idUserProfil).FirstOrDefault();
                     if (user != null)
                     {
@@ -129,7 +125,6 @@ namespace AbeerContactShared.Controllers
                         return true;
                     }
                 }
-
             }
             catch (Exception ex)
             {

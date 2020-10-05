@@ -1,0 +1,42 @@
+﻿@model AbeerContactShared.Data.Repo.Annonce
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Create</h1>
+
+<h4>Annonce</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+           
+            <div class="form-group">
+                <label asp-for="TitleAnnonce" class="control-label"></label>
+                <input asp-for="TitleAnnonce" class="form-control" />
+                <span asp-validation-for="TitleAnnonce" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DescriptionAnnonce" class="control-label"></label>
+                <input asp-for="DescriptionAnnonce" class="form-control" />
+                <span asp-validation-for="DescriptionAnnonce" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PathImageAnnonce" class="control-label"></label>
+                <input asp-for="PathImageAnnonce" class="form-control" />
+                <span asp-validation-for="PathImageAnnonce" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
