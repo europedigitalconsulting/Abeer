@@ -242,17 +242,17 @@ namespace Abeer.Server
 
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-                var admin = await userManager.FindByEmailAsync("admin@Abeer.io");
+                var admin = await userManager.FindByEmailAsync("admin@abeer.io");
 
                 if (admin == null)
                 {
                     //create admin
                     await userManager.CreateAsync(new ApplicationUser
                     {
-                        UserName = "admin@crypocoin.io",
+                        UserName = "admin@abeer.io",
                         Country = "France",
                         DisplayName = "adminisrator",
-                        Email = "admin@Abeer.io",
+                        Email = "admin@abeer.io",
                         EmailConfirmed = true,
                         FirstName = "Admin",
                         LastName = "admin",
@@ -260,17 +260,17 @@ namespace Abeer.Server
                     }, "Xc9wf8or&");
                 }
 
-                var manager = await userManager.FindByEmailAsync("manager@Abeer.io");
+                var manager = await userManager.FindByEmailAsync("manager@abeer.io");
 
                 if (manager == null)
                 {
                     //create manager
                     await userManager.CreateAsync(new ApplicationUser
                     {
-                        UserName = "manager@crypocoin.io",
+                        UserName = "manager@abeer.io",
                         Country = "France",
                         DisplayName = "manager",
-                        Email = "manager@Abeer.io",
+                        Email = "manager@abeer.io",
                         EmailConfirmed = true,
                         FirstName = "Manager",
                         LastName = "Manager",
@@ -278,17 +278,17 @@ namespace Abeer.Server
                     }, "Xc9wf8or&");
                 }
 
-                var uoperator = await userManager.FindByEmailAsync("operator@Abeer.io");
+                var uoperator = await userManager.FindByEmailAsync("operator@abeer.io");
 
                 if (uoperator == null)
                 {
                     //create operator
                     await userManager.CreateAsync(new ApplicationUser
                     {
-                        UserName = "operator@crypocoin.io",
+                        UserName = "operator@abeer.io",
                         Country = "France",
                         DisplayName = "operator",
-                        Email = "operator@Abeer.io",
+                        Email = "operator@abeer.io",
                         EmailConfirmed = true,
                         FirstName = "Operator",
                         LastName = "Operator",
@@ -296,17 +296,17 @@ namespace Abeer.Server
                     }, "Xc9wf8or&");
                 }
 
-                var ucustomer = await userManager.FindByEmailAsync("customer@Abeer.io");
+                var ucustomer = await userManager.FindByEmailAsync("customer@abeer.io");
 
                 if (ucustomer == null)
                 {
                     //create operator
                     await userManager.CreateAsync(new ApplicationUser
                     {
-                        UserName = "customer@crypocoin.io",
+                        UserName = "customer@abeer.io",
                         Country = "France",
                         DisplayName = "customer",
-                        Email = "customer@Abeer.io",
+                        Email = "customer@abeer.io",
                         EmailConfirmed = true,
                         FirstName = "customer",
                         LastName = "customer",

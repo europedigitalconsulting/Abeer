@@ -8,12 +8,24 @@
   <ItemGroup>
     <Compile Remove="App_Data\**" />
     <Compile Remove="Resources\Pages\**" />
+    <Compile Remove="wwwroot\css\bootstrap-social\assets\**" />
+    <Compile Remove="wwwroot\css\bootstrap-social\node_modules\**" />
     <Content Remove="App_Data\**" />
     <Content Remove="Resources\Pages\**" />
+    <Content Remove="wwwroot\css\bootstrap-social\assets\**" />
+    <Content Remove="wwwroot\css\bootstrap-social\node_modules\**" />
     <EmbeddedResource Remove="App_Data\**" />
     <EmbeddedResource Remove="Resources\Pages\**" />
+    <EmbeddedResource Remove="wwwroot\css\bootstrap-social\assets\**" />
+    <EmbeddedResource Remove="wwwroot\css\bootstrap-social\node_modules\**" />
     <None Remove="App_Data\**" />
     <None Remove="Resources\Pages\**" />
+    <None Remove="wwwroot\css\bootstrap-social\assets\**" />
+    <None Remove="wwwroot\css\bootstrap-social\node_modules\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\css\bootstrap-social\bootstrap-social.css" />
   </ItemGroup>
 
   <ItemGroup>
@@ -48,6 +60,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\css\bootstrap-social\" />
     <Folder Include="wwwroot\Templates\Excel\" />
   </ItemGroup>
 

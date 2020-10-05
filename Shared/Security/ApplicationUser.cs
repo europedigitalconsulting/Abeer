@@ -20,5 +20,6 @@ namespace Abeer.Shared
         public int PinDigit { get; set; }
         public byte[] EncryptionIv { get; set; } //Iv = Initialization vector
         public byte[] EncryptionKey { get; set; }
+
     }
 }
