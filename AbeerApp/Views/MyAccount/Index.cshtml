@@ -1,0 +1,203 @@
+﻿
+@using WebApplication1.Areas.Identity.Data
+@model ApplicationUser
+@{
+    ViewData["Title"] = "Profil : " + Model.FirstName;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .btn-file {
+        position: relative;
+        overflow: hidden;
+    }
+
+        .btn-file input[type=file] {
+            position: absolute;
+            top: 0;
+            right: 0;
+            min-width: 100%;
+            min-height: 100%;
+            font-size: 100px;
+            text-align: right;
+            filter: alpha(opacity=0);
+            opacity: 0;
+            outline: none;
+            background: white;
+            cursor: inherit;
+            display: block;
+        }
+
+    #img-upload {
+        width: 100%;
+    }
+</style>
+
+<div role="main" class="main">
+    <!-- Nav Bar  -->
+    <section class="page-header mb-lg"></section>
+    <!-- Fin Nav Bar -->
+    <div class="container">
+        <input type="hidden" id="profilUserId" name="profilUserId" value="@Model.Id" />
+
+        <div class="col-md-8 order-md-1">
+            <h4 class="mb-3">Informations</h4>
+            <hr class="mb-4">
+            <!--<div class="row">
+                <div class="col-md-6">
+
+                    <label>Image</label>
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <span class="btn btn-default btn-file">
+                                Browse… <input type="file" id="imgInp">
+                            </span>
+                        </span>
+                        <input type="text" class="form-control" readonly>
+                    </div>
+                    <img id='img-upload' src="@Model.PathImage" />-->
+
+
+                    <!--Upload Image-->
+                    <!--<div class="imageupload">
+                    <div class="file-tab ">
+                        <img class="img-responsive thumbnail" src='@Model.PathImage' style="max-width: 142px" height="300">
+                        <label class="btn btn-upload-img btn-file">
+                            <span>Ajouter une photo</span>-->
+                    <!-- The file is stored here. -->
+                    <!--<input type="file" name="imageFile">
+                        </label>
+                    </div>
+                    <div class="url-tab panel-body">
+                        <div class="input-group">
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-success">Submit</button>
+                            </div>
+                        </div>-->
+                    <!-- The URL is stored here. -->
+                    <!--<input type="hidden" name="image-url" id="pathImage">
+                        </div>
+                    </div>
+                    <div class="alert alert-info fade in nomargin" style="padding: 7px;margin-top: 5px;">
+                        <p style="font-size: 12px; line-height: 1.5;">
+                            - Extention disponible
+                            <i class="fa fa-question-circle cursor" data-toggle="tooltip" data-placement="bottom" title="[ jpg, jpeg, png ]"></i>
+                        </p>
+                        <p style="font-size: 12px; line-height: 1.5; ">
+                            - Dimension max
+                            <i class="fa fa-question-circle cursor" data-toggle="tooltip" data-placement="bottom" title="200px / 200px"></i>
+                        </p>
+                    </div>-->
+                    <!--End Upload Image-->
+                <!--</div>
+            </div>-->
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="firstName">First name</label>
+                    <input type="text" class="form-control" id="firstName" placeholder="" value="@Model.FirstName" required="">
+                    <div class="invalid-feedback">
+                        Valid first name is required.
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="lastName">Last name</label>
+                    <input type="text" class="form-control" id="lastName" placeholder="" value="@Model.LastName" required="">
+                    <div class="invalid-feedback">
+                        Valid last name is required.
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="username">Username</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="userName" placeholder="" value="@Model.UserName" required="">
+                    <div class="invalid-feedback" style="width: 100%;">
+                        Your username is required.
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="email">Email <span class="text-muted">(Optional)</span></label>
+                <input type="email" class="form-control" id="email" value="@Model.Email">
+                <div class="invalid-feedback">
+                    Please enter a valid email address for shipping updates.
+                </div>
+            </div>
+
+
+            <hr class="mb-4">
+            <button class="btn btn-primary btn-lg btn-block col-md-2" type="submit" onclick="UpdateProfil()">Valider</button>
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+    var $imageupload = $('.imageupload');
+    var idUserProfil = $('#profilUserId').val();
+
+
+    function UpdateProfil() {
+
+        var pathImage = $('#img-upload').val();
+        var firstName = $('#firstName').val();
+        var lastName = $('#lastName').val();
+        var username = $('#userName').val();
+        var email = $('#email').val();
+        var idUserProfil = $('#profilUserId').val();
+
+        $.ajax({
+            type: "POST",
+            url: "MyAccount/UpdateProfil",
+            data: {
+                "firstName": firstName, "lastName": lastName, "username": username, "email": email, "idUserProfil": idUserProfil, "pathImage": pathImage
+            },
+            success: function (resp) {
+                alert('Opération de mise à jour des informations effectuées avec succès !');
+                window.location = "/";
+            }
+        });
+    }
+
+    //Upload Image
+    $(document).ready(function () {
+        $(document).on('change', '.btn-file :file', function () {
+            var input = $(this),
+                label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+            input.trigger('fileselect', [label]);
+        });
+
+        $('.btn-file :file').on('fileselect', function (event, label) {
+
+            var input = $(this).parents('.input-group').find(':text'),
+                log = label;
+
+            if (input.length) {
+                input.val(log);
+            } else {
+                if (log) alert(log);
+            }
+
+        });
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#img-upload').attr('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#imgInp").change(function () {
+            readURL(this); 0
+        });
+    });
+
+</script>
