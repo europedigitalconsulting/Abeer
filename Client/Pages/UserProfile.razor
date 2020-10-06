@@ -2,103 +2,109 @@
 @using Abeer.Client
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
 @inject Microsoft.Extensions.Localization.IStringLocalizer<UserProfile> Loc
-<!-- Main Content -->
-<div class="main-content">
-    <section class="section">
-        <div class="section-header">
-            <h1>@Loc["UserProfile"]</h1>
-            <div class="section-header-breadcrumb">
-                <div class="breadcrumb-item active"><a href="#">@Loc["Home"]</a></div>
-                <div class="breadcrumb-item"><a href="/MyAccount">@Loc["MyAccount"]</a></div>
-                <div class="breadcrumb-item">@Loc["UserProfile"]</div>
-            </div>
-        </div>
-        <div class="section-body">
-            <p class="section-lead">@Loc["CatchPhrase"].</p>
-            <div class="clearfix"></div>
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-body p-3">
-                            <div class="container-fluid bootstrap snippets bootdey">
-                                <div class="row">
-                                    <div class="col-12">
-                                        @if (ModalQrCodeVisible)
-                                        {
-                                            <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h4 class="modal-title">QR Code</h4>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <img alt="qrcode" src="/api/QrCodeGenerator?link=@ProfileUrl" style="width:280px" />
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn" @onclick="@(()=>ModalQrCodeVisible = false)">@Loc["Cancel"]</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        }
-                                        <EditForm Model="User">
-                                            <DataAnnotationsValidator />
-                                            <ValidationSummary />
-                                            <fieldset>
-                                                <div class="form-group">
-                                                    <label>@Loc["FirstName"]</label>
-                                                    <input type="text" @bind="@User.FirstName" Class="form-control" />
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>@Loc["LastName"]</label>
-                                                    <input type="text" @bind="@User.LastName" Class="form-control" />
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>@Loc["DisplayName"]</label>
-                                                    <input type="text" @bind="@User.DisplayName" Class="form-control" />
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>@Loc["City"]</label>
-                                                    <input type="text" @bind="@User.City" Class="form-control" />
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>@Loc["PinCode"]</label>
-                                                    <input @bind="@User.PinCode" maxlength="8" Class="form-control" disabled="disabled" />
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>@Loc["PinDigit"]</label>
-                                                    <input @bind="@User.PinDigit" maxlength="6" Class="form-control" disabled="disabled"/>
-                                                </div>
-                                                <div class="form-group">
-                                                    @if (User.IsOnline)
-                                                    {
-                                                        <span class="badge badge-success">@Loc["IsOnline"] @User.LastLogin</span>
-                                                    }
-                                                    else
-                                                    {
-                                                        <span class="badge badge-danger">@Loc["IsNotOnline"]</span>
-                                                    }
-                                                </div>
-                                                <div class="form-group">
-                                                    <label><InputCheckbox disabled="disabled" @bind-Value="@User.IsAdmin" />@Loc["IsAdmin"]</label>
-                                                    <label><InputCheckbox disabled="disabled" @bind-Value="@User.IsManager" />@Loc["IsManager"]</label>
-                                                    <label><InputCheckbox disabled="disabled" @bind-Value="@User.IsOperator" />@Loc["IsOperator"]</label>
-                                                </div>
-                                                <div class="form-group">
-                                                    <button type="submit" class="btn btn-success" @onclick="Update"><i class="fa fa-save"></i>@Loc["Update"]</button>
-                                                    <button type="button" class="btn btn-primary" @onclick="GeneratePinCode"><i class="fa fa-lock-open"></i>@Loc["GeneratePinCode"]</button>
-                                                    <button type="button" class="btn btn-primary" @onclick="GenerateTokenKeys"><i class="fab fa-keycdn"></i>@Loc["GenerateTokens"]</button>
-                                                    <button type="button" class="btn btn-primary" @onclick="@(()=>ModalQrCodeVisible =true)"><i class="fas fa-qrcode"></i>@Loc["ViewQrCode"]</button>                                                    
-                                                </div>
-                                            </fieldset>
-                                        </EditForm>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
+<section class="section">
+    <div class="section-header">
+        <h1>@Loc["UserProfile"]</h1>
+    </div>
+
+    @if (ModalQrCodeVisible)
+    {
+        <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">QR Code</h4>
+                    </div>
+                    <div class="modal-body">
+                        <img alt="qrcode" src="/api/QrCodeGenerator?link=@ProfileUrl" style="width:280px" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn" @onclick="@(()=>ModalQrCodeVisible = false)">@Loc["Cancel"]</button>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-</div>
+    }
+    <EditForm Model="User">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="card">
+            <div class="card-body">
+                @*@if (User.IsOnline)
+                {
+                    <span class="badge badge-success">@Loc["IsOnline"] @User.LastLogin</span>
+                }
+                else
+                {
+                    <span class="badge badge-danger">@Loc["IsNotOnline"]</span>
+                }*@
+
+                <div class="form-row">
+                    <div class="form-group col-6 col-sm-12">
+                        <label>@Loc["Email"]</label>
+                        <input type="text" @bind="@User.Email" Class="form-control" />
+                    </div>
+                    <div class="form-group col-6 col-sm-12">
+                        <label>@Loc["DisplayName"]</label>
+                        <input type="text" @bind="@User.DisplayName" Class="form-control" />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-6 col-sm-12">
+                        <label>@Loc["FirstName"]</label>
+                        <input type="text" @bind="@User.FirstName" Class="form-control" />
+                    </div>
+                    <div class="form-group col-6 col-sm-12">
+                        <label>@Loc["LastName"]</label>
+                        <input type="text" @bind="@User.LastName" Class="form-control" />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-6 col-sm-12">
+                        <label>@Loc["City"]</label>
+                        <input type="text" @bind="@User.City" Class="form-control" />
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <ul class="nav nav-tabs" id="myTab5" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="home-tab5" data-toggle="tab" href="#home5" role="tab" aria-controls="home" aria-selected="true">
+                            <i class="fas fa-home"></i> Social Networks
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="profile-tab5" data-toggle="tab" href="#profile5" role="tab" aria-controls="profile" aria-selected="false">
+                            <i class="fas fa-id-card"></i> Subscriptions 
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="contact-tab5" data-toggle="tab" href="#contact5" role="tab" aria-controls="contact" aria-selected="false">
+                            <i class="fas fa-mail-bulk"></i> Settings
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content tab-bordered" id="myTabContent5">
+                    <div class="tab-pane fade active show" id="home5" role="tabpanel" aria-labelledby="home-tab5">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                        cillum dolore eu fugiat nulla pariatur.
+                    </div>
+                    <div class="tab-pane fade" id="profile5" role="tabpanel" aria-labelledby="profile-tab5">
+                        Sed sed metus vel lacus hendrerit tempus. Sed efficitur velit tortor, ac efficitur est lobortis quis. Nullam lacinia metus erat, sed fermentum justo rutrum ultrices. Proin quis iaculis tellus. Etiam ac vehicula eros, pharetra consectetur dui.
+                    </div>
+                    <div class="tab-pane fade" id="contact5" role="tabpanel" aria-labelledby="contact-tab5">
+                        Vestibulum imperdiet odio sed neque ultricies, ut dapibus mi maximus. Proin ligula massa, gravida in lacinia efficitur, hendrerit eget mauris. Pellentesque fermentum, sem interdum molestie finibus, nulla diam varius leo, nec varius lectus elit id dolor.
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer text-right">
+                <button type="submit" class="btn btn-success" @onclick="Update"><i class="fa fa-save"></i>@Loc["Update"]</button>
+            </div>
+        </div>
+    </EditForm>
+</section>

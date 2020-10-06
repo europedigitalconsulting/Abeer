@@ -1,16 +1,58 @@
 ﻿@namespace Abeer.Client.Shared
-@using Microsoft.AspNetCore.Components.Authorization
 @inherits LayoutComponentBase
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Resources> Loc
+@code
+{
+    public bool ShowCamera { get; set; }
+
+    public void ToggleModal()
+    {
+        ShowCamera = !ShowCamera;
+    }
+    protected void OnDataReceived(byte[] data)
+    {
+        Console.WriteLine($"Data Recieved of length: {data.Length}");
+    }
+}
+
 <div id="app">
     <div class="main-wrapper">
-        <NavMenu LabelCardList="@Loc["CardList"]" 
+        <NavMenu LabelCardList="@Loc["CardList"]"
                  LabelContacts="@Loc["ContactList"]"
                  LabelTokenBatches="@Loc["TokenBatches"]"
                  LabelDashboard="@Loc["Dashboard"]"
                  LabelLogout="@Loc["Logout"]"
                  LabelMyAccount="@Loc["MyAccount"]"
                  LabelUserList="@Loc["UserList"]"></NavMenu>
-        @Body
+
+        <div class="main-content" style="min-height: 839px;">
+            @Body
+        </div>
     </div>
+    <footer class="main-footer bg-secondary fixed-bottom">
+            <div class="text-center">
+                <a class="btn btn-light" @onclick="ToggleModal"><i class="fa fa-2x fa-camera"></i></a>
+            </div>
+        </footer>
 </div>
+
+
+@if (ShowCamera)
+{
+    <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Scan QR code</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="article-image" data-background="../assets/img/news/img12.jpg" style="background-image: url(&quot;../assets/img/news/img12.jpg&quot;);">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" @onclick="@(()=>ShowCamera = false)">@Loc["Cancel"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
