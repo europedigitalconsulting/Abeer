@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using System.Globalization;
+using BlazorAnimate;
 using Microsoft.JSInterop;
 
 namespace Abeer.Client
@@ -25,6 +26,11 @@ namespace Abeer.Client
             
             builder.Services.AddLocalization();
             builder.Services.AddApiAuthorization();
+            builder.Services.Configure<AnimateOptions>(options =>
+            {
+                options.Animation = Animations.FadeDown;
+                options.Duration = TimeSpan.FromMilliseconds(1000);
+            });
 
             var host = builder.Build();
             var jsInterop = host.Services.GetRequiredService<IJSRuntime>();

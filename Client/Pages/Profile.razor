@@ -1,6 +1,7 @@
 ﻿@page "/Profile"
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Users> Loc
-@code 
+
+@code
 {
     public bool ModalQrCodeVisible { get; set; }
 
@@ -23,12 +24,13 @@
 
                 </div>
                 <div class="author-box-details">
+                    <img alt="qrcode" src="/api/QrCodeGenerator?link=test" style="width: 100px" @onclick="ToggleModal" />
                     <div class="author-box-name">
                         <a href="#" class="mr-3">Hasan Basri</a>
-                        <img alt="qrcode" src="/api/QrCodeGenerator?link=test" style="width: 100px" @onclick="ToggleModal" />
+
                     </div>
                     <div class="author-box-job">Web Developer</div>
-                    
+
                     <div class="author-box-description">
                         <p>
                             Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
@@ -40,7 +42,7 @@
                     <div class="mb-2 mt-3">
                         <div class="text-small font-weight-bold">Hasan Social Network</div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="col-lg-3 col-md-3 col-sm-12">
                             <div class="card profile-widget border">
@@ -66,16 +68,16 @@
                             <div class="card profile-widget border">
                                 <div class="profile-widget-header">
                                     <img alt="image" src="assets/img/social/facebook.png" class="rounded-circle profile-widget-picture">
-                                    <div class="profile-widget-items">
-                                        <div class="profile-widget-item">
-                                            <div class="profile-widget-item-label">Followers</div>
-                                            <div class="profile-widget-item-value">6,8K</div>
-                                        </div>
-                                        <div class="profile-widget-item">
-                                            <div class="profile-widget-item-label">Following</div>
-                                            <div class="profile-widget-item-value">2,1K</div>
-                                        </div>
-                                    </div>
+                                    @*<div class="profile-widget-items">
+                                            <div class="profile-widget-item">
+                                                <div class="profile-widget-item-label">Followers</div>
+                                                <div class="profile-widget-item-value">6,8K</div>
+                                            </div>
+                                            <div class="profile-widget-item">
+                                                <div class="profile-widget-item-label">Following</div>
+                                                <div class="profile-widget-item-value">2,1K</div>
+                                            </div>
+                                        </div>*@
                                 </div>
                                 <div class="profile-widget-description pb-0">
                                     <div class="profile-widget-name">https://facebook.com/hassa.basrni</div>
@@ -86,16 +88,6 @@
                             <div class="card profile-widget border">
                                 <div class="profile-widget-header">
                                     <img alt="image" src="assets/img/social/twitter.png" class="rounded-circle profile-widget-picture">
-                                    <div class="profile-widget-items">
-                                        <div class="profile-widget-item">
-                                            <div class="profile-widget-item-label">Followers</div>
-                                            <div class="profile-widget-item-value">6,8K</div>
-                                        </div>
-                                        <div class="profile-widget-item">
-                                            <div class="profile-widget-item-label">Following</div>
-                                            <div class="profile-widget-item-value">2,1K</div>
-                                        </div>
-                                    </div>
                                 </div>
                                 <div class="profile-widget-description pb-0">
                                     <div class="profile-widget-name"> @@Hassan.Basri</div>
@@ -106,16 +98,6 @@
                             <div class="card profile-widget border">
                                 <div class="profile-widget-header">
                                     <img alt="image" src="assets/img/social/instagram.png" class="rounded-circle profile-widget-picture">
-                                    <div class="profile-widget-items">
-                                        <div class="profile-widget-item">
-                                            <div class="profile-widget-item-label">Followers</div>
-                                            <div class="profile-widget-item-value">6,8K</div>
-                                        </div>
-                                        <div class="profile-widget-item">
-                                            <div class="profile-widget-item-label">Following</div>
-                                            <div class="profile-widget-item-value">2,1K</div>
-                                        </div>
-                                    </div>
                                 </div>
                                 <div class="profile-widget-description pb-0">
                                     <div class="profile-widget-name">@@Hassan.Basri</div>
@@ -125,20 +107,20 @@
                         <div class="col-lg-3 col-md-3 col-sm-12">
                             <div class="card profile-widget border">
                                 <div class="profile-widget-header">
-                                    <img alt="image" src="assets/img/social/linkedin.png" class="rounded-circle profile-widget-picture">
-                                    <div class="profile-widget-items">
-                                        <div class="profile-widget-item">
-                                            <div class="profile-widget-item-label">Followers</div>
-                                            <div class="profile-widget-item-value">6,8K</div>
-                                        </div>
-                                        <div class="profile-widget-item">
-                                            <div class="profile-widget-item-label">Following</div>
-                                            <div class="profile-widget-item-value">2,1K</div>
-                                        </div>
-                                    </div>
+                                    <img alt="image" src="assets/img/social/whatsapp.png" class="rounded-circle profile-widget-picture">
                                 </div>
                                 <div class="profile-widget-description pb-0">
-                                    <div class="profile-widget-name">https://www.linkedin.com/in/hassanbasri</div>
+                                    <div class="profile-widget-name">+33624796927</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-12">
+                            <div class="card profile-widget border">
+                                <div class="profile-widget-header">
+                                    <img alt="image" src="assets/img/social/linkedin.png" class="rounded-circle profile-widget-picture">
+                                </div>
+                                <div class="profile-widget-description pb-0">
+                                    <div class="profile-widget-name"><a href="https://www.linkedin.com/in/hassanbasri">https://www.linkedin.com/in/hassanbasri</a></div>
                                 </div>
                             </div>
                         </div>
@@ -156,12 +138,12 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">Profile QR Code</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="ToggleModal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <img alt="qrcode" src="/api/QrCodeGenerator?link=test" style="width:100%" />
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn" @onclick="@(()=>ModalQrCodeVisible = false)">@Loc["Cancel"]</button>
                 </div>
             </div>
         </div>

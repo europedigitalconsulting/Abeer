@@ -28,13 +28,13 @@
                             <div class="card-body p-2">
                                 <div class="panel panel-default">
                                     <div class="panel-body">
-                                        <div class="input-group">
-                                            <input type="text" id="example-input1-group2" name="example-input1-group2" class="form-control" placeholder="@Loc["Search"]" @bind-value="SearchTerm">
-                                            <span class="input-group-btn pl-2">
-                                                <button type="button" class="btn btn-effect-ripple btn-primary" @onclick="SearchButtonClick"><i class="fa fa-search"></i></button>
-                                                <button type="button" class="btn btn-effect-ripple btn-primary" @onclick="ShowInsertUser" title="@Loc["AddUser"]"><i class="fas fa-plus-square"></i></button>
-                                            </span>
-                                        </div>
+                                            <div class="input-group">
+                                                <input type="text" id="example-input1-group2" name="example-input1-group2" class="form-control" placeholder="@Loc["Search"]" @bind-value="SearchTerm">
+                                                <span class="input-group-btn pl-2">
+                                                    <button type="button" class="btn btn-effect-ripple btn-primary" @onclick="SearchButtonClick"><i class="fa fa-search"></i></button>
+                                                    <button type="button" class="btn btn-effect-ripple btn-primary" @onclick="ShowInsertUser" title="@Loc["AddUser"]"><i class="fas fa-plus-square"></i></button>
+                                                </span>
+                                            </div>
 
                                         <div class="row">
                                             @if (Items?.Any() == true)

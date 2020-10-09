@@ -12,15 +12,58 @@
     {
         <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
             <div class="modal-dialog">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">QR Code</h4>
                     </div>
                     <div class="modal-body">
-                        <img alt="qrcode" src="/api/QrCodeGenerator?link=@ProfileUrl" style="width:280px" />
+                        <img alt="qrcode" src="/api/QrCodeGenerator?link=@ProfileUrl" style="width: 280px"/>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn" @onclick="@(()=>ModalQrCodeVisible = false)">@Loc["Cancel"]</button>
+                        <button type="button" class="btn" @onclick="@(() => ModalQrCodeVisible = false)">@Loc["Cancel"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    @if (ModalSocialNetworkVisible)
+    {
+        <div class="modal fade show" id="modalSocialNetwork" style="display:block" aria-modal="true" role="dialog">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Social networks available</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="ToggleModalSocialNetwork">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="card m-5">
+                            <a class="btn btn-block btn-social btn-facebook">
+                                <i class="fab fa-facebook"></i> Sign in with Facebook
+                            </a>
+                            <a class="btn btn-block btn-social btn-instagram">
+                                <i class="fab fa-instagram"></i> Sign in with Instagram
+                            </a>
+                            <a class="btn btn-block btn-social btn-twitter">
+                                <i class="fab fa-twitter"></i> Sign in with Twitter
+                            </a>
+                            <a class="btn btn-block btn-social btn-success">
+                                <i class="fab fa-whatsapp"></i> Sign in with Whatsapp
+                            </a>
+                            <a class="btn btn-block btn-social btn-linkedin">
+                                <i class="fab fa-linkedin"></i> Sign in with LinkedIn
+                            </a>
+                            <a class="btn btn-block btn-social btn-microsoft">
+                                <i class="fab fa-microsoft"></i> Sign in with Microsoft
+                            </a>
+                            <a class="btn btn-block btn-social btn-reddit border">
+                                <i class="fab fa-apple"></i> Sign in with Apple
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -31,79 +74,58 @@
         <ValidationSummary />
         <div class="card">
             <div class="card-body">
-                @*@if (User.IsOnline)
-                {
-                    <span class="badge badge-success">@Loc["IsOnline"] @User.LastLogin</span>
-                }
-                else
-                {
-                    <span class="badge badge-danger">@Loc["IsNotOnline"]</span>
-                }*@
-
                 <div class="form-row">
-                    <div class="form-group col-6 col-sm-12">
-                        <label>@Loc["Email"]</label>
-                        <input type="text" @bind="@User.Email" Class="form-control" />
-                    </div>
-                    <div class="form-group col-6 col-sm-12">
+                    <div class="form-group col-lg-6  col-sm-12">
                         <label>@Loc["DisplayName"]</label>
                         <input type="text" @bind="@User.DisplayName" Class="form-control" />
                     </div>
                 </div>
-
                 <div class="form-row">
-                    <div class="form-group col-6 col-sm-12">
+                    <div class="form-group col-lg-6 col-sm-12">
+                        <label>@Loc["Email"]</label>
+                        <input type="text" @bind="@User.Email" Class="form-control"/>
+                    </div>
+                    <div class="form-group col-lg-6 col-sm-12">
+                        <label>@Loc["Phone"]</label>
+                        <input type="text" Class="form-control"/>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-lg-6  col-sm-12">
                         <label>@Loc["FirstName"]</label>
-                        <input type="text" @bind="@User.FirstName" Class="form-control" />
+                        <input type="text" @bind="@User.FirstName" Class="form-control"/>
                     </div>
-                    <div class="form-group col-6 col-sm-12">
+                    <div class="form-group col-lg-6 col-sm-12">
                         <label>@Loc["LastName"]</label>
-                        <input type="text" @bind="@User.LastName" Class="form-control" />
+                        <input type="text" @bind="@User.LastName" Class="form-control"/>
                     </div>
                 </div>
                 <div class="form-row">
-                    <div class="form-group col-6 col-sm-12">
+                    <div class="form-group col-lg-6 col-sm-12">
                         <label>@Loc["City"]</label>
-                        <input type="text" @bind="@User.City" Class="form-control" />
+                        <input type="text" @bind="@User.City" Class="form-control"/>
+                    </div>
+                    <div class="form-group col-lg-6 col-sm-12">
+                        <label>@Loc["Country"]</label>
+                        <input type="text" @bind="@User.Country" Class="form-control"/>
                     </div>
                 </div>
-            </div>
-            <div class="card-body">
-                <ul class="nav nav-tabs" id="myTab5" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link active" id="home-tab5" data-toggle="tab" href="#home5" role="tab" aria-controls="home" aria-selected="true">
-                            <i class="fas fa-home"></i> Social Networks
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="profile-tab5" data-toggle="tab" href="#profile5" role="tab" aria-controls="profile" aria-selected="false">
-                            <i class="fas fa-id-card"></i> Subscriptions 
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="contact-tab5" data-toggle="tab" href="#contact5" role="tab" aria-controls="contact" aria-selected="false">
-                            <i class="fas fa-mail-bulk"></i> Settings
-                        </a>
-                    </li>
-                </ul>
-                <div class="tab-content tab-bordered" id="myTabContent5">
-                    <div class="tab-pane fade active show" id="home5" role="tabpanel" aria-labelledby="home-tab5">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                        cillum dolore eu fugiat nulla pariatur.
-                    </div>
-                    <div class="tab-pane fade" id="profile5" role="tabpanel" aria-labelledby="profile-tab5">
-                        Sed sed metus vel lacus hendrerit tempus. Sed efficitur velit tortor, ac efficitur est lobortis quis. Nullam lacinia metus erat, sed fermentum justo rutrum ultrices. Proin quis iaculis tellus. Etiam ac vehicula eros, pharetra consectetur dui.
-                    </div>
-                    <div class="tab-pane fade" id="contact5" role="tabpanel" aria-labelledby="contact-tab5">
-                        Vestibulum imperdiet odio sed neque ultricies, ut dapibus mi maximus. Proin ligula massa, gravida in lacinia efficitur, hendrerit eget mauris. Pellentesque fermentum, sem interdum molestie finibus, nulla diam varius leo, nec varius lectus elit id dolor.
-                    </div>
+                <h5>Social networks connected</h5>
+                <div class="row ml-3">
+
+                    <a href="#" class="btn  btn-lg  btn-social-icon mr-1 btn-facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="btn  btn-lg btn-social-icon mr-1 btn-twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <button href="#" class="btn  btn-lg  btn-primary" @onclick="ToggleModalSocialNetwork">
+                        <i class="fa fa-plus"></i>
+                    </button>
                 </div>
             </div>
             <div class="card-footer text-right">
-                <button type="submit" class="btn btn-success" @onclick="Update"><i class="fa fa-save"></i>@Loc["Update"]</button>
+                <button type="submit" class="btn btn-success" @onclick="Update">@Loc["Save"]</button>
             </div>
         </div>
     </EditForm>

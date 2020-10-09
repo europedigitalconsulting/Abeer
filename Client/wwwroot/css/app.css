@@ -1228,7 +1228,7 @@ select.form-control:not([size]):not([multiple]) {
         .card .card-header h4 + .card-header-action,
         .card .card-header h4 + .card-header-form {
             flex-grow: 0;
-            width: 100%;
+            /*width: 100%;*/
             margin-top: 10px;
         }
 }
@@ -2093,7 +2093,6 @@ h6 .badge {
 .navbar {
     height: 70px;
     left: 250px;
-    right: 5px;
     position: absolute;
     z-index: 890;
     background-color: transparent;
@@ -2106,9 +2105,10 @@ h6 .badge {
 
 .navbar-bg {
     content: ' ';
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
+    right: 0;
     width: 100%;
     height: 115px;
     background-color: #6777ef;
@@ -2409,7 +2409,7 @@ h6 .badge {
             }
 
     .navbar {
-        left: 5px;
+        left: 0;
         right: 0;
     }
 
@@ -3335,7 +3335,7 @@ pre {
         }
 
         .section .section-header .section-header-breadcrumb {
-            flex-basis: 100%;
+         /*   flex-basis: 100%;*/
             margin-top: 10px;
         }
 }
@@ -3959,7 +3959,7 @@ body.layout-3 .main-footer {
     padding: 20px 30px 20px 280px;
     margin-top: 40px;
     color: #98a6ad;
-    border-top: 1px solid #e3eaef;
+    background-color: #2f71ff;
     display: inline-block;
     width: 100%;
 }

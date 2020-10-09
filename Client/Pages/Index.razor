@@ -1,5 +1,4 @@
 ﻿@page "/"
-@attribute [Microsoft.AspNetCore.Authorization.Authorize]
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Resources> Loc
 @inject Microsoft.Extensions.Localization.IStringLocalizer<TransactionTable> TransactionListLoc
 @code
@@ -10,4 +9,4 @@
     public decimal BalanceValue { get; set; } = 4564.5456M;
 }
 
-<Profile></Profile>
+<Services></Services>

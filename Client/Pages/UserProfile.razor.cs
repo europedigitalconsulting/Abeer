@@ -16,6 +16,8 @@ namespace Abeer.Client.Pages
 
         public ApplicationUser User { get; set; } = new ApplicationUser();
         public bool ModalQrCodeVisible { get; set; }
+
+        public bool ModalSocialNetworkVisible { get; set; }
         public string ProfileUrl => NavigationManager.ToAbsoluteUri($"/importContact/{User.Id}").ToString();
         protected override async Task OnInitializedAsync()
         {
@@ -35,22 +37,9 @@ namespace Abeer.Client.Pages
             User = JsonConvert.DeserializeObject<ApplicationUser>(json);
         }
 
-        async Task GeneratePinCode()
+        async Task ToggleModalSocialNetwork()
         {
-            var response = await HttpClient.GetAsync($"/api/Profile/PinCode/{User.Id}");
-            response.EnsureSuccessStatusCode();
-
-            var json = await response.Content.ReadAsStringAsync();
-            User = JsonConvert.DeserializeObject<ApplicationUser>(json);
-        }
-
-        async Task GenerateTokenKeys()
-        {
-            var response = await HttpClient.GetAsync($"/api/Profile/Tokens/{User.Id}");
-            response.EnsureSuccessStatusCode();
-
-            var json = await response.Content.ReadAsStringAsync();
-            User = JsonConvert.DeserializeObject<ApplicationUser>(json);
+            ModalSocialNetworkVisible = !ModalSocialNetworkVisible;
         }
     }
 }
