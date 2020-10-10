@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Abeer.Server.Data;
 using System;
+using System.Collections.Generic;
 using Abeer.Shared;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
@@ -242,60 +243,6 @@ namespace Abeer.Server
 
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-                var admin = await userManager.FindByEmailAsync("admin@abeer.io");
-
-                if (admin == null)
-                {
-                    //create admin
-                    await userManager.CreateAsync(new ApplicationUser
-                    {
-                        UserName = "admin@abeer.io",
-                        Country = "France",
-                        DisplayName = "adminisrator",
-                        Email = "admin@abeer.io",
-                        EmailConfirmed = true,
-                        FirstName = "Admin",
-                        LastName = "admin",
-                        IsAdmin = true
-                    }, "Xc9wf8or&");
-                }
-
-                var manager = await userManager.FindByEmailAsync("manager@abeer.io");
-
-                if (manager == null)
-                {
-                    //create manager
-                    await userManager.CreateAsync(new ApplicationUser
-                    {
-                        UserName = "manager@abeer.io",
-                        Country = "France",
-                        DisplayName = "manager",
-                        Email = "manager@abeer.io",
-                        EmailConfirmed = true,
-                        FirstName = "Manager",
-                        LastName = "Manager",
-                        IsManager = true
-                    }, "Xc9wf8or&");
-                }
-
-                var uoperator = await userManager.FindByEmailAsync("operator@abeer.io");
-
-                if (uoperator == null)
-                {
-                    //create operator
-                    await userManager.CreateAsync(new ApplicationUser
-                    {
-                        UserName = "operator@abeer.io",
-                        Country = "France",
-                        DisplayName = "operator",
-                        Email = "operator@abeer.io",
-                        EmailConfirmed = true,
-                        FirstName = "Operator",
-                        LastName = "Operator",
-                        IsOperator = true,
-                    }, "Xc9wf8or&");
-                }
-
                 var ucustomer = await userManager.FindByEmailAsync("customer@abeer.io");
 
                 if (ucustomer == null)
@@ -305,11 +252,22 @@ namespace Abeer.Server
                     {
                         UserName = "customer@abeer.io",
                         Country = "France",
-                        DisplayName = "customer",
+                        DisplayName = "Hasan Basri",
                         Email = "customer@abeer.io",
+                        Title = "World's Master",
+                        Description = "Lorem ipsum dolor sit amet,consectetur adipiscing elit,sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
                         EmailConfirmed = true,
-                        FirstName = "customer",
-                        LastName = "customer",
+                        FirstName = "Hasan",
+                        LastName = "Basri",
+                        City = "Paris",
+                        PhoneNumber = "+66 624796927",
+                        SocialNetworkConnected = new List<SocialNetwork>
+                        {
+                            new SocialNetwork { Name = "Facebook", Logo = "facebook", DisplayInfo = "hasan.basri",},
+                            new SocialNetwork { Name = "Instagram", Logo = "instagram",DisplayInfo = "@hasan.basri"},
+                            new SocialNetwork { Name = "Whatsapp", Logo = "success", DisplayInfo = "+66 624796927"},
+                        }
+
                     }, "Xc9wf8or&");
                 }
             }

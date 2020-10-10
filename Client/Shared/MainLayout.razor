@@ -1,29 +1,26 @@
 ﻿@namespace Abeer.Client.Shared
 @inherits LayoutComponentBase
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Resources> Loc
-@using BlazorAnimate
-<Animate>
-    <div id="app">
-        <div class="container-fluid">
-            <NavMenu LabelCardList="@Loc["CardList"]"
-                     LabelContacts="@Loc["ContactList"]"
-                     LabelTokenBatches="@Loc["TokenBatches"]"
-                     LabelDashboard="@Loc["Dashboard"]"
-                     LabelLogout="@Loc["Logout"]"
-                     LabelMyAccount="@Loc["MyAccount"]"
-                     LabelUserList="@Loc["UserList"]"></NavMenu>
+<div id="app">
+    <div class="container-fluid">
+        <NavMenu LabelCardList="@Loc["CardList"]"
+                 LabelContacts="@Loc["ContactList"]"
+                 LabelTokenBatches="@Loc["TokenBatches"]"
+                 LabelDashboard="@Loc["Dashboard"]"
+                 LabelLogout="@Loc["Logout"]"
+                 LabelMyAccount="@Loc["MyAccount"]"
+                 LabelUserList="@Loc["UserList"]"></NavMenu>
 
-            <div class="main-content" style="min-height: 839px;">
-                @Body
-            </div>
-            <footer class="main-footer fixed-bottom">
-                <div class="text-center">
-                    <a href="profile" class="btn  rounded mr-1"><i class="fa fa-2x fa-user"></i></a>
-                    <ScanBarCode></ScanBarCode>
-                    @*<a href="contacts" class="btn btn-primary rounded"><i class="fa fa-2x fa-user-friends" style="color: white"></i></a>*@
-                    <a href="services" class="btn  rounded mr-1"><i class="fa fa-2x  fa-concierge-bell"></i></a>
-                </div>
-            </footer>
+        <div class="main-content" style="min-height: 839px;">
+            @Body
         </div>
     </div>
-</Animate>
+
+</div>
+<footer class="main-footer fixed-bottom">
+    <div class="text-center">
+        <a href="profile" class="btn  rounded mr-1"><i class="fa fa-2x fa-user"></i></a>
+        <ScanBarCode></ScanBarCode>
+        <a href="services" class="btn  rounded mr-1"><i class="fa fa-2x  fa-concierge-bell"></i></a>
+    </div>
+</footer>

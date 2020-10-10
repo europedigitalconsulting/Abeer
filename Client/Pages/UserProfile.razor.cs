@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -15,6 +17,10 @@ namespace Abeer.Client.Pages
         [Inject]private HttpClient HttpClient { get; set; }
 
         public ApplicationUser User { get; set; } = new ApplicationUser();
+        
+        public List<SocialNetwork> AvailableSocialNetworks { get; set; } = new List<SocialNetwork>();
+
+        public List<SocialNetwork> AvailableSocialNetworksToAdd { get; set; } = new List<SocialNetwork>();
         public bool ModalQrCodeVisible { get; set; }
 
         public bool ModalSocialNetworkVisible { get; set; }
@@ -26,6 +32,19 @@ namespace Abeer.Client.Pages
             var json = await response.Content.ReadAsStringAsync();
             Console.WriteLine($"user :{json}");
             User = JsonConvert.DeserializeObject<ApplicationUser>(json);
+
+            var responseSocialNetwork = await HttpClient.GetAsync("api/socialnetwork");
+            response.EnsureSuccessStatusCode();
+            var jsonSocialNetwork = await responseSocialNetwork.Content.ReadAsStringAsync();
+            AvailableSocialNetworks = JsonConvert.DeserializeObject<List<SocialNetwork>>(jsonSocialNetwork);
+
+            AvailableSocialNetworks.ForEach(a =>
+            {
+                if(!User.SocialNetworkConnected.ToList().Exists(c => a.Name.Equals(c.Name,StringComparison.OrdinalIgnoreCase)))
+                {
+                    AvailableSocialNetworksToAdd.Add(a);
+                }
+            });
         }
 
         async Task Update()

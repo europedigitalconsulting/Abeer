@@ -1,5 +1,4 @@
-﻿@page "/ProfileEdit"
-@using Abeer.Client
+﻿@page "/Profile/Edit"
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
 @inject Microsoft.Extensions.Localization.IStringLocalizer<UserProfile> Loc
 
@@ -42,27 +41,12 @@
                     </div>
                     <div class="modal-body">
                         <div class="card m-5">
-                            <a class="btn btn-block btn-social btn-facebook">
-                                <i class="fab fa-facebook"></i> Sign in with Facebook
+                            @foreach (var networkToAdd in AvailableSocialNetworksToAdd)
+                            {
+                            <a class="btn btn-block btn-social btn-@networkToAdd.Name.ToLower()">
+                                <i class="fab fa-@networkToAdd.Name.ToLower()"></i> Sign in with @networkToAdd.Name
                             </a>
-                            <a class="btn btn-block btn-social btn-instagram">
-                                <i class="fab fa-instagram"></i> Sign in with Instagram
-                            </a>
-                            <a class="btn btn-block btn-social btn-twitter">
-                                <i class="fab fa-twitter"></i> Sign in with Twitter
-                            </a>
-                            <a class="btn btn-block btn-social btn-success">
-                                <i class="fab fa-whatsapp"></i> Sign in with Whatsapp
-                            </a>
-                            <a class="btn btn-block btn-social btn-linkedin">
-                                <i class="fab fa-linkedin"></i> Sign in with LinkedIn
-                            </a>
-                            <a class="btn btn-block btn-social btn-microsoft">
-                                <i class="fab fa-microsoft"></i> Sign in with Microsoft
-                            </a>
-                            <a class="btn btn-block btn-social btn-reddit border">
-                                <i class="fab fa-apple"></i> Sign in with Apple
-                            </a>
+                            }
                         </div>
                     </div>
                 </div>
@@ -110,19 +94,22 @@
                         <input type="text" @bind="@User.Country" Class="form-control"/>
                     </div>
                 </div>
-                <h5>Social networks connected</h5>
-                <div class="row ml-3">
-
-                    <a href="#" class="btn  btn-lg  btn-social-icon mr-1 btn-facebook">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                    <a href="#" class="btn  btn-lg btn-social-icon mr-1 btn-twitter">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <button href="#" class="btn  btn-lg  btn-primary" @onclick="ToggleModalSocialNetwork">
-                        <i class="fa fa-plus"></i>
-                    </button>
-                </div>
+                @if (@User.SocialNetworkConnected.Count > 0)
+                {
+                    <h5>Social networks connected</h5>
+                    <div class="row ml-3">
+                        @foreach (var socialNetwork in User.SocialNetworkConnected)
+                        {
+                            <a href="#" class="btn  btn-lg  btn-social-icon mr-1 btn-@socialNetwork.Name.ToLower()">
+                                <i class="fab fa-@socialNetwork.Name.ToLower()"></i>
+                            </a>
+                            
+                        }
+                        <button href="#" class="btn  btn-lg  btn-primary" @onclick="ToggleModalSocialNetwork">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                    </div>
+                }
             </div>
             <div class="card-footer text-right">
                 <button type="submit" class="btn btn-success" @onclick="Update">@Loc["Save"]</button>

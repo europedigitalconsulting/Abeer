@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
+using System.Collections.Generic;
 
 namespace Abeer.Shared
 {
@@ -8,9 +9,10 @@ namespace Abeer.Shared
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string DisplayName { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
         public bool IsOnline { get; set; }
         public DateTime LastLogin { get; set; }
-
         public bool IsAdmin { get; set; }
         public bool IsManager { get; set; }
         public bool IsOperator { get; set; }
@@ -20,6 +22,7 @@ namespace Abeer.Shared
         public int PinDigit { get; set; }
         public byte[] EncryptionIv { get; set; } //Iv = Initialization vector
         public byte[] EncryptionKey { get; set; }
-
+        public ICollection<SocialNetwork> SocialNetworkConnected { get; set; }
+        
     }
 }

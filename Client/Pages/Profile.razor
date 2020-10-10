@@ -1,5 +1,6 @@
 ﻿@page "/Profile"
-@inject Microsoft.Extensions.Localization.IStringLocalizer<Users> Loc
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@inject Microsoft.Extensions.Localization.IStringLocalizer<UserProfile> Loc
 
 @code
 {
@@ -20,110 +21,70 @@
                 <div class="author-box-left">
                     <img alt="image" src="../assets/img/avatar/avatar-1.png" class="rounded-circle author-box-picture">
                     <div class="clearfix"></div>
-                    <a href="/ProfileEdit" class="btn btn-primary mt-3 follow-btn">Edit profile</a>
+                    <a href="/Profile/Edit" class="btn btn-primary mt-3 follow-btn">Edit profile</a>
 
                 </div>
                 <div class="author-box-details">
-                    <img alt="qrcode" src="/api/QrCodeGenerator?link=test" style="width: 100px" @onclick="ToggleModal" />
+                    <img alt="qrcode" src="/api/QrCodeGenerator?link=@ProfileUrl" style="width: 100px" @onclick="ToggleModal" />
                     <div class="author-box-name">
-                        <a href="#" class="mr-3">Hasan Basri</a>
+                        <a href="#" class="mr-3">@User.DisplayName</a>
 
                     </div>
-                    <div class="author-box-job">Web Developer</div>
-
-                    <div class="author-box-description">
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                            consequat.
-                        </p>
+                    @if (!string.IsNullOrEmpty(@User.Title))
+                    {
+                        <div class="author-box-job">@User.Title</div>
+                    }
+                    @if (!string.IsNullOrEmpty(@User.Description))
+                    {
+                        <div class="author-box-description">
+                            <p>
+                                @User.Description
+                            </p>
+                        </div>
+                    }
+                    <div class="mb-2 mt-3">
+                        <div class="text-small font-weight-bold">Location</div>
                     </div>
                     <div class="mb-2 mt-3">
-                        <div class="text-small font-weight-bold">Hasan Social Network</div>
+                        <span>@User.City, @User.Country</span>
+                    </div>
+                    <div class="mb-2 mt-3">
+                        <div class="text-small font-weight-bold">Social Network</div>
                     </div>
 
                     <div class="row">
-                        <div class="col-lg-3 col-md-3 col-sm-12">
-                            <div class="card profile-widget border">
-                                <div class="profile-widget-header">
-                                    <img alt="image" src="assets/img/social/mail.png" class="rounded-circle profile-widget-picture">
-                                </div>
-                                <div class="profile-widget-description pb-0">
-                                    <div class="profile-widget-name">hassan.basrni@gmail.com</div>
-                                </div>
+                        @if (!string.IsNullOrEmpty(@User.Email))
+                        {
+                            <div class="col-lg-3 col-md-3 col-sm-12  m-1">
+                                @*<a href="mailto:@User.Email">*@ 
+                                <a href="">
+                                    <img alt="image" src="assets/img/social/mail.png" class="rounded-circle img-thumbnail">
+                                </a>
                             </div>
-                        </div>
-                        <div class="col-lg-3 col-md-3 col-sm-12">
-                            <div class="card profile-widget border">
-                                <div class="profile-widget-header">
-                                    <img alt="image" src="assets/img/social/phone.png" class="rounded-circle profile-widget-picture">
-                                </div>
-                                <div class="profile-widget-description pb-0">
-                                    <div class="profile-widget-name">+33 624796927</div>
-                                </div>
+                          
+                        }
+                        @if (!string.IsNullOrEmpty(@User.PhoneNumber))
+                        {
+                            <div class="col-lg-3 col-md-3 col-sm-12 m-1">
+                                <a href="tel:@User.PhoneNumber" style="max-width:"> 
+                                    <img alt="image" src="assets/img/social/phone.png" class="rounded-circle img-thumbnail">
+                                </a>
                             </div>
-                        </div>
-                        <div class="col-lg-3 col-md-3 col-sm-12">
-                            <div class="card profile-widget border">
-                                <div class="profile-widget-header">
-                                    <img alt="image" src="assets/img/social/facebook.png" class="rounded-circle profile-widget-picture">
-                                    @*<div class="profile-widget-items">
-                                            <div class="profile-widget-item">
-                                                <div class="profile-widget-item-label">Followers</div>
-                                                <div class="profile-widget-item-value">6,8K</div>
-                                            </div>
-                                            <div class="profile-widget-item">
-                                                <div class="profile-widget-item-label">Following</div>
-                                                <div class="profile-widget-item-value">2,1K</div>
-                                            </div>
-                                        </div>*@
+                        }
+                        @if (User.SocialNetworkConnected != null)
+                        {
+                            @foreach (var socialNetwork in User.SocialNetworkConnected)
+                            {
+                                <div class="col-lg-3 col-md-3 col-sm-12  m-1
+                                     f">
+                                    <a href="@socialNetwork.Url">
+                                        <div class="profile-widget-header">
+                                            <img alt="image" src="assets/img/social/@(socialNetwork.Logo.ToLower()).png" class="rounded-circle img-thumbnail">
+                                        </div>
+                                      </a>
                                 </div>
-                                <div class="profile-widget-description pb-0">
-                                    <div class="profile-widget-name">https://facebook.com/hassa.basrni</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-3 col-sm-12">
-                            <div class="card profile-widget border">
-                                <div class="profile-widget-header">
-                                    <img alt="image" src="assets/img/social/twitter.png" class="rounded-circle profile-widget-picture">
-                                </div>
-                                <div class="profile-widget-description pb-0">
-                                    <div class="profile-widget-name"> @@Hassan.Basri</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-3 col-sm-12">
-                            <div class="card profile-widget border">
-                                <div class="profile-widget-header">
-                                    <img alt="image" src="assets/img/social/instagram.png" class="rounded-circle profile-widget-picture">
-                                </div>
-                                <div class="profile-widget-description pb-0">
-                                    <div class="profile-widget-name">@@Hassan.Basri</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-3 col-sm-12">
-                            <div class="card profile-widget border">
-                                <div class="profile-widget-header">
-                                    <img alt="image" src="assets/img/social/whatsapp.png" class="rounded-circle profile-widget-picture">
-                                </div>
-                                <div class="profile-widget-description pb-0">
-                                    <div class="profile-widget-name">+33624796927</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-3 col-sm-12">
-                            <div class="card profile-widget border">
-                                <div class="profile-widget-header">
-                                    <img alt="image" src="assets/img/social/linkedin.png" class="rounded-circle profile-widget-picture">
-                                </div>
-                                <div class="profile-widget-description pb-0">
-                                    <div class="profile-widget-name"><a href="https://www.linkedin.com/in/hassanbasri">https://www.linkedin.com/in/hassanbasri</a></div>
-                                </div>
-                            </div>
-                        </div>
+                            }
+                        }
                     </div>
                 </div>
             </div>
@@ -143,7 +104,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <img alt="qrcode" src="/api/QrCodeGenerator?link=test" style="width:100%" />
+                    <img alt="qrcode" src="/api/QrCodeGenerator?link=@ProfileUrl" style="width:100%" />
                 </div>
             </div>
         </div>
