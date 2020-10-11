@@ -243,11 +243,13 @@ namespace Abeer.Server.Controllers
                 callbackUrl = await _urlShortner.CreateUrl(Request.Scheme, Request.Host, callbackUrl);
 
                 var message = htmlBody.Replace("[frontWebSite]", frontWebSite, StringComparison.OrdinalIgnoreCase);
+
                 message = message.Replace("[LogoUrl]", logoUrl, StringComparison.OrdinalIgnoreCase);
                 message = message.Replace("[CallBackUrl]", callbackUrl, StringComparison.OrdinalIgnoreCase);
                 message = message.Replace("[UnSubscribeUrl]", unSubscribeUrl, StringComparison.OrdinalIgnoreCase);
                 message = message.Replace("[PostalAddress]", _configuration["Company:PostalAddress"]);
                 message = message.Replace("[TempPassword]", temporaryPassword);
+                message = message.Replace("[Login]", user.UserName);
 
                 await _emailSender.SendEmailAsync(user.Email, "email_created_subject", message);
 

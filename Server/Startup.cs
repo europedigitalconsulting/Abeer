@@ -246,11 +246,11 @@ namespace Abeer.Server
 
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-                var michel = await userManager.FindByEmailAsync("michelbruchet91@gmail.com");
+                var admin = await userManager.FindByEmailAsync("admin@abeer.io");
 
-                if (michel == null)
+                if (admin == null)
                 {
-                    michel = new ApplicationUser
+                    admin = new ApplicationUser
                     {
                         UserName = "admin@abeer.io",
                         Country = "France",
@@ -266,13 +266,13 @@ namespace Abeer.Server
                         IsAdmin = true
                     };
 
-                    var addResult = await userManager.CreateAsync(michel, "Xc9wf8or&");
+                    var addResult = await userManager.CreateAsync(admin, "Xc9wf8or&");
 
                     if (addResult.Succeeded)
                     {
-                        await functionalDb.SocialNetworkRepository.AddSocialNetwork(new SocialNetwork { OwnerId = michel.Id, Name = "Facebook", Logo = "fab fa-facebook-square", DisplayInfo = "michel.bruchet", BackgroundColor = "bg-primary", Url = "https://www.facebook.com/michel.bruchet" });
-                        await functionalDb.SocialNetworkRepository.AddSocialNetwork(new SocialNetwork { OwnerId = michel.Id, Name = "Instagram", Logo = "fab fa-instagram-square", DisplayInfo = "@michel.bruchet", BackgroundColor = "bg-danger", Url = "https://www.instagram.com" });
-                        await functionalDb.SocialNetworkRepository.AddSocialNetwork(new SocialNetwork { OwnerId = michel.Id, Name = "Whatsapp", Logo = "fab fa-whatsapp-square", DisplayInfo = "+33 780811024", BackgroundColor = "bg-success", Url = "whatsapp:33780811024" });
+                        await functionalDb.SocialNetworkRepository.AddSocialNetwork(new SocialNetwork { OwnerId = admin.Id, Name = "Facebook", Logo = "fab fa-facebook-square", DisplayInfo = "michel.bruchet", BackgroundColor = "bg-primary", Url = "https://www.facebook.com/michel.bruchet" });
+                        await functionalDb.SocialNetworkRepository.AddSocialNetwork(new SocialNetwork { OwnerId = admin.Id, Name = "Instagram", Logo = "fab fa-instagram-square", DisplayInfo = "@michel.bruchet", BackgroundColor = "bg-danger", Url = "https://www.instagram.com" });
+                        await functionalDb.SocialNetworkRepository.AddSocialNetwork(new SocialNetwork { OwnerId = admin.Id, Name = "Whatsapp", Logo = "fab fa-whatsapp-square", DisplayInfo = "+33 780811024", BackgroundColor = "bg-success", Url = "whatsapp:33780811024" });
                     }
                 }
                 var hasan = await userManager.FindByEmailAsync("customer@abeer.io");

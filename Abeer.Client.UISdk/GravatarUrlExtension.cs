@@ -173,5 +173,18 @@ namespace Abeer.Client
                 return "about:blank";
             }
         }
+
+        public static string GravatarUrl(this ApplicationUser user)
+        {
+            if (!string.IsNullOrEmpty(user?.Email))
+            {
+                var gravatar = new Gravatar();
+                return gravatar.GetImageSource(user.Email);
+            }
+            else
+            {
+                return "about:blank";
+            }
+        }
     }
 }

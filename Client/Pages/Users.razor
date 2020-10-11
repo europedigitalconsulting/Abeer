@@ -1,7 +1,72 @@
 ﻿@page "/Users"
+@using Abeer.Client
 @namespace Abeer.Client.Pages
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Users> Loc
 <!-- Main Content -->
+@if (showModal)
+{
+    <div class="modal fade show" id="modalCreateUser" style="display:block" aria-modal="true" role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="ToggleModalCreateUser">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">@Loc[Mode]</h4>
+                </div>
+                <div class="modal-body">
+                    <EditForm Model="current">
+                        <ValidationSummary></ValidationSummary>
+                        <div class="form-group">
+                            @Loc["FirstName"]
+                            <input type="text" @bind="current.FirstName" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            @Loc["LastName"]
+                            <input type="text" @bind="current.LastName" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            @Loc["DisplayName"]
+                            <input type="text" @bind="current.DisplayName" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            @Loc["Title"]
+                            <input type="text" @bind="current.Title" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            @Loc["Description"]
+                            <input type="text" @bind="current.Description" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            @Loc["Address"]
+                            <input type="text" @bind="current.Address" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            @Loc["City"]
+                            <input type="text" @bind="current.City" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            @Loc["Country"]
+                            <input type="text" @bind="current.Country" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            @Loc["Email"]
+                            <input type="text" @bind="current.Email" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            @Loc["PhoneNumber"]
+                            <input type="text" @bind="current.PhoneNumber" class="form-control" />
+                        </div>
+                    </EditForm>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" @onclick="SaveForm">@Loc[Mode]</button>
+                    <button type="button" class="btn btn-warning" @onclick="ToggleModalCreateUser">@Loc["Cancel"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 <div class="main-content">
     <section class="section">
         <div class="section-header">
@@ -28,13 +93,13 @@
                             <div class="card-body p-2">
                                 <div class="panel panel-default">
                                     <div class="panel-body">
-                                            <div class="input-group">
-                                                <input type="text" id="example-input1-group2" name="example-input1-group2" class="form-control" placeholder="@Loc["Search"]" @bind-value="SearchTerm">
-                                                <span class="input-group-btn pl-2">
-                                                    <button type="button" class="btn btn-effect-ripple btn-primary" @onclick="SearchButtonClick"><i class="fa fa-search"></i></button>
-                                                    <button type="button" class="btn btn-effect-ripple btn-primary" @onclick="ShowInsertUser" title="@Loc["AddUser"]"><i class="fas fa-plus-square"></i></button>
-                                                </span>
-                                            </div>
+                                        <div class="input-group">
+                                            <input type="text" id="example-input1-group2" name="example-input1-group2" class="form-control" placeholder="@Loc["Search"]" @bind-value="SearchTerm">
+                                            <span class="input-group-btn pl-2">
+                                                <button type="button" class="btn btn-effect-ripple btn-primary" @onclick="SearchButtonClick"><i class="fa fa-search"></i></button>
+                                                <button type="button" class="btn btn-effect-ripple btn-primary" @onclick="ShowInsertUser" title="@Loc["AddUser"]"><i class="fas fa-plus-square"></i></button>
+                                            </span>
+                                        </div>
 
                                         <div class="row">
                                             @if (Items?.Any() == true)
@@ -48,18 +113,17 @@
                                                                     <a class="pull-left" href="#">
                                                                         <img class="thumb-lg img-circle bx-s" src="@User.GravatarUrl()" alt="@User.DisplayName">
                                                                     </a>
-                                                                    @*<div class="pull-right btn-group-sm">
-                                                                            <button type="button" class="btn btn-success tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Edit" @onclick="@(() => ShowEditUser(User))">
-                                                                                <i class="fas fa-edit"></i>
+                                                                    <div class="pull-right btn-group-sm">
+                                                                        <button type="button" class="btn btn-success tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Edit" @onclick="@(() => ShowEditUser(User))">
+                                                                            <i class="fas fa-edit"></i>
+                                                                        </button>
+                                                                        @if (!User.IsOnline)
+                                                                        {
+                                                                            <button type="button" class="btn btn-danger tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Delete" @onclick="@(() => ShowDeleteUser(User))">
+                                                                                <i class="fas fa-trash"></i>
                                                                             </button>
-                                                                            @if (!User.IsOnline)
-                                                                            {
-                                                                                <button type="button" class="btn btn-danger tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Delete" @onclick="@(() => ShowDeleteUser(User))">
-                                                                                    <i class="fas fa-trash"></i>
-                                                                                </button>
-                                                                            }
-                                                                        </div>*@
-                                                                    <div class="info">
+                                                                        }
+                                                                    </div>                                                                    <div class="info">
                                                                         <h4></h4>
                                                                         <p class="text-muted">@User.DisplayName</p>
                                                                     </div>

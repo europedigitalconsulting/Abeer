@@ -3,6 +3,7 @@ using Abeer.Shared;
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 using Newtonsoft.Json;
 
@@ -19,12 +20,14 @@ namespace Abeer.Client.Pages
     public partial class Users : ComponentBase
     {
         bool showModal = false;
+        ApplicationUser current = new ApplicationUser();
+        string Mode = "Create";
 
         public UserForm UserForm { get; set; }
         public string TitleDialog { get; set; }
-        public List<ViewApplicationUser> Data { get; set; } = new List<ViewApplicationUser>();
+        public List<ApplicationUser> Data { get; set; } = new List<ApplicationUser>();
         protected string SearchTerm { get; set; }
-        protected List<ViewApplicationUser> Items = new List<ViewApplicationUser>();
+        protected List<ApplicationUser> Items = new List<ApplicationUser>();
 
         public int NbOfUsers { get; set; }
         public int NbOfUsersOnline { get; set; }
@@ -53,7 +56,7 @@ namespace Abeer.Client.Pages
             response.EnsureSuccessStatusCode();
             var json = await response.Content.ReadAsStringAsync();
 
-            Data = JsonConvert.DeserializeObject<List<ViewApplicationUser>>(json);
+            Data = JsonConvert.DeserializeObject<List<ApplicationUser>>(json);
             Items = Data.ToList();
             
             NbOfUsers = Data.Count;
@@ -70,52 +73,54 @@ namespace Abeer.Client.Pages
             Console.WriteLine($"{found.Count} Users found");
             StateHasChanged();
         }
-        void ModalClose() => showModal = false;
-        void ModalShow() => showModal = true;
-        void ModalCancel() => showModal = false;
-        string Mode { get; set; } = "Insert";
 
-        ViewApplicationUser current = null;
-
-        void ShowInsertUser()
+        async Task ToggleModalCreateUser()
         {
-            current = new ViewApplicationUser();
-            Mode = "Insert";
-            ModalShow();
-            StateHasChanged();
+            showModal = !showModal;
         }
-        void ShowEditUser(ViewApplicationUser User)
+
+        async Task ShowInsertUser()
+        {
+            current = new ApplicationUser();
+            Mode = "Create";
+            await ToggleModalCreateUser().ConfigureAwait(false);
+            await InvokeAsync(StateHasChanged);
+        }
+
+        async Task ShowEditUser(ApplicationUser User)
         {
             current = User;
             Mode = "Update";
-            ModalShow();
-            StateHasChanged();
+            await ToggleModalCreateUser().ConfigureAwait(false);
+            await InvokeAsync(StateHasChanged);
         }
 
-        void ShowDeleteUser(ViewApplicationUser User)
+        async Task ShowDeleteUser(ApplicationUser User)
         {
             current = User;
             Mode = "Delete";
-            ModalShow();
+            await ToggleModalCreateUser().ConfigureAwait(false);
+            await InvokeAsync(StateHasChanged);
         }
+
         async Task Insert()
         {
-            var response = await HttpClient.PostAsJsonAsync<ViewApplicationUser>("api/Users", current);
+            var response = await HttpClient.PostAsJsonAsync<ApplicationUser>("api/Users", current);
             response.EnsureSuccessStatusCode();
             var json = await response.Content.ReadAsStringAsync();
             Console.WriteLine($"insert result : {json}");
-            var User = JsonConvert.DeserializeObject<ViewApplicationUser>(json);
+            var User = JsonConvert.DeserializeObject<ApplicationUser>(json);
             Data.Add(User);
-            ModalClose();
-            StateHasChanged();
+            await ToggleModalCreateUser().ConfigureAwait(false);
+            await InvokeAsync(StateHasChanged);
         }
 
         async Task Update()
         {
-            var response = await HttpClient.PutAsJsonAsync<ViewApplicationUser>($"api/Users/{current.Id}", current);
+            var response = await HttpClient.PutAsJsonAsync<ApplicationUser>($"api/Users/{current.Id}", current);
             response.EnsureSuccessStatusCode();
-            ModalClose();
-            StateHasChanged();
+            await ToggleModalCreateUser().ConfigureAwait(false);
+            await InvokeAsync(StateHasChanged);
         }
 
         async Task Delete()
@@ -124,20 +129,31 @@ namespace Abeer.Client.Pages
             response.EnsureSuccessStatusCode();
             Data.Remove(current);
             Items.Remove(current);
-            ModalClose();
-            StateHasChanged();
+            await ToggleModalCreateUser().ConfigureAwait(false);
+            await InvokeAsync(StateHasChanged);
         }
 
-        async Task AddSuggestedUser(ViewApplicationUser User)
+        async Task AddSuggestedUser(ApplicationUser User)
         {
-            var response = await HttpClient.PostAsJsonAsync<ViewApplicationUser>("api/Users", User);
+            var response = await HttpClient.PostAsJsonAsync<ApplicationUser>("api/Users", User);
             response.EnsureSuccessStatusCode();
             var json = await response.Content.ReadAsStringAsync();
             Console.WriteLine($"insert result : {json}");
-            current = JsonConvert.DeserializeObject<ViewApplicationUser>(json);
+            current = JsonConvert.DeserializeObject<ApplicationUser>(json);
             Data.Add(current);
-            ModalClose();
-            StateHasChanged();
+            await ToggleModalCreateUser().ConfigureAwait(false);
+            await InvokeAsync(StateHasChanged);
+        }
+
+        Task SaveForm()
+        {
+            return Mode switch
+            {
+                "Insert" => Insert(),
+                "Update" => Update(),
+                "Delete" => Delete(),
+                _ => throw new NotImplementedException(),
+            };
         }
     }
 }
