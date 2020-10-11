@@ -15,7 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Abeer.Client.DashboardControls\Abeer.Client.DashboardControls.csproj" />
     <ProjectReference Include="..\Abeer.Client.UISdk\Abeer.Client.UISdk.csproj" />
     <ProjectReference Include="..\Shared\Abeer.Shared.csproj" />
   </ItemGroup>

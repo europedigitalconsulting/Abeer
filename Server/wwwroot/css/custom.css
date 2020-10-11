@@ -1,0 +1,19 @@
+/**
+ *
+ * You can write your CSS code here, DO NOT touch the default JavaScript file
+ * because it will make it harder for you to update.
+ * 
+ */
+
+/*# sourceMappingURL=custom.css.map */
+.author-box .author-box-right {
+ float: right;
+ text-align: center;
+ padding-left: 5px;
+}
+
+.author-box .author-box-right .btn {
+        padding: 5px 15px;
+        font-size: 12px;
+        border-radius: 30px;
+    }

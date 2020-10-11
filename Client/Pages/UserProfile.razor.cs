@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -15,7 +17,13 @@ namespace Abeer.Client.Pages
         [Inject]private HttpClient HttpClient { get; set; }
 
         public ApplicationUser User { get; set; } = new ApplicationUser();
+        
+        public List<SocialNetwork> AvailableSocialNetworks { get; set; } = new List<SocialNetwork>();
+
+        public List<SocialNetwork> AvailableSocialNetworksToAdd { get; set; } = new List<SocialNetwork>();
         public bool ModalQrCodeVisible { get; set; }
+
+        public bool ModalSocialNetworkVisible { get; set; }
         public string ProfileUrl => NavigationManager.ToAbsoluteUri($"/importContact/{User.Id}").ToString();
         protected override async Task OnInitializedAsync()
         {
@@ -24,6 +32,19 @@ namespace Abeer.Client.Pages
             var json = await response.Content.ReadAsStringAsync();
             Console.WriteLine($"user :{json}");
             User = JsonConvert.DeserializeObject<ApplicationUser>(json);
+
+            var responseSocialNetwork = await HttpClient.GetAsync("api/socialnetwork");
+            response.EnsureSuccessStatusCode();
+            var jsonSocialNetwork = await responseSocialNetwork.Content.ReadAsStringAsync();
+            AvailableSocialNetworks = JsonConvert.DeserializeObject<List<SocialNetwork>>(jsonSocialNetwork);
+
+            AvailableSocialNetworks.ForEach(a =>
+            {
+                if(!User.SocialNetworkConnected.ToList().Exists(c => a.Name.Equals(c.Name,StringComparison.OrdinalIgnoreCase)))
+                {
+                    AvailableSocialNetworksToAdd.Add(a);
+                }
+            });
         }
 
         async Task Update()
@@ -35,22 +56,9 @@ namespace Abeer.Client.Pages
             User = JsonConvert.DeserializeObject<ApplicationUser>(json);
         }
 
-        async Task GeneratePinCode()
+        async Task ToggleModalSocialNetwork()
         {
-            var response = await HttpClient.GetAsync($"/api/Profile/PinCode/{User.Id}");
-            response.EnsureSuccessStatusCode();
-
-            var json = await response.Content.ReadAsStringAsync();
-            User = JsonConvert.DeserializeObject<ApplicationUser>(json);
-        }
-
-        async Task GenerateTokenKeys()
-        {
-            var response = await HttpClient.GetAsync($"/api/Profile/Tokens/{User.Id}");
-            response.EnsureSuccessStatusCode();
-
-            var json = await response.Content.ReadAsStringAsync();
-            User = JsonConvert.DeserializeObject<ApplicationUser>(json);
+            ModalSocialNetworkVisible = !ModalSocialNetworkVisible;
         }
     }
 }

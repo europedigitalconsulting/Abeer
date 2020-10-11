@@ -672,7 +672,7 @@ tr:first-child > td > .fc-day-grid-event {
       margin-bottom: 10px;
       font-weight: 600; }
 
-@media (max-width: 575.98px) {
+@media (max-width:275.98px) {
   .profile-widget .profile-widget-picture {
     left: 50%;
     transform: translate(-50%, 0);

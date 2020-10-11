@@ -32,17 +32,19 @@ namespace Abeer.Server
             context.IssuedClaims.AddRange(roleClaims);
 
             var user = await _userManager.FindByNameAsync(context.Subject.Identity.Name);
-
-            if (!user.IsOnline)
+            if (user != null)
             {
-                user.IsOnline = true;
-                user.LastLogin = DateTime.UtcNow;
-                await _userManager.UpdateAsync(user);
-            }
-            foreach (var claim in context.Subject.Claims)
-            {
-                if (!context.IssuedClaims.Any(c => c.Type == claim.Type))
-                    context.IssuedClaims.Add(claim);
+                if (!user.IsOnline)
+                {
+                    user.IsOnline = true;
+                    user.LastLogin = DateTime.UtcNow;
+                    await _userManager.UpdateAsync(user);
+                }
+                foreach (var claim in context.Subject.Claims)
+                {
+                    if (!context.IssuedClaims.Any(c => c.Type == claim.Type))
+                        context.IssuedClaims.Add(claim);
+                }
             }
         }
 

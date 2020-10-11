@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using System.Globalization;
+using BlazorAnimate;
 using Microsoft.JSInterop;
+using Abeer.Client.UISdk;
 
 namespace Abeer.Client
 {
@@ -17,6 +19,8 @@ namespace Abeer.Client
 
             builder.RootComponents.Add<App>("app");
 
+            builder.Services.AddHttpClient("Abeer.Anonymous", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
+
             builder.Services.AddHttpClient("Abeer.ServerAPI", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
                 .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
 
@@ -25,6 +29,13 @@ namespace Abeer.Client
             
             builder.Services.AddLocalization();
             builder.Services.AddApiAuthorization();
+            builder.Services.Configure<AnimateOptions>(options =>
+            {
+                options.Animation = Animations.FadeDown;
+                options.Duration = TimeSpan.FromMilliseconds(1000);
+            });
+
+            builder.Services.AddSingleton<NavigationUrlService>();
 
             var host = builder.Build();
             var jsInterop = host.Services.GetRequiredService<IJSRuntime>();

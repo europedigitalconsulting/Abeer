@@ -2,7 +2,7 @@
 
 @using System.Security.Claims
 
-@code 
+@code
 {
     protected ClaimsPrincipal _user;
 
@@ -11,12 +11,6 @@
 
     [Parameter]
     public string LabelUserList { get; set; }
-
-    [Parameter]
-    public string LabelTokenBatches { get; set; }
-
-    [Parameter]
-    public string LabelCardList { get; set; }
 
     [Parameter]
     public string LabelContacts { get; set; }
@@ -47,37 +41,37 @@
         Console.WriteLine("nav menu on initialized called");
     }
 }
-
 <nav class="nav navbar navbar-bg navbar-expand-lg">
     <div class="nav navbar-header">
         <a class="navbar-brand" href="/">Abeer</a>
     </div>
     <ul class="nav navbar-nav mr-auto">
+
+        <form class="form-inline mr-auto">
+            <ul class="navbar-nav mr-3">
+                <li><a href="#" data-toggle="search" class="nav-link nav-link-lg d-sm-none"><i class="fas fa-search"></i></a></li>
+            </ul>
+        </form>
     </ul>
     <ul class="nav navbar-nav  navbar-right">
-        @if (_user?.Identity.IsAuthenticated == true && _user?.HasClaim(ClaimTypes.Role, "admin") == true)
-        {
-            <li class="nav-item"><a class="nav-link" href="/Users" title="@LabelUserList"><i class="fas fa-users-cog"></i><span class="sr-only">@LabelUserList</span></a></li>
-        }
-        @if (_user?.Identity.IsAuthenticated == true && _user?.HasClaim(ClaimTypes.Role, "operator") == true || _user?.HasClaim(ClaimTypes.Role, "admin") == true)
-        {
-            <li class="nav-item"><a class="nav-link" href="/TokenBatches" title="@LabelTokenBatches"><i class="fas fa-coins"></i><span class="sr-only">@LabelTokenBatches</span></a></li>
-        }
-        @if (_user?.Identity.IsAuthenticated == true && _user?.HasClaim(ClaimTypes.Role, "manager") == true || _user?.HasClaim(ClaimTypes.Role, "admin") == true)
-        {
-            <li class="nav-item"><a class="nav-link" href="/Cards" title="@LabelCardList"><i class="fas fa-credit-card"></i><span class="sr-only">@LabelCardList</span></a></li>
-        }
-        <li class="nav-item">
-            <a class="nav-link" href="Contacts/List" title="@LabelContacts"><i style="color: #fff;" class="fa fa-user-friends"><span class="sr-only">@LabelContacts</span></i></a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/" title="@LabelDashboard"><i style="color: #fff;" class="fa fa-tachometer-alt"><span class="sr-only">>@LabelDashboard</span></i></a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/myaccount" title="@LabelMyAccount"><i style="color: #fff;" class="fa fa-user-circle"><span class="sr-only">>@LabelMyAccount</span></i></a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="identity/account/logout?returnUrl=/" title="@LabelLogout"><i style="color: #fff;" class="fa fa-sign-out-alt"><span class="sr-only">@LabelLogout</span></i></a>
+        <li class="dropdown">
+            <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
+                <img alt="image" src="../assets/img/avatar/avatar-1.png" class="rounded-circle mr-1">
+                <div class="d-sm-none d-lg-inline-block">Hi, Hassan</div>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+                <div class="dropdown-title">Logged in 5 min ago</div>
+                <a href="profile" class="dropdown-item has-icon">
+                    <i class="far fa-user"></i> Profile
+                </a>
+                <a href="services" class="dropdown-item has-icon">
+                    <i class="fas fa-concierge-bell"></i> Services
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="identity/account/logout?returnUrl=/" class="dropdown-item has-icon text-danger">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
         </li>
     </ul>
 </nav>

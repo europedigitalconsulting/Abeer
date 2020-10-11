@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="BlazorAnimate" Version="3.0.0" />
     <PackageReference Include="ChartJs.Blazor.Fork" Version="0.10.4" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="3.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Build" Version="3.2.1" PrivateAssets="all" />
@@ -24,8 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Abeer.Client.Business.ContactUI\Abeer.Client.Business.ContactUI.csproj" />
-    <ProjectReference Include="..\Abeer.Client.DashboardControls\Abeer.Client.DashboardControls.csproj" />
     <ProjectReference Include="..\Abeer.Client.UISdk\Abeer.Client.UISdk.csproj" />
     <ProjectReference Include="..\Shared\Abeer.Shared.csproj" />
   </ItemGroup>
@@ -35,6 +34,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\assets\img\services\" />
+    <Folder Include="wwwroot\assets\img\social\" />
     <Folder Include="wwwroot\css\fontawesome\" />
   </ItemGroup>
 

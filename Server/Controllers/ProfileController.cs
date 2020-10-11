@@ -1,25 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Abeer.Shared;
 using Microsoft.AspNetCore.Authorization;
-using System.Net.Mime;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using System.Collections.Concurrent;
-using Microsoft.AspNetCore.WebUtilities;
-using System.Text;
-using System.IO;
 using Microsoft.AspNetCore.Hosting;
-using System.Globalization;
-using Microsoft.AspNetCore.Http.Extensions;
 using Abeer.Services;
-using System;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Configuration;
-using System.Security.Claims;
+using Abeer.Shared.ViewModels;
 
 namespace Abeer.Server.Controllers
 {
@@ -64,6 +52,8 @@ namespace Abeer.Server.Controllers
             user.LastName = applicationUser.LastName;
             user.DisplayName = applicationUser.DisplayName;
             user.City = applicationUser.City;
+            user.Country = applicationUser.Country;
+
 
             var result = await _userManager.UpdateAsync(user);
             
