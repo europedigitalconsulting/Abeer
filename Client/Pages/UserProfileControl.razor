@@ -95,7 +95,11 @@
                                     <div class="card-header">@socialNetwork.Name</div>
                                     <div class="card-body">
                                         <a href="@socialNetwork.Url" target="_blank">
-                                            @if (socialNetwork.Logo.StartsWith("fa"))
+                                            @if (string.IsNullOrWhiteSpace(socialNetwork.Logo))
+                                            {
+                                                <i class="fas fa-share-alt rounded-circle img-thumbnail" style="font-size:105px; width:155px;text-align:center"></i>
+                                            }
+                                            else if (socialNetwork.Logo.StartsWith("fa"))
                                             {
                                                 <i class="@socialNetwork.Logo rounded-circle img-thumbnail" style="font-size:105px; width:155px;text-align:center"></i>
                                             }
@@ -118,7 +122,11 @@
                                     <div class="card-header">@customLink.Name</div>
                                     <div class="card-body">
                                         <a href="@customLink.Url" target="_blank">
-                                            @if (customLink.Logo.StartsWith("fa"))
+                                            @if(string.IsNullOrEmpty(customLink.Logo))
+                                            {
+                                                <i class="fas fa-paperclip rounded-circle img-thumbnail" style="font-size:105px; width:155px;text-align:center"></i>
+                                            }
+                                            else if (customLink.Logo.StartsWith("fa"))
                                             {
                                                 <i class="@customLink.Logo rounded-circle img-thumbnail" style="font-size:105px; width:155px;text-align:center"></i>
                                             }
