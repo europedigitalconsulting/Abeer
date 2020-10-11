@@ -1,5 +1,10 @@
 ﻿@page "/Profile"
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
-@inject Microsoft.Extensions.Localization.IStringLocalizer<UserProfile> Loc
+@inject Microsoft.Extensions.Localization.IStringLocalizer<EditProfile> Loc
+@inject Abeer.Client.UISdk.NavigationUrlService NavigationUrlService
 
-<UserProfileControl></UserProfileControl>
+<UserProfileControl DisplayName="@UserProfile.DisplayName" PhotoUrl="@UserProfile.GravatarUrl()" Title="@UserProfile.Title" City="@UserProfile.City"
+                    Country="@UserProfile.Country" Description="@UserProfile.Description"
+                    Email="@UserProfile.Email" PhoneNumber="@UserProfile.PhoneNumber"
+                    ProfileUrl="@NavigationManager.ToAbsoluteUri($"/ViewProfile/{UserProfile.Id}").ToString()"
+                    SocialNetworkConnected="UserProfile.SocialNetworkConnected" CustomLinks="UserProfile.CustomLinks"></UserProfileControl>

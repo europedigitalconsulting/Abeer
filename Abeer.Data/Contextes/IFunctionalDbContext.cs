@@ -9,6 +9,7 @@ namespace Abeer.Data
     public interface IFunctionalDbContext
     {
         DbSet<UrlShortned> UrlShortneds { get; set; }
+        DbSet<CustomLink> CustomLinks { get; set; }
         DbSet<SocialNetwork> SocialNetworks { get; set; }
         DbSet<Contact> Contacts { get; set; }
         DbSet<TokenBatch> TokenBatches { get; set; }
@@ -22,7 +23,6 @@ namespace Abeer.Data
         DbSet<Shared.Purchase> Purchase { get; set; }
         DbSet<Shared.Payment> Payment { get; set; }
         DbSet<Country> Countries { get; set; }
-
         Task BulkInsertAsync<T>(IEnumerable<T> countries) where T:class;
         Task BulkUpdateAsync<T>(IList<T> entities) where T : class;
 

@@ -12,16 +12,16 @@ namespace Abeer.Client.Pages
         [Inject] private NavigationManager NavigationManager { get; set; }
         [Inject] private HttpClient httpClient { get; set; }
 
-        public string ProfileUrl => NavigationManager.ToAbsoluteUri($"/profile/{User.Id}").ToString();
-        public ApplicationUser User { get; set; } = new ApplicationUser();
+        public ViewApplicationUser UserProfile { get; set; } = new ViewApplicationUser();
 
         protected override async Task OnInitializedAsync()
         {
             var response = await httpClient.GetAsync("api/Profile");
             response.EnsureSuccessStatusCode();
             var json = await response.Content.ReadAsStringAsync();
-            Console.WriteLine($"user :{json}");
-            User = JsonConvert.DeserializeObject<ApplicationUser>(json);
+            UserProfile = JsonConvert.DeserializeObject<ViewApplicationUser>(json);
+            NavigationUrlService.SetUrls($"https://www.google.com/maps/search/?api=1&query={UserProfile.Address},{UserProfile.City}%20{UserProfile.Country}&query_place_id={UserProfile.DisplayName}",
+                null);
         }
     }
 }

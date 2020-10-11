@@ -150,14 +150,28 @@ namespace Abeer.Client
 
         public static string GravatarUrl(this ViewContact contact)
         {
-            var gravatar = new Gravatar();
-            return gravatar.GetImageSource(contact.Email);
+            if (!string.IsNullOrEmpty(contact?.Email))
+            {
+                var gravatar = new Gravatar();
+                return gravatar.GetImageSource(contact.Email);
+            }
+            else
+            {
+                return "about:blank";
+            }
         }
 
         public static string GravatarUrl(this ViewApplicationUser user)
         {
-            var gravatar = new Gravatar();
-            return gravatar.GetImageSource(user.Email);
+            if (!string.IsNullOrEmpty(user?.Email))
+            {
+                var gravatar = new Gravatar();
+                return gravatar.GetImageSource(user.Email);
+            }
+            else
+            {
+                return "about:blank";
+            }
         }
     }
 }

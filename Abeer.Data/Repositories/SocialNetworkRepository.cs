@@ -2,8 +2,10 @@
 
 using Microsoft.EntityFrameworkCore;
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Abeer.Data.Repositories
@@ -24,6 +26,17 @@ namespace Abeer.Data.Repositories
             await FunctionalDbContext.SocialNetworks.AddAsync(socialNetwork);
             await FunctionalDbContext.SaveChangesAsync();
             return socialNetwork;
+        }
+
+        public async Task<SocialNetwork> FirstOrDefaultAsync(Expression<Func<SocialNetwork, bool>> expression)
+        {
+            return await FunctionalDbContext.SocialNetworks.FirstOrDefaultAsync(expression);
+        }
+
+        public async Task Remove(SocialNetwork network)
+        {
+            FunctionalDbContext.SocialNetworks.Remove(network);
+            await FunctionalDbContext.SaveChangesAsync();
         }
     }
 }

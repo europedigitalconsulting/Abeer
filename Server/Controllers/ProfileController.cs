@@ -8,6 +8,8 @@ using Abeer.Services;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Configuration;
 using Abeer.Shared.ViewModels;
+using Abeer.Data.UnitOfworks;
+using System.Collections.Generic;
 
 namespace Abeer.Server.Controllers
 {
@@ -22,11 +24,12 @@ namespace Abeer.Server.Controllers
         private readonly UrlShortner _urlShortner;
         private readonly IEmailSender _emailSender;
         private readonly IConfiguration _configuration;
+        private readonly FunctionalUnitOfWork _functionalUnitOfWork;
 
         public ProfileController(UserManager<ApplicationUser> userManager,
             IAuthorizationService authorizationService,
             IWebHostEnvironment env, UrlShortner urlShortner, IEmailSender emailSender,
-            IConfiguration configuration)
+            IConfiguration configuration, FunctionalUnitOfWork functionalUnitOfWork)
         {
             _userManager = userManager;
             _authorizationService = authorizationService;
@@ -34,13 +37,40 @@ namespace Abeer.Server.Controllers
             _urlShortner = urlShortner;
             _emailSender = emailSender;
             _configuration = configuration;
+            _functionalUnitOfWork = functionalUnitOfWork;
         }
 
         [HttpGet]
         public async Task<ActionResult<ApplicationUser>> GetUserProfile()
         {
-            var user = await _userManager.FindByIdAsync(User.NameIdentifier());
-            return Ok(user);
+            var user = await _userManager
+                .FindByIdAsync(User.NameIdentifier());
+
+            return Ok(new ViewApplicationUser
+            {
+                City = user.City,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                Id = user.Id,
+                SocialNetworkConnected = await _functionalUnitOfWork
+                    .SocialNetworkRepository
+                        .GetSocialNetworkLinks(user.Id) ?? new List<SocialNetwork>(),
+                CustomLinks = await _functionalUnitOfWork
+                    .CustomLinkRepository
+                        .GetCustomLinkLinks(user.Id) ?? new List<CustomLink>(),
+                Address = user.Address,
+                Country = user.Country,
+                Description = user.Description,
+                DisplayName = user.DisplayName,
+                FirstName = user.FirstName,
+                IsAdmin = user.IsAdmin,
+                IsManager = user.IsManager,
+                IsOnline = user.IsOnline,
+                IsOperator = user.IsOperator,
+                LastLogin = user.LastLogin,
+                LastName = user.LastName,
+                Title = user.Title
+            });
         }
 
         [HttpPut]

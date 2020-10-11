@@ -13,6 +13,7 @@ namespace Abeer.Shared
 
         [Key]
         public string Id { get; set; }
+        public string OwnerId { get; set; }
         public string BackgroundColor { get; set; }
         public string Name { get; set; }
         public string DisplayInfo { get; set; }

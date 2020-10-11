@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Abeer.Shared;
 using Microsoft.AspNetCore.Authorization;
+using Abeer.Data.UnitOfworks;
 
 namespace Abeer.Server.Controllers
 {
@@ -11,21 +12,51 @@ namespace Abeer.Server.Controllers
     [ApiController]
     public class SocialNetworkController : ControllerBase
     {
+        private readonly FunctionalUnitOfWork _functionalUnitOfWork;
+        public SocialNetworkController(FunctionalUnitOfWork functionalUnitOfWork)
+        {
+            _functionalUnitOfWork = functionalUnitOfWork;
+        }
+
         [HttpGet]
         public async Task<ActionResult<List<SocialNetwork>>> GetSocialNetworks()
         {
             var socialNetworks = new List<SocialNetwork>
             {
-                new SocialNetwork {Name = "Facebook", Logo = "facebook"},
-                new SocialNetwork {Name = "Twitter", Logo = "twitter"},
-                new SocialNetwork {Name = "Instagram", Logo = "instagram"},
-                new SocialNetwork {Name = "Whatsapp", Logo = "success"},
-                new SocialNetwork {Name = "Linkedin", Logo = "linkedin"},
-                new SocialNetwork {Name = "Microsoft", Logo = "microsoft"},
-                new SocialNetwork {Name = "Apple", Logo = "twitter"}
-
+                new SocialNetwork{BackgroundColor = "bg-primary", Logo = "fab fa-facebook-square", Name="Facebook"},
+                new SocialNetwork{BackgroundColor = "bg-danger", Logo = "fab fa-youtube-square", Name="Youtube"},
+                new SocialNetwork{BackgroundColor = "bg-danger", Logo = "fab fa-instagram-square", Name="Instagram"},
+                new SocialNetwork{BackgroundColor = "bg-primary", Logo = "fab fa-twitter-square", Name="Twitter"},
+                new SocialNetwork{BackgroundColor = "bg-secondary", Logo = "fab fa-pintereset-square", Name="Pintereset"},
+                new SocialNetwork{BackgroundColor = "bg-primary", Logo = "fab fa-linkedin", Name="Linkedin"}
             };
             return Ok(socialNetworks);
+        }
+
+        [HttpDelete("{UserId}/{networkName}")]
+        public async Task<IActionResult> Delete(string UserId, string networkName)
+        {
+            var network = await _functionalUnitOfWork.SocialNetworkRepository.FirstOrDefaultAsync(s => s.OwnerId == UserId &&
+                s.Name == networkName);
+
+            if (network == null)
+                return NotFound();
+
+            await _functionalUnitOfWork.SocialNetworkRepository.Remove(network);
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PostAsync(SocialNetwork network)
+        {
+            if (network == null)
+                return BadRequest();
+
+            if (network.OwnerId != User.NameIdentifier())
+                return BadRequest();
+
+            await _functionalUnitOfWork.SocialNetworkRepository.AddSocialNetwork(network);
+            return Ok();
         }
     }
 }

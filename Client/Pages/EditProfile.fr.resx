@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AddASocialNetwork" xml:space="preserve">
+    <value>Connecter un autre réseau social</value>
+  </data>
+  <data name="AvailableSocialNetwork" xml:space="preserve">
+    <value>Réseau disponible</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
@@ -125,6 +131,9 @@
   </data>
   <data name="City" xml:space="preserve">
     <value>City</value>
+  </data>
+  <data name="CustomLinks" xml:space="preserve">
+    <value>Liens personnalisés</value>
   </data>
   <data name="DisplayName" xml:space="preserve">
     <value>Display name</value>
@@ -170,6 +179,15 @@
   </data>
   <data name="PinDigit" xml:space="preserve">
     <value>Pin Digit</value>
+  </data>
+  <data name="SocialNetworkConnected" xml:space="preserve">
+    <value>Réseaux sociaux</value>
+  </data>
+  <data name="SocialType" xml:space="preserve">
+    <value>Type de réseau</value>
+  </data>
+  <data name="SocialUrl" xml:space="preserve">
+    <value>URL du profil</value>
   </data>
   <data name="Update" xml:space="preserve">
     <value>Update</value>

@@ -21,6 +21,7 @@ namespace Abeer.Data.UnitOfworks
         private TokenItemRepository _TokenItemRepository;
         private CountriesRepository _CountriesRepository;
         private SocialNetworkRepository _SocialNetworkRepository;
+        private CustomLinkRepository _CustomLinkRepository;
 
         private IFunctionalDbContext ApplicationDbContext { get; }
         private IServiceProvider ServiceProvider { get; }
@@ -62,6 +63,17 @@ namespace Abeer.Data.UnitOfworks
                     _SocialNetworkRepository = ActivatorUtilities.CreateInstance<SocialNetworkRepository>(ServiceProvider);
 
                 return _SocialNetworkRepository;
+            }
+        }
+
+        public CustomLinkRepository CustomLinkRepository
+        {
+            get
+            {
+                if (_CustomLinkRepository == null)
+                    _CustomLinkRepository = ActivatorUtilities.CreateInstance<CustomLinkRepository>(ServiceProvider);
+
+                return _CustomLinkRepository;
             }
         }
 

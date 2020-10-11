@@ -34,7 +34,7 @@ namespace Abeer.Server.Controllers
                 City = user.City,
                 Email = user.Email, PhoneNumber = user.PhoneNumber, Id = user.Id,
                 SocialNetworkConnected = await _functionalUnitOfWork.SocialNetworkRepository.GetSocialNetworkLinks(user.Id) ?? new List<SocialNetwork>(),
-                CustomLinks = new List<CustomLink>(),
+                CustomLinks = await _functionalUnitOfWork.CustomLinkRepository.GetCustomLinkLinks(user.Id) ?? new List<CustomLink>(),
                 Address = user.Address,
                 Country = user.Country,
                 Description = user.Description,
