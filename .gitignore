@@ -351,3 +351,4 @@ MigrationBackup/
 /Server/App_Data
 /Server/CryptoCoin-security.db
 /Server/CryptoCoin-features.db
+/Server/*.db

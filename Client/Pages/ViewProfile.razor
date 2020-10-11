@@ -1,0 +1,53 @@
+﻿@page "/ViewProfile/{ProfileId}"
+@inject Microsoft.Extensions.Localization.IStringLocalizer<UserProfile> Loc
+@inject IHttpClientFactory HttpClientFactory
+@inject NavigationManager Navigation
+@inject Abeer.Client.UISdk.NavigationUrlService NavigationUrlService
+
+@layout ViewLayout
+@code
+{
+    [Parameter]
+    public string ProfileId { get; set; }
+    public ViewApplicationUser UserProfile { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+        NavigationUrlService.ProfileUrl = Navigation.ToAbsoluteUri("/profile/Edit").ToString();
+        return base.OnInitializedAsync();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!string.IsNullOrEmpty(ProfileId))
+        {
+            var httpClient = HttpClientFactory.CreateClient("Abeer.Anonymous");
+
+            var getProfile = await httpClient.GetAsync($"/api/viewProfile/{ProfileId}");
+
+            getProfile.EnsureSuccessStatusCode();
+            var json = await getProfile.Content.ReadAsStringAsync();
+            UserProfile = Newtonsoft.Json.JsonConvert.DeserializeObject<ViewApplicationUser>(json);
+
+            NavigationUrlService.SetUrls($"https://www.google.com/maps/search/?api=1&query={UserProfile.Address},{UserProfile.City}%20{UserProfile.Country}&query_place_id={UserProfile.DisplayName}",
+                Navigation.ToAbsoluteUri($"/ImportContact/{UserProfile.Id}").ToString());
+
+            await InvokeAsync(StateHasChanged);
+        }
+
+        await base.OnParametersSetAsync();
+    }
+}
+
+@if (UserProfile != null)
+{
+    <UserProfileControl DisplayName="@UserProfile.DisplayName" Title="" City="@UserProfile.City"
+                        Country="@UserProfile.Country" Description="@UserProfile.Description"
+                        Email="@UserProfile.Email" PhoneNumber="@UserProfile.PhoneNumber"
+                        ProfileUrl="@Navigation.ToAbsoluteUri($"/ViewProfile/{UserProfile.Id}").ToString()"
+                        SocialNetworkConnected="UserProfile.SocialNetworkConnected" CustomLinks="UserProfile.CustomLinks"></UserProfileControl>
+}
+else
+{
+    <span>loading...</span>
+}

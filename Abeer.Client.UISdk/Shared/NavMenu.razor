@@ -13,12 +13,6 @@
     public string LabelUserList { get; set; }
 
     [Parameter]
-    public string LabelTokenBatches { get; set; }
-
-    [Parameter]
-    public string LabelCardList { get; set; }
-
-    [Parameter]
     public string LabelContacts { get; set; }
 
     [Parameter]
@@ -55,14 +49,8 @@
 
         <form class="form-inline mr-auto">
             <ul class="navbar-nav mr-3">
-                @*<li><a href="#" data-toggle="sidebar" class="nav-link nav-link-lg"><i class="fas fa-bars"></i></a></li>*@
-                @*<li><a href="#" data-toggle="search" class="nav-link nav-link-lg d-sm-none"><i class="fas fa-search"></i></a></li>*@
+                <li><a href="#" data-toggle="search" class="nav-link nav-link-lg d-sm-none"><i class="fas fa-search"></i></a></li>
             </ul>
-            @*<div class="search-element">
-                <input class="form-control" type="search" placeholder="Search" aria-label="Search" data-width="250" style="width: 250px;">
-                <button class="btn" type="submit"><i class="fas fa-search"></i></button>
-                <div class="search-backdrop"></div>
-            </div>*@
         </form>
     </ul>
     <ul class="nav navbar-nav  navbar-right">
@@ -76,9 +64,6 @@
                 <a href="profile" class="dropdown-item has-icon">
                     <i class="far fa-user"></i> Profile
                 </a>
-                @*<a href="contacts" class="dropdown-item has-icon">
-                    <i class="fa fa-user-friends"></i> Contacts
-                </a>*@
                 <a href="services" class="dropdown-item has-icon">
                     <i class="fas fa-concierge-bell"></i> Services
                 </a>
@@ -90,29 +75,3 @@
         </li>
     </ul>
 </nav>
-
-@*<div class="main-sidebar" tabindex="1" style="overflow: hidden; outline: none;">
-    <aside id="sidebar-wrapper">
-        <div class="sidebar-brand">
-            <a href="/">Abeer</a>
-        </div>
-        <div class="sidebar-brand sidebar-brand-sm">
-            <a href="/">Ab</a>
-        </div>
-        <ul class="sidebar-menu">
-            <li class="menu-header">Services</li>
-            <li class="nav-item dropdown">
-                <a href="#" class="nav-link has-dropdown"><i class="fas fa-fire"></i><span>Ads</span></a>
-                <ul class="dropdown-menu" style="display: none;">
-                    <li><a class="nav-link" href="index-0.html">Create Ads</a></li>
-                    <li><a class="nav-link" href="index.html">My Ads</a></li>
-                </ul>
-            </li>
-        </ul>
-        <div class="mt-4 mb-4 p-3 hide-sidebar-mini">
-            <a href="https://getstisla.com/docs" class="btn btn-primary btn-lg btn-block btn-icon-split">
-                <i class="fas fa-rocket"></i> Documentation
-            </a>
-        </div>
-    </aside>
-</div>*@

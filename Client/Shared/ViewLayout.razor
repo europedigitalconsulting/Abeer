@@ -1,0 +1,36 @@
+﻿@namespace Abeer.Client.Shared
+@inherits LayoutComponentBase
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Resources> Loc
+@inject Abeer.Client.UISdk.NavigationUrlService NavigationUrlService
+@code
+{
+    protected override void OnInitialized()
+    {
+        NavigationUrlService.PropertyChanged += OnPropertyChanged;
+    }
+
+    private void OnPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        StateHasChanged();
+    }
+}
+<div id="app">
+    <div class="container-fluid">
+        <NavMenu LabelContacts="@Loc["ContactList"]"
+                 LabelDashboard="@Loc["Dashboard"]"
+                 LabelLogout="@Loc["Logout"]"
+                 LabelMyAccount="@Loc["MyAccount"]"
+                 LabelUserList="@Loc["UserList"]"></NavMenu>
+        <div class="main-content" style="min-height: 839px;">
+            @Body
+        </div>
+    </div>
+</div>
+<footer class="main-footer fixed-bottom">
+    <div class="text-center">
+        <a href="@NavigationUrlService.MapUrl" class="btn  rounded mr-1" title="Maps" target="_blank" style="font-size:35px"><i class="fas fa-map-signs" style="font-size:35px"></i></a>
+        <a href="@NavigationUrlService.ProfileUrl" class="btn  rounded mr-1" title="Edit" style="font-size:35px"><i class="fa fa-user-edit" style="font-size:35px"></i></a>
+        <a href="@NavigationUrlService.ImportContactUrl" class="btn  rounded mr-1" title="Import" style="font-size:35px"><i class="fa fa-user-plus" style="font-size:35px"></i></a>
+        <a href="@NavigationUrlService.ServicesUrl" class="btn  rounded mr-1" title="Services" style="font-size:35px" target="_blank"><i class="fa fa-concierge-bell" style="font-size:35px"></i></a>
+    </div>
+</footer>

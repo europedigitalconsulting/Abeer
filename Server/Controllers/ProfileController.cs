@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Abeer.Services;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Configuration;
+using Abeer.Shared.ViewModels;
 
 namespace Abeer.Server.Controllers
 {
