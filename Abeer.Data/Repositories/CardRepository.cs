@@ -17,6 +17,7 @@ namespace Abeer.Data.Repositories
         {
             FunctionalDbContext = applicationDbContext;
         }
+        public IFunctionalDbContext FunctionalDbContext { get; }
 
         public async Task<List<Card>> GetCards() =>
             await FunctionalDbContext.Cards.Include(c => c.CardStatus).ToListAsync();
@@ -24,7 +25,6 @@ namespace Abeer.Data.Repositories
         public async Task<Card> GetCard(Guid id) =>
             await FunctionalDbContext.Cards.Include(c => c.CardStatus).FirstOrDefaultAsync(b => b.Id == id);
 
-        public IFunctionalDbContext FunctionalDbContext { get; }
 
         public async Task Update(Card card)
         {

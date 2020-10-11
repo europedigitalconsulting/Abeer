@@ -86,5 +86,6 @@ namespace Abeer.Data.Contextes
         public DbSet<Purchase> Purchase { get; set; }
         public DbSet<Payment> Payment { get; set; }
         public DbSet<Country> Countries { get; set; }
+        public DbSet<SocialNetwork> SocialNetworks { get; set; }
     }
 }

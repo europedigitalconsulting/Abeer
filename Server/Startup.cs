@@ -239,16 +239,45 @@ namespace Abeer.Server
             if (env.IsDevelopment())
             {
                 var db = scope.ServiceProvider.GetRequiredService<SecurityDbContext>();
+                var functionalDb = scope.ServiceProvider.GetRequiredService<FunctionalUnitOfWork>();
+
                 db.Database.EnsureCreated();
+                functionalDb.EnsureCreated();
 
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-                var ucustomer = await userManager.FindByEmailAsync("customer@abeer.io");
+                var michel = await userManager.FindByEmailAsync("michelbruchet91@gmail.com");
 
-                if (ucustomer == null)
+                if (michel == null)
                 {
-                    //create operator
-                    await userManager.CreateAsync(new ApplicationUser
+                    michel = new ApplicationUser
+                    {
+                        UserName = "michelbruchet91@gmail.com",
+                        Country = "France",
+                        DisplayName = "Michel Bruchet",
+                        Email = "michelbruchet91@gmail.com",
+                        Title = "",
+                        Description = "Lorem ipsum dolor sit amet,consectetur adipiscing elit,sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
+                        EmailConfirmed = true,
+                        FirstName = "Michel",
+                        LastName = "Bruchet",
+                        City = "Quincy Sous senart",
+                        PhoneNumber = "+33 7 80 81 10 24"
+                    };
+
+                    var addResult = await userManager.CreateAsync(michel, "Xc9wf8or&");
+
+                    if (addResult.Succeeded)
+                    {
+                        await functionalDb.SocialNetworkRepository.AddSocialNetwork(new SocialNetwork { OwnerId = michel.Id, Name = "Facebook", Logo = "fab fa-facebook-square", DisplayInfo = "michel.bruchet", BackgroundColor = "bg-primary", Url = "https://www.facebook.com/michel.bruchet" });
+                        await functionalDb.SocialNetworkRepository.AddSocialNetwork(new SocialNetwork { OwnerId = michel.Id, Name = "Instagram", Logo = "fab fa-instagram-square", DisplayInfo = "@michel.bruchet", BackgroundColor = "bg-danger", Url = "https://www.instagram.com" });
+                        await functionalDb.SocialNetworkRepository.AddSocialNetwork(new SocialNetwork { OwnerId = michel.Id, Name = "Whatsapp", Logo = "fab fa-whatsapp-square", DisplayInfo = "+33 780811024", BackgroundColor = "bg-success", Url = "whatsapp:33780811024" });
+                    }
+                }
+                var hasan = await userManager.FindByEmailAsync("customer@abeer.io");
+                if (hasan == null)
+                {
+                    hasan = new ApplicationUser
                     {
                         UserName = "customer@abeer.io",
                         Country = "France",
@@ -260,15 +289,43 @@ namespace Abeer.Server
                         FirstName = "Hasan",
                         LastName = "Basri",
                         City = "Paris",
-                        PhoneNumber = "+66 624796927",
-                        SocialNetworkConnected = new List<SocialNetwork>
-                        {
-                            new SocialNetwork { Name = "Facebook", Logo = "facebook", DisplayInfo = "hasan.basri",},
-                            new SocialNetwork { Name = "Instagram", Logo = "instagram",DisplayInfo = "@hasan.basri"},
-                            new SocialNetwork { Name = "Whatsapp", Logo = "success", DisplayInfo = "+66 624796927"},
-                        }
+                        PhoneNumber = "+66 624796927"
+                    };
 
-                    }, "Xc9wf8or&");
+                    var addHasan = await userManager.CreateAsync(hasan, "Xc9wf8or&");
+
+                    if (addHasan.Succeeded)
+                    {
+                        await functionalDb.SocialNetworkRepository.AddSocialNetwork(new SocialNetwork
+                        {
+                            OwnerId = hasan.Id,
+                            Name = "Facebook",
+                            Logo = "fab fa-facebook-square",
+                            DisplayInfo = "hasan.basri",
+                            BackgroundColor = "bg-primary",
+                            Url = "https://www.facebook.com/hasan.basri"
+                        });
+
+                        await functionalDb.SocialNetworkRepository.AddSocialNetwork(new SocialNetwork
+                        {
+                            OwnerId = hasan.Id,
+                            Name = "Instagram",
+                            Logo = "fab fa-instagram-square",
+                            DisplayInfo = "@hasan.basri",
+                            BackgroundColor = "bg-danger",
+                            Url = "https://www.instagram.com/hasan.basri"
+                        });
+
+                        await functionalDb.SocialNetworkRepository.AddSocialNetwork(new SocialNetwork
+                        {
+                            OwnerId = hasan.Id,
+                            Name = "Whatsapp",
+                            Logo = "fab fa-whatsapp-square",
+                            DisplayInfo = "+66 624796927",
+                            BackgroundColor = "bg-success",
+                            Url = "whatsapp:66624796927"
+                        });
+                    }
                 }
             }
         }

@@ -40,32 +40,39 @@ namespace Abeer.Server.Controllers
         [HttpGet("import/{id}")]
         public async Task<ActionResult<ImportContactResultViewModel>> Import(string id)
         {
-            var user = await _userManager.FindByIdAsync(id);
-            
-            if (user == null)
-                return NotFound();
-
-            var contact = await _UnitOfWork.ContactRepository.FirstOrDefaultAsync(c => c.Email == user.Email && c.OwnerId == User.NameIdentifier());
-            
-            if(contact == null)
+            if (User.NameIdentifier() == id)
             {
-                var result = await _UnitOfWork.ContactRepository.AddAsync(new Contact
-                {
-                    City = user.City,
-                    Country = user.Country,
-                    DisplayName = user.DisplayName,
-                    Email = user.Email,
-                    OwnerId = User.NameIdentifier(),
-                    UserId = user.Id
-                });
-
-                await _UnitOfWork.SaveChangesAsync();
-
-                return new ImportContactResultViewModel { Contact = result, IsValid = true, StatusCode = "OK" };
+                return new ImportContactResultViewModel { Contact = null, IsValid = false, StatusCode = "SelfReference" };
             }
             else
             {
-                return new ImportContactResultViewModel { Contact = contact, IsValid = false, StatusCode = "Duplicate" };
+                var user = await _userManager.FindByIdAsync(id);
+
+                if (user == null)
+                    return NotFound();
+
+                var contact = await _UnitOfWork.ContactRepository.FirstOrDefaultAsync(c => c.Email == user.Email && c.OwnerId == User.NameIdentifier());
+
+                if (contact == null)
+                {
+                    var result = await _UnitOfWork.ContactRepository.AddAsync(new Contact
+                    {
+                        City = user.City,
+                        Country = user.Country,
+                        DisplayName = user.DisplayName,
+                        Email = user.Email,
+                        OwnerId = User.NameIdentifier(),
+                        UserId = user.Id
+                    });
+
+                    await _UnitOfWork.SaveChangesAsync();
+
+                    return new ImportContactResultViewModel { Contact = result, IsValid = true, StatusCode = "OK" };
+                }
+                else
+                {
+                    return new ImportContactResultViewModel { Contact = contact, IsValid = false, StatusCode = "Duplicate" };
+                }
             }
         }
 

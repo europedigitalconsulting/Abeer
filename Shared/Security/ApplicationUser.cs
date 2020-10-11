@@ -50,8 +50,6 @@ namespace Abeer.Shared
         public int PinDigit { get; set; }
         public byte[] EncryptionIv { get; set; } //Iv = Initialization vector
         public byte[] EncryptionKey { get; set; }
-        public ICollection<SocialNetwork> SocialNetworkConnected { get; set; }
-        public ICollection<CustomLink> CustomLinks { get; set; }
         public string Address { get; set; }
     }
 }

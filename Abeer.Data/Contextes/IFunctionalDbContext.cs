@@ -9,6 +9,7 @@ namespace Abeer.Data
     public interface IFunctionalDbContext
     {
         DbSet<UrlShortned> UrlShortneds { get; set; }
+        DbSet<SocialNetwork> SocialNetworks { get; set; }
         DbSet<Contact> Contacts { get; set; }
         DbSet<TokenBatch> TokenBatches { get; set; }
         DbSet<Card> Cards { get; set; }

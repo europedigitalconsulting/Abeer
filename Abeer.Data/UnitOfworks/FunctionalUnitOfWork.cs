@@ -20,6 +20,8 @@ namespace Abeer.Data.UnitOfworks
         private TokenBatchRepository _TokenBatchRepository;
         private TokenItemRepository _TokenItemRepository;
         private CountriesRepository _CountriesRepository;
+        private SocialNetworkRepository _SocialNetworkRepository;
+
         private IFunctionalDbContext ApplicationDbContext { get; }
         private IServiceProvider ServiceProvider { get; }
 
@@ -49,6 +51,17 @@ namespace Abeer.Data.UnitOfworks
                     _ContactRepository = ActivatorUtilities.CreateInstance<ContactRepository>(ServiceProvider);
 
                 return _ContactRepository;
+            }
+        }
+
+        public SocialNetworkRepository SocialNetworkRepository
+        {
+            get
+            {
+                if (_SocialNetworkRepository == null)
+                    _SocialNetworkRepository = ActivatorUtilities.CreateInstance<SocialNetworkRepository>(ServiceProvider);
+
+                return _SocialNetworkRepository;
             }
         }
 

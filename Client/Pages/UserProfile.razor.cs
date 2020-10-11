@@ -16,7 +16,7 @@ namespace Abeer.Client.Pages
         [Inject]private NavigationManager NavigationManager { get; set; }
         [Inject]private HttpClient HttpClient { get; set; }
 
-        public ApplicationUser User { get; set; } = new ApplicationUser();
+        public ViewApplicationUser User { get; set; } = new ViewApplicationUser();
         
         public List<SocialNetwork> AvailableSocialNetworks { get; set; } = new List<SocialNetwork>();
 
@@ -31,7 +31,7 @@ namespace Abeer.Client.Pages
             response.EnsureSuccessStatusCode();
             var json = await response.Content.ReadAsStringAsync();
             Console.WriteLine($"user :{json}");
-            User = JsonConvert.DeserializeObject<ApplicationUser>(json);
+            User = JsonConvert.DeserializeObject<ViewApplicationUser>(json);
 
             var responseSocialNetwork = await HttpClient.GetAsync("api/socialnetwork");
             response.EnsureSuccessStatusCode();
@@ -53,7 +53,7 @@ namespace Abeer.Client.Pages
             response.EnsureSuccessStatusCode();
 
             var json = await response.Content.ReadAsStringAsync();
-            User = JsonConvert.DeserializeObject<ApplicationUser>(json);
+            User = JsonConvert.DeserializeObject<ViewApplicationUser>(json);
         }
 
         async Task ToggleModalSocialNetwork()

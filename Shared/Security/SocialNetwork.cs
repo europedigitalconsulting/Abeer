@@ -6,14 +6,16 @@ namespace Abeer.Shared
 {
     public class SocialNetwork
     {
+        [Key]
+        public string Id { get; set; }
+
         public SocialNetwork()
         {
             Id = Guid.NewGuid().ToString();
         }
 
+        public string OwnerId { get; set; }
 
-        [Key]
-        public string Id { get; set; }
         public string BackgroundColor { get; set; }
         public string Name { get; set; }
         public string DisplayInfo { get; set; }

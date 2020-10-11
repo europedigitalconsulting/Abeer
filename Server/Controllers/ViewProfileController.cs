@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+
+using Abeer.Data.UnitOfworks;
 using Abeer.Shared;
 
 using Microsoft.AspNetCore.Authorization;
@@ -14,10 +16,12 @@ namespace Abeer.Server.Controllers
     public class ViewProfileController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly FunctionalUnitOfWork _functionalUnitOfWork;
 
-        public ViewProfileController(UserManager<ApplicationUser> userManager)
+        public ViewProfileController(UserManager<ApplicationUser> userManager, FunctionalUnitOfWork functionalUnitOfWork)
         {
             _userManager = userManager;
+            _functionalUnitOfWork = functionalUnitOfWork;
         }
 
         [AllowAnonymous]
@@ -29,8 +33,8 @@ namespace Abeer.Server.Controllers
             {
                 City = user.City,
                 Email = user.Email, PhoneNumber = user.PhoneNumber, Id = user.Id,
-                SocialNetworkConnected = user.SocialNetworkConnected ?? new List<SocialNetwork>(),
-                CustomLinks = user.CustomLinks ?? new List<CustomLink>(),
+                SocialNetworkConnected = await _functionalUnitOfWork.SocialNetworkRepository.GetSocialNetworkLinks(user.Id) ?? new List<SocialNetwork>(),
+                CustomLinks = new List<CustomLink>(),
                 Address = user.Address,
                 Country = user.Country,
                 Description = user.Description,

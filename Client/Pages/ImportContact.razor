@@ -1,4 +1,4 @@
-﻿@page "/ImportContact/{UserId}"
+﻿@page "/ImportContact/{ProfileId}"
 @using Abeer.Client
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
 @inject Microsoft.Extensions.Localization.IStringLocalizer<ImportContact> Loc
@@ -8,65 +8,74 @@
     public bool IsValid { get; set; }
 
     [Parameter]
-    public string UserId { get; set; }
+    public string ProfileId { get; set; }
 
     public Contact Contact { get; set; }
     public string StatusCode { get; set; }
 
+    public string ErrorDetail { get; set; }
+
     protected override async Task OnParametersSetAsync()
     {
-        if (!string.IsNullOrEmpty(UserId))
+        if (!string.IsNullOrEmpty(ProfileId))
         {
-            var response = await HttpClient.GetAsync($"/api/Contacts/import/{UserId}");
+            var response = await HttpClient.GetAsync($"/api/Contacts/import/{ProfileId}");
             response.EnsureSuccessStatusCode();
             var json = await response.Content.ReadAsStringAsync();
             var result = Newtonsoft.Json.JsonConvert.DeserializeObject<ImportContactResultViewModel>(json);
             IsValid = result.IsValid;
             Contact = result.Contact;
             StatusCode = result.StatusCode;
+            switch (StatusCode)
+            {
+                case "SelfReference":
+                    ErrorDetail = Loc["SelfReference"];
+                    break;
+                case "Duplicate":
+                    ErrorDetail = Loc["Duplicate"];
+                    break;
+                default:
+                    break;
+            }
         }
 
         await base.OnParametersSetAsync();
     }
 }
-@if (Contact != null)
-{
-    <!-- Main Content -->
-    <div class="main-content">
-        <section class="section">
-            <div class="section-header">
-                <h1>@Loc["ImportContact"]</h1>
-                <div class="section-header-breadcrumb">
-                    <div class="breadcrumb-item active"><a href="#">@Loc["Home"]</a></div>
-                    <div class="breadcrumb-item"><a href="#">@Loc["MyWallet"]</a></div>
-                    <div class="breadcrumb-item"><a href="/MyAccount">@Loc["Contacts"]</a></div>
-                    <div class="breadcrumb-item">@Loc["ImportContact"]</div>
-                </div>
+<!-- Main Content -->
+<div class="main-content">
+    <section class="section">
+        <div class="section-header">
+            <h1>@Loc["ImportContact"]</h1>
+            <div class="section-header-breadcrumb">
+                <div class="breadcrumb-item active"><a href="#">@Loc["Home"]</a></div>
+                <div class="breadcrumb-item"><a href="/MyAccount">@Loc["Contacts"]</a></div>
+                <div class="breadcrumb-item">@Loc["ImportContact"]</div>
             </div>
-            <div class="section-body">
-                <p class="section-lead">@Loc["CatchPhrase"].</p>
-                <div class="clearfix"></div>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-body p-0">
-                                <div class="container bootstrap snippets bootdey">
-                                    <div class="row">
-                                        <div class="col-12">
-                                            @if (IsValid)
-                                            {
-                                                <div class="alert alert-success">
-                                                    <h4>@Loc["MessageSuccess"]</h4>
-                                                    <a href="@($"/Contacts/Detail/{Contact.Id}")">@Loc["ViewContact"]</a>
-                                                </div>
-                                            }
-                                            else
-                                            {
-                                                <div class="alert alert-error">
-                                                    <h4>@Loc[StatusCode]</h4>
-                                                </div>
-                                            }
-                                        </div>
+        </div>
+        <div class="section-body">
+            <p class="section-lead">@Loc["CatchPhrase"].</p>
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body p-0">
+                            <div class="container bootstrap snippets bootdey">
+                                <div class="row">
+                                    <div class="col-12">
+                                        @if (IsValid && Contact != null)
+                                        {
+                                            <div class="alert alert-success">
+                                                <h4>@Loc["MessageSuccess"]</h4>
+                                                <a href="@($"/ViewProfile/{Contact.UserId}")">@Loc["ViewContact"]</a>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="alert alert-danger">
+                                                @ErrorDetail
+                                            </div>
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -74,6 +83,6 @@
                     </div>
                 </div>
             </div>
-        </section>
-    </div>
-}
+        </div>
+    </section>
+</div>

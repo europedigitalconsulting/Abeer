@@ -20,9 +20,10 @@ namespace Abeer.Client.UISdk
         public NavigationUrlService(NavigationManager navigationManager)
         {
             this.navigationManager = navigationManager;
-            ProfileUrl = navigationManager.ToAbsoluteUri("/profile").ToString();
+            ProfileUrl = navigationManager.ToAbsoluteUri("/profile/Edit").ToString();
             ImportContactUrl = navigationManager.ToAbsoluteUri("/addContact").ToString();
             ServicesUrl = navigationManager.ToAbsoluteUri("/services").ToString();
+            ContactsUrl = navigationManager.ToAbsoluteUri("/contacts").ToString();
         }
 
         public void SetUrls(string mapUrl, string importContactUrl)
@@ -62,6 +63,18 @@ namespace Abeer.Client.UISdk
             set
             {
                 _ImportContactUrl = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _ContactsUrl;
+
+        public string ContactsUrl
+        {
+            get => _ContactsUrl;
+            set
+            {
+                _ContactsUrl = value;
                 OnPropertyChanged();
             }
         }
