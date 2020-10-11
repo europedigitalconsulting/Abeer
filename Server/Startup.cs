@@ -252,17 +252,18 @@ namespace Abeer.Server
                 {
                     michel = new ApplicationUser
                     {
-                        UserName = "michelbruchet91@gmail.com",
+                        UserName = "admin@abeer.io",
                         Country = "France",
                         DisplayName = "Michel Bruchet",
-                        Email = "michelbruchet91@gmail.com",
-                        Title = "",
+                        Email = "admin@abeer.io",
+                        Title = "CEO",
                         Description = "Lorem ipsum dolor sit amet,consectetur adipiscing elit,sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
                         EmailConfirmed = true,
                         FirstName = "Michel",
                         LastName = "Bruchet",
                         City = "Quincy Sous senart",
-                        PhoneNumber = "+33 7 80 81 10 24"
+                        PhoneNumber = "+33 7 80 81 10 24",
+                        IsAdmin = true
                     };
 
                     var addResult = await userManager.CreateAsync(michel, "Xc9wf8or&");
