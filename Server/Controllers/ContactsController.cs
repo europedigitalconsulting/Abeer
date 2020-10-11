@@ -32,9 +32,29 @@ namespace Abeer.Server.Controllers
 
         // GET: api/Contacts
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Contact>>> GetContacts()
+        public async Task<ActionResult<IEnumerable<ViewContact>>> GetContacts()
         {
-            return await _UnitOfWork.ContactRepository.GetContacts(User.NameIdentifier());
+            var contacts = await _UnitOfWork.ContactRepository.GetContacts(User.NameIdentifier());
+            
+            List<ViewContact> viewContacts = new List<ViewContact>();
+
+            Parallel.ForEach(contacts, async (contact) =>
+            {
+                var user = await _userManager.FindByIdAsync(contact.UserId);
+                ViewContact item = new ViewContact(user, contact);
+
+                user.NubmerOfView += 1;
+                await _userManager.UpdateAsync(user);
+
+                item.NumberOfView = user.NubmerOfView;
+                item.SocialNetworks = await _UnitOfWork.SocialNetworkRepository.GetSocialNetworkLinks(contact.UserId) ??
+                    new List<SocialNetwork>();
+
+                item.CustomLinks = new List<CustomLink>();
+                viewContacts.Add(item);
+            });
+
+            return viewContacts;
         }
 
         [HttpGet("import/{id}")]
@@ -51,17 +71,13 @@ namespace Abeer.Server.Controllers
                 if (user == null)
                     return NotFound();
 
-                var contact = await _UnitOfWork.ContactRepository.FirstOrDefaultAsync(c => c.Email == user.Email && c.OwnerId == User.NameIdentifier());
+                var contact = await _UnitOfWork.ContactRepository.FirstOrDefaultAsync(c => c.UserId == user.Id && c.OwnerId == User.NameIdentifier());
 
                 if (contact == null)
                 {
                     var result = await _UnitOfWork.ContactRepository.AddAsync(new Contact
                     {
-                        City = user.City,
-                        Country = user.Country,
-                        DisplayName = user.DisplayName,
-                        Email = user.Email,
-                        OwnerId = User.NameIdentifier(),
+                        OwnerId = User.NameIdentifier(), 
                         UserId = user.Id
                     });
 
@@ -77,12 +93,12 @@ namespace Abeer.Server.Controllers
         }
 
         [HttpGet("Suggestion")]
-        public  async Task<ActionResult<IEnumerable<Contact>>> GetSuggestion(string term)
+        public  async Task<ActionResult<IEnumerable<ViewContact>>> GetSuggestion(string term)
         {
             var users = await _userManager?.Users.Where(u => u.Id.Contains(term) ||
                 u.Email.Contains(term) || u.UserName.Contains(term)).ToListAsync();
 
-            ConcurrentBag<Contact> contacts = new ConcurrentBag<Contact>();
+            ConcurrentBag<ViewContact> contacts = new ConcurrentBag<ViewContact>();
 
             Parallel.ForEach<ApplicationUser>(users, async (user) =>
             {
@@ -90,20 +106,12 @@ namespace Abeer.Server.Controllers
 
                 if (contact != null)
                 {
-                    contacts.Add(new Contact { UserId = user.Id, DisplayName = contact.DisplayName, Email = user.Email });
+                    contacts.Add(new ViewContact { UserId = user.Id, DisplayName = user.DisplayName, Email = user.Email });
                 }
                 else
                 {
-                    contacts.Add(new Contact { UserId = user.Id, DisplayName = user.UserName, Email = user.Email });
+                    contacts.Add(new ViewContact { UserId = user.Id, DisplayName = user.UserName, Email = user.Email });
                 }
-            });
-
-            var searchContacts = await _UnitOfWork.ContactRepository.Where(c => c.UserId.Contains(term) || c.Email.Contains(term) || c.DisplayName.Contains(term));
-
-            Parallel.ForEach<Contact>(searchContacts, (contact) =>
-            {
-                if (!contacts.Any(c => c.Email == contact.Email))
-                    contacts.Add(new Contact { UserId = contact.UserId, Email = contact.Email, DisplayName = contact.DisplayName });
             });
 
             return contacts;

@@ -26,10 +26,11 @@ namespace Abeer.Shared
         public string Address { get; set; }
         public string Country { get; set; }
         public string City { get; set; }
-        public ICollection<SocialNetwork> SocialNetworkConnected { get; set; }
-        public ICollection<CustomLink> CustomLinks { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
+        public int NubmerOfView { get; set; }
+        public ICollection<SocialNetwork> SocialNetworkConnected { get; set; }
+        public ICollection<CustomLink> CustomLinks { get; set; }
     }
 
     public class ApplicationUser : IdentityUser
@@ -51,5 +52,6 @@ namespace Abeer.Shared
         public byte[] EncryptionIv { get; set; } //Iv = Initialization vector
         public byte[] EncryptionKey { get; set; }
         public string Address { get; set; }
+        public int NubmerOfView { get; set; }
     }
 }

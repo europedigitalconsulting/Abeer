@@ -22,9 +22,9 @@ namespace Abeer.Client.Pages
 
         public UserForm UserForm { get; set; }
         public string TitleDialog { get; set; }
-        public List<ApplicationUser> Data { get; set; } = new List<ApplicationUser>();
+        public List<ViewApplicationUser> Data { get; set; } = new List<ViewApplicationUser>();
         protected string SearchTerm { get; set; }
-        protected List<ApplicationUser> Items = new List<ApplicationUser>();
+        protected List<ViewApplicationUser> Items = new List<ViewApplicationUser>();
 
         public int NbOfUsers { get; set; }
         public int NbOfUsersOnline { get; set; }
@@ -53,7 +53,7 @@ namespace Abeer.Client.Pages
             response.EnsureSuccessStatusCode();
             var json = await response.Content.ReadAsStringAsync();
 
-            Data = JsonConvert.DeserializeObject<List<ApplicationUser>>(json);
+            Data = JsonConvert.DeserializeObject<List<ViewApplicationUser>>(json);
             Items = Data.ToList();
             
             NbOfUsers = Data.Count;
@@ -75,16 +75,16 @@ namespace Abeer.Client.Pages
         void ModalCancel() => showModal = false;
         string Mode { get; set; } = "Insert";
 
-        ApplicationUser current = null;
+        ViewApplicationUser current = null;
 
         void ShowInsertUser()
         {
-            current = new ApplicationUser();
+            current = new ViewApplicationUser();
             Mode = "Insert";
             ModalShow();
             StateHasChanged();
         }
-        void ShowEditUser(ApplicationUser User)
+        void ShowEditUser(ViewApplicationUser User)
         {
             current = User;
             Mode = "Update";
@@ -92,7 +92,7 @@ namespace Abeer.Client.Pages
             StateHasChanged();
         }
 
-        void ShowDeleteUser(ApplicationUser User)
+        void ShowDeleteUser(ViewApplicationUser User)
         {
             current = User;
             Mode = "Delete";
@@ -100,11 +100,11 @@ namespace Abeer.Client.Pages
         }
         async Task Insert()
         {
-            var response = await HttpClient.PostAsJsonAsync<ApplicationUser>("api/Users", current);
+            var response = await HttpClient.PostAsJsonAsync<ViewApplicationUser>("api/Users", current);
             response.EnsureSuccessStatusCode();
             var json = await response.Content.ReadAsStringAsync();
             Console.WriteLine($"insert result : {json}");
-            var User = JsonConvert.DeserializeObject<ApplicationUser>(json);
+            var User = JsonConvert.DeserializeObject<ViewApplicationUser>(json);
             Data.Add(User);
             ModalClose();
             StateHasChanged();
@@ -112,7 +112,7 @@ namespace Abeer.Client.Pages
 
         async Task Update()
         {
-            var response = await HttpClient.PutAsJsonAsync<ApplicationUser>($"api/Users/{current.Id}", current);
+            var response = await HttpClient.PutAsJsonAsync<ViewApplicationUser>($"api/Users/{current.Id}", current);
             response.EnsureSuccessStatusCode();
             ModalClose();
             StateHasChanged();
@@ -128,13 +128,13 @@ namespace Abeer.Client.Pages
             StateHasChanged();
         }
 
-        async Task AddSuggestedUser(ApplicationUser User)
+        async Task AddSuggestedUser(ViewApplicationUser User)
         {
-            var response = await HttpClient.PostAsJsonAsync<ApplicationUser>("api/Users", User);
+            var response = await HttpClient.PostAsJsonAsync<ViewApplicationUser>("api/Users", User);
             response.EnsureSuccessStatusCode();
             var json = await response.Content.ReadAsStringAsync();
             Console.WriteLine($"insert result : {json}");
-            current = JsonConvert.DeserializeObject<ApplicationUser>(json);
+            current = JsonConvert.DeserializeObject<ViewApplicationUser>(json);
             Data.Add(current);
             ModalClose();
             StateHasChanged();

@@ -148,13 +148,13 @@ namespace Abeer.Client
             }
         }
 
-        public static string GravatarUrl(this Contact contact)
+        public static string GravatarUrl(this ViewContact contact)
         {
             var gravatar = new Gravatar();
             return gravatar.GetImageSource(contact.Email);
         }
 
-        public static string GravatarUrl(this ApplicationUser user)
+        public static string GravatarUrl(this ViewApplicationUser user)
         {
             var gravatar = new Gravatar();
             return gravatar.GetImageSource(user.Email);
