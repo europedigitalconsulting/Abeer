@@ -23,7 +23,10 @@
     protected override async Task OnParametersSetAsync()
     {
         var httpClient = HttpClientFactory.CreateClient("Abeer.Anonymous");
-        var offer = await httpClient.GetAsync("api/");
+        var response = await httpClient.GetAsync("api/Offer");
+        response.EnsureSuccessStatusCode();
+        var json = await response.Content.ReadAsStringAsync();
+        Offer = Newtonsoft.Json.JsonConvert.DeserializeObject<OfferModel>(json);
         await base.OnParametersSetAsync();
     }
 
@@ -36,6 +39,9 @@
 
     async Task Finish()
     {
+        var httpClient = HttpClientFactory.CreateClient("Abeer.Anonymous");
+        var response = await httpClient.PutAsJsonAsync<OfferModel>("api/offer/valid", Offer);
+        response.EnsureSuccessStatusCode();
         NavigationManager.NavigateTo("/MyOffers");
     }
 }

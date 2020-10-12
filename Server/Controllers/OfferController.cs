@@ -25,6 +25,7 @@ namespace Abeer.Server.Controllers
             });
         }
 
+        [HttpPost]
         public async Task<ActionResult<OfferModel>> Create(CreateOfferRequestViewModel createOfferRequestViewModel)
         {
             return await Task.Run<ActionResult<OfferModel>>(() =>
@@ -55,6 +56,12 @@ namespace Abeer.Server.Controllers
 
                 return Ok(offer);
             });
+        }
+
+        [HttpPut]
+        public async Task Valid(OfferModel offerModel)
+        {
+
         }
     }
 }
