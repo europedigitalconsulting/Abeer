@@ -1,7 +1,7 @@
 ﻿@page "/CreateAd"
 @using Abeer.Shared.Functional
 @inject Microsoft.Extensions.Localization.IStringLocalizer<CreateAd> Loc
-@inject HttpClient HttpClient
+@inject IHttpClientFactory HttpClientFactory
 @inject NavigationManager NavigationManager
 
 @code
@@ -48,7 +48,8 @@
             Price = CurrentPrice
         };
 
-        var response = await HttpClient.PostAsJsonAsync<CreateOfferRequestViewModel>("/api/Offer", CreateOfferRequest);
+        var httpClient = HttpClientFactory.CreateClient("Abeer.Anonymous");
+        var response = await httpClient.PostAsJsonAsync<CreateOfferRequestViewModel>("/api/Offer", CreateOfferRequest);
         PublishHasError = !response.IsSuccessStatusCode;
 
         if (!PublishHasError)
@@ -69,7 +70,8 @@
             Price = CurrentPrice
         };
 
-        var response = await HttpClient.PostAsJsonAsync<CreateOfferRequestViewModel>("/api/Offer", CreateOfferRequest);
+        var httpClient = HttpClientFactory.CreateClient("Abeer.Anonymous");
+        var response = await httpClient.PostAsJsonAsync<CreateOfferRequestViewModel>("/api/Offer", CreateOfferRequest);
         PublishHasError = !response.IsSuccessStatusCode;
 
         if (!PublishHasError)
