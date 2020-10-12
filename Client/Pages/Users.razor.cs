@@ -22,6 +22,7 @@ namespace Abeer.Client.Pages
         bool showModal = false;
         ApplicationUser current = new ApplicationUser();
         string Mode = "Create";
+        bool ModalShareProfileVisible = false;
 
         public UserForm UserForm { get; set; }
         public string TitleDialog { get; set; }
@@ -79,6 +80,11 @@ namespace Abeer.Client.Pages
             showModal = !showModal;
         }
 
+        async Task ToggleModalShareProfile()
+        {
+            ModalShareProfileVisible = !ModalShareProfileVisible;
+        }
+
         async Task ShowInsertUser()
         {
             current = new ApplicationUser();
@@ -133,16 +139,12 @@ namespace Abeer.Client.Pages
             await InvokeAsync(StateHasChanged);
         }
 
-        async Task AddSuggestedUser(ApplicationUser User)
+        public string ProfileUrl { get; private set; }
+
+        Task ShareProfile(ApplicationUser user)
         {
-            var response = await HttpClient.PostAsJsonAsync<ApplicationUser>("api/Users", User);
-            response.EnsureSuccessStatusCode();
-            var json = await response.Content.ReadAsStringAsync();
-            Console.WriteLine($"insert result : {json}");
-            current = JsonConvert.DeserializeObject<ApplicationUser>(json);
-            Data.Add(current);
-            await ToggleModalCreateUser().ConfigureAwait(false);
-            await InvokeAsync(StateHasChanged);
+            ProfileUrl = navigationManager.ToAbsoluteUri($"/viewProfile/{user.Id}").ToString();
+            return ToggleModalShareProfile();
         }
 
         Task SaveForm()
