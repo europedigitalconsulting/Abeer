@@ -1,38 +1,222 @@
 ﻿@page "/CreateAd"
-<section class="section">
-    <div class="section-header">
-        <h1>Create Ad</h1>
-    </div>
-    <div class="card">
-        <div class="card-body">
-            <div class="form-row">
+@using Abeer.Shared.Functional
+@inject Microsoft.Extensions.Localization.IStringLocalizer<CreateAd> Loc
+@inject HttpClient HttpClient
+@inject NavigationManager NavigationManager
+
+@code
+{
+    public string Step { get; set; } = "Step1";
+    public OfferModel Offer { get; set; } = new OfferModel();
+    public OfferPrice CurrentPrice { get; set; } = new OfferPrice();
+
+    public List<OfferPrice> OfferPrices { get; set; } = new List<OfferPrice>();
+
+    async Task Step2()
+    {
+        Step = "Step2";
+        await InvokeAsync(StateHasChanged);
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        OfferPrices = new List<OfferPrice>
+{
+            new OfferPrice{PriceName = "Free", PriceDescription = "This offer is free and you can display your ad for 2 days",
+                DelayToDisplay = 2, DisplayDuration = 2, MaxViewCount = 50, Value = 0},
+            new OfferPrice{PriceName = "7Days", PriceDescription = "Display your offer for 7 days and pay only 5 days",
+                DelayToDisplay = 7, DisplayDuration = 7, MaxViewCount = 0, Value = 500}
+        };
+
+        await base.OnParametersSetAsync();
+    }
+
+    async Task SelectOffer(OfferPrice currentPrice)
+    {
+        CurrentPrice = currentPrice;
+        Step = "Step3";
+        await InvokeAsync(StateHasChanged);
+    }
+
+    bool PublishHasError;
+
+    async Task ValidOffer()
+    {
+        var CreateOfferRequest = new CreateOfferRequestViewModel
+        {
+            Offer = Offer,
+            Price = CurrentPrice
+        };
+
+        var response = await HttpClient.PostAsJsonAsync<CreateOfferRequestViewModel>("/api/Offer", CreateOfferRequest);
+        PublishHasError = !response.IsSuccessStatusCode;
+
+        if (!PublishHasError)
+        {
+            NavigationManager.NavigateTo("/MyAds", true);
+        }
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+    async Task ProcessPayment()
+    {
+        var CreateOfferRequest = new CreateOfferRequestViewModel
+        {
+            Offer = Offer,
+            Price = CurrentPrice
+        };
+
+        var response = await HttpClient.PostAsJsonAsync<CreateOfferRequestViewModel>("/api/Offer", CreateOfferRequest);
+        PublishHasError = !response.IsSuccessStatusCode;
+
+        if (!PublishHasError)
+        {
+            var json = await response.Content.ReadAsStringAsync();
+            var offer = Newtonsoft.Json.JsonConvert.DeserializeObject<OfferModel>(json);
+            NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri($"/api/payment/Create/{offer.Id}").ToString(), true);
+        }
+
+        await InvokeAsync(StateHasChanged);
+    }
+}
+
+@if (Step == "Step1")
+{
+    <section class="section">
+        <div class="section-header">
+            <h1>@Loc["Title"]</h1>
+        </div>
+        <div class="card">
+            <div class="card-body">
                 <div class="form-group col-6 col-sm-12">
-                    <label>Title</label>
-                    <input type="text" Class="form-control" />
+                    <label>@Loc["AdTitle"]</label>
+                    <input type="text" Class="form-control" @bind="Offer.Title" />
                 </div>
                 <div class="form-group col-6 col-sm-12">
-                    <label>Description</label>
-                    <textarea type="text" Class="form-control" rows="6" />
+                    <label>@Loc["Description"]</label>
+                    <textarea type="text" Class="form-control" rows="6" @bind="Offer.Description" />
                 </div>
                 <div class="form-group col-6 col-sm-12">
-                    <label>Price</label>
-                    <input type="number" Class="form-control" />
+                    <label>@Loc["Price"]</label>
+                    <input type="number" Class="form-control" @bind="Offer.Price" />
                 </div>
                 <div class="form-group col-6 col-sm-12">
-                    <label>Date </label>
-                    <input type="date" Class="form-control" />
+                    <label>@Loc["Url1"]</label>
+                    <input type="url" Class="form-control" @bind="Offer.Url1" />
                 </div>
-            </div>
-            <div class="card">
-                <div class="card-header">
-                    <h4>Images</h4>
+                <div class="form-group col-6 col-sm-12">
+                    <label>@Loc["Url2"]</label>
+                    <input type="url" Class="form-control" @bind="Offer.Url2" />
                 </div>
-                <div class="card-body">
-                    <form action="#" class="dropzone dz-clickable" id="mydropzone">
-                      
-                        <div class="dz-default dz-message"><span>Drop files here to upload</span></div></form>
+                <div class="form-group col-6 col-sm-12">
+                    <label>@Loc["Url3"]</label>
+                    <input type="url" Class="form-control" @bind="Offer.Url3" />
+                </div>
+                <div class="form-group col-6 col-sm-12">
+                    <label>@Loc["Url4"]</label>
+                    <input type="url" Class="form-control" @bind="Offer.Url4" />
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success" @onclick="Step2"><i class="fas fa-upload"></i>@Loc["StartPublish"]</button>
+                    <a href="Ads" class="btn btn-warning">@Loc["Cancel"]</a>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+}
+else if (Step == "Step2")
+{
+    <section class="section">
+        <div class="section-header">
+            <h1>@Loc["Title"]</h1>
+            <h2>@Offer.Title</h2>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                @foreach (var price in OfferPrices)
+                {
+                    <div class="col-lg-3 col-md-3 col-sm-12">
+                        <div class="card profile-widget border">
+                            <div class="profile-widget-header">
+                                <h4>@price.PriceName</h4>
+                            </div>
+                            <div class="profile-widget-description pb-0">
+                                <div class="profile-widget-name">@price.PriceDescription</div>
+                            </div>
+                            <button type="submit" class="btn btn-success" @onclick="@(async ()=>await SelectOffer(price))">@Loc["Select"]</button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+}
+else if (Step == "Step3")
+{
+    <section class="section">
+        <div class="section-header">
+            <h1>@Loc["Title"]</h1>
+            <h2>@Offer.Title</h2>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                @if (PublishHasError)
+                {
+                    <div class="alert alert-danger">
+                        @Loc["PublishError"]
+                    </div>
+                }
+                <h3>@Loc["Summary"]</h3>
+                <div class="form-group col-6 col-sm-12">
+                    <label>@Loc["AdTitle"]</label>
+                    <input type="text" Class="form-control" @bind="Offer.Title" />
+                </div>
+                <div class="form-group col-6 col-sm-12">
+                    <label>@Loc["Description"]</label>
+                    <textarea type="text" Class="form-control" rows="6" @bind="Offer.Description" />
+                </div>
+                <div class="form-group col-6 col-sm-12">
+                    <label>@Loc["Price"]</label>
+                    <input type="number" Class="form-control" @bind="Offer.Price" />
+                </div>
+                <div class="form-group col-6 col-sm-12">
+                    <label>@Loc["Url1"]</label>
+                    <input type="url" Class="form-control" @bind="Offer.Url1" />
+                </div>
+                <div class="form-group col-6 col-sm-12">
+                    <label>@Loc["Url2"]</label>
+                    <input type="url" Class="form-control" @bind="Offer.Url2" />
+                </div>
+                <div class="form-group col-6 col-sm-12">
+                    <label>@Loc["Url3"]</label>
+                    <input type="url" Class="form-control" @bind="Offer.Url3" />
+                </div>
+                <div class="form-group col-6 col-sm-12">
+                    <label>@Loc["Url4"]</label>
+                    <input type="url" Class="form-control" @bind="Offer.Url4" />
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-12">
+                    <div class="card profile-widget border">
+                        <div class="profile-widget-header">
+                            <h4>@CurrentPrice.PriceName</h4>
+                        </div>
+                        <div class="profile-widget-description pb-0">
+                            <div class="profile-widget-name">@CurrentPrice.PriceDescription</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    @if (CurrentPrice.Value == 0)
+                    {
+                        <button type="submit" class="btn btn-success" @onclick="@(async () => await ValidOffer())"><i class="fas fa-upload"></i>@Loc["ValidOffer"]</button>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-success" @onclick="@(async () => await ProcessPayment())"><i class="fab fa-cc-paypal"></i>@Loc["ProcessPayment"]</button>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+}

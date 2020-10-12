@@ -8,7 +8,6 @@ using System.Globalization;
 using BlazorAnimate;
 using Microsoft.JSInterop;
 using Abeer.Client.UISdk;
-
 namespace Abeer.Client
 {
     public class Program
