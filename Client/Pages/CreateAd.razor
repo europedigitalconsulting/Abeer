@@ -53,7 +53,9 @@
 
         if (!PublishHasError)
         {
-            NavigationManager.NavigateTo("/MyAds", true);
+            var json = await response.Content.ReadAsStringAsync();
+            var offer = Newtonsoft.Json.JsonConvert.DeserializeObject<OfferModel>(json);
+            NavigationManager.NavigateTo($"/ValidOffer/{offer.Id}", true);
         }
 
         await InvokeAsync(StateHasChanged);
@@ -74,7 +76,7 @@
         {
             var json = await response.Content.ReadAsStringAsync();
             var offer = Newtonsoft.Json.JsonConvert.DeserializeObject<OfferModel>(json);
-            NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri($"/api/payment/Create/{offer.Id}").ToString(), true);
+            NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri($"PayOffer/{offer.Id}").ToString(), true);
         }
 
         await InvokeAsync(StateHasChanged);
@@ -206,6 +208,9 @@ else if (Step == "Step3")
                         </div>
                     </div>
                 </div>
+                <div class="alert alert-info">
+                    @Loc["RequireLogin"]
+                </div>
                 <div class="form-group">
                     @if (CurrentPrice.Value == 0)
                     {
@@ -213,7 +218,7 @@ else if (Step == "Step3")
                     }
                     else
                     {
-                        <button type="submit" class="btn btn-success" @onclick="@(async () => await ProcessPayment())"><i class="fab fa-cc-paypal"></i>@Loc["ProcessPayment"]</button>
+                        <button type="submit" class="btn btn-success" @onclick="@(async () => await ProcessPayment())"><i class="far fa-credit-card"></i>@Loc["ProcessPayment"]</button>
                     }
                 </div>
             </div>

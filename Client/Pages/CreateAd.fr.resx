@@ -135,6 +135,9 @@
   <data name="Price" xml:space="preserve">
     <value>Prix</value>
   </data>
+  <data name="RequireLogin" xml:space="preserve">
+    <value>Pour terminer votre processus de publication, vous avez besoin d'être authentifié ou de vous inscrire, si vous n'êtes pas encore authentifié après que vous ayez cliquer sur "Publier l'annonce" vous serez rediriger alors vers le formulaire d'authentification et votre annonce sera prise en compte après authentification. Si vous devez procéder au paiement, vous sera rediriger vers le formulaire d'authentification avant le formulaire de paiement</value>
+  </data>
   <data name="Select" xml:space="preserve">
     <value>Sélectionnez cette formule</value>
   </data>
@@ -160,6 +163,6 @@
     <value>URL du média à utiliser (4)</value>
   </data>
   <data name="ValidOffer" xml:space="preserve">
-    <value>Valider l'offre et la publier</value>
+    <value>Publier l'annonce</value>
   </data>
 </root>

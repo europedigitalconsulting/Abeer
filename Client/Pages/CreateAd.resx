@@ -135,6 +135,9 @@
   <data name="Price" xml:space="preserve">
     <value>Price</value>
   </data>
+  <data name="RequireLogin" xml:space="preserve">
+    <value>Offer's publishing process requires an user account, if you are not login, you will be redirect to login form</value>
+  </data>
   <data name="Select" xml:space="preserve">
     <value>Select it</value>
   </data>
