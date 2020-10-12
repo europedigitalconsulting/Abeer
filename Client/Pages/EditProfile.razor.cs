@@ -1,4 +1,6 @@
 ﻿using Abeer.Shared;
+using Abeer.Shared.ViewModels;
+
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
 
@@ -27,11 +29,18 @@ namespace Abeer.Client.Pages
         public List<SocialNetwork> SocialNetworkConnected { get; set; } = new List<SocialNetwork>();
         public List<CustomLink> CustomLinks { get; set; } = new List<CustomLink>();
 
-        public bool ModalQrCodeVisible { get; set; }
+        bool ModalQrCodeVisible;
+        bool ModalSocialNetworkVisible;
+        bool ModalCustomLinkVisible;
+        bool ModalChangePassword;
+        bool ChangePasswordHasError;
+        string ChangePasswordError = "";
 
-        public bool ModalSocialNetworkVisible { get; set; }
-        public bool ModalCustomLinkVisible { get; set; }
-        public string ProfileUrl => NavigationManager.ToAbsoluteUri($"/importContact/{User.Id}").ToString();
+        public string OldPassword { get; set; }
+        public string NewPassword { get; set; }
+        public string ConfirmPassword { get; set; }
+
+        public string ProfileUrl => NavigationManager.ToAbsoluteUri($"/viewProfile/{User.Id}").ToString();
         protected override async Task OnInitializedAsync()
         {
             var response = await HttpClient.GetAsync("api/Profile");
@@ -69,6 +78,28 @@ namespace Abeer.Client.Pages
             User = JsonConvert.DeserializeObject<ViewApplicationUser>(json);
         }
 
+        async Task ChangePassword()
+        {
+            if(NewPassword != ConfirmPassword)
+            {
+                ChangePasswordHasError = true;
+                ChangePasswordError = Loc["PasswordNotConfirmedError"].Value;
+            }
+            else
+            {
+                ChangePasswordHasError = false;
+                var response = await HttpClient.PutAsJsonAsync($"/api/Profile/ChangePassword", new ChangePasswordViewModel
+                {
+                    UserId = User.Id, OldPassword = OldPassword, NewPassword = NewPassword
+                });
+                ChangePasswordHasError = !response.IsSuccessStatusCode;
+                ChangePasswordError = Loc["ChangePasswordFailedError"];
+
+                if (!ChangePasswordHasError)
+                    await ToogleChangePassword();
+            }
+        }
+
         async Task ToggleModalSocialNetwork()
         {
             ModalSocialNetworkVisible = !ModalSocialNetworkVisible;
@@ -77,6 +108,11 @@ namespace Abeer.Client.Pages
         async Task ToggleModalCustomLink()
         {
             ModalCustomLinkVisible = !ModalCustomLinkVisible;
+        }
+
+        async Task ToogleChangePassword()
+        {
+            ModalChangePassword = !ModalChangePassword;
         }
 
         async Task DeleteSocialNetwork(SocialNetwork socialNetwork)

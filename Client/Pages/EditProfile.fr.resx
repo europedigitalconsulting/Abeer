@@ -129,8 +129,17 @@
   <data name="CatchPhrase" xml:space="preserve">
     <value>This page helps you to edit your own profile, you can edit, regenerate pin code or token to encrypt your blockchain</value>
   </data>
+  <data name="ChangePassword" xml:space="preserve">
+    <value>Modifier son mot de passe</value>
+  </data>
+  <data name="ChangePasswordFailedError" xml:space="preserve">
+    <value>Impossible d'enregister votre nouveau mot de passe, veuillez réessayer plus tard</value>
+  </data>
   <data name="City" xml:space="preserve">
     <value>City</value>
+  </data>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>Confirmer votre mot de passe</value>
   </data>
   <data name="CustomLinks" xml:space="preserve">
     <value>Liens personnalisés</value>
@@ -173,6 +182,15 @@
   </data>
   <data name="MyWallet" xml:space="preserve">
     <value>My Wallet</value>
+  </data>
+  <data name="NewPassword" xml:space="preserve">
+    <value>Nouveau mot de passe</value>
+  </data>
+  <data name="OldPassword" xml:space="preserve">
+    <value>Entrer votre ancien mot de passe</value>
+  </data>
+  <data name="PasswordNotConfirmedError" xml:space="preserve">
+    <value>Merci de bien vouloir confirmer votre mot de passe</value>
   </data>
   <data name="PinCode" xml:space="preserve">
     <value>Pin Code</value>

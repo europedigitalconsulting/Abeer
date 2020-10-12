@@ -93,6 +93,25 @@ namespace Abeer.Server.Controllers
             return BadRequest();
         }
 
+        [HttpPut("ChangePassword")]
+        public async Task<ActionResult<ApplicationUser>> ChangePassword(ChangePasswordViewModel changePasswordViewModel)
+        {
+            if (changePasswordViewModel.UserId != User.NameIdentifier())
+                return BadRequest();
+
+            var user = await _userManager.FindByIdAsync(changePasswordViewModel.UserId);
+            
+            if (user == null)
+                return NotFound();
+
+            var result = await _userManager.ChangePasswordAsync(user, changePasswordViewModel.OldPassword, changePasswordViewModel.NewPassword);
+
+            if (result.Succeeded)
+                return Ok(user);
+
+            return BadRequest();
+        }
+
         [HttpGet("PinCode/{id}")]
         public async Task <ActionResult<ApplicationUser>> GeneratePinCode(string id)
         {
