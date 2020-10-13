@@ -26,6 +26,8 @@ namespace Abeer.Shared.Functional
         public string PaymentInformation { get; set; }
         public DateTime StartDisplayTime { get; set; }
         public DateTime? EndDisplayTime { get; set; }
+        public bool IsValid { get; set; }
+        public DateTime ValidateDate { get; set; }
     }
 
     public class OfferPrice

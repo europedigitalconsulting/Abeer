@@ -5,6 +5,7 @@ using System.Collections.Concurrent;
 using Abeer.Shared.Functional;
 using System;
 using System.Linq;
+using Abeer.Data.UnitOfworks;
 
 namespace Abeer.Server.Controllers
 {
@@ -58,10 +59,15 @@ namespace Abeer.Server.Controllers
             });
         }
 
+        [Authorize]
         [HttpPut]
-        public async Task Valid(OfferModel offerModel)
+        public async Task<ActionResult<OfferModel>> Valid(OfferModel offerModel, [FromServices]FunctionalUnitOfWork functionalUnitOfWork)
         {
-
+            var current = Offers.FirstOrDefault(o => o.Id == offerModel.Id);
+            current.IsValid = true;
+            current.ValidateDate = DateTime.UtcNow;
+            var inserted = await functionalUnitOfWork.OfferRepository.AddAsync(current);
+            return Ok(inserted);
         }
     }
 }
