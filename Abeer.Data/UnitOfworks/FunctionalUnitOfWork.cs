@@ -22,7 +22,7 @@ namespace Abeer.Data.UnitOfworks
         private CountriesRepository _CountriesRepository;
         private SocialNetworkRepository _SocialNetworkRepository;
         private CustomLinkRepository _CustomLinkRepository;
-        private OfferRepository _offerRepository;
+        private AdRepository _AdRepository;
 
         private IFunctionalDbContext ApplicationDbContext { get; }
         private IServiceProvider ServiceProvider { get; }
@@ -100,14 +100,14 @@ namespace Abeer.Data.UnitOfworks
             }
         }
 
-        public OfferRepository OfferRepository
+        public AdRepository AdRepository
         {
             get
             {
-                if(_offerRepository == null)
-                    _offerRepository = ActivatorUtilities.CreateInstance<OfferRepository>(ServiceProvider);
+                if(_AdRepository == null)
+                    _AdRepository = ActivatorUtilities.CreateInstance<AdRepository>(ServiceProvider);
 
-                return _offerRepository;
+                return _AdRepository;
             }
         }
 

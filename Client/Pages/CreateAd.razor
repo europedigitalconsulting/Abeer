@@ -7,10 +7,10 @@
 @code
 {
     public string Step { get; set; } = "Step1";
-    public OfferModel Offer { get; set; } = new OfferModel();
-    public OfferPrice CurrentPrice { get; set; } = new OfferPrice();
+    public AdModel Ad { get; set; } = new AdModel();
+    public AdPrice CurrentPrice { get; set; } = new AdPrice();
 
-    public List<OfferPrice> OfferPrices { get; set; } = new List<OfferPrice>();
+    public List<AdPrice> AdPrices { get; set; } = new List<AdPrice>();
 
     async Task Step2()
     {
@@ -20,18 +20,18 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        OfferPrices = new List<OfferPrice>
+        AdPrices = new List<AdPrice>
 {
-            new OfferPrice{PriceName = "Free", PriceDescription = "This offer is free and you can display your ad for 2 days",
+            new AdPrice{PriceName = "Free", PriceDescription = "This Ad is free and you can display your ad for 2 days",
                 DelayToDisplay = 2, DisplayDuration = 2, MaxViewCount = 50, Value = 0},
-            new OfferPrice{PriceName = "7Days", PriceDescription = "Display your offer for 7 days and pay only 5 days",
+            new AdPrice{PriceName = "7Days", PriceDescription = "Display your Ad for 7 days and pay only 5 days",
                 DelayToDisplay = 7, DisplayDuration = 7, MaxViewCount = 0, Value = 500}
         };
 
         await base.OnParametersSetAsync();
     }
 
-    async Task SelectOffer(OfferPrice currentPrice)
+    async Task SelectPrice(AdPrice currentPrice)
     {
         CurrentPrice = currentPrice;
         Step = "Step3";
@@ -40,23 +40,23 @@
 
     bool PublishHasError;
 
-    async Task ValidOffer()
+    async Task ValidAd()
     {
-        var CreateOfferRequest = new CreateOfferRequestViewModel
+        var CreateAdRequest = new CreateAdRequestViewModel
         {
-            Offer = Offer,
+            Ad = Ad,
             Price = CurrentPrice
         };
 
         var httpClient = HttpClientFactory.CreateClient("Abeer.Anonymous");
-        var response = await httpClient.PostAsJsonAsync<CreateOfferRequestViewModel>("/api/Offer", CreateOfferRequest);
+        var response = await httpClient.PostAsJsonAsync<CreateAdRequestViewModel>("/api/Ad", CreateAdRequest);
         PublishHasError = !response.IsSuccessStatusCode;
 
         if (!PublishHasError)
         {
             var json = await response.Content.ReadAsStringAsync();
-            var offer = Newtonsoft.Json.JsonConvert.DeserializeObject<OfferModel>(json);
-            NavigationManager.NavigateTo($"/ValidOffer/{offer.Id}", true);
+            var Ad = Newtonsoft.Json.JsonConvert.DeserializeObject<AdModel>(json);
+            NavigationManager.NavigateTo($"/ValidAd/{Ad.Id}", true);
         }
 
         await InvokeAsync(StateHasChanged);
@@ -64,21 +64,21 @@
 
     async Task ProcessPayment()
     {
-        var CreateOfferRequest = new CreateOfferRequestViewModel
+        var CreateAdRequest = new CreateAdRequestViewModel
         {
-            Offer = Offer,
+            Ad = Ad,
             Price = CurrentPrice
         };
 
         var httpClient = HttpClientFactory.CreateClient("Abeer.Anonymous");
-        var response = await httpClient.PostAsJsonAsync<CreateOfferRequestViewModel>("/api/Offer", CreateOfferRequest);
+        var response = await httpClient.PostAsJsonAsync<CreateAdRequestViewModel>("/api/Ad", CreateAdRequest);
         PublishHasError = !response.IsSuccessStatusCode;
 
         if (!PublishHasError)
         {
             var json = await response.Content.ReadAsStringAsync();
-            var offer = Newtonsoft.Json.JsonConvert.DeserializeObject<OfferModel>(json);
-            NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri($"PayOffer/{offer.Id}").ToString(), true);
+            var Ad = Newtonsoft.Json.JsonConvert.DeserializeObject<AdModel>(json);
+            NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri($"PayAd/{Ad.Id}").ToString(), true);
         }
 
         await InvokeAsync(StateHasChanged);
@@ -95,31 +95,31 @@
             <div class="card-body">
                 <div class="form-group col-6 col-sm-12">
                     <label>@Loc["AdTitle"]</label>
-                    <input type="text" Class="form-control" @bind="Offer.Title" />
+                    <input type="text" Class="form-control" @bind="Ad.Title" />
                 </div>
                 <div class="form-group col-6 col-sm-12">
                     <label>@Loc["Description"]</label>
-                    <textarea type="text" Class="form-control" rows="6" @bind="Offer.Description" />
+                    <textarea type="text" Class="form-control" rows="6" @bind="Ad.Description" />
                 </div>
                 <div class="form-group col-6 col-sm-12">
                     <label>@Loc["Price"]</label>
-                    <input type="number" Class="form-control" @bind="Offer.Price" />
+                    <input type="number" Class="form-control" @bind="Ad.Price" />
                 </div>
                 <div class="form-group col-6 col-sm-12">
                     <label>@Loc["Url1"]</label>
-                    <input type="url" Class="form-control" @bind="Offer.Url1" />
+                    <input type="url" Class="form-control" @bind="Ad.Url1" />
                 </div>
                 <div class="form-group col-6 col-sm-12">
                     <label>@Loc["Url2"]</label>
-                    <input type="url" Class="form-control" @bind="Offer.Url2" />
+                    <input type="url" Class="form-control" @bind="Ad.Url2" />
                 </div>
                 <div class="form-group col-6 col-sm-12">
                     <label>@Loc["Url3"]</label>
-                    <input type="url" Class="form-control" @bind="Offer.Url3" />
+                    <input type="url" Class="form-control" @bind="Ad.Url3" />
                 </div>
                 <div class="form-group col-6 col-sm-12">
                     <label>@Loc["Url4"]</label>
-                    <input type="url" Class="form-control" @bind="Offer.Url4" />
+                    <input type="url" Class="form-control" @bind="Ad.Url4" />
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-success" @onclick="Step2"><i class="fas fa-upload"></i>@Loc["StartPublish"]</button>
@@ -134,11 +134,11 @@ else if (Step == "Step2")
     <section class="section">
         <div class="section-header">
             <h1>@Loc["Title"]</h1>
-            <h2>@Offer.Title</h2>
+            <h2>@Ad.Title</h2>
         </div>
         <div class="card">
             <div class="card-body">
-                @foreach (var price in OfferPrices)
+                @foreach (var price in AdPrices)
                 {
                     <div class="col-lg-3 col-md-3 col-sm-12">
                         <div class="card profile-widget border">
@@ -148,7 +148,7 @@ else if (Step == "Step2")
                             <div class="profile-widget-description pb-0">
                                 <div class="profile-widget-name">@price.PriceDescription</div>
                             </div>
-                            <button type="submit" class="btn btn-success" @onclick="@(async ()=>await SelectOffer(price))">@Loc["Select"]</button>
+                            <button type="submit" class="btn btn-success" @onclick="@(async ()=>await SelectPrice(price))">@Loc["Select"]</button>
                         </div>
                     </div>
                 }
@@ -161,7 +161,7 @@ else if (Step == "Step3")
     <section class="section">
         <div class="section-header">
             <h1>@Loc["Title"]</h1>
-            <h2>@Offer.Title</h2>
+            <h2>@Ad.Title</h2>
         </div>
         <div class="card">
             <div class="card-body">
@@ -174,31 +174,31 @@ else if (Step == "Step3")
                 <h3>@Loc["Summary"]</h3>
                 <div class="form-group col-6 col-sm-12">
                     <label>@Loc["AdTitle"]</label>
-                    <input type="text" Class="form-control" @bind="Offer.Title" />
+                    <input type="text" Class="form-control" @bind="Ad.Title" />
                 </div>
                 <div class="form-group col-6 col-sm-12">
                     <label>@Loc["Description"]</label>
-                    <textarea type="text" Class="form-control" rows="6" @bind="Offer.Description" />
+                    <textarea type="text" Class="form-control" rows="6" @bind="Ad.Description" />
                 </div>
                 <div class="form-group col-6 col-sm-12">
                     <label>@Loc["Price"]</label>
-                    <input type="number" Class="form-control" @bind="Offer.Price" />
+                    <input type="number" Class="form-control" @bind="Ad.Price" />
                 </div>
                 <div class="form-group col-6 col-sm-12">
                     <label>@Loc["Url1"]</label>
-                    <input type="url" Class="form-control" @bind="Offer.Url1" />
+                    <input type="url" Class="form-control" @bind="Ad.Url1" />
                 </div>
                 <div class="form-group col-6 col-sm-12">
                     <label>@Loc["Url2"]</label>
-                    <input type="url" Class="form-control" @bind="Offer.Url2" />
+                    <input type="url" Class="form-control" @bind="Ad.Url2" />
                 </div>
                 <div class="form-group col-6 col-sm-12">
                     <label>@Loc["Url3"]</label>
-                    <input type="url" Class="form-control" @bind="Offer.Url3" />
+                    <input type="url" Class="form-control" @bind="Ad.Url3" />
                 </div>
                 <div class="form-group col-6 col-sm-12">
                     <label>@Loc["Url4"]</label>
-                    <input type="url" Class="form-control" @bind="Offer.Url4" />
+                    <input type="url" Class="form-control" @bind="Ad.Url4" />
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-12">
                     <div class="card profile-widget border">
@@ -216,7 +216,7 @@ else if (Step == "Step3")
                 <div class="form-group">
                     @if (CurrentPrice.Value == 0)
                     {
-                        <button type="submit" class="btn btn-success" @onclick="@(async () => await ValidOffer())"><i class="fas fa-upload"></i>@Loc["ValidOffer"]</button>
+                        <button type="submit" class="btn btn-success" @onclick="@(async () => await ValidAd())"><i class="fas fa-upload"></i>@Loc["ValidAd"]</button>
                     }
                     else
                     {

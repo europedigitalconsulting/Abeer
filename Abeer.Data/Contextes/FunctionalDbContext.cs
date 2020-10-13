@@ -89,6 +89,6 @@ namespace Abeer.Data.Contextes
         public DbSet<Country> Countries { get; set; }
         public DbSet<SocialNetwork> SocialNetworks { get; set; }
         public DbSet<CustomLink> CustomLinks { get; set; }
-        public DbSet<OfferModel> Offers { get; set; }
+        public DbSet<AdModel> Ads { get; set; }
     }
 }

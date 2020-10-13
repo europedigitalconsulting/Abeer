@@ -139,7 +139,7 @@
     <value>Price</value>
   </data>
   <data name="RequireLogin" xml:space="preserve">
-    <value>Offer's publishing process requires an user account, if you are not login, you will be redirect to login form</value>
+    <value>Ad's publishing process requires an user account, if you are not login, you will be redirect to login form</value>
   </data>
   <data name="Select" xml:space="preserve">
     <value>Select it</value>
@@ -165,7 +165,7 @@
   <data name="URL4" xml:space="preserve">
     <value>URL to use (4)</value>
   </data>
-  <data name="ValidOffer" xml:space="preserve">
+  <data name="ValidAd" xml:space="preserve">
     <value>Valid the offer and publish it</value>
   </data>
 </root>

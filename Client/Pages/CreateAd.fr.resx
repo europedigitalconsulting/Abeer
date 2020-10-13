@@ -165,7 +165,7 @@
   <data name="URL4" xml:space="preserve">
     <value>URL du média à utiliser (4)</value>
   </data>
-  <data name="ValidOffer" xml:space="preserve">
+  <data name="ValidAd" xml:space="preserve">
     <value>Publier l'annonce</value>
   </data>
 </root>

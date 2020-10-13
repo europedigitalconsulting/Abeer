@@ -1,0 +1,106 @@
+﻿@page "/ValidAd/{AdId}"
+@using Abeer.Shared.Functional
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@inject Microsoft.Extensions.Localization.IStringLocalizer<CreateAd> Loc
+@inject HttpClient httpClient
+@inject NavigationManager NavigationManager
+@code
+{ [Parameter]
+    public string AdId { get; set; }
+
+    public string Step { get; set; } = "Step1";
+
+    public AdModel Ad { get; set; } = new AdModel();
+    public AdPrice CurrentPrice { get; set; } = new AdPrice();
+
+    async Task Step2()
+    {
+        Step = "Step2";
+        await InvokeAsync(StateHasChanged);
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var response = await httpClient.GetAsync($"api/Ad/{AdId}");
+
+        if (!response.IsSuccessStatusCode)
+        {
+            NavigationManager.NavigateTo("CreateAd");
+        }
+        else
+        {
+            var json = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"Ad:{json}");
+            Ad = Newtonsoft.Json.JsonConvert.DeserializeObject<AdModel>(json);
+            await base.OnParametersSetAsync();
+        }
+    }
+
+    async Task SelectPrice(AdPrice currentPrice)
+    {
+        CurrentPrice = currentPrice;
+        Step = "Step3";
+        await InvokeAsync(StateHasChanged);
+    }
+
+    async Task Finish()
+    {
+        var response = await httpClient.GetAsync($"api/Ad/valid/{Ad.Id}");
+        response.EnsureSuccessStatusCode();
+        NavigationManager.NavigateTo("/MyAds");
+    } }
+<section class="section">
+    <div class="section-header">
+        <h1>@Loc["Title"]</h1>
+        <h2>@Ad.Title</h2>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <h3>@Loc["Summary"]</h3>
+            <div class="form-group col-6 col-sm-12">
+                <label>@Loc["AdTitle"]</label>
+                <input type="text" Class="form-control" @bind="Ad.Title" disabled="disabled" />
+            </div>
+            <div class="form-group col-6 col-sm-12">
+                <label>@Loc["Description"]</label>
+                <textarea type="text" Class="form-control" rows="6" @bind="Ad.Description" disabled="disabled" />
+            </div>
+            <div class="form-group col-6 col-sm-12">
+                <label>@Loc["Price"]</label>
+                <input type="number" Class="form-control" @bind="Ad.Price" disabled="disabled" />
+            </div>
+            <div class="form-group col-6 col-sm-12">
+                <label>@Loc["Url1"]</label>
+                <input type="url" Class="form-control" @bind="Ad.Url1" disabled="disabled" />
+            </div>
+            <div class="form-group col-6 col-sm-12">
+                <label>@Loc["Url2"]</label>
+                <input type="url" Class="form-control" @bind="Ad.Url2" disabled="disabled" />
+            </div>
+            <div class="form-group col-6 col-sm-12">
+                <label>@Loc["Url3"]</label>
+                <input type="url" Class="form-control" @bind="Ad.Url3" disabled="disabled" />
+            </div>
+            <div class="form-group col-6 col-sm-12">
+                <label>@Loc["Url4"]</label>
+                <input type="url" Class="form-control" @bind="Ad.Url4" disabled="disabled" />
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="card profile-widget border">
+                    <div class="profile-widget-header">
+                        <h4>@CurrentPrice.PriceName</h4>
+                    </div>
+                    <div class="profile-widget-description pb-0">
+                        <div class="profile-widget-name">@CurrentPrice.PriceDescription</div>
+                    </div>
+                </div>
+            </div>
+            @if (Ad.Id != Guid.Empty)
+            {
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success" @onclick="Finish"><i class="fas fa-upload"></i>@Loc["Finish"]</button>
+                </div>            
+            }
+        </div>
+    </div>
+</section>

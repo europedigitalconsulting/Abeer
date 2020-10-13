@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Abeer.Shared.Functional
 {
-    public class OfferModel
+    public class AdModel
     {
-        public OfferModel()
+        public AdModel()
         {
             Id = Guid.NewGuid();
         }
@@ -22,7 +22,7 @@ namespace Abeer.Shared.Functional
         public string Url4 { get; set; }
         public string OwnerId { get; set; }
         public int ViewCount { get; set; }
-        public OfferPrice OfferPrice { get; set; }
+        public AdPrice AdPrice { get; set; }
         public string PaymentInformation { get; set; }
         public DateTime StartDisplayTime { get; set; }
         public DateTime? EndDisplayTime { get; set; }
@@ -30,9 +30,9 @@ namespace Abeer.Shared.Functional
         public DateTime ValidateDate { get; set; }
     }
 
-    public class OfferPrice
+    public class AdPrice
     {
-        public OfferPrice()
+        public AdPrice()
         {
             Id = Guid.NewGuid();
         }
