@@ -129,6 +129,9 @@
   <data name="DropFileHere" xml:space="preserve">
     <value>Veuillez déposer ici les photos nécessaire pour votre offre</value>
   </data>
+  <data name="Finish" xml:space="preserve">
+    <value>Mettre en ligne mon offre</value>
+  </data>
   <data name="Images" xml:space="preserve">
     <value>Image</value>
   </data>

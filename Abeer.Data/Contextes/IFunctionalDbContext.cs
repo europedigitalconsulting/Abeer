@@ -1,5 +1,7 @@
 ﻿using Abeer.Data.Models;
 using Abeer.Shared;
+using Abeer.Shared.Functional;
+
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -23,6 +25,8 @@ namespace Abeer.Data
         DbSet<Shared.Purchase> Purchase { get; set; }
         DbSet<Shared.Payment> Payment { get; set; }
         DbSet<Country> Countries { get; set; }
+        DbSet<OfferModel> Offers { get; }
+
         Task BulkInsertAsync<T>(IEnumerable<T> countries) where T:class;
         Task BulkUpdateAsync<T>(IList<T> entities) where T : class;
 

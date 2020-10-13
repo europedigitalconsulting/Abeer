@@ -6,17 +6,18 @@ using Abeer.Shared.Functional;
 using System;
 using System.Linq;
 using Abeer.Data.UnitOfworks;
+using ClosedXML.Excel;
 
 namespace Abeer.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [AllowAnonymous]
     public class OfferController : ControllerBase
     {
         private static readonly ConcurrentBag<OfferModel> Offers = new ConcurrentBag<OfferModel>();
 
-        [HttpGet]
+        [Authorize]
+        [HttpGet("{id}")]
         public async Task<ActionResult<OfferModel>> Get(Guid id)
         {
             return await Task.Run(() =>
@@ -27,6 +28,7 @@ namespace Abeer.Server.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<ActionResult<OfferModel>> Create(CreateOfferRequestViewModel createOfferRequestViewModel)
         {
             return await Task.Run<ActionResult<OfferModel>>(() =>
@@ -60,14 +62,20 @@ namespace Abeer.Server.Controllers
         }
 
         [Authorize]
-        [HttpPut]
-        public async Task<ActionResult<OfferModel>> Valid(OfferModel offerModel, [FromServices]FunctionalUnitOfWork functionalUnitOfWork)
+        [HttpGet]
+        public async Task<ActionResult<OfferModel>> Valid(Guid offerId, [FromServices]FunctionalUnitOfWork functionalUnitOfWork)
         {
-            var current = Offers.FirstOrDefault(o => o.Id == offerModel.Id);
-            current.IsValid = true;
-            current.ValidateDate = DateTime.UtcNow;
-            var inserted = await functionalUnitOfWork.OfferRepository.AddAsync(current);
-            return Ok(inserted);
+            var current = Offers.FirstOrDefault(o => o.Id == offerId);
+            
+            if (current.OfferPrice.Value == 0 || !string.IsNullOrEmpty(current.PaymentInformation))
+            {
+                current.IsValid = true;
+                current.ValidateDate = DateTime.UtcNow;
+                var inserted = await functionalUnitOfWork.OfferRepository.AddAsync(current);
+                return Ok(inserted);
+            }
+
+            return BadRequest();
         }
     }
 }

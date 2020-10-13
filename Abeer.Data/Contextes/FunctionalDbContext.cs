@@ -1,6 +1,7 @@
 ﻿using Abeer.Data;
 using Abeer.Data.Models;
 using Abeer.Shared;
+using Abeer.Shared.Functional;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -88,5 +89,6 @@ namespace Abeer.Data.Contextes
         public DbSet<Country> Countries { get; set; }
         public DbSet<SocialNetwork> SocialNetworks { get; set; }
         public DbSet<CustomLink> CustomLinks { get; set; }
+        public DbSet<OfferModel> Offers { get; set; }
     }
 }

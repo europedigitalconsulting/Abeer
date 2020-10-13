@@ -129,6 +129,9 @@
   <data name="DropFileHere" xml:space="preserve">
     <value>Drop files here to upload</value>
   </data>
+  <data name="Finish" xml:space="preserve">
+    <value>Publish my offer</value>
+  </data>
   <data name="Images" xml:space="preserve">
     <value>Image</value>
   </data>

@@ -22,6 +22,7 @@ namespace Abeer.Data.UnitOfworks
         private CountriesRepository _CountriesRepository;
         private SocialNetworkRepository _SocialNetworkRepository;
         private CustomLinkRepository _CustomLinkRepository;
+        private OfferRepository _offerRepository;
 
         private IFunctionalDbContext ApplicationDbContext { get; }
         private IServiceProvider ServiceProvider { get; }
@@ -96,6 +97,17 @@ namespace Abeer.Data.UnitOfworks
                     _PurchaseRepository = ActivatorUtilities.CreateInstance<PurchaseRepository>(ServiceProvider);
 
                 return _PurchaseRepository;
+            }
+        }
+
+        public OfferRepository OfferRepository
+        {
+            get
+            {
+                if(_offerRepository == null)
+                    _offerRepository = ActivatorUtilities.CreateInstance<OfferRepository>(ServiceProvider);
+
+                return _offerRepository;
             }
         }
 

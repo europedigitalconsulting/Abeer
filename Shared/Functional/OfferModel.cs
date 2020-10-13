@@ -32,6 +32,13 @@ namespace Abeer.Shared.Functional
 
     public class OfferPrice
     {
+        public OfferPrice()
+        {
+            Id = Guid.NewGuid();
+        }
+
+        [Key]
+        public Guid Id { get; set; }
         public string PriceName { get; set; }
         public string PriceDescription { get; set; }
         public decimal Value { get; set; }
