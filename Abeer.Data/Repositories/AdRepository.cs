@@ -35,5 +35,18 @@ namespace Abeer.Data.Repositories
             _context.Ads.Update(ad);
             await _context.SaveChangesAsync();
         }
+
+        public async Task DeleteAsync(Guid id)
+        {
+            var ad = await _context.Ads.FirstOrDefaultAsync(a => a.Id == id);
+            _context.Ads.Remove(ad);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<AdModel>> GetVisibled()
+        {
+            return await _context.Ads.Where(a => a.StartDisplayTime <= DateTime.UtcNow && a.EndDisplayTime >= DateTime.UtcNow
+                && a.IsValid == true).ToListAsync();
+        }
     }
 }

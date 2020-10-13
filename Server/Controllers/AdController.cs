@@ -24,6 +24,13 @@ namespace Abeer.Server.Controllers
         }
 
         [Authorize]
+        [HttpGet("Visibled")]
+        public async Task<ActionResult<IEnumerable<AdModel>>> GetVisibled([FromServices] FunctionalUnitOfWork functionalUnitOfWork)
+        {
+            return Ok(await functionalUnitOfWork.AdRepository.GetVisibled());
+        }
+
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<AdModel>> Get(Guid id)
         {
@@ -43,28 +50,19 @@ namespace Abeer.Server.Controllers
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
-                var Ad = new AdModel
-                {
-                    Description = createAdRequestViewModel.Ad.Description,
-                    OwnerId = User.NameIdentifier(),
-                    Title = createAdRequestViewModel.Ad.Title,
-                    Url1 = createAdRequestViewModel.Ad.Url1,
-                    Url2 = createAdRequestViewModel.Ad.Url2,
-                    Url3 = createAdRequestViewModel.Ad.Url3,
-                    Url4 = createAdRequestViewModel.Ad.Url4
-                };
-
+                var ad = createAdRequestViewModel.Ad;
+                
                 if (createAdRequestViewModel.Price.Value == 0)
                 {
-                    Ad.StartDisplayTime = DateTime.Now.AddDays(createAdRequestViewModel.Price.DelayToDisplay);
-                    Ad.EndDisplayTime = DateTime.Now.AddDays(createAdRequestViewModel.Price.DisplayDuration.GetValueOrDefault(1));
+                    ad.StartDisplayTime = DateTime.Now.AddDays(createAdRequestViewModel.Price.DelayToDisplay);
+                    ad.EndDisplayTime = DateTime.Now.AddDays(createAdRequestViewModel.Price.DisplayDuration.GetValueOrDefault(1));
                 }
 
-                Ad.AdPrice = createAdRequestViewModel.Price;
+                ad.AdPrice = createAdRequestViewModel.Price;
 
-                Ads.Add(Ad);
+                Ads.Add(ad);
 
-                return Ok(Ad);
+                return Ok(ad);
             });
         }
 
@@ -92,6 +90,14 @@ namespace Abeer.Server.Controllers
         public async Task<IActionResult> Update(AdModel ad, [FromServices] FunctionalUnitOfWork functionalUnitOfWork)
         {
             await functionalUnitOfWork.AdRepository.Update(ad);
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpDelete]
+        public async Task<IActionResult> Delete(Guid id, [FromServices] FunctionalUnitOfWork functionalUnitOfWork)
+        {
+            await functionalUnitOfWork.AdRepository.DeleteAsync(id);
             return Ok();
         }
     }
