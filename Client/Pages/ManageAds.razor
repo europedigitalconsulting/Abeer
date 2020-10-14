@@ -1,0 +1,242 @@
+﻿@page "/ManageAds"
+@using System.Security.Claims
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@inject HttpClient HttpClient
+@inject Microsoft.Extensions.Localization.IStringLocalizer<ManageAds> Loc
+
+@code
+{
+    bool ModalFormAdVisible;
+    bool FormHasError;
+
+    string TitleForm = "EditForm";
+    string Mode = "Insert";
+
+    Abeer.Shared.Functional.AdModel Current = new Abeer.Shared.Functional.AdModel();
+
+    public string Term { get; set; }
+
+    List<Abeer.Shared.Functional.AdModel> All = new List<Abeer.Shared.Functional.AdModel>();
+    List<Abeer.Shared.Functional.AdModel> Items = new List<Abeer.Shared.Functional.AdModel>();
+
+    [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    [Inject] private NavigationManager navigationManager { get; set; }
+
+    void countTerm(KeyboardEventArgs e)
+    {
+        if (Term.Length > 5)
+            Search();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authenticateSate = await authenticationStateTask;
+
+        Console.WriteLine("User claims");
+
+        if (!authenticateSate.User.Identity.IsAuthenticated || !authenticateSate.User.HasClaim(ClaimTypes.Role, "admin"))
+        {
+            Console.WriteLine("User is not admin, redirect to login");
+            navigationManager.NavigateTo("/authentication/Login", true);
+        }
+
+        var getAll = await HttpClient.GetAsync("/api/ad/admin");
+        getAll.EnsureSuccessStatusCode();
+        var json = await getAll.Content.ReadAsStringAsync();
+        All = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Abeer.Shared.Functional.AdModel>>(json);
+        Items = All.ToList();
+    }
+
+    void Search()
+    {
+        Items = All.Where(a => a.Title.Contains(Term) || a.Description.Contains(Term)).ToList();
+    }
+
+    void OpenEditModal(Abeer.Shared.Functional.AdModel adModel)
+    {
+        Current = adModel;
+        Mode = "Edit";
+        ModalFormAdVisible = true;
+    }
+
+    void OpenDeleteModal(Abeer.Shared.Functional.AdModel adModel)
+    {
+        Current = adModel;
+        Mode = "Delete";
+        ModalFormAdVisible = true;
+    }
+
+    void OpenCreateAd()
+    {
+        Current = new Abeer.Shared.Functional.AdModel();
+        Current.StartDisplayTime = DateTime.UtcNow;
+        Mode = "Insert";
+        ModalFormAdVisible = true;
+    }
+
+    async Task Save()
+    {
+        switch (Mode)
+        {
+            case "Insert":
+                {
+                    var postResponse = await HttpClient.PostAsJsonAsync<Abeer.Shared.Functional.AdModel>("/api/ad/admin", Current);
+                    postResponse.EnsureSuccessStatusCode();
+                    All.Add(Current);
+                    Items.Add(Current);
+                    Current = new Abeer.Shared.Functional.AdModel();
+                    ModalFormAdVisible = false;
+                    break;
+                }
+            case "Edit":
+                {
+                    var postResponse = await HttpClient.PutAsJsonAsync<Abeer.Shared.Functional.AdModel>("/api/ad/admin", Current);
+                    postResponse.EnsureSuccessStatusCode();
+                    Current = new Abeer.Shared.Functional.AdModel();
+                    ModalFormAdVisible = false;
+                    break;
+                }
+            case "Delete":
+                {
+                    var postResponse = await HttpClient.DeleteAsync($"/api/ad/{Current.Id}");
+                    postResponse.EnsureSuccessStatusCode();
+                    Current = new Abeer.Shared.Functional.AdModel();
+                    ModalFormAdVisible = false;
+                    break;
+                }
+        }
+    }
+    bool IsFormDisabled => Mode == "Delete";
+}
+@if (ModalFormAdVisible)
+{
+    <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">@Loc[TitleForm]</h4>
+                </div>
+                <div class="modal-body">
+                    <section class="section">
+                        <div class="section-header">
+                            <h1>@Loc["EditAdTitle"]</h1>
+                            <h2>@Current.Title</h2>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                @if (FormHasError)
+                                {
+                                    <div class="alert alert-danger">
+                                        @Loc["UpdateFailedError"]
+                                    </div>
+                                }
+                                <h3>@Loc["Summary"]</h3>
+                                <div class="form-group col-6 col-sm-12">
+                                    <label>@Loc["AdTitle"] @Current.ViewCount</label>
+                                    <input type="text" Class="form-control" @bind="Current.Title" disabled="@IsFormDisabled" />
+                                </div>
+                                <div class="form-group col-6 col-sm-12">
+                                    <label>@Loc["Description"]</label>
+                                    <textarea type="text" Class="form-control" rows="6" @bind="Current.Description" disabled="@IsFormDisabled" />
+                                </div>
+                                <div class="form-group col-6 col-sm-12">
+                                    <label>@Loc["Price"]</label>
+                                    <input type="number" Class="form-control" @bind="Current.Price" disabled="@IsFormDisabled" />
+                                </div>
+                                <div class="form-group col-6 col-sm-12">
+                                    <label>@Loc["Url1"]</label>
+                                    <input type="url" Class="form-control" @bind="Current.Url1" disabled="@IsFormDisabled" />
+                                </div>
+                                <div class="form-group col-6 col-sm-12">
+                                    <label>@Loc["Url2"]</label>
+                                    <input type="url" Class="form-control" @bind="Current.Url2" disabled="@IsFormDisabled" />
+                                </div>
+                                <div class="form-group col-6 col-sm-12">
+                                    <label>@Loc["Url3"]</label>
+                                    <input type="url" Class="form-control" @bind="Current.Url3" disabled="@IsFormDisabled" />
+                                </div>
+                                <div class="form-group col-6 col-sm-12">
+                                    <label>@Loc["Url4"]</label>
+                                    <input type="url" Class="form-control" @bind="Current.Url4" disabled="@IsFormDisabled" />
+                                </div>
+                                <div class="form-group col-6 col-sm-12">
+                                    <label>@Loc["StartDisplayTime"]</label>
+                                    <input type="datetime" Class="form-control" @bind-value="Current.StartDisplayTime" disabled="@IsFormDisabled" />
+                                </div>
+                                <div class="form-group col-6 col-sm-12">
+                                    <label>@Loc["EndDisplayTime"]</label>
+                                    <input type="datetime" Class="form-control" @bind-value="Current.EndDisplayTime" disabled="@IsFormDisabled" />
+                                </div>
+                                <div class="form-group col-6 col-sm-12">
+                                    <label>@Loc["IsValid"]</label>
+                                    <input type="checkbox" Class="form-control" @bind="Current.IsValid" disabled="@IsFormDisabled" />
+                                    @if (Current.IsValid)
+                                    {
+                                        <span class="badge badge-success">@Loc["ValidateOn"] @Current.ValidateDate</span>
+                                    }
+                                    @if (!string.IsNullOrEmpty(Current.PaymentInformation))
+                                    {
+                                        <span class="badge badget-success">@Loc["PaymentInformation"]: @Current.PaymentInformation</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" @onclick="@(() => ModalFormAdVisible = false)">@Loc["Cancel"]</button>
+                    <button type="button" class="btn btn-success" @onclick="Save">@Loc["Save"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<section class="section">
+    <div class="section-header">
+        <h1>@Loc["Title"]</h1>
+        <div class="input-group">
+            <input type="search" id="example-input1-group2" name="example-input1-group2" class="form-control" @bind="Term" @onkeyup="countTerm">
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-lg" @onclick="Search"><i class="fa fa-2x  fa-search"></i></button>
+            </span>
+            <div class="search-backdrop"></div>
+        </div>
+    </div>
+    <div class="section-body">
+        <div class="row">
+            <div class="col-12">
+                @foreach (var ad in Items)
+                {
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>@ad.Title</h4>
+                            <cite>@ad.StartDisplayTime / @ad.EndDisplayTime</cite>
+                            <div class="card-header-action">
+                                <a data-dismiss="#mycard-dimiss" class="btn btn-icon btn-primary" href="#">@ad.Price.FormatCurrency()</a>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p class="mb-2">
+                                @ad.Description
+                            </p>
+                            <div class="gallery gallery-md">
+                                <div class="gallery-item" data-image="@ad.Url1" data-title="Image 1" href="@ad.Url1" title="Image 1" style="background-image: url(&quot;@ad.Url1&quot;);"></div>
+                                <div class="gallery-item" data-image="@ad.Url2" data-title="Image 1" href="@ad.Url2" title="Image 2" style="background-image: url(&quot;@ad.Url2&quot;);"></div>
+                                <div class="gallery-item" data-image="@ad.Url3" data-title="Image 1" href="@ad.Url3" title="Image 3" style="background-image: url(&quot;@ad.Url3&quot;);"></div>
+                                <div class="gallery-item" data-image="@ad.Url4" data-title="Image 1" href="@ad.Url4" title="Image 4" style="background-image: url(&quot;@ad.Url4&quot;);"></div>
+                            </div>
+                            <button class="btn btn-primary" @onclick="@(()=>OpenEditModal(ad))"><i class="fas fa-pen-square"></i></button>
+                            <button class="btn btn-danger" @onclick="@(()=>OpenDeleteModal(ad))"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    </div>
+                }
+                <button class="btn btn-lg btn-info" @onclick="OpenCreateAd"><i class="fas fa-upload" style="font-size:45px"></i><h5>@Loc["PublishAnAd"]</h5></button>
+                <a class="btn btn-lg btn-info" href="/ManageAdPrices"><i class="fas fa-money-bill-wave-alt" style="font-size:45px"></i><h5>@Loc["ManageAdPrices"]</h5></a>
+            </div>
+        </div>
+    </div>
+</section>

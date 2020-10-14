@@ -10,23 +10,23 @@ namespace Abeer.Data
 {
     public interface IFunctionalDbContext
     {
-        DbSet<UrlShortned> UrlShortneds { get; set; }
-        DbSet<CustomLink> CustomLinks { get; set; }
-        DbSet<SocialNetwork> SocialNetworks { get; set; }
-        DbSet<Contact> Contacts { get; set; }
-        DbSet<TokenBatch> TokenBatches { get; set; }
-        DbSet<Card> Cards { get; set; }
-        DbSet<TokenItem> TokenItems { get; set; }
-        DbSet<TokenBatchStatu> TokenBatchStatus { get; set; }
-        DbSet<CardStatu> CardStatus { get; set; }
-        DbSet<Wallet> Wallets { get; set; }
-        DbSet<Shared.Transaction> Transactions { get; set; }
-        DbSet<TransactionStatu> TransactionStatus { get; set; }
-        DbSet<Shared.Purchase> Purchase { get; set; }
-        DbSet<Shared.Payment> Payment { get; set; }
-        DbSet<Country> Countries { get; set; }
+        DbSet<UrlShortned> UrlShortneds { get; }
+        DbSet<CustomLink> CustomLinks { get; }
+        DbSet<SocialNetwork> SocialNetworks { get; }
+        DbSet<Contact> Contacts { get; }
+        DbSet<TokenBatch> TokenBatches { get; }
+        DbSet<Card> Cards { get; }
+        DbSet<TokenItem> TokenItems { get; }
+        DbSet<TokenBatchStatu> TokenBatchStatus { get; }
+        DbSet<CardStatu> CardStatus { get; }
+        DbSet<Wallet> Wallets { get; }
+        DbSet<Shared.Transaction> Transactions { get; }
+        DbSet<TransactionStatu> TransactionStatus { get; }
+        DbSet<Shared.Purchase> Purchase { get; }
+        DbSet<Shared.Payment> Payment { get; }
+        DbSet<Country> Countries { get; }
         DbSet<AdModel> Ads { get; }
-
+        DbSet<AdPrice> AdPrices { get; }
         Task BulkInsertAsync<T>(IEnumerable<T> countries) where T:class;
         Task BulkUpdateAsync<T>(IList<T> entities) where T : class;
 

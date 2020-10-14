@@ -2,11 +2,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
+using System.Security.Principal;
+using System.Linq;
 
 namespace Abeer.Client
 {
     public static class GravatarUrlExtension
     {
+        private static string noimage = "/assets/img/avatar/avatar-1.png";
+
         /// <summary>
         /// NGravatar avatar rating.
         /// </summary>
@@ -157,7 +162,7 @@ namespace Abeer.Client
             }
             else
             {
-                return "about:blank";
+                return noimage;
             }
         }
 
@@ -170,7 +175,7 @@ namespace Abeer.Client
             }
             else
             {
-                return "about:blank";
+                return noimage;
             }
         }
 
@@ -183,7 +188,22 @@ namespace Abeer.Client
             }
             else
             {
-                return "about:blank";
+                return noimage;
+            }
+        }
+
+        public static string GravatarUrl(this IIdentity identity)
+        {
+            var email = identity.Name ;
+            
+            if(!string.IsNullOrEmpty(email))
+            {
+                var gravatar = new Gravatar();
+                return gravatar.GetImageSource(email);
+            }
+            else
+            {
+                return noimage;
             }
         }
     }

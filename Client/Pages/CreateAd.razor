@@ -15,19 +15,18 @@
     async Task Step2()
     {
         Step = "Step2";
+
+        var httpClient = HttpClientFactory.CreateClient("Abeer.Anonymous");
+        var getAll = await httpClient.GetAsync("/api/adprice");
+        getAll.EnsureSuccessStatusCode();
+        var json = await getAll.Content.ReadAsStringAsync();
+        AdPrices = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Abeer.Shared.Functional.AdPrice>>(json);
+
         await InvokeAsync(StateHasChanged);
     }
 
     protected override async Task OnParametersSetAsync()
     {
-        AdPrices = new List<AdPrice>
-{
-            new AdPrice{PriceName = "Free", PriceDescription = "This Ad is free and you can display your ad for 2 days",
-                DelayToDisplay = 2, DisplayDuration = 2, MaxViewCount = 50, Value = 0},
-            new AdPrice{PriceName = "7Days", PriceDescription = "Display your Ad for 7 days and pay only 5 days",
-                DelayToDisplay = 7, DisplayDuration = 7, MaxViewCount = 0, Value = 500}
-        };
-
         await base.OnParametersSetAsync();
     }
 
