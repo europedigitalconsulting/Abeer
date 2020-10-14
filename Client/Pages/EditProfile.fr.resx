@@ -189,6 +189,9 @@
   <data name="OldPassword" xml:space="preserve">
     <value>Entrer votre ancien mot de passe</value>
   </data>
+  <data name="PasswordFieldEmptyError" xml:space="preserve">
+    <value>Veuillez saisir tous les champs de mot de passe</value>
+  </data>
   <data name="PasswordNotConfirmedError" xml:space="preserve">
     <value>Merci de bien vouloir confirmer votre mot de passe</value>
   </data>

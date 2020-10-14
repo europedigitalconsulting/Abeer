@@ -18,11 +18,11 @@ namespace Abeer.Server.Controllers
             _functionalUnitOfWork = functionalUnitOfWork;
         }
 
-        [HttpDelete("{UserId}/{networkName}")]
-        public async Task<IActionResult> Delete(string UserId, string networkName)
+        [HttpDelete("{UserId}/{linkId}")]
+        public async Task<IActionResult> Delete(string UserId, string linkId)
         {
             var network = await _functionalUnitOfWork.CustomLinkRepository.FirstOrDefaultAsync(s => s.OwnerId == UserId &&
-                s.Name == networkName);
+                s.Id == linkId);
 
             if (network == null)
                 return NotFound();

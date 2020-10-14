@@ -29,7 +29,6 @@ namespace Abeer.Client.Pages
         public List<SocialNetwork> SocialNetworkConnected { get; set; } = new List<SocialNetwork>();
         public List<CustomLink> CustomLinks { get; set; } = new List<CustomLink>();
 
-        bool ModalQrCodeVisible;
         bool ModalSocialNetworkVisible;
         bool ModalCustomLinkVisible;
         bool ModalChangePassword;
@@ -43,7 +42,7 @@ namespace Abeer.Client.Pages
         public string ProfileUrl => NavigationManager.ToAbsoluteUri($"/viewProfile/{User.Id}").ToString();
         protected override async Task OnInitializedAsync()
         {
-            var response = await HttpClient.GetAsync("api/Profile");
+            var response = await HttpClient.GetAsync($"api/Profile");
             response.EnsureSuccessStatusCode();
             var json = await response.Content.ReadAsStringAsync();
             Console.WriteLine($"user :{json}");
@@ -80,6 +79,13 @@ namespace Abeer.Client.Pages
 
         async Task ChangePassword()
         {
+            if (string.IsNullOrEmpty(OldPassword) || string.IsNullOrEmpty(NewPassword) ||
+                string.IsNullOrEmpty(ConfirmPassword))
+            {
+
+                ChangePasswordHasError = true;
+                ChangePasswordError = Loc["PasswordFieldEmptyError"].Value;
+            }
             if(NewPassword != ConfirmPassword)
             {
                 ChangePasswordHasError = true;
@@ -93,13 +99,13 @@ namespace Abeer.Client.Pages
                     UserId = User.Id, OldPassword = OldPassword, NewPassword = NewPassword
                 });
                 ChangePasswordHasError = !response.IsSuccessStatusCode;
+                Console.Write(response.Content.ReadAsStringAsync());
                 ChangePasswordError = Loc["ChangePasswordFailedError"];
 
                 if (!ChangePasswordHasError)
                     await ToogleChangePassword();
             }
         }
-
         async Task ToggleModalSocialNetwork()
         {
             ModalSocialNetworkVisible = !ModalSocialNetworkVisible;
@@ -150,6 +156,7 @@ namespace Abeer.Client.Pages
             SocialNetworkConnected.Add(NewSocialLink);
             NewSocialLink = new SocialNetwork { OwnerId = User.Id };
             await InvokeAsync(StateHasChanged);
+            await ToggleModalSocialNetwork();
         }
 
         async Task AddCustomLink()
@@ -159,6 +166,7 @@ namespace Abeer.Client.Pages
             CustomLinks.Add(NewCustomLink);
             NewCustomLink = new CustomLink { OwnerId = User.Id };
             await InvokeAsync(StateHasChanged);
+            await ToggleModalCustomLink();
         }
 
         async Task SetSocialNetwork(string name, string background, string logo)

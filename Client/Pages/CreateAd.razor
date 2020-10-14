@@ -24,9 +24,11 @@
 {
             new AdPrice{PriceName = "Free", PriceDescription = "This Ad is free and you can display your ad for 2 days",
                 DelayToDisplay = 2, DisplayDuration = 2, MaxViewCount = 50, Value = 0},
-            new AdPrice{PriceName = "7Days", PriceDescription = "Display your Ad for 7 days and pay only 5 days",
-                DelayToDisplay = 7, DisplayDuration = 7, MaxViewCount = 0, Value = 500}
-        };
+            new AdPrice{PriceName = "7 Days", PriceDescription = "Display your Ad for 7 days and pay only 5 days",
+                DelayToDisplay = 7, DisplayDuration = 7, MaxViewCount = 0, Value = 500},
+            new AdPrice{PriceName = "30 Days", PriceDescription = "Display your Ad for 30 days and pay only 25 days",
+                DelayToDisplay = 30, DisplayDuration = 30, MaxViewCount = 0, Value = 1000}
+                };
 
         await base.OnParametersSetAsync();
     }
@@ -134,24 +136,33 @@ else if (Step == "Step2")
     <section class="section">
         <div class="section-header">
             <h1>@Loc["Title"]</h1>
-            <h2>@Ad.Title</h2>
         </div>
         <div class="card">
             <div class="card-body">
-                @foreach (var price in AdPrices)
-                {
-                    <div class="col-lg-3 col-md-3 col-sm-12">
-                        <div class="card profile-widget border">
-                            <div class="profile-widget-header">
-                                <h4>@price.PriceName</h4>
+                <div class="row">
+                    @foreach (var price in AdPrices)
+                    {
+                        <div class="col-lg-3 col-md-3 col-sm-12">
+                            <div class="card profile-widget border p-4">
+                                <div class="profile-widget-header">
+                                    @if (@price.Value > 0)
+                                    {
+                                        <div class="float-right">
+                                            <span class="badge badge-info">@price.Value €</span>
+                                        </div>
+                                    }
+                                    <h4>@price.PriceName</h4>
+                                </div>
+                                <div class="profile-widget-description pb-0">
+                                    <div class="profile-widget-name">@price.PriceDescription</div>
+                                </div>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-success" @onclick="@(async () => await SelectPrice(price))">@Loc["Select"]</button>
+                                </div>
                             </div>
-                            <div class="profile-widget-description pb-0">
-                                <div class="profile-widget-name">@price.PriceDescription</div>
-                            </div>
-                            <button type="submit" class="btn btn-success" @onclick="@(async ()=>await SelectPrice(price))">@Loc["Select"]</button>
                         </div>
-                    </div>
-                }
+                    }
+                </div>
             </div>
         </div>
     </section>
@@ -161,7 +172,6 @@ else if (Step == "Step3")
     <section class="section">
         <div class="section-header">
             <h1>@Loc["Title"]</h1>
-            <h2>@Ad.Title</h2>
         </div>
         <div class="card">
             <div class="card-body">
@@ -201,8 +211,14 @@ else if (Step == "Step3")
                     <input type="url" Class="form-control" @bind="Ad.Url4" />
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-12">
-                    <div class="card profile-widget border">
+                    <div class="card profile-widget border p-4">
                         <div class="profile-widget-header">
+                            @if (CurrentPrice.Value > 0)
+                            {
+                                <div class="float-right">
+                                    <span class="badge badge-info">@CurrentPrice.Value €</span>
+                                </div>
+                            }
                             <h4>@CurrentPrice.PriceName</h4>
                         </div>
                         <div class="profile-widget-description pb-0">
@@ -210,7 +226,7 @@ else if (Step == "Step3")
                         </div>
                     </div>
                 </div>
-                <div class="alert alert-info">
+                <div class="alert alert-info p-4">
                     @Loc["RequireLogin"]
                 </div>
                 <div class="form-group">

@@ -3961,7 +3961,7 @@ body.layout-3 .main-footer {
             }
 
 .main-content {
-    padding: 30px;
+    padding-bottom: 60px;
     padding-top: 90px;
     width: 100%;
     position: relative;

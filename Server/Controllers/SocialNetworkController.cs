@@ -27,7 +27,7 @@ namespace Abeer.Server.Controllers
                 new SocialNetwork{BackgroundColor = "bg-danger", Logo = "fab fa-youtube-square", Name="Youtube"},
                 new SocialNetwork{BackgroundColor = "bg-danger", Logo = "fab fa-instagram-square", Name="Instagram"},
                 new SocialNetwork{BackgroundColor = "bg-primary", Logo = "fab fa-twitter-square", Name="Twitter"},
-                new SocialNetwork{BackgroundColor = "bg-secondary", Logo = "fab fa-pintereset-square", Name="Pintereset"},
+                new SocialNetwork{BackgroundColor = "bg-secondary", Logo = "fab fa-pinterest-square", Name="Pinterest"},
                 new SocialNetwork{BackgroundColor = "bg-primary", Logo = "fab fa-linkedin", Name="Linkedin"}
             };
             return Ok(socialNetworks);

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Abeer.Shared;
 using Microsoft.AspNetCore.Authorization;
@@ -10,6 +11,8 @@ using Microsoft.Extensions.Configuration;
 using Abeer.Shared.ViewModels;
 using Abeer.Data.UnitOfworks;
 using System.Collections.Generic;
+using System.Linq;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Abeer.Server.Controllers
 {
@@ -41,10 +44,13 @@ namespace Abeer.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ApplicationUser>> GetUserProfile()
+        public async Task<ActionResult<ApplicationUser>> GetUserProfile([FromQuery]string userId)
         {
+            if (string.IsNullOrEmpty(userId))
+                userId = User.NameIdentifier();
+
             var user = await _userManager
-                .FindByIdAsync(User.NameIdentifier());
+                .FindByIdAsync(userId);
 
             return Ok(new ViewApplicationUser
             {
@@ -109,7 +115,7 @@ namespace Abeer.Server.Controllers
             if (result.Succeeded)
                 return Ok(user);
 
-            return BadRequest();
+            return BadRequest(result.Errors?.FirstOrDefault()?.Code);
         }
 
         [HttpGet("PinCode/{id}")]
