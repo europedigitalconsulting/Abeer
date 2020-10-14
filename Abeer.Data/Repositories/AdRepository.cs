@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Abeer.Data.Repositories
@@ -27,7 +28,7 @@ namespace Abeer.Data.Repositories
 
         public async Task<IEnumerable<AdModel>> GetAllForAUser(string userId)
         {
-            return await _context.Ads.Where(o => o.OwnerId == userId).ToListAsync();
+            return await _context.Ads.Include(a => a.AdPrice).Where(o => o.OwnerId == userId).ToListAsync();
         }
 
         public async Task Update(AdModel ad)
@@ -45,13 +46,18 @@ namespace Abeer.Data.Repositories
 
         public async Task<List<AdModel>> GetVisibled()
         {
-            return await _context.Ads.Where(a => a.StartDisplayTime <= DateTime.UtcNow && a.EndDisplayTime >= DateTime.UtcNow
+            return await _context.Ads.Include(a => a.AdPrice).Where(a => a.StartDisplayTime <= DateTime.UtcNow && a.EndDisplayTime >= DateTime.UtcNow
                 && a.IsValid == true).ToListAsync();
+        }
+
+        public async Task<AdModel> FirstOrDefaultAsync(Expression<Func<AdModel, bool>> p)
+        {
+            return await _context.Ads.Include(a=>a.AdPrice).FirstOrDefaultAsync(p);
         }
 
         public async Task<List<AdModel>> AllAsync()
         {
-            return await _context.Ads.OrderByDescending(a => a.CreateDate).ToListAsync();
+            return await _context.Ads.Include(a => a.AdPrice).OrderByDescending(a => a.CreateDate).ToListAsync();
         }
     }
 }

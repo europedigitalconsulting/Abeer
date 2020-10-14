@@ -3,20 +3,12 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<CreateAd> Loc
 @inject IHttpClientFactory HttpClientFactory
 @inject NavigationManager NavigationManager
-@using BlazorInputFile
 @inject IJSRuntime jsRuntime
 @code
 {
     public string Step { get; set; } = "Step1";
     public AdModel Ad { get; set; } = new AdModel();
     public AdPrice CurrentPrice { get; set; } = new AdPrice();
-    const int MaxFileSizeMB = 5;
-    const int MaxFileSize = MaxFileSizeMB * 1024 * 1024; // 5MB
-    private string dropClass = "";
-    private bool fileSizeError = false;
-    private bool fileTypeError = false;
-    private List<IFileListEntry> selectedFiles = new List<IFileListEntry>();
-
     public List<AdPrice> AdPrices { get; set; } = new List<AdPrice>();
 
     async Task Step2()
@@ -68,30 +60,6 @@
 
     async Task<HttpResponseMessage> InsertAd(CreateAdRequestViewModel CreateAdRequest)
     {
-        if (selectedFiles?.Any() == true)
-        {
-            CreateAdRequest.Files = selectedFiles.Select(f =>
-            {
-                using var ms = new System.IO.MemoryStream();
-                f.Data.CopyTo(ms);
-                
-                var file = new FileData
-                {
-                    Name = f.Name,
-                    Size = f.Size,
-                    Type = f.Type,
-                    LastModified = f.LastModified,
-                    Data = ms.ToArray()
-                };
-
-                return file;
-            }).ToList();
-        }
-        else
-        {
-            CreateAdRequest.Files = new List<FileData>();
-        }
-
         var httpClient = HttpClientFactory.CreateClient("Abeer.Anonymous");
         var response = await httpClient.PostAsJsonAsync<CreateAdRequestViewModel>("/api/Ad", CreateAdRequest);
         PublishHasError = !response.IsSuccessStatusCode;
@@ -120,52 +88,10 @@
         await InvokeAsync(StateHasChanged);
     }
 
-    private void HandleDragEnter()
-    {
-        dropClass = "dropzone-drag";
-    }
-
-    private void HandleDragLeave()
-    {
-        dropClass = "";
-    }
-
-    private async Task HandleFileInputChange(IFileListEntry[] files)
-    {
-        dropClass = "";
-        fileSizeError = false;
-        fileTypeError = false;
-        List<string> acceptedFileTypes = new List<string>() { "image/png", "image/jpeg", "image/gif" };
-        if (files != null)
-        {
-            foreach (var file in files)
-            {
-                bool error = false;
-                if (file.Size > MaxFileSize)
-                {
-                    error = true;
-                    fileSizeError = true;
-                }
-
-                if (!acceptedFileTypes.Contains(file.Type))
-                {
-                    error = true;
-                    fileTypeError = true;
-                }
-
-                //keep the good files
-                if (!error)
-                {
-                    selectedFiles.Add(file);
-                }
-            }
-        }
-    }
-
-    private void RemoveFile(IFileListEntry file)
-    {
-        selectedFiles.Remove(file);
-    }
+    void AssignImageUrl1(string imgUrl) => Ad.ImageUrl1 = imgUrl;
+    void AssignImageUrl2(string imgUrl) => Ad.ImageUrl2 = imgUrl;
+    void AssignImageUrl3(string imgUrl) => Ad.ImageUrl3 = imgUrl;
+    void AssignImageUrl4(string imgUrl) => Ad.ImageUrl4 = imgUrl;
 }
 
 @if (Step == "Step1")
@@ -205,44 +131,16 @@
                     <input type="url" Class="form-control" @bind="Ad.Url4" />
                 </div>
                 <div class="form-group col-6 col-sm-12">
-                    <div class="dropzone @dropClass rounded">
-                        <InputFile id="fileInput" multiple title=""
-                                   OnChange="HandleFileInputChange"
-                                   accept="image/png,image/gif,image/jpeg"
-                                   @ondragenter="HandleDragEnter"
-                                   @ondragleave="HandleDragLeave" />
-                        Upload images
-                    </div>
-                    @if ((fileTypeError || fileSizeError))
-                    {
-                        <ul class="validation-errors mb-0">
-                            @if (fileTypeError)
-                            {
-                                <li class="validation-message">Only image files are accepted.</li>
-                            }
-                            @if (fileSizeError)
-                            {
-                                <li class="validation-message">The max file size is @MaxFileSizeMB MB.</li>
-                            }
-                        </ul>
-                    }
-                    @if (selectedFiles != null && selectedFiles.Count > 0)
-                    {
-                        <div class="col-12">
-                            <ul>
-                                @foreach (var file in selectedFiles)
-                                {
-                                    <li>
-                                        @file.Name
-                                        <button class="btn btn-link text-danger p-0 pl-1" type="button"
-                                                @onclick="@(e => RemoveFile(file))">
-                                            <small class="align-text-bottom">Remove</small>
-                                        </button>
-                                    </li>
-                                }
-                            </ul>
-                        </div>
-                    }
+                    <MediaUploader OnChange="AssignImageUrl1"></MediaUploader>
+                </div>
+                <div class="form-group col-6 col-sm-12">
+                    <MediaUploader OnChange="AssignImageUrl2"></MediaUploader>
+                </div>
+                <div class="form-group col-6 col-sm-12">
+                    <MediaUploader OnChange="AssignImageUrl3"></MediaUploader>
+                </div>
+                <div class="form-group col-6 col-sm-12">
+                    <MediaUploader OnChange="AssignImageUrl4"></MediaUploader>
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-success" @onclick="Step2"><i class="fas fa-upload"></i>@Loc["StartPublish"]</button>
@@ -324,44 +222,20 @@ else if (Step == "Step3")
                     <input type="url" Class="form-control" @bind="Ad.Url4" />
                 </div>
                 <div class="form-group col-6 col-sm-12">
-                    <div class="dropzone @dropClass rounded">
-                        <InputFile id="fileInput" multiple title=""
-                                   OnChange="HandleFileInputChange"
-                                   accept="image/png,image/gif,image/jpeg"
-                                   @ondragenter="HandleDragEnter"
-                                   @ondragleave="HandleDragLeave" />
-                        Upload images
-                    </div>
-                    @if ((fileTypeError || fileSizeError))
-                    {
-                        <ul class="validation-errors mb-0">
-                            @if (fileTypeError)
-                            {
-                                <li class="validation-message">Only image files are accepted.</li>
-                            }
-                            @if (fileSizeError)
-                            {
-                                <li class="validation-message">The max file size is @MaxFileSizeMB MB.</li>
-                            }
-                        </ul>
-                    }
-                    @if (selectedFiles != null && selectedFiles.Count > 0)
-                    {
-                        <div class="col-12">
-                            <ul>
-                                @foreach (var file in selectedFiles)
-                                {
-                                    <li>
-                                        @file.Name
-                                        <button class="btn btn-link text-danger p-0 pl-1" type="button"
-                                                @onclick="@(e => RemoveFile(file))">
-                                            <small class="align-text-bottom">Remove</small>
-                                        </button>
-                                    </li>
-                                }
-                            </ul>
-                        </div>
-                    }
+                    <MediaUploader OnChange="AssignImageUrl1" ImgUrl="@Ad.ImageUrl1"></MediaUploader>
+                    @Ad.ImageUrl1
+                </div>
+                <div class="form-group col-6 col-sm-12">
+                    <MediaUploader OnChange="AssignImageUrl2" ImgUrl="@Ad.ImageUrl2"></MediaUploader>
+                    @Ad.ImageUrl2
+                </div>
+                <div class="form-group col-6 col-sm-12">
+                    <MediaUploader OnChange="AssignImageUrl3" ImgUrl="@Ad.ImageUrl3"></MediaUploader>
+                    @Ad.ImageUrl3
+                </div>
+                <div class="form-group col-6 col-sm-12">
+                    <MediaUploader OnChange="AssignImageUrl4" ImgUrl="@Ad.ImageUrl4"></MediaUploader>
+                    @Ad.ImageUrl4
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-12">
                     <div class="card profile-widget border">

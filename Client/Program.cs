@@ -8,6 +8,8 @@ using System.Globalization;
 using BlazorAnimate;
 using Microsoft.JSInterop;
 using Abeer.Client.UISdk;
+using Tewr.Blazor.FileReader;
+
 namespace Abeer.Client
 {
     public class Program
@@ -33,6 +35,8 @@ namespace Abeer.Client
                 options.Animation = Animations.FadeDown;
                 options.Duration = TimeSpan.FromMilliseconds(1000);
             });
+            builder.Services.AddScoped<IAdPhotoRepository, AdHttpPhotoRepository>();
+            builder.Services.AddFileReaderService(o => o.UseWasmSharedBuffer = true);
 
             builder.Services.AddSingleton<NavigationUrlService>();
 

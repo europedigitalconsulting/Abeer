@@ -85,6 +85,18 @@
                 <label>@Loc["Url4"]</label>
                 <input type="url" Class="form-control" @bind="Ad.Url4" disabled="disabled" />
             </div>
+            <div class="form-group col-6 col-sm-12">
+                <img src="@Ad.ImageUrl1" />
+            </div>
+            <div class="form-group col-6 col-sm-12">
+                <img src="@Ad.ImageUrl2" />
+            </div>
+            <div class="form-group col-6 col-sm-12">
+                <img src="@Ad.ImageUrl3" />
+            </div>
+            <div class="form-group col-6 col-sm-12">
+                <img src="@Ad.ImageUrl4" />
+            </div>
             <div class="col-lg-3 col-md-3 col-sm-12">
                 <div class="card profile-widget border">
                     <div class="profile-widget-header">
@@ -99,7 +111,7 @@
             {
                 <div class="form-group">
                     <button type="submit" class="btn btn-success" @onclick="Finish"><i class="fas fa-upload"></i>@Loc["Finish"]</button>
-                </div>            
+                </div>
             }
         </div>
     </div>

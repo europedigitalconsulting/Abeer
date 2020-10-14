@@ -24,6 +24,9 @@ using Microsoft.Extensions.Logging;
 using System.Net.Http;
 using Abeer.Data.Contextes;
 using Abeer.Server.Hubs;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
+using Microsoft.AspNetCore.Http;
 
 namespace Abeer.Server
 {
@@ -181,6 +184,7 @@ namespace Abeer.Server
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
             using var scope = app.ApplicationServices.CreateScope();
 
             SeedUserData(scope, env);
@@ -203,7 +207,18 @@ namespace Abeer.Server
             //var rewriteUrlShortner = new RewriteOptions().AddRewrite(@"^\/shortned\/([0-9A-z-]+)", ")
             app.UseHttpsRedirection();
             app.UseBlazorFrameworkFiles();
+            
             app.UseStaticFiles();
+            var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), @"StaticFiles");
+            
+            if (!Directory.Exists(directoryPath))
+                Directory.CreateDirectory(directoryPath);
+
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"StaticFiles")),
+                RequestPath = new PathString("/StaticFiles")
+            });
 
             app.UseRouting();
 
