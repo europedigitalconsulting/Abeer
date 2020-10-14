@@ -40,6 +40,10 @@
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
     </div>
+    <!--package nuget-->
+    <script src="_content/BlazorAnimate/blazorAnimateInterop.js"></script>
+    <script src="_content/BlazorInputFile/inputfile.js"></script>
+
     <!--blazor scripts-->
     <script src="_content/Microsoft.AspNetCore.Components.WebAssembly.Authentication/AuthenticationService.js"></script>
     <script src="_framework/blazor.webassembly.js"></script>
@@ -68,17 +72,17 @@
     <script src="js/scripts.js"></script>
     <script src="js/custom.js"></script>
     <script src="js/helper.js"></script>
+
     <!--service-worker-->
     <script>navigator.serviceWorker.register('service-worker.js');</script>
 
     <!--blazor culture-->
-<script>
-    window.blazorCulture = {
-        get: () => window.localStorage['BlazorCulture'],
-        set: (value) => window.localStorage['BlazorCulture'] = value
-    };
-</script>
-<script src="_content/BlazorAnimate/blazorAnimateInterop.js"></script>
+    <script>
+        window.blazorCulture = {
+            get: () => window.localStorage['BlazorCulture'],
+            set: (value) => window.localStorage['BlazorCulture'] = value
+        };
+    </script>
 </body>
 
 </html>
