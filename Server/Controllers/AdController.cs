@@ -23,7 +23,7 @@ namespace Abeer.Server.Controllers
             return Ok(await functionalUnitOfWork.AdRepository.GetAllForAUser(User.NameIdentifier()));
         }
 
-        [Authorize]
+        [AllowAnonymous]
         [HttpGet("Visibled")]
         public async Task<ActionResult<IEnumerable<AdModel>>> GetVisibled([FromServices] FunctionalUnitOfWork functionalUnitOfWork)
         {
@@ -98,6 +98,29 @@ namespace Abeer.Server.Controllers
         public async Task<IActionResult> Delete(Guid id, [FromServices] FunctionalUnitOfWork functionalUnitOfWork)
         {
             await functionalUnitOfWork.AdRepository.DeleteAsync(id);
+            return Ok();
+        }
+
+
+        [Authorize]
+        [HttpGet("admin")]
+        public async Task<ActionResult<IEnumerable<AdModel>>> GetForAdministration([FromServices] FunctionalUnitOfWork functionalUnitOfWork)
+        {
+            return Ok(await functionalUnitOfWork.AdRepository.AllAsync());
+        }
+
+        [Authorize]
+        [HttpPost("admin")]
+        public async Task<ActionResult<AdModel>> CreateByAdmin(AdModel adModel, [FromServices] FunctionalUnitOfWork functionalUnitOfWork)
+        {
+            return Ok(await functionalUnitOfWork.AdRepository.AddAsync(adModel));
+        }
+
+        [Authorize]
+        [HttpPut("admin")]
+        public async Task<IActionResult> UpdateByAdmin(AdModel adModel, [FromServices] FunctionalUnitOfWork functionalUnitOfWork)
+        {
+            await functionalUnitOfWork.AdRepository.Update(adModel);
             return Ok();
         }
     }

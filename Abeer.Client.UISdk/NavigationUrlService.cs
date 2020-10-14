@@ -8,8 +8,6 @@ namespace Abeer.Client.UISdk
 {
     public class NavigationUrlService : INotifyPropertyChanged
     {
-        private readonly NavigationManager navigationManager;
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -19,11 +17,11 @@ namespace Abeer.Client.UISdk
 
         public NavigationUrlService(NavigationManager navigationManager)
         {
-            this.navigationManager = navigationManager;
-            ProfileUrl = navigationManager.ToAbsoluteUri("/profile/Edit").ToString();
-            ImportContactUrl = navigationManager.ToAbsoluteUri("/addContact").ToString();
-            ServicesUrl = navigationManager.ToAbsoluteUri("/services").ToString();
-            ContactsUrl = navigationManager.ToAbsoluteUri("/contacts").ToString();
+            _ProfileUrl = navigationManager.ToAbsoluteUri("/profile/Edit").ToString();
+            _ImportContactUrl = navigationManager.ToAbsoluteUri("/addContact").ToString();
+            _ServicesUrl = navigationManager.ToAbsoluteUri("/services").ToString();
+            _ContactsUrl = navigationManager.ToAbsoluteUri("/contacts").ToString();
+            _MyAdsUrl = navigationManager.ToAbsoluteUri("/MyAds").ToString();
         }
 
         public void SetUrls(string mapUrl, string importContactUrl)
@@ -86,6 +84,17 @@ namespace Abeer.Client.UISdk
             set
             {
                 _ServicesUrl = value;
+                OnPropertyChanged();
+            }
+        }
+
+        string _MyAdsUrl;
+        public string MyAdsUrl
+        {
+            get => _MyAdsUrl;
+            set
+            {
+                _MyAdsUrl = value;
                 OnPropertyChanged();
             }
         }

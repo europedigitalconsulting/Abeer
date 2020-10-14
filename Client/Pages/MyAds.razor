@@ -195,7 +195,7 @@
                     <div class="card">
                         <div class="card-header">
                             <h4>
-                                @Ad.Title @if (Ad.StartDisplayTime <= DateTime.UtcNow)
+                                @Ad.Title <span class="badge badge-primary">@Ad.ViewCount</span> @if (Ad.StartDisplayTime <= DateTime.UtcNow)
                             {
                                 if (Ad.EndDisplayTime >= DateTime.UtcNow)
                                 {

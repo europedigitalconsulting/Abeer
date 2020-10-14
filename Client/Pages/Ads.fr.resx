@@ -117,10 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ManageAds" xml:space="preserve">
+    <value>Gérer les annonces et les offres</value>
+  </data>
   <data name="PublishYourAd" xml:space="preserve">
-    <value>Publish your ad or offer now</value>
+    <value>Publiez votre offre maintenant et gagner en visibilité</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Ad and offers</value>
+    <value>Annonce et offre</value>
   </data>
 </root>

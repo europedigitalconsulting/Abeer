@@ -1,10 +1,15 @@
 ﻿@page "/ads"
+@using System.Security.Claims 
 @inject IHttpClientFactory HttpClientFactory
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Ads> Loc
 
 @code
 {
+        [CascadingParameter]
+        private Task<AuthenticationState> authenticationStateTask { get; set; }
+
     public string Term { get; set; }
+    public bool IsAdmin { get; set; }
 
     List<Abeer.Shared.Functional.AdModel> All = new List<Abeer.Shared.Functional.AdModel>();
     List<Abeer.Shared.Functional.AdModel> Items = new List<Abeer.Shared.Functional.AdModel>();
@@ -23,6 +28,13 @@
         var json = await getAll.Content.ReadAsStringAsync();
         All = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Abeer.Shared.Functional.AdModel>>(json);
         Items = All.ToList();
+
+        var authenticateSate = await authenticationStateTask;
+
+        if (authenticateSate.User?.Identity.IsAuthenticated == true)
+        {
+            IsAdmin = (authenticateSate.User.Identity.IsAuthenticated && authenticateSate.User.HasClaim(ClaimTypes.Role, "admin"));
+        }
     }
 
     void Search()
@@ -49,7 +61,8 @@
                 {
                     <div class="card">
                         <div class="card-header">
-                            <h4>@ad.Title</h4>
+                            <h4>@ad.Title <span class="badge badget-primary">@ad.ViewCount</span></h4>
+                            <cite>@ad.StartDisplayTime / @ad.EndDisplayTime</cite>
                             <div class="card-header-action">
                                 <a data-dismiss="#mycard-dimiss" class="btn btn-icon btn-primary" href="#">@ad.Price.FormatCurrency()</a>
                             </div>
@@ -68,6 +81,10 @@
                     </div>
                 }
                 <a class="btn btn-lg btn-info" href="CreateAd"><i class="fas fa-upload" style="font-size:45px"></i><h5>@Loc["PublishYourAd"]</h5></a>
+                @if (IsAdmin)
+                {
+                    <a class="btn btn-lg btn-info" href="ManageAds"><i class="fas fa-database" style="font-size:45px"></i>@Loc["ManageAds"]</a>
+                }
             </div>
         </div>
     </div>

@@ -48,5 +48,10 @@ namespace Abeer.Data.Repositories
             return await _context.Ads.Where(a => a.StartDisplayTime <= DateTime.UtcNow && a.EndDisplayTime >= DateTime.UtcNow
                 && a.IsValid == true).ToListAsync();
         }
+
+        public async Task<List<AdModel>> AllAsync()
+        {
+            return await _context.Ads.OrderByDescending(a => a.CreateDate).ToListAsync();
+        }
     }
 }

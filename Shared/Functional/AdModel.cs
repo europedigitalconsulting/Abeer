@@ -9,6 +9,7 @@ namespace Abeer.Shared.Functional
         public AdModel()
         {
             Id = Guid.NewGuid();
+            CreateDate = DateTime.UtcNow;
         }
 
         [Key]
@@ -28,6 +29,7 @@ namespace Abeer.Shared.Functional
         public DateTime? EndDisplayTime { get; set; }
         public bool IsValid { get; set; }
         public DateTime ValidateDate { get; set; }
+        public DateTime CreateDate { get; set; }
     }
 
     public class AdPrice
