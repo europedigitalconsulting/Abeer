@@ -1,0 +1,69 @@
+﻿@code
+{
+    [Parameter]
+    public Microsoft.Extensions.Localization.IStringLocalizer Loc { get; set; }
+    [Parameter]
+    public Abeer.Shared.Functional.AdModel Ad { get; set; }
+    [Parameter]
+    public Boolean Editable { get; set; }
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnEditClicked { get; set; }
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnDeleteClicked { get; set; }
+}
+<div class="col-12">
+    <div class="card">
+        <div class="card-header">
+            <h4>
+                @Ad.Title <span class="badge badge-primary">@Ad.ViewCount</span> @if (Ad.StartDisplayTime <= DateTime.UtcNow)
+                {
+                    if (Ad.EndDisplayTime >= DateTime.UtcNow)
+                    {
+                        <span class="badge badge-success">@Loc["OnlineBetween"] @Ad.StartDisplayTime / @Ad.EndDisplayTime</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-success">@Loc["NotOnlineSince"] @Ad.EndDisplayTime</span>
+                    }
+                }
+                else
+                {
+                    <span class="badge badget-secondary">@Loc["WillBeOnline"] @Ad.StartDisplayTime</span>
+                }
+            </h4>
+            <div class="card-header-action">
+                <a data-dismiss="#mycard-dimiss" class="btn btn-icon btn-primary" href="#">@Ad.Price</a>
+            </div>
+        </div>
+        <div class="card-body">
+            <p class="mb-2">
+                @Ad.Description
+            </p>
+            <div class="row col-12">
+                <div class="gallery">
+                    @if (!string.IsNullOrEmpty(Ad.ImageUrl1))
+                    {
+                        <img class="img-fluid img-thumbnail" style="max-width:90px;max-height:90px" src="@Ad.ImageUrl1" alt="Image 1">
+                    }
+                    @if (!string.IsNullOrEmpty(Ad.ImageUrl2))
+                    {
+                        <img class="img-fluid img-thumbnail" style="max-width:90px;max-height:90px" src="@Ad.ImageUrl2" alt="Image 2">
+                    }
+                    @if (!string.IsNullOrEmpty(Ad.ImageUrl3))
+                    {
+                        <img class="img-fluid img-thumbnail" style="max-width:90px;max-height:90px" src="@Ad.ImageUrl3" alt="Image 3">
+                    }
+                    @if (!string.IsNullOrEmpty(Ad.ImageUrl4))
+                    {
+                        <img class="img-fluid img-thumbnail" style="max-width:90px;max-height:90px" src="@Ad.ImageUrl4" alt="Image 4">
+                    }
+                </div>
+            </div>
+            @if (Editable)
+            {
+                <button class="btn btn-primary" @onclick="@OnEditClicked"><i class="fas fa-pen-square"></i></button>
+                <button class="btn btn-danger" @onclick="@OnDeleteClicked"><i class="fas fa-trash-alt"></i></button>
+            }
+        </div>
+    </div>
+</div>

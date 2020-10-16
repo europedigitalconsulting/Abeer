@@ -6,13 +6,13 @@
 
 @code
 {
-    bool ModalFormAdVisible;
-    bool FormHasError;
+        bool ModalFormAdVisible;
+        bool FormHasError;
 
-    string TitleForm = "EditForm";
-    string Mode = "Insert";
+        string TitleForm = "EditForm";
+        string Mode = "Insert";
 
-    Abeer.Shared.Functional.AdModel Current = new Abeer.Shared.Functional.AdModel();
+        Abeer.Shared.Functional.AdModel Current = new Abeer.Shared.Functional.AdModel();
 
     public string Term { get; set; }
 
@@ -75,34 +75,62 @@
         ModalFormAdVisible = true;
     }
 
+    string FormError = "";
+
     async Task Save()
     {
+        FormHasError = false;
+        FormError = "";
+
         switch (Mode)
         {
             case "Insert":
                 {
                     var postResponse = await HttpClient.PostAsJsonAsync<Abeer.Shared.Functional.AdModel>("/api/ad/admin", Current);
-                    postResponse.EnsureSuccessStatusCode();
-                    All.Add(Current);
-                    Items.Add(Current);
-                    Current = new Abeer.Shared.Functional.AdModel();
-                    ModalFormAdVisible = false;
+                    FormHasError = !postResponse.IsSuccessStatusCode;
+
+                    if (FormHasError)
+                        FormError = postResponse.ReasonPhrase;
+                    else
+                    {
+                        All.Add(Current);
+                        Items.Add(Current);
+                        Current = new Abeer.Shared.Functional.AdModel();
+                        ModalFormAdVisible = false;
+                    }
+
                     break;
                 }
             case "Edit":
                 {
-                    var postResponse = await HttpClient.PutAsJsonAsync<Abeer.Shared.Functional.AdModel>("/api/ad/admin", Current);
-                    postResponse.EnsureSuccessStatusCode();
-                    Current = new Abeer.Shared.Functional.AdModel();
-                    ModalFormAdVisible = false;
+                    var putResponse = await HttpClient.PutAsJsonAsync<Abeer.Shared.Functional.AdModel>("/api/ad/admin", Current);
+                    FormHasError = !putResponse.IsSuccessStatusCode;
+
+                    if (FormHasError)
+                    {
+                        FormError = putResponse.ReasonPhrase;
+                    }
+                    else
+                    {
+                        Current = new Abeer.Shared.Functional.AdModel();
+                        ModalFormAdVisible = false;
+                    }
                     break;
                 }
             case "Delete":
                 {
-                    var postResponse = await HttpClient.DeleteAsync($"/api/ad/{Current.Id}");
-                    postResponse.EnsureSuccessStatusCode();
-                    Current = new Abeer.Shared.Functional.AdModel();
-                    ModalFormAdVisible = false;
+                    var deleteResponse = await HttpClient.DeleteAsync($"/api/ad/{Current.Id}");
+                    FormHasError = deleteResponse.IsSuccessStatusCode;
+
+                    if (FormHasError)
+                    {
+                        FormError = deleteResponse.ReasonPhrase;
+                    }
+                    else
+                    {
+                        Current = new Abeer.Shared.Functional.AdModel();
+                        ModalFormAdVisible = false;
+                    }
                     break;
                 }
         }
@@ -128,61 +156,7 @@
                         </div>
                         <div class="card">
                             <div class="card-body">
-                                @if (FormHasError)
-                                {
-                                    <div class="alert alert-danger">
-                                        @Loc["UpdateFailedError"]
-                                    </div>
-                                }
-                                <h3>@Loc["Summary"]</h3>
-                                <div class="form-group col-6 col-sm-12">
-                                    <label>@Loc["AdTitle"] @Current.ViewCount</label>
-                                    <input type="text" Class="form-control" @bind="Current.Title" disabled="@IsFormDisabled" />
-                                </div>
-                                <div class="form-group col-6 col-sm-12">
-                                    <label>@Loc["Description"]</label>
-                                    <textarea type="text" Class="form-control" rows="6" @bind="Current.Description" disabled="@IsFormDisabled" />
-                                </div>
-                                <div class="form-group col-6 col-sm-12">
-                                    <label>@Loc["Price"]</label>
-                                    <input type="number" Class="form-control" @bind="Current.Price" disabled="@IsFormDisabled" />
-                                </div>
-                                <div class="form-group col-6 col-sm-12">
-                                    <label>@Loc["Url1"]</label>
-                                    <input type="url" Class="form-control" @bind="Current.Url1" disabled="@IsFormDisabled" />
-                                </div>
-                                <div class="form-group col-6 col-sm-12">
-                                    <label>@Loc["Url2"]</label>
-                                    <input type="url" Class="form-control" @bind="Current.Url2" disabled="@IsFormDisabled" />
-                                </div>
-                                <div class="form-group col-6 col-sm-12">
-                                    <label>@Loc["Url3"]</label>
-                                    <input type="url" Class="form-control" @bind="Current.Url3" disabled="@IsFormDisabled" />
-                                </div>
-                                <div class="form-group col-6 col-sm-12">
-                                    <label>@Loc["Url4"]</label>
-                                    <input type="url" Class="form-control" @bind="Current.Url4" disabled="@IsFormDisabled" />
-                                </div>
-                                <div class="form-group col-6 col-sm-12">
-                                    <label>@Loc["StartDisplayTime"]</label>
-                                    <input type="datetime" Class="form-control" @bind-value="Current.StartDisplayTime" disabled="@IsFormDisabled" />
-                                </div>
-                                <div class="form-group col-6 col-sm-12">
-                                    <label>@Loc["EndDisplayTime"]</label>
-                                    <input type="datetime" Class="form-control" @bind-value="Current.EndDisplayTime" disabled="@IsFormDisabled" />
-                                </div>
-                                <div class="form-group col-6 col-sm-12">
-                                    <label>@Loc["IsValid"]</label>
-                                    <input type="checkbox" Class="form-control" @bind="Current.IsValid" disabled="@IsFormDisabled" />
-                                    @if (Current.IsValid)
-                                    {
-                                        <span class="badge badge-success">@Loc["ValidateOn"] @Current.ValidateDate</span>
-                                    }
-                                    @if (!string.IsNullOrEmpty(Current.PaymentInformation))
-                                    {
-                                        <span class="badge badget-success">@Loc["PaymentInformation"]: @Current.PaymentInformation</span>
-                                    }
-                                </div>
+                                <FormAd Current="Current" Loc="Loc" Disabled="@(Mode == "Delete")" FormError="@FormError" FormHasError="@FormHasError"></FormAd>
                             </div>
                         </div>
                     </section>
@@ -211,28 +185,7 @@
             <div class="col-12">
                 @foreach (var ad in Items)
                 {
-                    <div class="card">
-                        <div class="card-header">
-                            <h4>@ad.Title</h4>
-                            <cite>@ad.StartDisplayTime / @ad.EndDisplayTime</cite>
-                            <div class="card-header-action">
-                                <a data-dismiss="#mycard-dimiss" class="btn btn-icon btn-primary" href="#">@ad.Price.FormatCurrency()</a>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <p class="mb-2">
-                                @ad.Description
-                            </p>
-                            <div class="gallery gallery-md">
-                                <div class="gallery-item" data-image="@ad.Url1" data-title="Image 1" href="@ad.Url1" title="Image 1" style="background-image: url(&quot;@ad.Url1&quot;);"></div>
-                                <div class="gallery-item" data-image="@ad.Url2" data-title="Image 1" href="@ad.Url2" title="Image 2" style="background-image: url(&quot;@ad.Url2&quot;);"></div>
-                                <div class="gallery-item" data-image="@ad.Url3" data-title="Image 1" href="@ad.Url3" title="Image 3" style="background-image: url(&quot;@ad.Url3&quot;);"></div>
-                                <div class="gallery-item" data-image="@ad.Url4" data-title="Image 1" href="@ad.Url4" title="Image 4" style="background-image: url(&quot;@ad.Url4&quot;);"></div>
-                            </div>
-                            <button class="btn btn-primary" @onclick="@(()=>OpenEditModal(ad))"><i class="fas fa-pen-square"></i></button>
-                            <button class="btn btn-danger" @onclick="@(()=>OpenDeleteModal(ad))"><i class="fas fa-trash-alt"></i></button>
-                        </div>
-                    </div>
+                    <CardAd Ad="ad" Editable="true" Loc="Loc" OnEditClicked="@(()=>OpenEditModal(ad))" OnDeleteClicked="@(()=>OpenDeleteModal(ad))"></CardAd>
                 }
                 <button class="btn btn-lg btn-info" @onclick="OpenCreateAd"><i class="fas fa-upload" style="font-size:45px"></i><h5>@Loc["PublishAnAd"]</h5></button>
                 <a class="btn btn-lg btn-info" href="/ManageAdPrices"><i class="fas fa-money-bill-wave-alt" style="font-size:45px"></i><h5>@Loc["ManageAdPrices"]</h5></a>

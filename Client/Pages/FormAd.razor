@@ -1,0 +1,91 @@
+﻿@code{
+    [Parameter]
+    public Microsoft.Extensions.Localization.IStringLocalizer Loc { get; set; }
+    [Parameter]
+    public Abeer.Shared.Functional.AdModel Current { get; set; }
+    [Parameter]
+    public bool FormHasError { get; set; }
+    [Parameter]
+    public string FormError { get; set; }
+    [Parameter]
+    public bool Disabled { get; set; }
+
+    void AssignImageUrl1(string imgUrl) => Current.ImageUrl1 = imgUrl;
+    void AssignImageUrl2(string imgUrl) => Current.ImageUrl2 = imgUrl;
+    void AssignImageUrl3(string imgUrl) => Current.ImageUrl3 = imgUrl;
+    void AssignImageUrl4(string imgUrl) => Current.ImageUrl4 = imgUrl;
+
+}
+<section class="section">
+    <div class="section-header">
+        <h1>@Loc["EditAdTitle"]</h1>
+        <h2>@Current.Title</h2>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            @if (FormHasError)
+            {
+                <div class="alert alert-danger">
+                    @FormError
+                </div>
+            }
+            <h3>@Loc["Summary"]</h3>
+            <div class="form-group col-6 col-sm-12">
+                <label>@Loc["AdTitle"]</label>
+                <input type="text" Class="form-control" @bind="Current.Title" disabled="@Disabled" />
+            </div>
+            <div class="form-group col-6 col-sm-12">
+                <label>@Loc["Description"]</label>
+                <textarea type="text" Class="form-control" rows="6" @bind="Current.Description" disabled="@Disabled"/>
+            </div>
+            <div class="form-group col-6 col-sm-12">
+                <label>@Loc["Price"]</label>
+                <input type="number" Class="form-control" @bind="Current.Price" disabled="@Disabled"/>
+            </div>
+            <div class="form-group col-6 col-sm-12">
+                <label>@Loc["Url1"]</label>
+                <input type="url" Class="form-control" @bind="Current.Url1" disabled="@Disabled"/>
+            </div>
+            <div class="form-group col-6 col-sm-12">
+                <label>@Loc["Url2"]</label>
+                <input type="url" Class="form-control" @bind="Current.Url2" disabled="@Disabled"/>
+            </div>
+            <div class="form-group col-6 col-sm-12">
+                <label>@Loc["Url3"]</label>
+                <input type="url" Class="form-control" @bind="Current.Url3" disabled="@Disabled"/>
+            </div>
+            <div class="form-group col-6 col-sm-12">
+                <label>@Loc["Url4"]</label>
+                <input type="url" Class="form-control" @bind="Current.Url4" disabled="@Disabled"/>
+            </div>
+            <div class="form-group col-6 col-sm-12">
+                @if (!Disabled)
+                {
+                    <MediaUploader OnChange="AssignImageUrl1" ImgUrl="@Current.ImageUrl1"></MediaUploader>
+                }
+                @Current.ImageUrl1
+            </div>
+            <div class="form-group col-6 col-sm-12">
+                @if (!Disabled)
+                {
+                    <MediaUploader OnChange="AssignImageUrl2" ImgUrl="@Current.ImageUrl2"></MediaUploader>
+                }
+                @Current.ImageUrl2
+            </div>
+            <div class="form-group col-6 col-sm-12">
+                @if (!Disabled)
+                {
+                    <MediaUploader OnChange="AssignImageUrl3" ImgUrl="@Current.ImageUrl3"></MediaUploader>
+                }
+                @Current.ImageUrl3
+            </div>
+            <div class="form-group col-6 col-sm-12">
+                @if (!Disabled)
+                {
+                    <MediaUploader OnChange="AssignImageUrl4" ImgUrl="@Current.ImageUrl4"></MediaUploader>
+                }
+                @Current.ImageUrl4
+            </div>
+        </div>
+    </div>
+</section>

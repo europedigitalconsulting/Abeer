@@ -47,16 +47,6 @@
         ModalDeleteAdVisible = false;
         await InvokeAsync(StateHasChanged);
     }
-
-    string ImageUrl1 => Current?.ImageUrl1;
-    string ImageUrl2 => Current?.ImageUrl2;
-    string ImageUrl3 => Current?.ImageUrl3;
-    string ImageUrl4 => Current?.ImageUrl4;
-
-    void AssignImageUrl1(string imgUrl) => Current.ImageUrl1 = imgUrl;
-    void AssignImageUrl2(string imgUrl) => Current.ImageUrl2 = imgUrl;
-    void AssignImageUrl3(string imgUrl) => Current.ImageUrl3 = imgUrl;
-    void AssignImageUrl4(string imgUrl) => Current.ImageUrl4 = imgUrl;
 }
 @if (ModalEditAdVisible)
 {
@@ -70,67 +60,7 @@
                     <h4 class="modal-title">@Loc["EditAdTitle"]</h4>
                 </div>
                 <div class="modal-body">
-                    <section class="section">
-                        <div class="section-header">
-                            <h1>@Loc["EditAdTitle"]</h1>
-                            <h2>@Current.Title</h2>
-                        </div>
-                        <div class="card">
-                            <div class="card-body">
-                                @if (UpdateHasError)
-                                {
-                                    <div class="alert alert-danger">
-                                        @Loc["UpdateFailedError"]
-                                    </div>
-                                }
-                                <h3>@Loc["Summary"]</h3>
-                                <div class="form-group col-6 col-sm-12">
-                                    <label>@Loc["AdTitle"]</label>
-                                    <input type="text" Class="form-control" @bind="Current.Title" />
-                                </div>
-                                <div class="form-group col-6 col-sm-12">
-                                    <label>@Loc["Description"]</label>
-                                    <textarea type="text" Class="form-control" rows="6" @bind="Current.Description" />
-                                </div>
-                                <div class="form-group col-6 col-sm-12">
-                                    <label>@Loc["Price"]</label>
-                                    <input type="number" Class="form-control" @bind="Current.Price" />
-                                </div>
-                                <div class="form-group col-6 col-sm-12">
-                                    <label>@Loc["Url1"]</label>
-                                    <input type="url" Class="form-control" @bind="Current.Url1" />
-                                </div>
-                                <div class="form-group col-6 col-sm-12">
-                                    <label>@Loc["Url2"]</label>
-                                    <input type="url" Class="form-control" @bind="Current.Url2" />
-                                </div>
-                                <div class="form-group col-6 col-sm-12">
-                                    <label>@Loc["Url3"]</label>
-                                    <input type="url" Class="form-control" @bind="Current.Url3" />
-                                </div>
-                                <div class="form-group col-6 col-sm-12">
-                                    <label>@Loc["Url4"]</label>
-                                    <input type="url" Class="form-control" @bind="Current.Url4" />
-                                </div>
-                                <div class="form-group col-6 col-sm-12">
-                                    <MediaUploader OnChange="AssignImageUrl1" ImgUrl="@Current.ImageUrl1"></MediaUploader>
-                                    @Current.ImageUrl1
-                                </div>
-                                <div class="form-group col-6 col-sm-12">
-                                    <MediaUploader OnChange="AssignImageUrl2" ImgUrl="@Current.ImageUrl2"></MediaUploader>
-                                    @Current.ImageUrl2
-                                </div>
-                                <div class="form-group col-6 col-sm-12">
-                                    <MediaUploader OnChange="AssignImageUrl3" ImgUrl="@Current.ImageUrl3"></MediaUploader>
-                                    @Current.ImageUrl3
-                                </div>
-                                <div class="form-group col-6 col-sm-12">
-                                    <MediaUploader OnChange="AssignImageUrl4" ImgUrl="@Current.ImageUrl4"></MediaUploader>
-                                    @Current.ImageUrl4
-                                </div>
-                            </div>
-                        </div>
-                    </section>
+                    <FormAd Current="Current" Disabled="false" FormHasError="UpdateHasError" FormError="@Loc["UpdateFailedError"]" Loc="Loc"></FormAd>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-warning" @onclick="@(() => ModalEditAdVisible = false)">@Loc["Cancel"]</button>
@@ -159,41 +89,7 @@
                         </div>
                         <div class="card">
                             <div class="card-body">
-                                @if (DeleteHasError)
-                                {
-                                    <div class="alert alert-danger">
-                                        @Loc["DeleteFailedError"]
-                                    </div>
-                                }
-                                <h3>@Loc["Summary"]</h3>
-                                <div class="form-group col-6 col-sm-12">
-                                    <label>@Loc["AdTitle"]</label>
-                                    <input type="text" Class="form-control" @bind="Current.Title" disabled="disabled" />
-                                </div>
-                                <div class="form-group col-6 col-sm-12">
-                                    <label>@Loc["Description"]</label>
-                                    <textarea type="text" Class="form-control" rows="6" @bind="Current.Description" disabled="disabled" />
-                                </div>
-                                <div class="form-group col-6 col-sm-12">
-                                    <label>@Loc["Price"]</label>
-                                    <input type="number" Class="form-control" @bind="Current.Price" disabled="disabled" />
-                                </div>
-                                <div class="form-group col-6 col-sm-12">
-                                    <label>@Loc["Url1"]</label>
-                                    <input type="url" Class="form-control" @bind="Current.Url1" disabled="disabled" />
-                                </div>
-                                <div class="form-group col-6 col-sm-12">
-                                    <label>@Loc["Url2"]</label>
-                                    <input type="url" Class="form-control" @bind="Current.Url2" disabled="disabled" />
-                                </div>
-                                <div class="form-group col-6 col-sm-12">
-                                    <label>@Loc["Url3"]</label>
-                                    <input type="url" Class="form-control" @bind="Current.Url3" disabled="disabled" />
-                                </div>
-                                <div class="form-group col-6 col-sm-12">
-                                    <label>@Loc["Url4"]</label>
-                                    <input type="url" Class="form-control" @bind="Current.Url4" disabled="disabled" />
-                                </div>
+                                <FormAd Current="Current" Disabled="true" FormHasError="@DeleteHasError" FormError="@Loc["DeleteFailedError"]" Loc="Loc"></FormAd>
                             </div>
                         </div>
                     </section>
@@ -217,70 +113,7 @@
         <div class="row">
             @foreach (var Ad in Ads)
             {
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4>
-                                @Ad.Title <span class="badge badge-primary">@Ad.ViewCount</span> @if (Ad.StartDisplayTime <= DateTime.UtcNow)
-                                {
-                                    if (Ad.EndDisplayTime >= DateTime.UtcNow)
-                                    {
-                                        <span class="badge badge-success">@Loc["OnlineBetween"] @Ad.StartDisplayTime / @Ad.EndDisplayTime</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge badge-success">@Loc["NotOnlineSince"] @Ad.EndDisplayTime</span>
-                                    }
-                                }
-                                else
-                                {
-                                    <span class="badge badget-secondary">@Loc["WillBeOnline"] @Ad.StartDisplayTime</span>
-                                }
-                            </h4>
-                            <div class="card-header-action">
-                                <a data-dismiss="#mycard-dimiss" class="btn btn-icon btn-primary" href="#">@Ad.Price</a>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <p class="mb-2">
-                                @Ad.Description
-                            </p>
-                            <div class="clearfix"></div>
-                            <div class="row col-12">
-                                <div class="gallery">
-                                    @if (!string.IsNullOrEmpty(Ad.ImageUrl1))
-                                    {
-                                        <div class="col-lg-3 col-md-4">
-                                            <a href="#" class="d-block mb-4 h-100"><img class="img-fluid img-thumbnail" style="max-width:90px;max-height:90px" src="@Ad.ImageUrl1" alt="Image 1"></a>
-                                        </div>
-                                    }
-                                    @if (!string.IsNullOrEmpty(Ad.ImageUrl2))
-                                    {
-                                        <div class="col-lg-3 col-md-4">
-                                            <a href="#" class="d-block mb-4 h-100"><img class="img-fluid img-thumbnail" style="max-width:90px;max-height:90px" src="@Ad.ImageUrl2" alt="Image 2"></a>
-                                        </div>
-                                    }
-                                    @if (!string.IsNullOrEmpty(Ad.ImageUrl3))
-                                    {
-                                        <div class="col-lg-3 col-md-4">
-                                            <a href="#" class="d-block mb-4 h-100"><img class="img-fluid img-thumbnail" style="max-width:90px;max-height:90px" src="@Ad.ImageUrl3" alt="Image 3"></a>
-                                        </div>
-                                    }
-                                    @if (!string.IsNullOrEmpty(Ad.ImageUrl4))
-                                    {
-                                        <div class="col-lg-3 col-md-4">
-                                            <a href="#" class="d-block mb-4 h-100"><img class="img-fluid img-thumbnail" style="max-width:90px;max-height:90px" src="@Ad.ImageUrl4" alt="Image 4"></a>
-                                        </div>
-                                    }
-                                </div>
-                            </div>
-                            <div class="row text-center text-lg-left">
-                            </div>
-                            <button class="btn btn-primary" @onclick="@(()=>OpenEditModal(Ad))"><i class="fas fa-pen-square"></i></button>
-                            <button class="btn btn-danger" @onclick="@(()=>OpenDeleteModal(Ad))"><i class="fas fa-trash-alt"></i></button>
-                        </div>
-                    </div>
-                </div>
+                <CardAd Loc="Loc" Ad="Ad" OnEditClicked="@(()=>OpenEditModal(Ad))" OnDeleteClicked="@(()=>OpenDeleteModal(Ad))"></CardAd>
             }
         </div>
     </div>
