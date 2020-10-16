@@ -3,7 +3,7 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<EditProfile> Loc
 @inject Abeer.Client.UISdk.NavigationUrlService NavigationUrlService
 
-<UserProfileControl DisplayName="@UserProfile.DisplayName" PhotoUrl="@UserProfile.GravatarUrl()" Title="@UserProfile.Title" City="@UserProfile.City"
+<UserProfileControl DisplayName="@UserProfile.DisplayName" PhotoUrl="@UserProfile.PhotoUrl" Title="@UserProfile.Title" City="@UserProfile.City"
                     Country="@UserProfile.Country" Description="@UserProfile.Description"
                     Email="@UserProfile.Email" PhoneNumber="@UserProfile.PhoneNumber"
                     ProfileUrl="@NavigationManager.ToAbsoluteUri($"/ViewProfile/{UserProfile.Id}").ToString()"

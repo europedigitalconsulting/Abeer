@@ -8,11 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\js\helper.ts" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="BlazorAnimate" Version="3.0.0" />
+    <PackageReference Include="BlazorInputFile" Version="0.2.0" />
     <PackageReference Include="ChartJs.Blazor.Fork" Version="0.10.4" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="3.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Build" Version="3.2.1" PrivateAssets="all" />
@@ -37,7 +34,6 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\assets\img\social\" />
-    <Folder Include="wwwroot\css\fontawesome\" />
   </ItemGroup>
 
   <ItemGroup>

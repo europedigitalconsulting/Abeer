@@ -126,6 +126,9 @@
   <data name="CatchPhrase" xml:space="preserve">
     <value>This page helps you to edit your own profile, you can edit, regenerate pin code or token to encrypt your blockchain</value>
   </data>
+  <data name="ChangePhoto" xml:space="preserve">
+    <value>Change my photo</value>
+  </data>
   <data name="City" xml:space="preserve">
     <value>City</value>
   </data>

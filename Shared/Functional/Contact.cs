@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
+
 namespace Abeer.Shared
 {
     public class ViewContact
@@ -31,6 +32,7 @@ namespace Abeer.Shared
             City = user.City;
             Email = user.Email;
             PhoneNumber = user.PhoneNumber;
+            PhotoUrl = string.IsNullOrWhiteSpace(user.PhotoUrl) ? user.GravatarUrl() : user.PhotoUrl;
         }
 
         public List<SocialNetwork> SocialNetworks { get; set; }
@@ -52,6 +54,7 @@ namespace Abeer.Shared
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public int NumberOfView { get; set; }
+        public string PhotoUrl { get; set; }
     }
     public class Contact
     {

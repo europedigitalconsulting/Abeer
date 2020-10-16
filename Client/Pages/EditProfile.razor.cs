@@ -2,6 +2,7 @@
 using Abeer.Shared.ViewModels;
 
 using Microsoft.AspNetCore.Components;
+
 using Newtonsoft.Json;
 
 using System;
@@ -18,11 +19,11 @@ namespace Abeer.Client.Pages
         SocialNetwork NewSocialLink = new SocialNetwork();
         CustomLink NewCustomLink = new CustomLink();
 
-        [Inject]private NavigationManager NavigationManager { get; set; }
-        [Inject]private HttpClient HttpClient { get; set; }
+        [Inject] private NavigationManager NavigationManager { get; set; }
+        [Inject] private HttpClient HttpClient { get; set; }
 
         public ViewApplicationUser User { get; set; } = new ViewApplicationUser();
-        
+
         public List<SocialNetwork> AvailableSocialNetworks { get; set; } = new List<SocialNetwork>();
 
         public List<SocialNetwork> AvailableSocialNetworksToAdd { get; set; } = new List<SocialNetwork>();
@@ -33,12 +34,34 @@ namespace Abeer.Client.Pages
         bool ModalCustomLinkVisible;
         bool ModalChangePassword;
         bool ChangePasswordHasError;
+        bool ChangePhotoHasError;
+        bool ModalChangePhoto;
         string ChangePasswordError = "";
+        string ChangePhotoError = "";
+        string _PhotoType = "Gravatar";
 
+        public string PhotoType
+        {
+            get => _PhotoType;
+            set
+            {
+                _PhotoType = value;
+            }
+        }
         public string OldPassword { get; set; }
         public string NewPassword { get; set; }
         public string ConfirmPassword { get; set; }
 
+        private string _PhotoUrl;
+
+        public string PhotoUrl
+        {
+            get => _PhotoUrl;
+            set
+            {
+                _PhotoUrl = value;
+            }
+        }
         public string ProfileUrl => NavigationManager.ToAbsoluteUri($"/viewProfile/{User.Id}").ToString();
         protected override async Task OnInitializedAsync()
         {
@@ -47,6 +70,8 @@ namespace Abeer.Client.Pages
             var json = await response.Content.ReadAsStringAsync();
             Console.WriteLine($"user :{json}");
             User = JsonConvert.DeserializeObject<ViewApplicationUser>(json);
+
+            _PhotoUrl = User.PhotoUrl;
 
             NewSocialLink = new SocialNetwork { OwnerId = User.Id };
 
@@ -61,11 +86,18 @@ namespace Abeer.Client.Pages
 
             AvailableSocialNetworks.ForEach(a =>
             {
-                if(!User.SocialNetworkConnected.ToList().Exists(c => a.Name.Equals(c.Name,StringComparison.OrdinalIgnoreCase)))
+                if (!User.SocialNetworkConnected.ToList().Exists(c => a.Name.Equals(c.Name, StringComparison.OrdinalIgnoreCase)))
                 {
                     AvailableSocialNetworksToAdd.Add(a);
                 }
             });
+        }
+
+        async Task ChangePhoto()
+        {
+            User.PhotoUrl = PhotoUrl;
+            await Update();
+            await ToggleChangePhoto();
         }
 
         async Task Update()
@@ -79,14 +111,7 @@ namespace Abeer.Client.Pages
 
         async Task ChangePassword()
         {
-            if (string.IsNullOrEmpty(OldPassword) || string.IsNullOrEmpty(NewPassword) ||
-                string.IsNullOrEmpty(ConfirmPassword))
-            {
-
-                ChangePasswordHasError = true;
-                ChangePasswordError = Loc["PasswordFieldEmptyError"].Value;
-            }
-            if(NewPassword != ConfirmPassword)
+            if (NewPassword != ConfirmPassword)
             {
                 ChangePasswordHasError = true;
                 ChangePasswordError = Loc["PasswordNotConfirmedError"].Value;
@@ -96,14 +121,15 @@ namespace Abeer.Client.Pages
                 ChangePasswordHasError = false;
                 var response = await HttpClient.PutAsJsonAsync($"/api/Profile/ChangePassword", new ChangePasswordViewModel
                 {
-                    UserId = User.Id, OldPassword = OldPassword, NewPassword = NewPassword
+                    UserId = User.Id,
+                    OldPassword = OldPassword,
+                    NewPassword = NewPassword
                 });
                 ChangePasswordHasError = !response.IsSuccessStatusCode;
-                Console.Write(response.Content.ReadAsStringAsync());
                 ChangePasswordError = Loc["ChangePasswordFailedError"];
 
                 if (!ChangePasswordHasError)
-                    await ToogleChangePassword();
+                    await ToggleChangePassword();
             }
         }
         async Task ToggleModalSocialNetwork()
@@ -116,9 +142,14 @@ namespace Abeer.Client.Pages
             ModalCustomLinkVisible = !ModalCustomLinkVisible;
         }
 
-        async Task ToogleChangePassword()
+        async Task ToggleChangePassword()
         {
             ModalChangePassword = !ModalChangePassword;
+        }
+
+        async Task ToggleChangePhoto()
+        {
+            ModalChangePhoto = !ModalChangePhoto;
         }
 
         async Task DeleteSocialNetwork(SocialNetwork socialNetwork)

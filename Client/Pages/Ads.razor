@@ -46,6 +46,8 @@
 <section class="section">
     <div class="section-header">
         <h1>@Loc["Title"]</h1>
+    </div>
+    <div class="section-header">
         <div class="input-group">
             <input type="search" id="example-input1-group2" name="example-input1-group2" class="form-control" @bind="Term" @onkeyup="countTerm">
             <span class="input-group-btn">
@@ -53,6 +55,15 @@
             </span>
             <div class="search-backdrop"></div>
         </div>
+        <div class="input-group-btn">
+            <div class="text-center">
+                <a class="btn  btn-lg" href="CreateAd" title="@Loc["PublishYourAd"]"><i class="fas fa-upload" style="font-size:45px"></i><h5></h5></a>
+                @if (IsAdmin)
+                {
+                <a class="btn btn-lg" href="ManageAds" title="@Loc["ManageAds"]"><i class="fas fa-database" style="font-size:45px"></i></a>
+                }
+                </div>
+            </div>
     </div>
     <div class="section-body">
         <div class="row">
@@ -60,11 +71,6 @@
                 @foreach (var ad in Items)
                 {
                     <CardAd Loc="Loc" Ad="ad" Editable="false"></CardAd>
-                }
-                <a class="btn btn-lg btn-info" href="CreateAd" style="height:90px"><i class="fas fa-upload" style="font-size:45px"></i><h5>@Loc["PublishYourAd"]</h5></a>
-                @if (IsAdmin)
-                {
-                    <a class="btn btn-lg btn-info" href="ManageAds" style="height:90px"><i class="fas fa-database" style="font-size:45px"></i>@Loc["ManageAds"]</a>
                 }
             </div>
         </div>

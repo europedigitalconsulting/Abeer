@@ -24,5 +24,6 @@ namespace Abeer.Shared
         public byte[] EncryptionKey { get; set; }
         public string Address { get; set; }
         public int NubmerOfView { get; set; }
+        public string PhotoUrl { get; set; }
     }
 }

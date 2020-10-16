@@ -23,6 +23,7 @@ namespace Abeer.Client.Pages
             response.EnsureSuccessStatusCode();
             var json = await response.Content.ReadAsStringAsync();
             UserProfile = JsonConvert.DeserializeObject<ViewApplicationUser>(json);
+            Console.Write(json);
             NavigationUrlService.SetUrls($"https://www.google.com/maps/search/?api=1&query={UserProfile.Address},{UserProfile.City}%20{UserProfile.Country}&query_place_id={UserProfile.DisplayName}",
                 null);
         }

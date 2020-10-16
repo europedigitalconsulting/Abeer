@@ -5,63 +5,61 @@
 @code
 { protected ClaimsPrincipal _user;
 
-            [CascadingParameter]
-            private Task<AuthenticationState> authenticationStateTask { get; set; }
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
 
-            [Parameter]
-            public string LabelUserList { get; set; }
+    [Parameter]
+    public string LabelUserList { get; set; }
 
-            [Parameter]
-            public string LabelContacts { get; set; }
+    [Parameter]
+    public string LabelContacts { get; set; }
 
-            [Parameter]
-            public string LabelDashboard { get; set; }
+    [Parameter]
+    public string LabelDashboard { get; set; }
 
-            [Parameter]
-            public string LabelMyAccount { get; set; }
+    [Parameter]
+    public string LabelMyAccount { get; set; }
 
-            [Parameter]
-            public string LabelLogout { get; set; }
+    [Parameter]
+    public string LabelLogout { get; set; }
 
-            protected override async Task OnParametersSetAsync()
-            {
-                await base.OnParametersSetAsync();
+    public string PhotoUrl { get; set; }
 
-                var authState = await authenticationStateTask;
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
 
-                _user = authState.User;
-                Console.WriteLine($"User is Authenticated : {_user.Identity.IsAuthenticated} - navMenu for user {_user.FindFirstValue("displayname")}");
-                await InvokeAsync(StateHasChanged);
-            }
+        var authState = await authenticationStateTask;
 
-            protected override void OnInitialized()
-            {
-                base.OnInitialized();
-                Console.WriteLine("nav menu on initialized called");
-            } 
+        _user = authState.User;
+        PhotoUrl = _user.FindFirstValue("photoUrl") ?? _user.Identity.GravatarUrl();
+        Console.WriteLine($"User is Authenticated : {_user.Identity.IsAuthenticated} - navMenu for user {_user.FindFirstValue("displayname")}");
+        await InvokeAsync(StateHasChanged);
     }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        Console.WriteLine("nav menu on initialized called");
+    }
+}
 <nav class="nav navbar navbar-bg navbar-expand-lg">
     <div class="nav navbar-header">
         <a class="navbar-brand" href="/">Abeer</a>
     </div>
     <ul class="nav navbar-nav mr-auto">
-
-        <form class="form-inline mr-auto">
-            <ul class="navbar-nav mr-3">
-                <li><a href="#" data-toggle="search" class="nav-link nav-link-lg d-sm-none"><i class="fas fa-search"></i></a></li>
-            </ul>
-        </form>
+        
     </ul>
     <ul class="nav navbar-nav  navbar-right">
         <li class="dropdown">
             @if (_user?.Identity.IsAuthenticated == true)
             {
                 <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-                    <img alt="image" src="@_user.Identity.GravatarUrl()" class="rounded-circle mr-1">
+                    <img alt="image" src="@PhotoUrl" class="rounded-circle mr-1">
                     <div class="d-sm-none d-lg-inline-block">Hi, @_user.FindFirstValue("displayname")</div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
-                    <div class="dropdown-title">Logged since @_user.FindFirstValue("lastlogin")</div>
+                    @*<div class="dropdown-title">Logged since @_user.FindFirstValue("lastlogin")</div>*@
                     <a href="profile" class="dropdown-item has-icon">
                         <i class="far fa-user"></i> Profile
                     </a>
@@ -85,7 +83,7 @@
                     <a href="identity/account/logout?returnUrl=/" class="dropdown-item has-icon text-danger">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </a>
-                </div> 
+                </div>
             }
             else
             {

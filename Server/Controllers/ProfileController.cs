@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Abeer.Shared.ViewModels;
 using Abeer.Data.UnitOfworks;
 using System.Collections.Generic;
+using Abeer.Client;
 using System.Linq;
 using Microsoft.EntityFrameworkCore.Internal;
 
@@ -44,7 +45,7 @@ namespace Abeer.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ApplicationUser>> GetUserProfile([FromQuery]string userId)
+        public async Task<ActionResult<ApplicationUser>> GetUserProfile([FromQuery] string userId)
         {
             if (string.IsNullOrEmpty(userId))
                 userId = User.NameIdentifier();
@@ -52,7 +53,7 @@ namespace Abeer.Server.Controllers
             var user = await _userManager
                 .FindByIdAsync(userId);
 
-            return Ok(new ViewApplicationUser
+            var value = new ViewApplicationUser
             {
                 City = user.City,
                 Email = user.Email,
@@ -60,10 +61,10 @@ namespace Abeer.Server.Controllers
                 Id = user.Id,
                 SocialNetworkConnected = await _functionalUnitOfWork
                     .SocialNetworkRepository
-                        .GetSocialNetworkLinks(user.Id) ?? new List<SocialNetwork>(),
+                    .GetSocialNetworkLinks(user.Id) ?? new List<SocialNetwork>(),
                 CustomLinks = await _functionalUnitOfWork
                     .CustomLinkRepository
-                        .GetCustomLinkLinks(user.Id) ?? new List<CustomLink>(),
+                    .GetCustomLinkLinks(user.Id) ?? new List<CustomLink>(),
                 Address = user.Address,
                 Country = user.Country,
                 Description = user.Description,
@@ -75,8 +76,10 @@ namespace Abeer.Server.Controllers
                 IsOperator = user.IsOperator,
                 LastLogin = user.LastLogin,
                 LastName = user.LastName,
-                Title = user.Title
-            });
+                Title = user.Title,
+                PhotoUrl = string.IsNullOrWhiteSpace(user.PhotoUrl) ? user.GravatarUrl() : user.PhotoUrl
+            };
+            return Ok(value);
         }
 
         [HttpPut]
@@ -89,7 +92,7 @@ namespace Abeer.Server.Controllers
             user.DisplayName = applicationUser.DisplayName;
             user.City = applicationUser.City;
             user.Country = applicationUser.Country;
-
+            user.PhotoUrl = applicationUser.PhotoUrl;
 
             var result = await _userManager.UpdateAsync(user);
             

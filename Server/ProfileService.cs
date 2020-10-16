@@ -1,4 +1,5 @@
-﻿using Abeer.Shared;
+﻿using Abeer.Client;
+using Abeer.Shared;
 
 using IdentityModel;
 
@@ -32,6 +33,7 @@ namespace Abeer.Server
             context.IssuedClaims.AddRange(roleClaims);
 
             var user = await _userManager.FindByNameAsync(context.Subject.Identity.Name);
+            
             if (user != null)
             {
                 if (!user.IsOnline)
@@ -46,6 +48,9 @@ namespace Abeer.Server
                         context.IssuedClaims.Add(claim);
                 }
             }
+
+            if (!context.IssuedClaims.Any(c => c.Type == "photoUrl"))
+                context.IssuedClaims.Add(new System.Security.Claims.Claim("photoUrl", (string.IsNullOrWhiteSpace(user.PhotoUrl) ? user.GravatarUrl() : user.PhotoUrl)));
         }
 
         public Task IsActiveAsync(IsActiveContext context)

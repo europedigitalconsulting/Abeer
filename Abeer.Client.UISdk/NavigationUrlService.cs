@@ -17,7 +17,7 @@ namespace Abeer.Client.UISdk
 
         public NavigationUrlService(NavigationManager navigationManager)
         {
-            _ProfileUrl = navigationManager.ToAbsoluteUri("/profile/Edit").ToString();
+            _ProfileUrl = navigationManager.ToAbsoluteUri("/profile").ToString();
             _ImportContactUrl = navigationManager.ToAbsoluteUri("/addContact").ToString();
             _ServicesUrl = navigationManager.ToAbsoluteUri("/services").ToString();
             _ContactsUrl = navigationManager.ToAbsoluteUri("/contacts").ToString();

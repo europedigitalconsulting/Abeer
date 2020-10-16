@@ -1,7 +1,11 @@
-﻿<input type="file" @ref="_input" @onchange="HandleSelected" accept=".jpg, .jpeg, png" />
+﻿
+<div class="btn btn-primary btn-sm float-left">
+    <i class="fa fa-2x fa-paperclip"></i>
+    <input type="file" @ref="_input" @onchange="HandleSelected" accept=".jpg, .jpeg, png" class="form-control" />
+</div>
 @if (ImgUrl != null)
 {
-    <div>
-        <img src="@ImgUrl" style="width:300px" />
+    <div class="text-center m-4">
+        <img src="@ImgUrl" class="img-thumbnail" />
     </div>
 }
