@@ -30,125 +30,171 @@
     }
     @if (ModalChangePassword)
     {
-<div class="modal fade show" id="modalChangePassword" style="display:block" aria-modal="true" role="dialog">
-    <div class="modal-dialog">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">@Loc["ChangePassword"]</h4>
-            </div>
-            <div class="modal-body">
-                @if (ChangePasswordHasError)
-                {
-<div class="alert alert-danger">
-    @ChangePasswordError
-</div>}
-                <div class="form-group">
-                    @Loc["OldPassword"]
-                    <input type="password" class="form-control" @bind="OldPassword" />
+        <div class="modal fade show" id="modalChangePassword" style="display:block" aria-modal="true" role="dialog">
+            <div class="modal-dialog">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">@Loc["ChangePassword"]</h4>
+                    </div>
+                    <div class="modal-body">
+                        @if (ChangePasswordHasError)
+                        {
+                            <div class="alert alert-danger">
+                                @ChangePasswordError
+                            </div>}
+                        <div class="form-group">
+                            @Loc["OldPassword"]
+                            <input type="password" class="form-control" @bind="OldPassword" />
+                        </div>
+                        <div class="form-group">
+                            @Loc["NewPassword"]
+                            <input type="password" class="form-control" @bind="NewPassword" />
+                        </div>
+                        <div class="form-group">
+                            @Loc["ConfirmPassword"]
+                            <input type="password" class="form-control" @bind="ConfirmPassword" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" @onclick="ChangePassword">@Loc["ChangePassword"]</button>
+                        <button type="button" class="btn btn-warning" @onclick="@(() => ModalQrCodeVisible = false)">@Loc["Cancel"]</button>
+                    </div>
                 </div>
-                <div class="form-group">
-                    @Loc["NewPassword"]
-                    <input type="password" class="form-control" @bind="NewPassword" />
-                </div>
-                <div class="form-group">
-                    @Loc["ConfirmPassword"]
-                    <input type="password" class="form-control" @bind="ConfirmPassword" />
-                </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" @onclick="ChangePassword">@Loc["ChangePassword"]</button>
-                <button type="button" class="btn btn-warning" @onclick="@(() => ModalQrCodeVisible = false)">@Loc["Cancel"]</button>
-            </div>
-        </div>
-    </div>
-</div>}
+        </div>}
 
     @if (ModalSocialNetworkVisible)
     {
-<div class="modal fade show" id="modalSocialNetwork" style="display:block" aria-modal="true" role="dialog">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">@Loc["AddASocialNetwork"]</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="ToggleModalSocialNetwork">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="card m-5">
-                    <div class="form-group">
-                        @Loc["SocialUrl"]
-                        <input type="url" @bind="NewSocialLink.Url" class="form-control" />
+        <div class="modal fade show" id="modalSocialNetwork" style="display:block" aria-modal="true" role="dialog">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">@Loc["AddASocialNetwork"]</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="ToggleModalSocialNetwork">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                    <div class="form-group">
-                        @Loc["SocialType"]
-                        <ul>
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    @Loc["AvailableSocialNetwork"]
-                                    @if (!string.IsNullOrEmpty(NewSocialLink.Name))
-                                    {
-                    <i class="@NewSocialLink.Logo"></i><span>@NewSocialLink.Name</span>}
-                                    <b class="caret"></b>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    @foreach (var item in AvailableSocialNetworksToAdd)
-                                    {
-                    <li><a href="javascript:void(0)" @onclick="@(()=>SetSocialNetwork(item.Name, item.BackgroundColor, item.Logo))"><i class="@item.Logo"></i>@item.Name</a></li>}
+                    <div class="modal-body">
+                        <div class="card m-5">
+                            <div class="form-group">
+                                @Loc["SocialUrl"]
+                                <input type="url" @bind="NewSocialLink.Url" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                @Loc["SocialType"]
+                                <ul>
+                                    <li class="dropdown">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                            @Loc["AvailableSocialNetwork"]
+                                            @if (!string.IsNullOrEmpty(NewSocialLink.Name))
+                                            {
+                                                <i class="@NewSocialLink.Logo"></i><span>@NewSocialLink.Name</span>}
+                                            <b class="caret"></b>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            @foreach (var item in AvailableSocialNetworksToAdd)
+                                            {
+                                                <li><a href="javascript:void(0)" @onclick="@(()=>SetSocialNetwork(item.Name, item.BackgroundColor, item.Logo))"><i class="@item.Logo"></i>@item.Name</a></li>
+                                            }
+                                        </ul>
+                                    </li>
                                 </ul>
-                            </li>
-                        </ul>
+                            </div>
+                            <button class="btn btn-success" @onclick="AddSocialNetwork">@Loc["AddASocialNetwork"]</button>
+                        </div>
                     </div>
-                    <button class="btn btn-success" @onclick="AddSocialNetwork">@Loc["AddASocialNetwork"]</button>
                 </div>
             </div>
-        </div>
-    </div>
-</div>}
+        </div>}
     @if (ModalCustomLinkVisible)
     {
-<div class="modal fade show" id="modalCustomLink" style="display:block" aria-modal="true" role="dialog">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">@Loc["AddCustomLink"]</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="ToggleModalCustomLink">
+        <div class="modal fade show" id="modalCustomLink" style="display:block" aria-modal="true" role="dialog">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">@Loc["AddCustomLink"]</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="ToggleModalCustomLink">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="card m-5">
+                            <div class="form-group">
+                                @Loc["Name"]
+                                <input @bind="NewCustomLink.Name" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                @Loc["BackgroundColor"]
+                                <input @bind="NewCustomLink.BackgroundColor" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                @Loc["Logo"]
+                                <input @bind="NewCustomLink.Logo" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                @Loc["Url"]
+                                <input type="url" @bind="NewCustomLink.Url" class="form-control" />
+                            </div>
+                            <button class="btn btn-success" @onclick="AddCustomLink">@Loc["AddCustomLink"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>}
+    @if (ModalChangePhoto)
+    {
+        <div class="modal fade show" id="modalChangePhoto" style="display:block" aria-modal="true" role="dialog">
+            <div class="modal-dialog">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-            </div>
-            <div class="modal-body">
-                <div class="card m-5">
-                    <div class="form-group">
-                        @Loc["Name"]
-                        <input @bind="NewCustomLink.Name" class="form-control" />
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">@Loc["ChangePhoto"]</h4>
                     </div>
-                    <div class="form-group">
-                        @Loc["BackgroundColor"]
-                        <input @bind="NewCustomLink.BackgroundColor" class="form-control" />
+                    <div class="modal-body">
+                        @if (ChangePhotoHasError)
+                        {
+                            <div class="alert alert-danger">
+                                @ChangePhotoError
+                            </div>
+                        }
+                        <div class="form-group">
+                            @Loc["PhotoType"]
+                            <select @bind="PhotoType">
+                                <option value="Gravatar">@Loc["UseGravatarPhoto"]</option>
+                                <option value="Custom">@Loc["UseCustomPhoto"]</option>
+                            </select>
+                        </div>
+                        @if (PhotoType == "Custom")
+                        {
+                            <div class="form-group">
+                                @Loc["UseCustomPhoto"]
+                                <MediaUploader ImgUrl="@PhotoUrl" OnChange="@((fileUrl)=>PhotoUrl = fileUrl)"></MediaUploader>
+                            </div>
+                        }
                     </div>
-                    <div class="form-group">
-                        @Loc["Logo"]
-                        <input @bind="NewCustomLink.Logo" class="form-control" />
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" @onclick="ChangePhoto">@Loc["ChangePhoto"]</button>
+                        <button type="button" class="btn btn-warning" @onclick="@(() => ModalChangePhoto = false)">@Loc["Cancel"]</button>
                     </div>
-                    <div class="form-group">
-                        @Loc["Url"]
-                        <input type="url" @bind="NewCustomLink.Url" class="form-control" />
-                    </div>
-                    <button class="btn btn-success" @onclick="AddCustomLink">@Loc["AddCustomLink"]</button>
                 </div>
             </div>
         </div>
-    </div>
-</div>}
-
+    }
     <EditForm Model="User">
         <DataAnnotationsValidator />
         <ValidationSummary />
         <div class="card">
             <div class="card-body">
+                <div class="form-row">
+                    <div class="form-group col-lg-6  col-sm-12">
+                        <img src="@PhotoUrl" style="max-width:90px;max-height:90px" />
+                    </div>
+                </div>
                 <div class="form-row">
                     <div class="form-group col-lg-6  col-sm-12">
                         <label>@Loc["DisplayName"]</label>
@@ -188,56 +234,58 @@
                 <h5>@Loc["SocialNetworkConnected"]</h5>
                 @if (SocialNetworkConnected?.Count > 0)
                 {
-<div class="row ml-3">
-    <ul class="list ma0 pa0 flex flex-row flex-wrap justify-start items-start">
-        @foreach (var socialNetwork in SocialNetworkConnected)
-        {
-<li class="dib ma0 pb3 w-grid-2 w-grid-4-m w-grid-6-l w-grid-9-xl">
-    <div class="flex flex-column justify-center relative shadow-hover default hover-bg-white br2 hide-child">
-        <a href="@socialNetwork.Url" target="_blank"
-           class="flex flex-column items-center justify-center color-inherit w-100 pa2 br2 br--top no-underline hover-bg-blue4 hover-white">
-            <i class="@socialNetwork.Logo" style="font-size: 48px;"></i>
-        </a>
-        <div class="w-100 ph1 pv2 tc f2">
-            <span class="db gray5 hover-gray7 text select-all">@socialNetwork.Name</span>
-            <button @onclick="@(()=>DeleteSocialNetwork(socialNetwork))"><i class="fa fa-trash"></i></button>
-        </div>
-    </div>
-</li>}
-    </ul>
-</div>          }
+                    <div class="row ml-3">
+                        <ul class="list ma0 pa0 flex flex-row flex-wrap justify-start items-start">
+                            @foreach (var socialNetwork in SocialNetworkConnected)
+                            {
+                                <li class="dib ma0 pb3 w-grid-2 w-grid-4-m w-grid-6-l w-grid-9-xl">
+                                    <div class="flex flex-column justify-center relative shadow-hover default hover-bg-white br2 hide-child">
+                                        <a href="@socialNetwork.Url" target="_blank"
+                                           class="flex flex-column items-center justify-center color-inherit w-100 pa2 br2 br--top no-underline hover-bg-blue4 hover-white">
+                                            <i class="@socialNetwork.Logo" style="font-size: 48px;"></i>
+                                        </a>
+                                        <div class="w-100 ph1 pv2 tc f2">
+                                            <span class="db gray5 hover-gray7 text select-all">@socialNetwork.Name</span>
+                                            <button @onclick="@(()=>DeleteSocialNetwork(socialNetwork))"><i class="fa fa-trash"></i></button>
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    </div>}
                 <button href="#" class="btn  btn-lg  btn-primary" @onclick="OpenModalSocialNetwork">
                     <i class="fa fa-plus"></i>
                 </button>
                 <h5>@Loc["CustomLinks"]</h5>
                 @if (CustomLinks?.Count > 0)
                 {
-<div class="row ml-3">
-    <ul class="list ma0 pa0 flex flex-row flex-wrap justify-start items-start">
-        @foreach (var customLink in CustomLinks)
-        {
-            <li class="dib ma0 pb3 w-grid-2 w-grid-4-m w-grid-6-l w-grid-9-xl">
-                <div class="flex flex-column justify-center relative shadow-hover default hover-bg-white br2 hide-child">
-                    <a href="@customLink.Url" target="_blank"
-                       class="flex flex-column items-center justify-center color-inherit w-100 pa2 br2 br--top no-underline hover-bg-blue4 hover-white">
-                        <i class="@customLink.Logo" style="font-size: 48px;"></i>
-                    </a>
-                    <div class="w-100 ph1 pv2 tc f2">
-                        <span class="db gray5 hover-gray7 text select-all">@customLink.Name</span>
-                        <button @onclick="@(()=>DeleteCustomLink(customLink))"><i class="fa fa-trash"></i></button>
-                    </div>
-                </div>
-            </li>
-        }
-    </ul>
-</div>          }
+                    <div class="row ml-3">
+                        <ul class="list ma0 pa0 flex flex-row flex-wrap justify-start items-start">
+                            @foreach (var customLink in CustomLinks)
+                            {
+                                <li class="dib ma0 pb3 w-grid-2 w-grid-4-m w-grid-6-l w-grid-9-xl">
+                                    <div class="flex flex-column justify-center relative shadow-hover default hover-bg-white br2 hide-child">
+                                        <a href="@customLink.Url" target="_blank"
+                                           class="flex flex-column items-center justify-center color-inherit w-100 pa2 br2 br--top no-underline hover-bg-blue4 hover-white">
+                                            <i class="@customLink.Logo" style="font-size: 48px;"></i>
+                                        </a>
+                                        <div class="w-100 ph1 pv2 tc f2">
+                                            <span class="db gray5 hover-gray7 text select-all">@customLink.Name</span>
+                                            <button @onclick="@(()=>DeleteCustomLink(customLink))"><i class="fa fa-trash"></i></button>
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    </div>}
                 <button href="#" class="btn  btn-lg  btn-primary" @onclick="OpenModalCustomLink">
                     <i class="fa fa-plus"></i>
                 </button>
 
             </div>
             <div class="card-footer text-right">
-                <button type="button" class="btn btn-warning" @onclick="ToogleChangePassword"><i class="fas fa-key"></i>@Loc["ChangePassword"]</button>
+                <button type="button" class="btn btn-warning" @onclick="ToggleChangePhoto"><i class="fas fa-key"></i>@Loc["ChangePhoto"]</button>
+                <button type="button" class="btn btn-warning" @onclick="ToggleChangePassword"><i class="fas fa-key"></i>@Loc["ChangePassword"]</button>
                 <button type="submit" class="btn btn-success" @onclick="Update">@Loc["Save"]</button>
             </div>
         </div>

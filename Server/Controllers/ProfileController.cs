@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Abeer.Shared.ViewModels;
 using Abeer.Data.UnitOfworks;
 using System.Collections.Generic;
+using Abeer.Client;
 
 namespace Abeer.Server.Controllers
 {
@@ -50,6 +51,7 @@ namespace Abeer.Server.Controllers
             {
                 City = user.City,
                 Email = user.Email,
+                PhotoUrl = string.IsNullOrWhiteSpace(user.PhotoUrl) ? user.GravatarUrl() : user.PhotoUrl,
                 PhoneNumber = user.PhoneNumber,
                 Id = user.Id,
                 SocialNetworkConnected = await _functionalUnitOfWork
@@ -83,7 +85,7 @@ namespace Abeer.Server.Controllers
             user.DisplayName = applicationUser.DisplayName;
             user.City = applicationUser.City;
             user.Country = applicationUser.Country;
-
+            user.PhotoUrl = applicationUser.PhotoUrl;
 
             var result = await _userManager.UpdateAsync(user);
             

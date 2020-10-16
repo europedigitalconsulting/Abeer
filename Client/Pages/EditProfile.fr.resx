@@ -135,6 +135,9 @@
   <data name="ChangePasswordFailedError" xml:space="preserve">
     <value>Impossible d'enregister votre nouveau mot de passe, veuillez réessayer plus tard</value>
   </data>
+  <data name="ChangePhoto" xml:space="preserve">
+    <value>Modifier ma photo</value>
+  </data>
   <data name="City" xml:space="preserve">
     <value>City</value>
   </data>
