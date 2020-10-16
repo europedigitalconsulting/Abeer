@@ -108,9 +108,9 @@
                 </div>
                 <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
                     <label>@Loc["Description"]</label>
-                    <textarea type="text" Class="form-control " rows="6" @bind="Ad.Description" cols="6"></textarea>
+                    <textarea type="text" Class="form-control h-100" rows="6" @bind="Ad.Description" cols="6"></textarea>
                 </div>
-                <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
+                <div class="form-group form-group col-lg-6 col-md-6 col-sm-6">
                     <label>@Loc["Price"]</label>
                     <input type="number" Class="form-control" @bind="Ad.Price" />
                 </div>
@@ -131,20 +131,24 @@
                     <input type="url" Class="form-control" @bind="Ad.Url4" />
                 </div>
                 <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
-                    <MediaUploader OnChange="AssignImageUrl1"></MediaUploader>
+                    <label>@Loc["Image1"]</label>
+                    <MediaUploader Id="AssignImageUrl1" OnChange="AssignImageUrl1"></MediaUploader>
                 </div>
                 <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
-                    <MediaUploader OnChange="AssignImageUrl2"></MediaUploader>
+                    <label>@Loc["Image2"]</label>
+                    <MediaUploader Id="AssignImageUrl2" OnChange="AssignImageUrl2"></MediaUploader>
                 </div>
                 <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
-                    <MediaUploader OnChange="AssignImageUrl3"></MediaUploader>
+                    <label>@Loc["Image3"]</label>
+                    <MediaUploader Id="AssignImageUrl3" OnChange="AssignImageUrl3"></MediaUploader>
                 </div>
                 <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
-                    <MediaUploader OnChange="AssignImageUrl4"></MediaUploader>
+                    <label>@Loc["Image4"]</label>
+                    <MediaUploader Id="AssignImageUrl4" OnChange="AssignImageUrl4"></MediaUploader>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-success" @onclick="Step2"><i class="fas fa-upload"></i>@Loc["StartPublish"]</button>
-                    <a href="Ads" class="btn btn-warning">@Loc["Cancel"]</a>
+                    <a type="submit" class="btn btn-success" @onclick="Step2" title="@Loc["StartPublish"]"><i class="fa fa-2x fa-upload"></i></a>
+                    <a href="Ads" class="btn btn-warning" title="@Loc["Cancel"]"><i class="fa fa-2x fa-times"></i></a>
                 </div>
             </div>
         </div>
@@ -154,7 +158,7 @@ else if (Step == "Step2")
 {
     <section class="section">
         <div class="section-header">
-            <h1>@Loc["Title"]</h1>
+            <h1>@Loc["SelectYourOffer"]</h1>
         </div>
         <div class="card">
             <div class="card-body">

@@ -6,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Abeer.Server.Data;
 using System;
-using System.Collections.Generic;
 using Abeer.Shared;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
