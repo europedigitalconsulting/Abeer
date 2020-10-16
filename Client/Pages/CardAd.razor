@@ -40,22 +40,22 @@
                 @Ad.Description
             </p>
             <div class="row col-12">
-                <div class="gallery">
-                    @if (!string.IsNullOrEmpty(Ad.ImageUrl1))
+                <div class="gallery gallery-md">
+                    @if (!string.IsNullOrWhiteSpace(Ad.ImageUrl1))
                     {
-                        <img class="img-fluid img-thumbnail" style="max-width:90px;max-height:90px" src="@Ad.ImageUrl1" alt="Image 1">
+                        <div class="gallery-item" data-image="@Ad.ImageUrl1" data-title="Image 1" href="@Ad.ImageUrl1" title="Image 1" style="background-image: url(&quot;@Ad.ImageUrl1&quot;);"></div>
                     }
-                    @if (!string.IsNullOrEmpty(Ad.ImageUrl2))
+                    @if (!string.IsNullOrWhiteSpace(Ad.ImageUrl2))
                     {
-                        <img class="img-fluid img-thumbnail" style="max-width:90px;max-height:90px" src="@Ad.ImageUrl2" alt="Image 2">
+                        <div class="gallery-item" data-image="@Ad.ImageUrl2" data-title="Image 1" href="@Ad.ImageUrl2" title="Image 2" style="background-image: url(&quot;@Ad.ImageUrl2&quot;);"></div>
                     }
-                    @if (!string.IsNullOrEmpty(Ad.ImageUrl3))
+                    @if (!string.IsNullOrWhiteSpace(Ad.ImageUrl3))
                     {
-                        <img class="img-fluid img-thumbnail" style="max-width:90px;max-height:90px" src="@Ad.ImageUrl3" alt="Image 3">
+                        <div class="gallery-item" data-image="@Ad.ImageUrl3" data-title="Image 1" href="@Ad.ImageUrl3" title="Image 3" style="background-image: url(&quot;@Ad.ImageUrl3&quot;);"></div>
                     }
-                    @if (!string.IsNullOrEmpty(Ad.ImageUrl4))
+                    @if (!string.IsNullOrWhiteSpace(Ad.ImageUrl4))
                     {
-                        <img class="img-fluid img-thumbnail" style="max-width:90px;max-height:90px" src="@Ad.ImageUrl4" alt="Image 4">
+                        <div class="gallery-item" data-image="@Ad.ImageUrl4" data-title="Image 1" href="@Ad.ImageUrl4" title="Image 4" style="background-image: url(&quot;@Ad.ImageUrl4&quot;);"></div>
                     }
                 </div>
             </div>

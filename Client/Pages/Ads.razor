@@ -1,12 +1,12 @@
 ﻿@page "/ads"
-@using System.Security.Claims 
+@using System.Security.Claims
 @inject IHttpClientFactory HttpClientFactory
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Ads> Loc
 
 @code
 {
-        [CascadingParameter]
-        private Task<AuthenticationState> authenticationStateTask { get; set; }
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
 
     public string Term { get; set; }
     public bool IsAdmin { get; set; }
@@ -59,31 +59,12 @@
             <div class="col-12">
                 @foreach (var ad in Items)
                 {
-                    <div class="card">
-                        <div class="card-header">
-                            <h4>@ad.Title <span class="badge badget-primary">@ad.ViewCount</span></h4>
-                            <cite>@ad.StartDisplayTime / @ad.EndDisplayTime</cite>
-                            <div class="card-header-action">
-                                <a data-dismiss="#mycard-dimiss" class="btn btn-icon btn-primary" href="#">@ad.Price.FormatCurrency()</a>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <p class="mb-2">
-                                @ad.Description
-                            </p>
-                            <div class="gallery gallery-md">
-                                <div class="gallery-item" data-image="@ad.Url1" data-title="Image 1" href="@ad.Url1" title="Image 1" style="background-image: url(&quot;@ad.Url1&quot;);"></div>
-                                <div class="gallery-item" data-image="@ad.Url2" data-title="Image 1" href="@ad.Url2" title="Image 2" style="background-image: url(&quot;@ad.Url2&quot;);"></div>
-                                <div class="gallery-item" data-image="@ad.Url3" data-title="Image 1" href="@ad.Url3" title="Image 3" style="background-image: url(&quot;@ad.Url3&quot;);"></div>
-                                <div class="gallery-item" data-image="@ad.Url4" data-title="Image 1" href="@ad.Url4" title="Image 4" style="background-image: url(&quot;@ad.Url4&quot;);"></div>
-                            </div>
-                        </div>
-                    </div>
+                    <CardAd Loc="Loc" Ad="ad" Editable="false"></CardAd>
                 }
-                <a class="btn btn-lg btn-info" href="CreateAd"><i class="fas fa-upload" style="font-size:45px"></i><h5>@Loc["PublishYourAd"]</h5></a>
+                <a class="btn btn-lg btn-info" href="CreateAd" style="height:90px"><i class="fas fa-upload" style="font-size:45px"></i><h5>@Loc["PublishYourAd"]</h5></a>
                 @if (IsAdmin)
                 {
-                    <a class="btn btn-lg btn-info" href="ManageAds"><i class="fas fa-database" style="font-size:45px"></i>@Loc["ManageAds"]</a>
+                    <a class="btn btn-lg btn-info" href="ManageAds" style="height:90px"><i class="fas fa-database" style="font-size:45px"></i>@Loc["ManageAds"]</a>
                 }
             </div>
         </div>
