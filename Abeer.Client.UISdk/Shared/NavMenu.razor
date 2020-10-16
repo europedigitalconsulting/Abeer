@@ -3,44 +3,43 @@
 @using System.Security.Claims
 
 @code
-{
-    protected ClaimsPrincipal _user;
+{ protected ClaimsPrincipal _user;
 
-    [CascadingParameter]
-    private Task<AuthenticationState> authenticationStateTask { get; set; }
+            [CascadingParameter]
+            private Task<AuthenticationState> authenticationStateTask { get; set; }
 
-    [Parameter]
-    public string LabelUserList { get; set; }
+            [Parameter]
+            public string LabelUserList { get; set; }
 
-    [Parameter]
-    public string LabelContacts { get; set; }
+            [Parameter]
+            public string LabelContacts { get; set; }
 
-    [Parameter]
-    public string LabelDashboard { get; set; }
+            [Parameter]
+            public string LabelDashboard { get; set; }
 
-    [Parameter]
-    public string LabelMyAccount { get; set; }
+            [Parameter]
+            public string LabelMyAccount { get; set; }
 
-    [Parameter]
-    public string LabelLogout { get; set; }
+            [Parameter]
+            public string LabelLogout { get; set; }
 
-    protected override async Task OnParametersSetAsync()
-    {
-        await base.OnParametersSetAsync();
+            protected override async Task OnParametersSetAsync()
+            {
+                await base.OnParametersSetAsync();
 
-        var authState = await authenticationStateTask;
+                var authState = await authenticationStateTask;
 
-        _user = authState.User;
-        Console.WriteLine($"User is Authenticated : {_user.Identity.IsAuthenticated} - navMenu for user {_user.FindFirstValue("displayname")}");
-        await InvokeAsync(StateHasChanged);
+                _user = authState.User;
+                Console.WriteLine($"User is Authenticated : {_user.Identity.IsAuthenticated} - navMenu for user {_user.FindFirstValue("displayname")}");
+                await InvokeAsync(StateHasChanged);
+            }
+
+            protected override void OnInitialized()
+            {
+                base.OnInitialized();
+                Console.WriteLine("nav menu on initialized called");
+            } 
     }
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        Console.WriteLine("nav menu on initialized called");
-    }
-}
 <nav class="nav navbar navbar-bg navbar-expand-lg">
     <div class="nav navbar-header">
         <a class="navbar-brand" href="/">Abeer</a>
@@ -55,23 +54,43 @@
     </ul>
     <ul class="nav navbar-nav  navbar-right">
         <li class="dropdown">
-            <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-                <img alt="image" src="../assets/img/avatar/avatar-1.png" class="rounded-circle mr-1">
-                <div class="d-sm-none d-lg-inline-block">Hi, Hassan</div>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right">
-                <div class="dropdown-title">Logged in 5 min ago</div>
-                <a href="profile" class="dropdown-item has-icon">
-                    <i class="fas fa-user"></i> Profile
+            @if (_user?.Identity.IsAuthenticated == true)
+            {
+                <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
+                    <img alt="image" src="@_user.Identity.GravatarUrl()" class="rounded-circle mr-1">
+                    <div class="d-sm-none d-lg-inline-block">Hi, @_user.FindFirstValue("displayname")</div>
                 </a>
-                <a href="services" class="dropdown-item has-icon">
-                    <i class="fas fa-concierge-bell"></i> Services
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="identity/account/logout?returnUrl=/" class="dropdown-item has-icon text-danger">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </a>
-            </div>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <div class="dropdown-title">Logged since @_user.FindFirstValue("lastlogin")</div>
+                    <a href="profile" class="dropdown-item has-icon">
+                        <i class="far fa-user"></i> Profile
+                    </a>
+                    <a href="services" class="dropdown-item has-icon">
+                        <i class="fas fa-concierge-bell"></i> Services
+                    </a>
+                    @if (_user.HasClaim(ClaimTypes.Role, "admin"))
+                    {
+                        <div class="dropdown-divider"></div>
+                        <a href="Users" class="dropdown-item has-icon">
+                            <i class="fas fa-users"></i> Users
+                        </a>
+                        <a href="ManageAds" class="dropdown-item has-icon">
+                            <img alt="image" src="assets/img/services/Ad.png" class="rounded-circle profile-widget-picture" style="max-width:16px; max-height:36px;"> Offers
+                        </a>
+                        <a href="ManageAdPrices" class="dropdown-item has-icon">
+                            <i class="fas fa-money-bill-wave-alt"></i> Prices
+                        </a>
+                    }
+                    <div class="dropdown-divider"></div>
+                    <a href="identity/account/logout?returnUrl=/" class="dropdown-item has-icon text-danger">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </div> 
+            }
+            else
+            {
+                <a href="identity/account/login" class="nav-link dropdown-toggle nav-link-lg nav-link-user">login</a>
+            }
         </li>
     </ul>
 </nav>

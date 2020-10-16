@@ -23,6 +23,7 @@ namespace Abeer.Data.UnitOfworks
         private SocialNetworkRepository _SocialNetworkRepository;
         private CustomLinkRepository _CustomLinkRepository;
         private AdRepository _AdRepository;
+        private AdPriceRepository _AdPriceRepository;
 
         private IFunctionalDbContext ApplicationDbContext { get; }
         private IServiceProvider ServiceProvider { get; }
@@ -110,6 +111,19 @@ namespace Abeer.Data.UnitOfworks
                 return _AdRepository;
             }
         }
+
+
+        public AdPriceRepository AdPriceRepository
+        {
+            get
+            {
+                if (_AdPriceRepository == null)
+                    _AdPriceRepository = ActivatorUtilities.CreateInstance<AdPriceRepository>(ServiceProvider);
+
+                return _AdPriceRepository;
+            }
+        }
+
 
         public void DetectChanges()
         {

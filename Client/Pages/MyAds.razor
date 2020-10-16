@@ -3,11 +3,13 @@
 @inject HttpClient HttpClient
 @inject Microsoft.Extensions.Localization.IStringLocalizer<MyAds> Loc
 @code
-{ 
+{
     List<Abeer.Shared.Functional.AdModel> Ads = new List<Abeer.Shared.Functional.AdModel>();
     bool ModalEditAdVisible;
     Abeer.Shared.Functional.AdModel Current = new Abeer.Shared.Functional.AdModel();
     bool UpdateHasError;
+    bool ModalDeleteAdVisible;
+    bool DeleteHasError;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -18,10 +20,16 @@
         Ads = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Abeer.Shared.Functional.AdModel>>(json);
     }
 
-    void Edit(Abeer.Shared.Functional.AdModel ad)
+    void OpenEditModal(Abeer.Shared.Functional.AdModel ad)
     {
         Current = ad;
         ModalEditAdVisible = true;
+    }
+
+    void OpenDeleteModal(Abeer.Shared.Functional.AdModel adModel)
+    {
+        Current = adModel;
+        ModalDeleteAdVisible = true;
     }
 
     async Task Update()
@@ -31,73 +39,69 @@
         ModalEditAdVisible = false;
         await InvokeAsync(StateHasChanged);
     }
-}
- @if (ModalEditAdVisible)
+
+    async Task Delete()
     {
-        <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
-            <div class="modal-dialog modal-lg modal-dialog-scrollable">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">@Loc["EditAdTitle"]</h4>
-                    </div>
-                    <div class="modal-body">
-                        <section class="section">
-                            <div class="section-header">
-                                <h1>@Loc["Title"]</h1>
-                                <h2>@Current.Title</h2>
-                            </div>
-                            <div class="card">
-                                <div class="card-body">
-                                    @if (UpdateHasError)
-                                    {
-                                        <div class="alert alert-danger">
-                                            @Loc["UpdateFailedError"]
-                                        </div>
-                                    }
-                                    <h3>@Loc["Summary"]</h3>
-                                    <div class="form-group col-6 col-sm-12">
-                                        <label>@Loc["AdTitle"]</label>
-                                        <input type="text" Class="form-control" @bind="Current.Title" />
-                                    </div>
-                                    <div class="form-group col-6 col-sm-12">
-                                        <label>@Loc["Description"]</label>
-                                        <textarea type="text" Class="form-control" rows="6" @bind="Current.Description" />
-                                    </div>
-                                    <div class="form-group col-6 col-sm-12">
-                                        <label>@Loc["Price"]</label>
-                                        <input type="number" Class="form-control" @bind="Current.Price" />
-                                    </div>
-                                    <div class="form-group col-6 col-sm-12">
-                                        <label>@Loc["Url1"]</label>
-                                        <input type="url" Class="form-control" @bind="Current.Url1" />
-                                    </div>
-                                    <div class="form-group col-6 col-sm-12">
-                                        <label>@Loc["Url2"]</label>
-                                        <input type="url" Class="form-control" @bind="Current.Url2" />
-                                    </div>
-                                    <div class="form-group col-6 col-sm-12">
-                                        <label>@Loc["Url3"]</label>
-                                        <input type="url" Class="form-control" @bind="Current.Url3" />
-                                    </div>
-                                    <div class="form-group col-6 col-sm-12">
-                                        <label>@Loc["Url4"]</label>
-                                        <input type="url" Class="form-control" @bind="Current.Url4" />
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-warning" @onclick="@(() => ModalEditAdVisible = false)">@Loc["Cancel"]</button>
-                        <button type="button" class="btn btn-success" @onclick="Update">@Loc["Update"]</button>
-                    </div>
+        var update = await HttpClient.DeleteAsync($"/api/Ad/{Current.Id}");
+        update.EnsureSuccessStatusCode();
+        ModalDeleteAdVisible = false;
+        await InvokeAsync(StateHasChanged);
+    }
+}
+@if (ModalEditAdVisible)
+{
+    <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">@Loc["EditAdTitle"]</h4>
+                </div>
+                <div class="modal-body">
+                    <FormAd Current="Current" Disabled="false" FormHasError="UpdateHasError" FormError="@Loc["UpdateFailedError"]" Loc="Loc"></FormAd>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" @onclick="@(() => ModalEditAdVisible = false)">@Loc["Cancel"]</button>
+                    <button type="button" class="btn btn-success" @onclick="Update">@Loc["Update"]</button>
                 </div>
             </div>
         </div>
-    }
+    </div>
+}
+@if (ModalDeleteAdVisible)
+{
+    <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">@Loc["DeleteAdTitle"]</h4>
+                </div>
+                <div class="modal-body">
+                    <section class="section">
+                        <div class="section-header">
+                            <h1>@Loc["Title"]</h1>
+                            <h2>@Current.Title</h2>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <FormAd Current="Current" Disabled="true" FormHasError="@DeleteHasError" FormError="@Loc["DeleteFailedError"]" Loc="Loc"></FormAd>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" @onclick="@(() => ModalDeleteAdVisible = false)">@Loc["Cancel"]</button>
+                    <button type="button" class="btn btn-success" @onclick="Delete">@Loc["Delete"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 <section class="section">
     <div class="section-header">
         <h1>@Loc["Title"]</h1>
@@ -109,43 +113,7 @@
         <div class="row">
             @foreach (var Ad in Ads)
             {
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4>@Ad.Title @if(Ad.StartDisplayTime <= DateTime.UtcNow)
-                            {
-                                if (Ad.EndDisplayTime >= DateTime.UtcNow)
-                                {
-                                    <span class="badge badge-success">@Loc["OnlineBetween"] @Ad.StartDisplayTime / @Ad.EndDisplayTime</span>
-                                }
-                                else
-                                {
-                                    <span class="badge badge-success">@Loc["NotOnlineSince"] @Ad.EndDisplayTime</span>
-                                }
-                            } else
-                            {
-                                <span class="badge badget-secondary">@Loc["WillBeOnline"] @Ad.StartDisplayTime</span>
-                            }
-                            </h4>
-                            <div class="card-header-action">
-                                <a data-dismiss="#mycard-dimiss" class="btn btn-icon btn-primary" href="#">@Ad.Price</a>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <p class="mb-2">
-                                @Ad.Description
-                            </p>
-                            <div class="gallery gallery-md">
-                                <div class="gallery-item" data-image="@Ad.Url1" data-title="Image 1" href="@Ad.Url1" title="Image 1" style="background-image: url(&quot;@(Ad.Url1)&quot;);"></div>
-                                <div class="gallery-item" data-image="@Ad.Url2" data-title="Image 1" href="@Ad.Url2" title="Image 2" style="background-image: url(&quot;@(Ad.Url2)&quot;);"></div>
-                                <div class="gallery-item" data-image="@Ad.Url3" data-title="Image 1" href="@Ad.Url3" title="Image 3" style="background-image: url(&quot;@(Ad.Url3)&quot;);"></div>
-                                <div class="gallery-item" data-image="@Ad.Url4" data-title="Image 1" href="@Ad.Url4" title="Image 4" style="background-image: url(&quot;@(Ad.Url4)&quot;);"></div>
-                            </div>
-                            <button class="btn btn-primary" @onclick="@(()=>Edit(Ad))"><i class="fas fa-pen-square"></i></button>
-                            <button class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
-                        </div>
-                    </div>
-                </div>
+                <CardAd Loc="Loc" Ad="Ad" OnEditClicked="@(()=>OpenEditModal(Ad))" OnDeleteClicked="@(()=>OpenDeleteModal(Ad))"></CardAd>
             }
         </div>
     </div>

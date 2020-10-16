@@ -153,6 +153,9 @@
   <data name="Title" xml:space="preserve">
     <value>Add a new offer</value>
   </data>
+  <data name="UploadFile" xml:space="preserve">
+    <value>You can also upload media files like photo or videos</value>
+  </data>
   <data name="URL1" xml:space="preserve">
     <value>URL to use (1)</value>
   </data>

@@ -3,33 +3,29 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<CreateAd> Loc
 @inject IHttpClientFactory HttpClientFactory
 @inject NavigationManager NavigationManager
-
+@inject IJSRuntime jsRuntime
 @code
 {
     public string Step { get; set; } = "Step1";
     public AdModel Ad { get; set; } = new AdModel();
     public AdPrice CurrentPrice { get; set; } = new AdPrice();
-
     public List<AdPrice> AdPrices { get; set; } = new List<AdPrice>();
 
     async Task Step2()
     {
         Step = "Step2";
+
+        var httpClient = HttpClientFactory.CreateClient("Abeer.Anonymous");
+        var getAll = await httpClient.GetAsync("/api/adprice");
+        getAll.EnsureSuccessStatusCode();
+        var json = await getAll.Content.ReadAsStringAsync();
+        AdPrices = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Abeer.Shared.Functional.AdPrice>>(json);
+
         await InvokeAsync(StateHasChanged);
     }
 
     protected override async Task OnParametersSetAsync()
     {
-        AdPrices = new List<AdPrice>
-{
-            new AdPrice{PriceName = "Free", PriceDescription = "This Ad is free and you can display your ad for 2 days",
-                DelayToDisplay = 2, DisplayDuration = 2, MaxViewCount = 50, Value = 0},
-            new AdPrice{PriceName = "7 Days", PriceDescription = "Display your Ad for 7 days and pay only 5 days",
-                DelayToDisplay = 7, DisplayDuration = 7, MaxViewCount = 0, Value = 500},
-            new AdPrice{PriceName = "30 Days", PriceDescription = "Display your Ad for 30 days and pay only 25 days",
-                DelayToDisplay = 30, DisplayDuration = 30, MaxViewCount = 0, Value = 1000}
-                };
-
         await base.OnParametersSetAsync();
     }
 
@@ -50,9 +46,7 @@
             Price = CurrentPrice
         };
 
-        var httpClient = HttpClientFactory.CreateClient("Abeer.Anonymous");
-        var response = await httpClient.PostAsJsonAsync<CreateAdRequestViewModel>("/api/Ad", CreateAdRequest);
-        PublishHasError = !response.IsSuccessStatusCode;
+        var response = await InsertAd(CreateAdRequest);
 
         if (!PublishHasError)
         {
@@ -62,6 +56,14 @@
         }
 
         await InvokeAsync(StateHasChanged);
+    }
+
+    async Task<HttpResponseMessage> InsertAd(CreateAdRequestViewModel CreateAdRequest)
+    {
+        var httpClient = HttpClientFactory.CreateClient("Abeer.Anonymous");
+        var response = await httpClient.PostAsJsonAsync<CreateAdRequestViewModel>("/api/Ad", CreateAdRequest);
+        PublishHasError = !response.IsSuccessStatusCode;
+        return response;
     }
 
     async Task ProcessPayment()
@@ -85,6 +87,11 @@
 
         await InvokeAsync(StateHasChanged);
     }
+
+    void AssignImageUrl1(string imgUrl) => Ad.ImageUrl1 = imgUrl;
+    void AssignImageUrl2(string imgUrl) => Ad.ImageUrl2 = imgUrl;
+    void AssignImageUrl3(string imgUrl) => Ad.ImageUrl3 = imgUrl;
+    void AssignImageUrl4(string imgUrl) => Ad.ImageUrl4 = imgUrl;
 }
 
 @if (Step == "Step1")
@@ -122,6 +129,18 @@
                 <div class="form-group col-6 col-sm-12">
                     <label>@Loc["Url4"]</label>
                     <input type="url" Class="form-control" @bind="Ad.Url4" />
+                </div>
+                <div class="form-group col-6 col-sm-12">
+                    <MediaUploader OnChange="AssignImageUrl1"></MediaUploader>
+                </div>
+                <div class="form-group col-6 col-sm-12">
+                    <MediaUploader OnChange="AssignImageUrl2"></MediaUploader>
+                </div>
+                <div class="form-group col-6 col-sm-12">
+                    <MediaUploader OnChange="AssignImageUrl3"></MediaUploader>
+                </div>
+                <div class="form-group col-6 col-sm-12">
+                    <MediaUploader OnChange="AssignImageUrl4"></MediaUploader>
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-success" @onclick="Step2"><i class="fas fa-upload"></i>@Loc["StartPublish"]</button>
@@ -209,6 +228,22 @@ else if (Step == "Step3")
                 <div class="form-group col-6 col-sm-12">
                     <label>@Loc["Url4"]</label>
                     <input type="url" Class="form-control" @bind="Ad.Url4" />
+                </div>
+                <div class="form-group col-6 col-sm-12">
+                    <MediaUploader OnChange="AssignImageUrl1" ImgUrl="@Ad.ImageUrl1"></MediaUploader>
+                    @Ad.ImageUrl1
+                </div>
+                <div class="form-group col-6 col-sm-12">
+                    <MediaUploader OnChange="AssignImageUrl2" ImgUrl="@Ad.ImageUrl2"></MediaUploader>
+                    @Ad.ImageUrl2
+                </div>
+                <div class="form-group col-6 col-sm-12">
+                    <MediaUploader OnChange="AssignImageUrl3" ImgUrl="@Ad.ImageUrl3"></MediaUploader>
+                    @Ad.ImageUrl3
+                </div>
+                <div class="form-group col-6 col-sm-12">
+                    <MediaUploader OnChange="AssignImageUrl4" ImgUrl="@Ad.ImageUrl4"></MediaUploader>
+                    @Ad.ImageUrl4
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-12">
                     <div class="card profile-widget border p-4">

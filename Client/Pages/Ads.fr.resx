@@ -117,58 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AdTitle" xml:space="preserve">
-    <value>Titre</value>
+  <data name="ManageAds" xml:space="preserve">
+    <value>Gérer les annonces et les offres</value>
   </data>
-  <data name="Cancel" xml:space="preserve">
-    <value>Annuler et revenir à la liste des annonces</value>
-  </data>
-  <data name="Description" xml:space="preserve">
-    <value>Description</value>
-  </data>
-  <data name="DropFileHere" xml:space="preserve">
-    <value>Veuillez déposer ici les photos nécessaire pour votre offre</value>
-  </data>
-  <data name="Finish" xml:space="preserve">
-    <value>Mettre en ligne mon offre</value>
-  </data>
-  <data name="Images" xml:space="preserve">
-    <value>Image</value>
-  </data>
-  <data name="Price" xml:space="preserve">
-    <value>Prix</value>
-  </data>
-  <data name="RequireLogin" xml:space="preserve">
-    <value>Pour terminer votre processus de publication, vous avez besoin d'être authentifié ou de vous inscrire, si vous n'êtes pas encore authentifié après que vous ayez cliquer sur "Publier l'annonce" vous serez rediriger alors vers le formulaire d'authentification et votre annonce sera prise en compte après authentification. Si vous devez procéder au paiement, vous sera rediriger vers le formulaire d'authentification avant le formulaire de paiement</value>
-  </data>
-  <data name="Select" xml:space="preserve">
-    <value>Sélectionnez cette formule</value>
-  </data>
-  <data name="StartPublish" xml:space="preserve">
-    <value>Commencer à publier votre offre</value>
-  </data>
-  <data name="Summary" xml:space="preserve">
-    <value>Récapitulatif</value>
+  <data name="PublishYourAd" xml:space="preserve">
+    <value>Publiez votre offre maintenant et gagner en visibilité</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Ajouter une offre</value>
-  </data>
-  <data name="UploadFile" xml:space="preserve">
-    <value>Vous pouvez également uploader des fichiers médias</value>
-  </data>
-  <data name="URL1" xml:space="preserve">
-    <value>URL du média à utiliser (1)</value>
-  </data>
-  <data name="URL2" xml:space="preserve">
-    <value>URL du média à utiliser (2)</value>
-  </data>
-  <data name="URL3" xml:space="preserve">
-    <value>URL du média à utiliser (3)</value>
-  </data>
-  <data name="URL4" xml:space="preserve">
-    <value>URL du média à utiliser (4)</value>
-  </data>
-  <data name="ValidAd" xml:space="preserve">
-    <value>Publier l'annonce</value>
+    <value>Annonce et offre</value>
   </data>
 </root>

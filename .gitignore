@@ -352,3 +352,4 @@ MigrationBackup/
 /Server/CryptoCoin-security.db
 /Server/CryptoCoin-features.db
 /Server/*.db
+/Server/StaticFiles/Images
