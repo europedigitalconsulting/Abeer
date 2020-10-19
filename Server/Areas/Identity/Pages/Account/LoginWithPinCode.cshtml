@@ -1,10 +1,10 @@
 ﻿@page
-@model Abeer.Server.Areas.Identity.Pages.Account.LoginWithPinCodeModel
-@inject IStringLocalizer<LoginModel> localizer
-@inject IHtmlLocalizer<LoginModel> htmlLocalizer
+@model LoginWithPinCodeModel
+@inject IStringLocalizer<LoginWithPinCodeModel> localizer
+@inject IHtmlLocalizer<LoginWithPinCodeModel> htmlLocalizer
 @{
     Layout = null;
-    ViewData["Title"] = localizer["LoginWihPinCodeTitle"];
+    ViewData["Title"] = localizer["Title"];
 }
 
 <!DOCTYPE html>
@@ -29,29 +29,46 @@
 <body>
     <div id="app">
         <section class="section">
-            <div class="container mt-5">
-                <div class="row">
-                    <div class="col-12 col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-8 offset-lg-2 col-xl-8 offset-xl-2">
-                        <div class="login-brand">
-                            <img src="/assets/img/logo_full.png" alt="Smart Click" width="80" class="shadow-light rounded-circle mb-5 mt-2">
+            <div class="d-flex flex-wrap align-items-stretch">
+                <div class="col-lg-4 col-md-6 col-12 order-lg-1 min-vh-100 order-2 bg-white">
+                    <div class="p-4 m-3">
+                        <img src="/assets/img/logo_full.png" alt="Smart Click" width="80" class="shadow-light rounded-circle mb-5 mt-2">
+                        <h4 class="text-dark font-weight-normal">@htmlLocalizer["Welcome"]</h4>
+                        <p class="text-muted">@localizer["Muted"]</p>
+                        <form id="account" method="post">
+                            <h4>@localizer["LocalLoginCatchPhrase"]</h4>
+                            <hr />
+                            <div asp-validation-summary="All" class="text-danger"></div>
+                            <div class="form-group">
+                                <label asp-for="Input">@localizer["PinCode"]</label>
+                                <input asp-for="Input.PinCode" class="form-control" />
+                                <span asp-validation-for="Input.PinCode" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Input.PinDigit">@localizer["PinDigit"]</label>
+                                <input asp-for="Input.PinDigit" class="form-control" />
+                                <span asp-validation-for="Input.PinDigit" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">@localizer["SubmitText"]</button>
+                            </div>
+                        </form>
+                        <div class="text-center mt-5 text-small">
+                            @htmlLocalizer["Copyright"]
+                            <div class="mt-2">
+                                <a href="#">@localizer["PrivacyLinkText"]</a>
+                                <div class="bullet"></div>
+                                <a href="#">@localizer["TermOfServiceText"]</a>
+                            </div>
                         </div>
-                        <div class="card card-primary">
-                            <div class="card-header"><h4>@localizer["LoginWihPinCodeCatchPhrase"].</h4></div>
-                            <div class="card-body">
-                                <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
-                                    <div asp-validation-summary="All" class="text-danger"></div>
-                                    <div class="form-group">
-                                        <label asp-for="Input.PinCode">@localizer["PinCode"]</label>
-                                        <input asp-for="Input.PinCode" class="form-control" autofocus />
-                                        <span asp-validation-for="Input.PinCode" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="Input.PinDigit">@localizer["PinDigit"]</label>
-                                        <input asp-for="Input.PinDigit" class="form-control"/>
-                                        <span asp-validation-for="Input.PinDigit" class="text-danger"></span>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">@localizer["Login"]</button>
-                                </form>
+                    </div>
+                </div>
+                <div class="col-lg-8 col-12 order-lg-2 order-1 min-vh-100 background-walk-y position-relative overlay-gradient-bottom" data-background="/assets/img/unsplash/beirut.jpg">
+                    <div class="absolute-bottom-left index-2">
+                        <div class="text-light p-5 pb-2">
+                            <div class="mb-5 pb-3">
+                                <h1 class="mb-2 display-4 font-weight-bold">@localizer["GoodMorning"]</h1>
+                                <h5 class="font-weight-normal text-muted-transparent">beirut, Lebanon</h5>
                             </div>
                         </div>
                     </div>
@@ -85,6 +102,5 @@
 
     <!-- General JS Scripts -->
     <partial name="_ValidationScriptsPartial" />
-
 </body>
 </html>

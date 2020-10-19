@@ -17,6 +17,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -61,19 +62,33 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [DataType(DataType.Password)]
+            [BindProperty(Name ="PinCode", SupportsGet =true)]
             [Display(Name = "Pin Code")]
             public string PinCode { get; set; }
-            
+
             [DataType(DataType.Password)]
             [Display(Name = "Pin Digit"), MaxLength(6)]
             public string PinDigit { get; set; }
         }
 
-        public Task OnGetAsync(string returnUrl = null)
+        public async Task<IActionResult> OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
-            return Task.CompletedTask;
+
+            if (Input == null)
+                Input = new InputModel();
+
+            if (!string.IsNullOrEmpty(Request.Query?["PinCode"]))
+            {
+                Input.PinCode = Request.Query?["PinCode"];
+            }
+
+            var user = await _userManager.Users.Where(u => u.PinCode == Input.PinCode).ToListAsync();
+
+            if (user == null || user.Count == 0)
+                return Redirect($"./Register?PinCode={Request.Query?["PinCode"]}");
+
+            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
@@ -83,8 +98,8 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = await _userManager.Users.FirstOrDefaultAsync(u => u.PinCode == Input.PinCode && u.PinDigit == int.Parse(Input.PinDigit));
-                
-                if(User == null)
+
+                if (User == null)
                 {
                     ModelState.AddModelError("", "User is not authorized");
                     return Page();
@@ -99,7 +114,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
 
                 identity.AddClaim(new Claim(JwtClaimTypes.Subject, user.Id));
                 identity.AddClaim(new Claim(JwtClaimTypes.Name, user.UserName));
-                
+
                 identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id));
                 identity.AddClaim(new Claim(ClaimTypes.Name, user.Email));
 
