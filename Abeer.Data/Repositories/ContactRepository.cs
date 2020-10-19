@@ -20,12 +20,18 @@ namespace Abeer.Data.Repositories
             _context = context;
         }
 
-        public System.Threading.Tasks.Task<List<Contact>> GetContacts(string ownerId)
+        public Task<List<Contact>> GetContacts(string ownerId)
         {
             return _context.Contacts.Where(c => c.OwnerId == ownerId).ToListAsync();
         }
 
-        public async Task<Contact> GetContact(long id)
+        public Task<List<Contact>> GetContacts(string ownerId, string term)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public async Task<Contact> GetContact(Guid id)
         {
             return await _context.Contacts.FindAsync(id);
         }
@@ -50,11 +56,6 @@ namespace Abeer.Data.Repositories
         public Task<List<Contact>> Where(Expression<Func<Contact, bool>> p)
         {
             return _context.Contacts.Where(p).ToListAsync();
-        }
-
-        public ValueTask<Contact> FindAsync(long id)
-        {
-            return _context.Contacts.FindAsync(id);
         }
 
         public void Remove(Contact contact)

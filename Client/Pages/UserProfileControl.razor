@@ -22,14 +22,26 @@
     public string Country { get; set; }
     [Parameter]
     public string Email { get; set; }
+
     [Parameter]
-    public string PhotoUrl { get; set; }
+    public string PhotoUrl { get; set; } 
     [Parameter]
     public string PhoneNumber { get; set; }
     [Parameter]
     public IEnumerable<SocialNetwork> SocialNetworkConnected { get; set; }
     [Parameter]
     public IEnumerable<CustomLink> CustomLinks { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+        if (string.IsNullOrEmpty(PhotoUrl))
+        {
+            PhotoUrl = "https://www.gravatar.com/avatar.php?gravatar_id=e511eeb916b3fa2202f38abfa29532b0&amp;rating=PG&amp;size=80";
+        }
+
+        await InvokeAsync(StateHasChanged);
+    }
 }
 
 <section class="section">

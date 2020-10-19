@@ -17,7 +17,7 @@ namespace Abeer.Shared
 
         public ViewContact(ApplicationUser user, Contact contact):this()
         {
-            Id = contact.Id;
+            Id = contact.Id.ToString();
             UserId = contact.UserId;
             OwnerId = contact.OwnerId;
             FirstName = user.FirstName;
@@ -38,7 +38,7 @@ namespace Abeer.Shared
         public List<SocialNetwork> SocialNetworks { get; set; }
         public List<CustomLink> CustomLinks { get; set; }
 
-        public long Id { get; set; }
+        public string Id { get; set; }
         public string UserId { get; set; }
         public string OwnerId { get; set; }
         public string FirstName { get; set; }
@@ -59,7 +59,7 @@ namespace Abeer.Shared
     public class Contact
     {
         [Key]
-        public long Id { get; set; }
+        public Guid Id { get; set; }
         public string UserId { get; set; }
         public string OwnerId { get; set; }
     }

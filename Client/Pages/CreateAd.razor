@@ -19,7 +19,7 @@
         var getAll = await httpClient.GetAsync("/api/adprice");
         getAll.EnsureSuccessStatusCode();
         var json = await getAll.Content.ReadAsStringAsync();
-        AdPrices = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Abeer.Shared.Functional.AdPrice>>(json);
+        AdPrices = Newtonsoft.Json.JsonConvert.DeserializeObject<List<AdPrice>>(json);
 
         await InvokeAsync(StateHasChanged);
     }

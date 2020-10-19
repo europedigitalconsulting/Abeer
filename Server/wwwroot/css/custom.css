@@ -17,3 +17,19 @@
         font-size: 12px;
         border-radius: 30px;
     }
+
+@media (max-width: 576px) {
+ .modal-dialog {
+  max-width: none;
+ }
+}
+
+.modal-dialog {
+ width: 98%;
+ height: 92%;
+ padding: 0;
+}
+
+.modal-content {
+ height: 99%;
+}

@@ -38,7 +38,7 @@ namespace Abeer.Server.Controllers
             
             List<ViewContact> viewContacts = new List<ViewContact>();
 
-            Parallel.ForEach(contacts, async (contact) =>
+            contacts.ForEach( async (contact) =>
             {
                 var user = await _userManager.FindByIdAsync(contact.UserId);
                 ViewContact item = new ViewContact(user, contact);
@@ -56,7 +56,32 @@ namespace Abeer.Server.Controllers
 
             return viewContacts;
         }
+        // GET: api/Contacts
+        [HttpGet("search/{term}")]
+        public async Task<ActionResult<IEnumerable<ViewContact>>> GetContacts(string term)
+        {
+            var contacts = await _UnitOfWork.ContactRepository.GetContacts(User.NameIdentifier(),term);
 
+            List<ViewContact> viewContacts = new List<ViewContact>();
+
+            contacts.ForEach(async (contact) =>
+            {
+                var user = await _userManager.FindByIdAsync(contact.UserId);
+                ViewContact item = new ViewContact(user, contact);
+
+                user.NubmerOfView += 1;
+                await _userManager.UpdateAsync(user);
+
+                item.NumberOfView = user.NubmerOfView;
+                item.SocialNetworks = await _UnitOfWork.SocialNetworkRepository.GetSocialNetworkLinks(contact.UserId) ??
+                                      new List<SocialNetwork>();
+
+                item.CustomLinks = new List<CustomLink>();
+                viewContacts.Add(item);
+            });
+
+            return viewContacts;
+        }
         [HttpGet("import/{id}")]
         public async Task<ActionResult<ImportContactResultViewModel>> Import(string id)
         {
@@ -92,26 +117,25 @@ namespace Abeer.Server.Controllers
             }
         }
 
-        [HttpGet("Suggestion")]
+        [HttpGet("Suggestions")]
         public  async Task<ActionResult<IEnumerable<ViewContact>>> GetSuggestion(string term)
         {
-            var users = await _userManager?.Users.Where(u => u.Id.Contains(term) ||
+            var users = string.IsNullOrEmpty(term) ? await _userManager?.Users.Take(20).ToListAsync() :  await _userManager?.Users.Where(u => u.Id.Contains(term) ||
                 u.Email.Contains(term) || u.UserName.Contains(term)).ToListAsync();
 
             ConcurrentBag<ViewContact> contacts = new ConcurrentBag<ViewContact>();
-
-            Parallel.ForEach<ApplicationUser>(users, async (user) =>
+            var allUserContacts = await _UnitOfWork.ContactRepository.GetContacts(User.NameIdentifier());
+            users = users.Where(u => !allUserContacts.Any(c => u.Id == c.UserId || u.Id == User.NameIdentifier()) ).ToList();
+            users.ForEach(async (user) =>
             {
                 var contact = await _UnitOfWork.ContactRepository.FirstOrDefaultAsync(u => u.UserId == user.Id);
-
                 if (contact != null)
                 {
-                    contacts.Add(new ViewContact { UserId = user.Id, DisplayName = user.DisplayName, Email = user.Email });
+                    var result = users.FirstOrDefault(c => c.Id == contact.UserId);
+                    ViewContact item = new ViewContact(result, contact);
+                    contacts.Add(item);
                 }
-                else
-                {
-                    contacts.Add(new ViewContact { UserId = user.Id, DisplayName = user.UserName, Email = user.Email });
-                }
+
             });
 
             return contacts;
@@ -119,7 +143,7 @@ namespace Abeer.Server.Controllers
 
         // GET: api/Contacts/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Contact>> GetContact(long id)
+        public async Task<ActionResult<Contact>> GetContact(Guid id)
         {
             var contact = await _UnitOfWork.ContactRepository.GetContact(id);
 
@@ -135,7 +159,7 @@ namespace Abeer.Server.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutContact(long id, Contact contact)
+        public async Task<IActionResult> PutContact(Guid id, Contact contact)
         {
             if (id != contact.Id)
             {
@@ -167,9 +191,9 @@ namespace Abeer.Server.Controllers
 
         // DELETE: api/Contacts/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Contact>> DeleteContact(long id)
+        public async Task<ActionResult<Contact>> DeleteContact(Guid id)
         {
-            var contact = await _UnitOfWork.ContactRepository.FindAsync(id);
+            var contact = await _UnitOfWork.ContactRepository.GetContact(id);
             
             if (contact == null)
             {

@@ -26,6 +26,7 @@ using Abeer.Server.Hubs;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Abeer.Server
 {
@@ -172,7 +173,7 @@ namespace Abeer.Server
             services.AddDbContext<TService>(options =>
                 options.UseSqlite(
                     Configuration.GetConnectionString(connectionStringsName), options =>
-                    options.MigrationsAssembly(typeof(SecurityDbContext).Assembly.FullName)));
+                    options.MigrationsAssembly(typeof(SecurityDbContext).Assembly.FullName)),ServiceLifetime.Transient);
 
             services.AddTransient(typeof(TInterface), sp =>
                 ActivatorUtilities.GetServiceOrCreateInstance<TService>(sp));
@@ -246,6 +247,7 @@ namespace Abeer.Server
                 .GetRequiredService<CountriesService>();
 
             countriesService.SeedData(env.WebRootPath).Wait();
+
         }
 
         private async void SeedUserData(IServiceScope scope, IWebHostEnvironment env)
@@ -288,6 +290,8 @@ namespace Abeer.Server
                         await functionalDb.SocialNetworkRepository.AddSocialNetwork(new SocialNetwork { OwnerId = admin.Id, Name = "Instagram", Logo = "fab fa-instagram-square", DisplayInfo = "@michel.bruchet", BackgroundColor = "bg-danger", Url = "https://www.instagram.com" });
                         await functionalDb.SocialNetworkRepository.AddSocialNetwork(new SocialNetwork { OwnerId = admin.Id, Name = "Whatsapp", Logo = "fab fa-whatsapp-square", DisplayInfo = "+33 780811024", BackgroundColor = "bg-success", Url = "whatsapp:33780811024" });
                     }
+
+                   
                 }
                 var hasan = await userManager.FindByEmailAsync("customer@abeer.io");
                 if (hasan == null)
@@ -342,6 +346,13 @@ namespace Abeer.Server
                         });
                     }
                 }
+                var contact1 = await functionalDb.ContactRepository.Where(c  => c.OwnerId == admin.Id);
+                if (!contact1.Any())
+                    await functionalDb.ContactRepository.AddAsync(new Contact { OwnerId = admin.Id, UserId = hasan.Id });
+                var contact2 = await functionalDb.ContactRepository.Where(c => c.OwnerId == hasan.Id);
+                if (!contact2.Any())
+                    await functionalDb.ContactRepository.AddAsync(new Contact { OwnerId = hasan.Id, UserId = admin.Id });
+                await functionalDb.SaveChangesAsync();
             }
         }
     }

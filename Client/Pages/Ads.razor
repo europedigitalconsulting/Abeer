@@ -51,16 +51,16 @@
         <div class="input-group">
             <input type="search" id="example-input1-group2" name="example-input1-group2" class="form-control" @bind="Term" @onkeyup="countTerm">
             <span class="input-group-btn">
-                <button type="button" class="btn btn-lg" @onclick="Search"><i class="fa fa-2x  fa-search"></i></button>
+                <button type="button" class="btn" @onclick="Search"><i class="fa fa-2x  fa-search"></i></button>
             </span>
             <div class="search-backdrop"></div>
         </div>
         <div class="input-group-btn">
             <div class="text-center">
-                <a class="btn  btn-lg" href="CreateAd" title="@Loc["PublishYourAd"]"><i class="fas fa-upload" style="font-size:45px"></i><h5></h5></a>
+                <a class="btn" href="CreateAd" title="@Loc["PublishYourAd"]"><i class="fa fa-2x fa-plus-square"></i><h5></h5></a>
                 @if (IsAdmin)
                 {
-                <a class="btn btn-lg" href="ManageAds" title="@Loc["ManageAds"]"><i class="fas fa-database" style="font-size:45px"></i></a>
+                <a class="btn " href="ManageAds" title="@Loc["ManageAds"]"><i class="fas fa-database"></i></a>
                 }
                 </div>
             </div>

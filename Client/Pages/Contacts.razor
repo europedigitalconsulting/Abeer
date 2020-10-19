@@ -1,5 +1,6 @@
 ﻿@page "/Contacts"
-@using Abeer.Client 
+
+@inject NavigationManager Navigation
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Contacts> Loc
 @inject HttpClient HttpClient
 
@@ -7,22 +8,33 @@
 {
     public List<ViewContact> All { get; set; } = new List<ViewContact>();
     public List<ViewContact> Items { get; set; } = new List<ViewContact>();
+    public List<ViewContact> Suggestions { get; set; } = new List<ViewContact>();
+    public List<ViewContact> SuggestionItems { get; set; } = new List<ViewContact>();
 
     protected override async Task OnParametersSetAsync()
     {
-        var getContacts = await HttpClient.GetAsync("/api/contacts");
-        getContacts.EnsureSuccessStatusCode();
+        var getAllContacts = await HttpClient.GetAsync("/api/Contacts/Suggestions");
+        getAllContacts.EnsureSuccessStatusCode();
 
-        var json = await getContacts.Content.ReadAsStringAsync();
+        var json = await getAllContacts.Content.ReadAsStringAsync();
+        Suggestions = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ViewContact>>(json);
+        SuggestionItems = Suggestions;
+
+        var getMyContacts = await HttpClient.GetAsync("/api/Contacts");
+        getMyContacts.EnsureSuccessStatusCode();
+
+        json = await getMyContacts.Content.ReadAsStringAsync();
         All = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ViewContact>>(json);
+
         Items = All.ToList();
 
         await base.OnParametersSetAsync();
     }
 
-    public string Term { get; set; }
+    public string Term { get; set; } = "";
+    public bool ShowContactAddModal { get; set; }
 
-    private void Search()
+    private void SearchAll()
     {
         if (string.IsNullOrWhiteSpace(Term))
             Items = All.ToList();
@@ -37,11 +49,113 @@
         StateHasChanged();
     }
 
+    private void Search()
+    {
+        if (string.IsNullOrWhiteSpace(Term))
+            SuggestionItems = Suggestions.ToList();
+        else
+            SuggestionItems = Suggestions.Where(c => c.FirstName.Contains(Term, StringComparison.OrdinalIgnoreCase)
+                               || c.LastName.Contains(Term, StringComparison.OrdinalIgnoreCase)
+                               || c.Description.Contains(Term, StringComparison.OrdinalIgnoreCase) ||
+                               c.DisplayName.Contains(Term, StringComparison.OrdinalIgnoreCase) ||
+                               c.Email.Contains(Term, StringComparison.OrdinalIgnoreCase) ||
+                               c.Title.Contains(Term, StringComparison.OrdinalIgnoreCase)).ToList();
+
+        StateHasChanged();
+    }
+
+    private void ToggleAddContact()
+    {
+        ShowContactAddModal = !ShowContactAddModal;
+    }
+
+    private void countSearchAll()
+    {
+        if (Term.Length >= 5)
+            SearchAll();
+    }
     private void countSearch()
     {
         if (Term.Length >= 5)
             Search();
     }
+
+    private void Import(string id)
+    {
+        var getMyContacts = HttpClient.GetAsync($"/api/Contacts/import/{id}").GetAwaiter().GetResult();
+        getMyContacts.EnsureSuccessStatusCode();
+    }
+
+}
+
+@if (ShowContactAddModal)
+{
+    <div class="modal fade show" id="ShowContactAddModal" style="display:block" aria-modal="true" role="dialog" aria-hidden="true">
+        <div class="modal-dialog  modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">@Loc["SearchContact"]</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="@(() => ShowContactAddModal = false)">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="section-header">
+                        <div class="input-group">
+                            <input type="search" id="searchContact" name="searchContact" class="form-control" @bind="Term" @oninput="countSearch">
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-lg" @onclick="Search"><i class="fa fa-2x fa-search"></i></button>
+                            </span>
+                            <div class="search-backdrop"></div>
+                        </div>
+                    </div>
+                    <div class="section-body">
+                        @foreach (var contact in SuggestionItems)
+                        {
+                            <div class="card author-box card-primary">
+                                <div class="card-body">
+                                    <div class="author-box-right">
+                                        <a @onclick="@(e => Import(contact.UserId))">
+                                            <i class="fa fa-3x fa-plus-square">
+                                                <div class="clearfix"></div>
+                                            </i>
+                                        </a>
+                                    </div>
+                                    <div class="author-box-left">
+                                        <img alt="image" src="@contact.PhotoUrl" class="rounded-circle author-box-picture">
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="author-box-details">
+                                        <div class="author-box-name">
+                                            <a href="#">@contact.DisplayName</a>
+                                        </div>
+                                        <div class="author-box-job">@contact.Title</div>
+                                        <div class="author-box-description">
+                                            <p>
+                                                @contact.Description
+                                            </p>
+                                        </div>
+                                        <div class="mb-2 mt-3">
+                                            <div class="text-small font-weight-bold">@Loc["SocialLinks"]</div>
+                                        </div>
+                                        @if (contact.SocialNetworks != null)
+                                        {
+                                            foreach (var socialNetwork in contact.SocialNetworks)
+                                            {
+                                                <a href="@socialNetwork.Url" class="btn btn-social-icon mr-1 btn-@(socialNetwork.Name.ToLower())" target="_blank">
+                                                    <i class="@socialNetwork.Logo"></i>
+                                                </a>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 <section class="section">
     <div class="section-header">
@@ -49,9 +163,10 @@
     </div>
     <div class="section-header">
         <div class="input-group">
-            <input type="search" id="example-input1-group2" name="example-input1-group2" class="form-control" @bind="Term" @oninput="countSearch">
+            <input type="search" id="example-input1-group2" name="example-input1-group2" class="form-control" @bind="Term" @oninput="countSearchAll">
             <span class="input-group-btn">
-                <button type="button" class="btn btn-lg" @onclick="Search"><i class="fa fa-2x  fa-search"></i></button>
+                <button type="button" class="btn" @onclick="SearchAll"><i class="fa fa-2x  fa-filter"></i></button>
+                <button type="button" class="btn" @onclick="ToggleAddContact"><i class="fa fa-2x fa-search"></i></button>
             </span>
             <div class="search-backdrop"></div>
         </div>
@@ -67,7 +182,7 @@
                     </div>
                     <div class="author-box-details">
                         <div class="author-box-name">
-                            <a href="#">@contact.DisplayName</a>
+                            <a href="@Navigation.ToAbsoluteUri($"/ViewProfile/{contact.UserId}")">@contact.DisplayName</a>
                         </div>
                         <div class="author-box-job">@contact.Title</div>
                         <div class="author-box-description">

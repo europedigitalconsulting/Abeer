@@ -1,6 +1,7 @@
 ﻿@namespace Abeer.Client.Shared
 
 @using System.Security.Claims
+@using Microsoft.AspNetCore.Http
 
 @code
 { protected ClaimsPrincipal _user;
@@ -45,7 +46,7 @@
 }
 <nav class="nav navbar navbar-bg navbar-expand-lg">
     <div class="nav navbar-header">
-        <a class="navbar-brand" href="/">Abeer</a>
+        <a class="navbar-brand" href="/">Smart Click</a>
     </div>
     <ul class="nav navbar-nav mr-auto">
         
@@ -80,14 +81,10 @@
                         </a>
                     }
                     <div class="dropdown-divider"></div>
-                    <a href="identity/account/logout?returnUrl=/" class="dropdown-item has-icon text-danger">
+                    <a href="identity/account/logout?returnUrl=/" class="dropdown-item has-icon text-danger" >
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </a>
                 </div>
-            }
-            else
-            {
-                <a href="identity/account/login" class="nav-link dropdown-toggle nav-link-lg nav-link-user">login</a>
             }
         </li>
     </ul>
