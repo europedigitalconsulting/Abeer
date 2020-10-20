@@ -1,24 +1,38 @@
+using Abeer.Services;
+using Abeer.Shared;
+
+using IdentityModel;
+
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
-using Abeer.Shared;
 
 namespace Abeer.Server.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class LoginModel : PageModel
     {
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly IEmailSender _emailSender;
+        private readonly UrlShortner _urlShortner;
+        private readonly IWebHostEnvironment _env;
+        private readonly string _webRoot;
 
         public LoginModel(SignInManager<ApplicationUser> signInManager, 
             ILogger<LoginModel> logger,
@@ -32,87 +46,130 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
         [BindProperty]
         public InputModel Input { get; set; }
 
-        public IList<AuthenticationScheme> ExternalLogins { get; set; }
-
         public string ReturnUrl { get; set; }
 
-        [TempData]
-        public string ErrorMessage { get; set; }
+        public IList<AuthenticationScheme> ExternalLogins { get; set; }
+        public IConfiguration Configuration { get; }
 
         public class InputModel
         {
-            [Required]
-            [EmailAddress]
-            public string Email { get; set; }
+            [BindProperty(Name = "PinCode", SupportsGet = true)]
+            [Display(Name = "Pin Code")]
+            public string PinCode { get; set; }
 
-            [Required]
             [DataType(DataType.Password)]
-            public string Password { get; set; }
-
-            [Display(Name = "Remember me?")]
-            public bool RememberMe { get; set; }
+            [Display(Name = "Pin Digit"), MaxLength(6)]
+            public string PinDigit { get; set; }
         }
 
-        public async Task OnGetAsync(string returnUrl = null)
+        public async Task<IActionResult> OnGetAsync(string returnUrl = null)
         {
-            if (!string.IsNullOrEmpty(ErrorMessage))
+            ReturnUrl = returnUrl;
+
+            if (Input == null)
+                Input = new InputModel();
+
+            if (!string.IsNullOrEmpty(Request.Query?["PinCode"]))
             {
-                ModelState.AddModelError(string.Empty, ErrorMessage);
+                Input.PinCode = Request.Query?["PinCode"];
             }
 
-            returnUrl = returnUrl ?? Url.Content("~/");
+            if (!string.IsNullOrEmpty(Input.PinCode))
+            {
+                var user = await _userManager.Users.Where(u => u.PinCode == Input.PinCode).ToListAsync();
 
-            // Clear the existing external cookie to ensure a clean login process
-            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+                if (user == null || user.Count == 0)
+                    return Redirect($"./Register?PinCode={Request.Query?["PinCode"]}");
+            }
 
-            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-
-            ReturnUrl = returnUrl;
+            return Page();
         }
-
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl = returnUrl ?? Url.Content("~/");
+            returnUrl ??= Url.Content("~/");
 
             if (ModelState.IsValid)
             {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
-                
-                if (result.Succeeded)
-                {
-                    var user = await _userManager.FindByEmailAsync(Input.Email);
-                    
-                    if(user != null)
-                    {
-                        user.IsOnline = true;
-                        user.LastLogin = DateTime.Now;
-                        await _userManager.UpdateAsync(user);
-                    }
+                var user = await _userManager.Users.FirstOrDefaultAsync(u => u.PinCode == Input.PinCode && u.PinDigit == int.Parse(Input.PinDigit));
 
-                    _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
-                }
-                if (result.RequiresTwoFactor)
+                if (User == null)
                 {
-                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
-                }
-                if (result.IsLockedOut)
-                {
-                    _logger.LogWarning("User account locked out.");
-                    return RedirectToPage("./Lockout");
-                }
-                else
-                {
-                    ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError("", "User is not authorized");
                     return Page();
                 }
+
+                user.IsOnline = true;
+                user.LastLogin = DateTime.UtcNow;
+                await _userManager.UpdateAsync(user);
+
+                var identity = new ClaimsIdentity("Identity.Application");
+
+
+                identity.AddClaim(new Claim(JwtClaimTypes.Subject, user.Id));
+                identity.AddClaim(new Claim(JwtClaimTypes.Name, user.UserName));
+
+                identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id));
+                identity.AddClaim(new Claim(ClaimTypes.Name, user.Email));
+
+                if (!string.IsNullOrWhiteSpace(user.FirstName))
+                    identity.AddClaim(new Claim(ClaimTypes.GivenName, user.FirstName));
+
+                if (!string.IsNullOrWhiteSpace(user.LastName))
+                    identity.AddClaim(new Claim(ClaimTypes.Surname, user.LastName));
+
+                identity.AddClaim(new Claim("displayname", GetDisplayName(user)));
+
+                identity.AddClaim(new Claim("isonline", user.IsOnline.ToString()));
+                identity.AddClaim(new Claim("lastlogin", user.LastLogin.ToString("s")));
+
+                if(!string.IsNullOrWhiteSpace(user.Title))
+                    identity.AddClaim(new Claim("title", user.Title));
+
+                if (!string.IsNullOrWhiteSpace(user.Description))
+                    identity.AddClaim(new Claim("description", user.Description));
+
+                if (!string.IsNullOrWhiteSpace(user.Country))
+                    identity.AddClaim(new Claim("country", user.Country));
+
+                if (!string.IsNullOrWhiteSpace(user.City))
+                    identity.AddClaim(new Claim("city", user.City));
+
+                if (!string.IsNullOrWhiteSpace(user.PhotoUrl))
+                    identity.AddClaim(new Claim("photourl", user.PhotoUrl));
+
+                identity.AddClaim(new Claim("numberofview", user.NubmerOfView.ToString()));
+
+                if (!string.IsNullOrWhiteSpace(user.Address))
+                    identity.AddClaim(new Claim("address", user.Address));
+
+                if (user.IsAdmin)
+                    identity.AddClaim(new Claim(ClaimTypes.Role, "admin"));
+
+                if (user.IsManager)
+                    identity.AddClaim(new Claim(ClaimTypes.Role, "manager"));
+
+                if (user.IsOperator)
+                    identity.AddClaim(new Claim(ClaimTypes.Role, "operator"));
+
+                var principal = new ClaimsPrincipal(identity);
+                await HttpContext.SignInAsync("Identity.Application", principal);
+
+                return LocalRedirect(returnUrl);
             }
 
             // If we got this far, something failed, redisplay form
             return Page();
         }
+
+        private string GetDisplayName(ApplicationUser user)
+        {
+            if (!string.IsNullOrWhiteSpace(user.DisplayName))
+                return user.DisplayName;
+            else if (!string.IsNullOrWhiteSpace(user.LastName))
+                return user.FirstName + " " + user.LastName;
+            else
+                return user.UserName;
+        }
+
     }
 }

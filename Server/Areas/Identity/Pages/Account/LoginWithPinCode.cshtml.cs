@@ -83,10 +83,13 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
                 Input.PinCode = Request.Query?["PinCode"];
             }
 
-            var user = await _userManager.Users.Where(u => u.PinCode == Input.PinCode).ToListAsync();
+            if (!string.IsNullOrEmpty(Input.PinCode))
+            {
+                var user = await _userManager.Users.Where(u => u.PinCode == Input.PinCode).ToListAsync();
 
-            if (user == null || user.Count == 0)
-                return Redirect($"./Register?PinCode={Request.Query?["PinCode"]}");
+                if (user == null || user.Count == 0)
+                    return Redirect($"./Register?PinCode={Request.Query?["PinCode"]}");
+            }
 
             return Page();
         }
