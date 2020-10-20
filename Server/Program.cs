@@ -12,10 +12,10 @@ namespace Abeer.Server
     {
         public static void Main(string[] args)
         {
-            Console.Title = "Abeer.ApiServer";
+            Console.Title = "SmartClick.ApiServer";
             try
             {
-                Log.Information("Abeer server starting");
+                Log.Information("Smart Click server starting");
                 CreateHostBuilder(args).Build().Run();
             }
             catch(Exception ex)

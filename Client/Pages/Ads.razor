@@ -27,7 +27,10 @@
         getAll.EnsureSuccessStatusCode();
         var json = await getAll.Content.ReadAsStringAsync();
         All = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Abeer.Shared.Functional.AdModel>>(json);
-        Items = All.ToList();
+        if (All != null)
+        {
+            Items = All?.ToList();
+        }
 
         var authenticateSate = await authenticationStateTask;
 
@@ -39,7 +42,7 @@
 
     void Search()
     {
-        Items = All.Where(a => a.Title.Contains(Term) || a.Description.Contains(Term)).ToList();
+        Items = All?.Where(a => a.Title.Contains(Term) || a.Description.Contains(Term)).ToList();
     }
 }
 
@@ -57,22 +60,32 @@
         </div>
         <div class="input-group-btn">
             <div class="text-center">
-                <a class="btn" href="CreateAd" title="@Loc["PublishYourAd"]"><i class="fa fa-2x fa-plus-square"></i><h5></h5></a>
                 @if (IsAdmin)
                 {
-                <a class="btn " href="ManageAds" title="@Loc["ManageAds"]"><i class="fas fa-database"></i></a>
+                    <a class="btn " href="ManageAds" title="@Loc["ManageAds"]"><i class="fas fa-database"></i></a>
                 }
-                </div>
             </div>
+        </div>
     </div>
     <div class="section-body">
         <div class="row">
             <div class="col-12">
-                @foreach (var ad in Items)
+                @if (Items.Any())
                 {
-                    <CardAd Loc="Loc" Ad="ad" Editable="false"></CardAd>
+                    foreach (var ad in Items)
+                    {
+                        <CardAd Loc="Loc" Ad="ad" Editable="false"></CardAd>
+                    }
+                }
+                else
+                {
+                    <div class="card bg-info p-5">
+                        <div class="text-center">@Loc["NoAds"]</div>
+                    </div>
                 }
             </div>
         </div>
     </div>
 </section>
+
+<FloatingActionButton ItemUrl="CreateAd"></FloatingActionButton>

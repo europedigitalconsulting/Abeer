@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Copyright" xml:space="preserve">
-    <value>Copyright &amp;copy; Fait avec 💙 par Abeer</value>
+    <value>Copyright &amp;copy; Fait avec 💙 par Smart Click</value>
   </data>
   <data name="Email" xml:space="preserve">
     <value>Email</value>
@@ -169,7 +169,7 @@
     <value>Quelles sont nos conditions d'utilisation ?</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>S'authentifier sur Abeer</value>
+    <value>S'authentifier sur Smart Click</value>
   </data>
   <data name="Welcome" xml:space="preserve">
     <value>Bienvenue sur &lt;span class="font-weight-bold"&gt;Smart Clik&lt;/span&gt;</value>

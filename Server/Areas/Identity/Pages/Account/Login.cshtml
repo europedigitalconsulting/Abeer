@@ -23,6 +23,7 @@
     <link href="/vendors/chocolat/dist/css/chocolat.css" rel="stylesheet" />
     <link href="/css/app.css" rel="stylesheet" />
     <link href="/css/components.css" rel="stylesheet" />
+    <link rel="icon" href="favicon.ico" />
 
 </head>
 
@@ -32,7 +33,9 @@
             <div class="d-flex flex-wrap align-items-stretch">
                 <div class="col-lg-4 col-md-6 col-12 order-lg-1 min-vh-100 order-2 bg-white">
                     <div class="p-4 m-3">
-                        <img src="/assets/img/logo_full.png" alt="Smart Click" width="80" class="shadow-light rounded-circle mb-5 mt-2">
+                        <div class="login-brand">
+                            <img src="/assets/img/logo_full.png" alt="Smart Click" class="img-shadow shadow-light">
+                        </div>
                         <h4 class="text-dark font-weight-normal">@htmlLocalizer["Welcome"]</h4>
                         <p class="text-muted">@localizer["Muted"]</p>
                         <form id="account" method="post">

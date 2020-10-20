@@ -25,6 +25,7 @@ using Abeer.Data.Contextes;
 using Abeer.Server.Hubs;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
+using Abeer.Shared.Functional;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Internal;
 
@@ -353,6 +354,7 @@ namespace Abeer.Server
                 if (!contact2.Any())
                     await functionalDb.ContactRepository.AddAsync(new Contact { OwnerId = hasan.Id, UserId = admin.Id });
                 await functionalDb.SaveChangesAsync();
+
             }
         }
     }

@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CatchPhrase" xml:space="preserve">
-    <value>To connect on Abeer you should be registered, please following this form and click on submit</value>
+    <value>To connect on Smart Click you should be registered, please following this form and click on submit</value>
   </data>
   <data name="ConfirmationCatchPhrase" xml:space="preserve">
     <value>An email has sent to you mail box {0} please confirm by clicking on the link</value>
@@ -145,15 +145,15 @@
     <value>Register</value>
   </data>
   <data name="RegisterConfirmationTitle" xml:space="preserve">
-    <value>Register confirmation &amp;mdash; Abeer</value>
+    <value>Register confirmation &amp;mdash; Smart Click</value>
   </data>
   <data name="RequestCertificate" xml:space="preserve">
     <value>Depending on your country, you will be asked for a national identity card and a valid identity photo. You Accept this rule before continuing your registration.</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Register on Abeer</value>
+    <value>Register on Smart Click</value>
   </data>
   <data name="UseExternal" xml:space="preserve">
-    <value>You have a social account you can use it to connect on Abeer</value>
+    <value>You have a social account you can use it to connect on Smart Click</value>
   </data>
 </root>

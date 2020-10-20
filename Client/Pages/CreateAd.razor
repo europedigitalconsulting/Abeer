@@ -11,6 +11,12 @@
     public AdPrice CurrentPrice { get; set; } = new AdPrice();
     public List<AdPrice> AdPrices { get; set; } = new List<AdPrice>();
 
+    async Task Step1()
+    {
+        Step = "Step1";
+        await InvokeAsync(StateHasChanged);
+    }
+
     async Task Step2()
     {
         Step = "Step2";
@@ -100,6 +106,7 @@
         <div class="section-header">
             <h1>@Loc["Title"]</h1>
         </div>
+        <div class="section-body">
         <div class="card">
             <div class="card-body">
                 <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
@@ -147,10 +154,13 @@
                     <MediaUploader Id="AssignImageUrl4" OnChange="AssignImageUrl4"></MediaUploader>
                 </div>
                 <div class="form-group">
-                    <a type="submit" class="btn btn-success" @onclick="Step2" title="@Loc["StartPublish"]"><i class="fa fa-2x fa-upload"></i></a>
-                    <a href="Ads" class="btn btn-warning" title="@Loc["Cancel"]"><i class="fa fa-2x fa-times"></i></a>
+                    <div class="text-center">
+                        <a href="Ads" class="btn btn-lg" title="@Loc["Cancel"]"><i class="fa fa-2x fa-arrow-left"></i></a>
+                        <a type="submit" class="btn btn-lg" @onclick="Step2" title="@Loc["StartPublish"]"><i class="fa fa-2x fa-arrow-right"></i></a>
+                    </div>
                 </div>
             </div>
+        </div>
         </div>
     </section>
 }
@@ -160,31 +170,37 @@ else if (Step == "Step2")
         <div class="section-header">
             <h1>@Loc["SelectYourOffer"]</h1>
         </div>
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    @foreach (var price in AdPrices)
-                    {
-                        <div class="col-lg-3 col-md-3 col-sm-12">
-                            <div class="card profile-widget border p-4">
-                                <div class="profile-widget-header">
-                                    @if (@price.Value > 0)
-                                    {
-                                        <div class="float-right">
-                                            <span class="badge badge-info">@price.Value €</span>
-                                        </div>
-                                    }
-                                    <h4>@price.PriceName</h4>
-                                </div>
-                                <div class="profile-widget-description pb-0">
-                                    <div class="profile-widget-name">@price.PriceDescription</div>
-                                </div>
-                                <div class="text-center">
-                                    <button type="submit" class="btn btn-success" @onclick="@(async () => await SelectPrice(price))">@Loc["Select"]</button>
+        <div class="section-body">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        @foreach (var price in AdPrices)
+                        {
+                            <div class="col-lg-3 col-md-3 col-sm-12">
+                                <div class="card profile-widget border p-4">
+                                    <div class="profile-widget-header">
+                                        @if (@price.Value > 0)
+                                        {
+                                            <div class="float-right">
+                                                <span class="badge badge-info">@price.Value €</span>
+                                            </div>
+                                        }
+                                        <h4>@price.PriceName</h4>
+                                    </div>
+                                    <div class="profile-widget-description pb-0">
+                                        <div class="profile-widget-name">@price.PriceDescription</div>
+                                    </div>
+                                    <div class="text-center">
+
+                                        <a type="submit" class="btn  btn-lg" @onclick="@(async () => await SelectPrice(price))">@Loc["Select"]</a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    }
+                        }
+                    </div>
+                    <div class="text-center">
+                        <a href="#" class="btn btn-lg" title="@Loc["Back"]" @onclick="Step1"><i class="fa fa-2x fa-arrow-left"></i></a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -196,87 +212,93 @@ else if (Step == "Step3")
         <div class="section-header">
             <h1>@Loc["Title"]</h1>
         </div>
-        <div class="card">
-            <div class="card-body">
-                @if (PublishHasError)
-                {
-                    <div class="alert alert-danger">
-                        @Loc["PublishError"]
+        <div class="section-body">
+            <div class="card">
+                <div class="card-body">
+                    @if (PublishHasError)
+                    {
+                        <div class="alert alert-danger">
+                            @Loc["PublishError"]
+                        </div>
+                    }
+                    <h3>@Loc["Summary"]</h3>
+                    <div class="form-group col-6 col-sm-12">
+                        <label>@Loc["AdTitle"]</label>
+                        <input type="text" Class="form-control" @bind="Ad.Title" />
                     </div>
-                }
-                <h3>@Loc["Summary"]</h3>
-                <div class="form-group col-6 col-sm-12">
-                    <label>@Loc["AdTitle"]</label>
-                    <input type="text" Class="form-control" @bind="Ad.Title" />
-                </div>
-                <div class="form-group col-6 col-sm-12">
-                    <label>@Loc["Description"]</label>
-                    <textarea type="text" Class="form-control" rows="6" @bind="Ad.Description" />
-                </div>
-                <div class="form-group col-6 col-sm-12">
-                    <label>@Loc["Price"]</label>
-                    <input type="number" Class="form-control" @bind="Ad.Price" />
-                </div>
-                <div class="form-group col-6 col-sm-12">
-                    <label>@Loc["Url1"]</label>
-                    <input type="url" Class="form-control" @bind="Ad.Url1" />
-                </div>
-                <div class="form-group col-6 col-sm-12">
-                    <label>@Loc["Url2"]</label>
-                    <input type="url" Class="form-control" @bind="Ad.Url2" />
-                </div>
-                <div class="form-group col-6 col-sm-12">
-                    <label>@Loc["Url3"]</label>
-                    <input type="url" Class="form-control" @bind="Ad.Url3" />
-                </div>
-                <div class="form-group col-6 col-sm-12">
-                    <label>@Loc["Url4"]</label>
-                    <input type="url" Class="form-control" @bind="Ad.Url4" />
-                </div>
-                <div class="form-group col-6 col-sm-12">
-                    <MediaUploader OnChange="AssignImageUrl1" ImgUrl="@Ad.ImageUrl1"></MediaUploader>
-                    @Ad.ImageUrl1
-                </div>
-                <div class="form-group col-6 col-sm-12">
-                    <MediaUploader OnChange="AssignImageUrl2" ImgUrl="@Ad.ImageUrl2"></MediaUploader>
-                    @Ad.ImageUrl2
-                </div>
-                <div class="form-group col-6 col-sm-12">
-                    <MediaUploader OnChange="AssignImageUrl3" ImgUrl="@Ad.ImageUrl3"></MediaUploader>
-                    @Ad.ImageUrl3
-                </div>
-                <div class="form-group col-6 col-sm-12">
-                    <MediaUploader OnChange="AssignImageUrl4" ImgUrl="@Ad.ImageUrl4"></MediaUploader>
-                    @Ad.ImageUrl4
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-12">
-                    <div class="card profile-widget border p-4">
-                        <div class="profile-widget-header">
-                            @if (CurrentPrice.Value > 0)
+                    <div class="form-group col-6 col-sm-12">
+                        <label>@Loc["Description"]</label>
+                        <textarea type="text" Class="form-control" rows="6" @bind="Ad.Description" />
+                    </div>
+                    <div class="form-group col-6 col-sm-12">
+                        <label>@Loc["Price"]</label>
+                        <input type="number" Class="form-control" @bind="Ad.Price" />
+                    </div>
+                    <div class="form-group col-6 col-sm-12">
+                        <label>@Loc["Url1"]</label>
+                        <input type="url" Class="form-control" @bind="Ad.Url1" />
+                    </div>
+                    <div class="form-group col-6 col-sm-12">
+                        <label>@Loc["Url2"]</label>
+                        <input type="url" Class="form-control" @bind="Ad.Url2" />
+                    </div>
+                    <div class="form-group col-6 col-sm-12">
+                        <label>@Loc["Url3"]</label>
+                        <input type="url" Class="form-control" @bind="Ad.Url3" />
+                    </div>
+                    <div class="form-group col-6 col-sm-12">
+                        <label>@Loc["Url4"]</label>
+                        <input type="url" Class="form-control" @bind="Ad.Url4" />
+                    </div>
+                    <div class="form-group col-6 col-sm-12">
+                        <MediaUploader OnChange="AssignImageUrl1" ImgUrl="@Ad.ImageUrl1"></MediaUploader>
+                        @Ad.ImageUrl1
+                    </div>
+                    <div class="form-group col-6 col-sm-12">
+                        <MediaUploader OnChange="AssignImageUrl2" ImgUrl="@Ad.ImageUrl2"></MediaUploader>
+                        @Ad.ImageUrl2
+                    </div>
+                    <div class="form-group col-6 col-sm-12">
+                        <MediaUploader OnChange="AssignImageUrl3" ImgUrl="@Ad.ImageUrl3"></MediaUploader>
+                        @Ad.ImageUrl3
+                    </div>
+                    <div class="form-group col-6 col-sm-12">
+                        <MediaUploader OnChange="AssignImageUrl4" ImgUrl="@Ad.ImageUrl4"></MediaUploader>
+                        @Ad.ImageUrl4
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-12">
+                        <div class="card profile-widget border p-4">
+                            <div class="profile-widget-header">
+                                @if (CurrentPrice.Value > 0)
+                                {
+                                    <div class="float-right">
+                                        <span class="badge badge-info">@CurrentPrice.Value €</span>
+                                    </div>
+                                }
+                                <h4>@CurrentPrice.PriceName</h4>
+                            </div>
+                            <div class="profile-widget-description pb-0">
+                                <div class="profile-widget-name">@CurrentPrice.PriceDescription</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="alert alert-info p-4">
+                        @Loc["RequireLogin"]
+                    </div>
+                    <div class="form-group">
+                        <div class="text-center">
+                            <a href="#" class="btn btn-lg" title="@Loc["Back"]" @onclick="Step2"><i class="fa fa-2x fa-arrow-left"></i></a>
+                            @if (CurrentPrice.Value == 0)
                             {
-                                <div class="float-right">
-                                    <span class="badge badge-info">@CurrentPrice.Value €</span>
-                                </div>
+
+                                <button type="submit" class="btn btn-lg" @onclick="@(async () => await ValidAd())"><i class="far fa-arrow-right"></i>@Loc["ValidAd"]</button>
                             }
-                            <h4>@CurrentPrice.PriceName</h4>
-                        </div>
-                        <div class="profile-widget-description pb-0">
-                            <div class="profile-widget-name">@CurrentPrice.PriceDescription</div>
+                            else
+                            {
+                                <button type="submit" class="btn btn-lg" @onclick="@(async () => await ProcessPayment())"><i class="far fa-credit-card"></i>@Loc["ProcessPayment"]</button>
+                            }
                         </div>
                     </div>
-                </div>
-                <div class="alert alert-info p-4">
-                    @Loc["RequireLogin"]
-                </div>
-                <div class="form-group">
-                    @if (CurrentPrice.Value == 0)
-                    {
-                        <button type="submit" class="btn btn-success" @onclick="@(async () => await ValidAd())"><i class="fas fa-upload"></i>@Loc["ValidAd"]</button>
-                    }
-                    else
-                    {
-                        <button type="submit" class="btn btn-success" @onclick="@(async () => await ProcessPayment())"><i class="far fa-credit-card"></i>@Loc["ProcessPayment"]</button>
-                    }
                 </div>
             </div>
         </div>

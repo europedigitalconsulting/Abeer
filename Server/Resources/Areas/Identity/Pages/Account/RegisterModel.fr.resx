@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CatchPhrase" xml:space="preserve">
-    <value>Pou se connecter sur Abeer, vous devez être enregistré, veuillez remplir le formulaire</value>
+    <value>Pou se connecter sur Smart Click, vous devez être enregistré, veuillez remplir le formulaire</value>
   </data>
   <data name="City" xml:space="preserve">
     <value>Ville</value>
@@ -151,13 +151,13 @@
     <value>S'inscrire</value>
   </data>
   <data name="RegisterConfirmationTitle" xml:space="preserve">
-    <value>Confirmation de l'inscirpiton &amp;mdash; Abeer</value>
+    <value>Confirmation de l'inscription &amp;mdash; Smart Click</value>
   </data>
   <data name="RequestCertificate" xml:space="preserve">
     <value>En fonction de votre pays une carte nationale d'identité vous sera demandée ainsi qu’une photo d’identité conforme. Vous reconnaissez avoir bien compris cette règle avant de continuer votre inscription.</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>S'inscrire sur Abeer</value>
+    <value>S'inscrire sur Smart Click</value>
   </data>
   <data name="UseExternal" xml:space="preserve">
     <value>Vous disposez d'un compte sur un réseau social partenaire, vous pouvez l'utiliser pour vous inscrire</value>

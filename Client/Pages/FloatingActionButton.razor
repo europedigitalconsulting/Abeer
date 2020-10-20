@@ -1,0 +1,14 @@
+﻿
+@code{
+
+    [Parameter]
+    public string ItemUrl { get; set; }
+}
+<div class="fixed-bottom m-5">
+    @*<div class="btn-group float-right">
+        <button type="button" class="btn badge badge-danger ">1</button>
+        <button type="button" class="btn badge badge-danger">2</button>
+        <button type="button" class="btn badge badge-danger">3</button>
+    </div>*@
+    <a href="@ItemUrl" class="btn btn-danger btn-circle btn-xl float-right"><i class="fa fa-2x fa-plus"></i></a>
+</div>
