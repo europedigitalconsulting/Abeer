@@ -6,27 +6,26 @@
 
 @if (ModalShareProfileVisible)
 {
-    <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">@Loc["ShareProfile"]</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="ToggleModalShareProfile">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <h5><a href="@ProfileUrl">@ProfileUrl</a></h5>
-                    <img alt="qrcode" src="/api/QrCodeGenerator?link=@ProfileUrl" style="width:100%" />
-                </div>
+<div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">@Loc["ShareProfile"]</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="ToggleModalShareProfile">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h5><a href="@ProfileUrl">@ProfileUrl</a></h5>
+                <img alt="qrcode" src="/api/QrCodeGenerator?link=@ProfileUrl" style="width:100%" />
             </div>
         </div>
     </div>
-}
+</div>}
 
 @if (showModal)
 {
-<div class="modal fade show" id="modalCreateUser" style="display:block" aria-modal="true" role="dialog">
+<div class="modal fade show" id="modalUser" style="display:block" aria-modal="true" role="dialog">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="ToggleModalCreateUser">
             <span aria-hidden="true">&times;</span>
@@ -77,6 +76,14 @@
                     <div class="form-group">
                         @Loc["PhoneNumber"]
                         <input type="text" @bind="current.PhoneNumber" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        @Loc["PinCode"]
+                        <input type="text" @bind="current.PinCode" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        @Loc["PinDigit"]
+                        <input type="number" @bind="current.PinDigit" class="form-control" />
                     </div>
                 </EditForm>
             </div>
@@ -142,13 +149,13 @@
                                                                                 </button>
                                                                                 @if (!User.IsOnline)
                                                                                 {
-                                                                            <button type="button" class="btn btn-danger tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Delete" @onclick="@(() => ShowDeleteUser(User))">
-                                                                                <i class="fas fa-trash"></i>
-                                                                            </button>}
+                                                        <button type="button" class="btn btn-danger tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Delete" @onclick="@(() => ShowDeleteUser(User))">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>}
                                                                             </div>
                                                                             <div class="info">
                                                                                 <h4></h4>
-                                                                                <p class="text-muted">@User.DisplayName</p>
+                                                                                <p class="text-muted">@User.DisplayName/@User.PinCode</p>
                                                                             </div>
                                                                         </div>
                                                                         <div class="clearfix"></div>
@@ -159,12 +166,12 @@
                                                                     </div>
                                                                 </div>
                                                             </div> }
-                                                    }
-                                                    else
-                                                    {
-                                    <div class="alert alert-info">
-                                        @Loc["NoUserFound"]
-                                    </div>}
+                                                                            }
+                                                                            else
+                                                                            {
+                                                            <div class="alert alert-info">
+                                                                @Loc["NoUserFound"]
+                                                            </div>}
                                                                         </div>
                                                                     </div>
                                                                 </div>

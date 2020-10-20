@@ -279,6 +279,8 @@ namespace Abeer.Server
                         LastName = "Bruchet",
                         City = "Quincy Sous senart",
                         PhoneNumber = "+33 7 80 81 10 24",
+                        PinCode = "12345678901234567",
+                        PinDigit = 12345,
                         IsAdmin = true
                     };
 

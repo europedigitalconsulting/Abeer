@@ -18,6 +18,8 @@ namespace Abeer.Shared
         public byte[] CsvFileContent { get; set; }
         public List<CardStatu> CardStatus { get; set; }
         public bool IsUsed { get; set; }
+        public bool IsSold { get; set; }
+        public DateTime? SoldDate { get; set; }
         public bool HasError { get; set; }
         public string ErrorMessage { get; set; }
         public ErrorTypes ErrorType { get; set; }
@@ -26,6 +28,8 @@ namespace Abeer.Shared
         public DateTime GeneratedDate { get; set; }
         public string GeneratedBy { get; set; }
         public string Icon { get; set; }
+        public string SoldBy { get; set; }
+        public int Quantity { get; set; }
     }
 
     public enum ErrorTypes
@@ -52,6 +56,7 @@ namespace Abeer.Shared
         Created=0, Started=1, Finished=2, Error=3,
         Generated = 4,
         Inserted = 5,
-        Updated = 6
+        Updated = 6,
+        Sold = 7
     }
 }

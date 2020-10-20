@@ -85,9 +85,12 @@ namespace Abeer.Client.Pages
             ModalShareProfileVisible = !ModalShareProfileVisible;
         }
 
+        static Random rdm = new Random();
+
         async Task ShowInsertUser()
         {
             current = new ApplicationUser();
+            current.PinDigit = rdm.Next(10000, 99999);
             Mode = "Create";
             await ToggleModalCreateUser().ConfigureAwait(false);
             await InvokeAsync(StateHasChanged);

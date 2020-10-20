@@ -47,53 +47,7 @@ namespace Abeer.Data.Repositories
                 UserId = userId
             };
 
-            await AddStatus(cardStatu);
-
-            var tokens = await FunctionalDbContext.TokenItems.Include(t => t.TokenBatch)
-                .Where(t => t.TokenBatch.TokenType == card.CardType && t.IsUsed == false && t.IsError == false)
-                .ToListAsync();
-
-            var batchRepo = new TokenBatchRepository(FunctionalDbContext);
-            var tokenItemRepo = new TokenItemRepository(FunctionalDbContext);
-
-            var available = tokens.Count;
-
-            if(available >= card.Value)
-            {
-                tokens = tokens.Take(card.Value).ToList();
-            }
-            else
-            {
-                var requiredTokens = card.Value - available;
-
-                var batch = new TokenBatch
-                {
-                    BatchNumber = string.Concat(DateTime.UtcNow.ToString("yyyMMddHHmmss"), rdm.Next(100000, 999999)),
-                    OperatorName = "sys",
-                    PartsItemsCount = requiredTokens,
-                    TokenType = card.CardType
-                };
-
-                if(tokens.Any())
-                {
-                    var firstBatch = tokens.First().TokenBatch;
-                    batch.WebHookUrl = firstBatch.WebHookUrl;
-                    batch.WebHookProtocolType = firstBatch.WebHookProtocolType;
-                    batch.WebHookAuthentication = firstBatch.WebHookAuthentication;
-                }
-
-                batch = (await batchRepo.AddAsync(batch, userId));
-                tokens.AddRange(batch.TokenItems);
-            }
-
-            foreach(var token in tokens)
-            {
-                token.IsUsed = true;
-                token.UsedDate = DateTime.UtcNow;
-                token.CardNumber = card.CardNumber;
-                token.CardId = card.Id;
-                await tokenItemRepo.Update(token);
-            }
+            await AddStatus(cardStatu);            
 
             await AddStatus(new CardStatu
             {
