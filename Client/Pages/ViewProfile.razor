@@ -26,7 +26,7 @@
             var getProfile = await httpClient.GetAsync($"/api/viewProfile/{ProfileId}");
 
             if (getProfile.StatusCode == System.Net.HttpStatusCode.NotFound)
-                Navigation.NavigateTo($"/Registration?PinCode={ProfileId}");
+                Navigation.NavigateTo(Navigation.ToAbsoluteUri($"/Identity/Account/Register?PinCode={ProfileId}").ToString(), true);
 
             getProfile.EnsureSuccessStatusCode();
             var json = await getProfile.Content.ReadAsStringAsync();

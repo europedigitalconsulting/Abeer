@@ -1,0 +1,216 @@
+﻿@namespace Abeer.Client.Pages
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@code
+{
+    [Parameter]
+    public string LabelCancel { get; set; }
+    [Parameter]
+    public string LabelDeleteTitle { get; set; }
+    [Parameter]
+    public string LabelDelete { get; set; }
+    [Parameter]
+    public string LabelInsertTitle { get; set; }
+    [Parameter]
+    public string LabelInsert { get; set; }
+    [Parameter]
+    public string LabelUpdateTitle { get; set; }
+    [Parameter]
+    public string LabelUpdate { get; set; }
+    [Parameter]
+    public string LabelConfirmDelete { get; set; }
+    [Parameter]
+    public string LabelMyCardList { get; set; }
+    [Parameter]
+    public string LabelHome { get; set; }
+    [Parameter]
+    public string LabelMyCardListCatchPhrase { get; set; }
+    [Parameter]
+    public string LabelSearch { get; set; }
+    [Parameter]
+    public string LabelAddCard { get; set; }
+    [Parameter]
+    public string LabelValue { get; set; }
+    [Parameter]
+    public string LabelFailed { get; set; }
+    [Parameter]
+    public string LabelPending { get; set; }
+    [Parameter]
+    public string LabelProcessing { get; set; }
+    [Parameter]
+    public string LabelGeneratedAt { get; set; }
+    [Parameter]
+    public string LabelNoCardFound { get; set; }
+    [Parameter]
+    public string LabelNbOfTokens { get; set; }
+    [Parameter]
+    public string LabelNbOfTokensUsed { get; set; }
+    [Parameter]
+    public string LabelNbOfTokenAvailable { get; set; }
+    [Parameter]
+    public string LabelCardNumber { get; set; }
+    [Parameter]
+    public string LabelCardType { get; set; }
+    [Parameter]
+    public string LabelPinCode { get; set; }
+    [Parameter]
+    public string LabelIcon { get; set; }
+    [Parameter]
+    public string LabelWebHookAuthentication { get; set; }
+    [Parameter]
+    public string LabelWebHookProtocolType { get; set; }
+    [Parameter]
+    public string LabelWebHookUrl { get; set; }
+}
+@if (IsModalVisible)
+{
+    <ModalDialog ShowModal="IsModalVisible" CancelLabel="@LabelCancel" Mode="@Mode"
+                 DeleteClicked="Delete" DeleteDialogTitle="@LabelDeleteTitle" DeleteLabel="@LabelDelete"
+                 InsertClicked="Insert" InsertDialogTitle="@LabelInsertTitle" InsertLabel="@LabelInsert"
+                 UpdateClicked="Update" UpdateDialogTitle="@LabelUpdateTitle" UpdateLabel="@LabelUpdate"
+                 ModalCancelClicked="CloseModal" ModalDialogSize="modal-lg modal-dialog-scrollable">
+        <InsertModalBody>
+            <CardForm @ref="CardForm" Card="current"
+                      LabelCardNumber="@LabelCardNumber" LabelCardType="@LabelCardType" LabelPinCode="@LabelPinCode" 
+                      LabelValue="@LabelValue" LabelIcon="@LabelIcon" LabelWebHookAuthentication="@LabelWebHookAuthentication" 
+                      LabelWebHookProtocolType="@LabelWebHookProtocolType" LabelWebHookUrl="@LabelWebHookUrl"></CardForm>
+        </InsertModalBody>
+        <UpdateModalBody>
+            <CardForm @ref="CardForm" Card="current" 
+                      LabelCardNumber="@LabelCardNumber" LabelCardType="@LabelCardType" LabelPinCode="@LabelPinCode" 
+                      LabelValue="@LabelValue" LabelIcon="@LabelIcon"></CardForm>
+        </UpdateModalBody>
+        <DeleteModalBody>
+            <div class="alert alert-info"><i class="fas fa-question-circle"></i>@LabelConfirmDelete</div>
+        </DeleteModalBody>
+    </ModalDialog>
+}
+<!-- Main Content -->
+<div class="main-content">
+    <section class="section">
+        <div class="section-header">
+            <h1>@LabelMyCardList <span class="badge badge-primary">@Items.Count</span></h1>
+            <div class="section-header-breadcrumb">
+                <div class="breadcrumb-item active"><a href="#">@LabelHome</a></div>
+                <div class="breadcrumb-item">@LabelMyCardList</div>
+            </div>
+        </div>
+
+        <div class="section-body">
+            <h2 class="section-title">@LabelMyCardList</h2>
+            <p class="section-lead">@LabelMyCardListCatchPhrase.</p>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body p-2">
+                            <div class="container-fluid">
+                                <PagineableRepeater TItem="Card" Items="@Items" EnableSearchFilter="true" PageSize="20">
+                                    <SearchForm>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-body p-2">
+                                                        <div class="input-group">
+                                                            <input type="text" id="example-input1-group2" name="example-input1-group2" class="form-control" placeholder="@LabelSearch" @bind-value="SearchTerm">
+                                                            <span class="input-group-btn pl-2">
+                                                                <button type="button" class="btn btn-effect-ripple btn-primary" @onclick="SearchButtonClick"><i class="fa fa-search"></i></button>
+
+                                                                @if (User?.HasClaim(System.Security.Claims.ClaimTypes.Role, "admin") == true)
+                                                                {
+                                                                    <button type="button" class="btn btn-effect-ripple btn-primary" @onclick="ShowInsertCard" title="@LabelAddCard"><i class="fas fa-plus-square"></i></button>
+                                                                }
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </SearchForm>
+                                    <ChildContent Context="Card">
+                                        @{
+                                            var lastStatus = Card.CardStatus.OrderByDescending(b => b.Status).FirstOrDefault();
+                                        }
+                                        <div class="col-3 badge-light">
+                                            <div class="panel">
+                                                <div class="panel-body p-t-10">
+                                                    <div class="media-main">
+                                                        <a class="pull-left" href="#" title="@Card.PinCode">
+                                                            <i class="@(string.IsNullOrEmpty(Card.Icon) ? "fas fa-archive" : Card.Icon) fa-7x"></i>
+                                                        </a>
+                                                        <div class="pull-right btn-group-sm">
+                                                            @if (!Card.IsGenerated && (User?.HasClaim(System.Security.Claims.ClaimTypes.Role, "manager") == true || User?.HasClaim(System.Security.Claims.ClaimTypes.Role, "admin") == true))
+                                                            {
+                                                                <button type="button" class="btn btn-success tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Edit" @onclick="@(() => ShowEditCard(Card))">
+                                                                    <i class="fas fa-edit"></i>
+                                                                </button>
+                                                                <button type="button" class="btn btn-danger tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Delete" @onclick="@(() => ShowDeleteCard(Card))">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </button>
+                                                            }
+                                                            @if (!Card.IsSold && Card.IsGenerated && !Card.IsUsed)
+                                                            {
+                                                                <button type="button" class="btn btn-success tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Delete" @onclick="@(() => SellCard(Card))">
+                                                                    <i class="fas fa-cash-register"></i>
+                                                                </button>
+                                                            }
+                                                        </div>
+                                                        <div class="info">
+                                                            <h4></h4>
+                                                            <p class="text-muted">@Card.CardNumber / @Card.Value @LabelValue</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="clearfix"></div>
+                                                    <hr>
+                                                    @if (Card.HasError)
+                                                    {
+                                                        <span class="badge badge-danger">@LabelFailed @Card.ErrorType</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        switch (lastStatus.Status)
+                                                        {
+                                                            case CardStatus.Created:
+                                                                {
+                                                                    <span class="badge badge-info">@LabelPending</span>
+                                                                    break;
+                                                                }
+                                                            case CardStatus.Started:
+                                                                {
+                                                                    <span class="badge badge-light">@LabelProcessing</span>
+                                                                    break;
+                                                                }
+                                                            case CardStatus.Error:
+                                                                {
+                                                                    <span class="badge badge-danger">@LabelFailed @lastStatus.StatusMessage</span>
+                                                                    break;
+                                                                }
+                                                            case CardStatus.Generated:
+                                                                {
+                                                                    <span class="badge badge-success">@LabelGeneratedAt @lastStatus.StatusDate</span>
+                                                                    break;
+                                                                }
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ChildContent>
+                                    <EmptyTemplate>
+                                        <div class="col-12">
+                                            <div class="alert alert-info">
+                                                @LabelNoCardFound
+                                                @if (User?.HasClaim(System.Security.Claims.ClaimTypes.Role, "manager") == true || User?.HasClaim(System.Security.Claims.ClaimTypes.Role, "admin") == true)
+                                                {
+                                                    <button type="button" class="btn btn-effect-ripple btn-primary" @onclick="ShowInsertCard" title="@LabelAddCard"><i class="fas fa-plus-square"></i></button>
+                                                }
+                                            </div>
+                                        </div>
+                                    </EmptyTemplate>
+                                </PagineableRepeater>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

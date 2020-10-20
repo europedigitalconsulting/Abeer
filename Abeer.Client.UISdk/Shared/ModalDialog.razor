@@ -33,11 +33,13 @@
     public EventCallback DeleteClicked { get; set; }
     [Parameter]
     public string DeleteLabel { get; set; }
+    [Parameter]
+    public string ModalDialogSize { get; set; }
 }
 @if (ShowModal)
 {
     <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
-        <div class="modal-dialog">
+        <div class="modal-dialog @ModalDialogSize">
             <div class="modal-content">
                 <!-- Modal Header -->
                 <div class="modal-header">

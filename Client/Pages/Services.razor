@@ -1,10 +1,26 @@
 ﻿@page "/services"
+@using System.Security.Claims
 
+@code
+{
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    public bool IsAdmin { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authenticateSate = await authenticationStateTask;
+
+        if (authenticateSate.User?.Identity.IsAuthenticated == true)
+        {
+            IsAdmin = (authenticateSate.User.Identity.IsAuthenticated && authenticateSate.User.HasClaim(ClaimTypes.Role, "admin"));
+        }
+    } }
 <section class="section">
     <div class="section-header">
         <h1>Services</h1>
     </div>
-   
+
     <div class="section-body">
         <div class="card card-primary">
             <div class="card-header">
@@ -46,17 +62,52 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-lg-3 col-md-3 col-sm-12">
-                            <div class="card profile-widget border">
-                                <div class="profile-widget-header">
-                                    <img alt="image" src="assets/img/services/taxi.png" class="rounded-circle profile-widget-picture">
-                                </div>
-                                <div class="profile-widget-description pb-0">
-                                    <div class="profile-widget-name">You can call a taxi all around the world</div>
-                                </div>
+                        <div class="card profile-widget border">
+                            <div class="profile-widget-header">
+                                <img alt="image" src="assets/img/services/taxi.png" class="rounded-circle profile-widget-picture">
                             </div>
+                            <div class="profile-widget-description pb-0">
+                                <div class="profile-widget-name">You can call a taxi all around the world</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        @if (IsAdmin)
+        {
+<div class="card card-primary">
+    <div class="card-header">
+        <h3>Administration</h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-12">
+
+                <div class="card profile-widget border">
+                    <div class="profile-widget-header">
+                        <i class="fas fa-users rounded-circle profile-widget-picture" style="font-size:150px"></i>
+                    </div>
+                    <div class="profile-widget-description pb-0">
+                        <div class="profile-widget-name">
+                            <a href="Users" target="_blank">You can manage add, edit or delete users</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="card profile-widget border">
+                    <div class="profile-widget-header">
+                        <i class="fas fa-credit-card rounded-circle profile-widget-picture" style="font-size:150px"></i>
+                    </div>
+                    <div class="profile-widget-description pb-0">
+                        <div class="profile-widget-name"><a href="Cards">You can manage cards, create new one, tracking using</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>}
     </div>
 </section>
