@@ -22,6 +22,7 @@ using Abeer.Shared;
 using static Abeer.Services.TemplateRenderManager;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Specialized;
+using Abeer.Data.UnitOfworks;
 
 namespace Abeer.Server.Areas.Identity.Pages.Account
 {
@@ -35,6 +36,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
         private readonly IEmailSender _emailSender;
         private readonly UrlShortner _urlShortner;
         private readonly CountriesService countriesService;
+        private readonly FunctionalUnitOfWork _functionalUnitOfWork;
         private readonly IWebHostEnvironment _env;
         private readonly string _webRoot;
 
@@ -46,7 +48,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
             IWebHostEnvironment env,
             IEmailSender emailSender,
             IConfiguration configuration, 
-            UrlShortner urlShortner, CountriesService countriesService)
+            UrlShortner urlShortner, CountriesService countriesService, FunctionalUnitOfWork functionalUnitOfWork)
         {
             _serviceProvider = serviceProvider;
             _userManager = userManager;
@@ -56,6 +58,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
             Configuration = configuration;
             _urlShortner = urlShortner;
             this.countriesService = countriesService;
+            _functionalUnitOfWork = functionalUnitOfWork;
             _env = env;
             _webRoot = _env.WebRootPath;
         }
@@ -96,6 +99,9 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
 
+            public string PinCode { get; set; }
+            public string DigitCode { get; set; }
+
             public string FirstName { get; set; }
             public string LastName { get; set; }
             public string DisplayName { get; set; }
@@ -103,9 +109,20 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
             public string Country { get; set; }
         }
 
+        static Random rdm = new Random();
+
         public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
+            
+            if (Input == null)
+                Input = new InputModel();
+
+            Input.DigitCode = rdm.Next(10000, 99999).ToString();
+    
+            if(Request?.Query?.ContainsKey("PinCode") == true)
+                Input.PinCode = Request.Query["PinCode"];
+            
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
@@ -123,44 +140,60 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
                     Email = Input.Email,
                     FirstName = Input.FirstName,
                     LastName = Input.LastName,
-                    DisplayName = GetDisplayName()
+                    DisplayName = GetDisplayName(),
+                    PinCode = Input.PinCode, 
+                    City = Input.City,
+                    Country = Input.Country, 
+                    PinDigit = int.Parse(Input.DigitCode)
                 };
-                var result = await _userManager.CreateAsync(user, Input.Password);
 
-                if (result.Succeeded)
+                var card = await _functionalUnitOfWork.CardRepository.FirstOrDefaultAsync(c => c.CardNumber == Input.PinCode);
+                
+                if(card != null && card.PinCode.Equals(Input.DigitCode) && card.IsSold && card.IsUsed == false)
                 {
-                    _logger.LogInformation("User created a new account with password.");
+                    var result = await _userManager.CreateAsync(user, Input.Password);
 
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-
-                    var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
-                        protocol: Request.Scheme);
-
-                    var frontWebSite = UriHelper.BuildAbsolute(Request.Scheme, Request.Host);
-                    var logoUrl = UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/assets/img/logo_full.png");
-                    var unSubscribeUrl = await _urlShortner.CreateUrl(Request.Scheme, Request.Host, UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/Account/UnSubscribe"));
-
-                    callbackUrl = await _urlShortner.CreateUrl(Request.Scheme, Request.Host, callbackUrl);
-
-                    await SendEmailTemplate("email-confirmation", new Dictionary<string, string>()
+                    if (result.Succeeded)
                     {
-                        {"frontWebSite", frontWebSite },
-                        {"logoUrl", logoUrl },
-                        {"unSubscribeUrl", unSubscribeUrl },
-                        {"callbackUrl", callbackUrl }
-                    });
+                        _logger.LogInformation("User created a new account with password.");
 
-                    return RedirectToPage("RegisterConfirmation",
-                        new { email = Input.Email, returnUrl = returnUrl });
+                        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+
+                        var callbackUrl = Url.Page(
+                            "/Account/ConfirmEmail",
+                            pageHandler: null,
+                            values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
+                            protocol: Request.Scheme);
+
+                        var frontWebSite = UriHelper.BuildAbsolute(Request.Scheme, Request.Host);
+                        var logoUrl = UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/assets/img/logo_full.png");
+                        var unSubscribeUrl = await _urlShortner.CreateUrl(Request.Scheme, Request.Host, UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/Account/UnSubscribe"));
+
+                        callbackUrl = await _urlShortner.CreateUrl(Request.Scheme, Request.Host, callbackUrl);
+
+                        await SendEmailTemplate("email-confirmation", new Dictionary<string, string>()
+                        {
+                            {"frontWebSite", frontWebSite },
+                            {"logoUrl", logoUrl },
+                            {"unSubscribeUrl", unSubscribeUrl },
+                            {"callbackUrl", callbackUrl }
+                        });
+
+                        card.IsUsed = true;
+                        await _functionalUnitOfWork.CardRepository.Update(card);
+
+                        return RedirectToPage("RegisterConfirmation",
+                            new { email = Input.Email, returnUrl = returnUrl });
+                    }
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
                 }
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
+
+
+               
             }
 
             // If we got this far, something failed, redisplay form
