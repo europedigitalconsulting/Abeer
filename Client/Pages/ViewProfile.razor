@@ -25,6 +25,9 @@
 
             var getProfile = await httpClient.GetAsync($"/api/viewProfile/{ProfileId}");
 
+            if (getProfile.StatusCode == System.Net.HttpStatusCode.NotFound)
+                Navigation.NavigateTo($"/Registration?PinCode={ProfileId}");
+
             getProfile.EnsureSuccessStatusCode();
             var json = await getProfile.Content.ReadAsStringAsync();
             UserProfile = Newtonsoft.Json.JsonConvert.DeserializeObject<ViewApplicationUser>(json);

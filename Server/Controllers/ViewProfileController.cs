@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Abeer.Data.UnitOfworks;
@@ -7,6 +8,7 @@ using Abeer.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Abeer.Server.Controllers
 {
@@ -28,7 +30,12 @@ namespace Abeer.Server.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ViewApplicationUser>> Get(string id)
         {
-            var user = await _userManager.FindByIdAsync(id) ?? await _userManager.FindByEmailAsync(id);
+            var user = await _userManager.FindByIdAsync(id) ?? await _userManager.Users.FirstOrDefaultAsync(u=>u.PinCode == id)
+                ?? await _userManager.FindByEmailAsync(id);
+
+            if (user == null)
+                return NotFound();
+
             return Ok(new ViewApplicationUser
             {
                 City = user.City,

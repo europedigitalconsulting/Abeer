@@ -353,3 +353,5 @@ MigrationBackup/
 /Server/CryptoCoin-features.db
 /Server/*.db
 /Server/StaticFiles/Images
+/Server/Abeer-security.db-wal
+/Server/Abeer-security.db-shm
