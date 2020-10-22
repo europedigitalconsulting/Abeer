@@ -192,14 +192,14 @@ else if (Step == "Step2")
                                     </div>
                                     <div class="text-center">
 
-                                        <a type="submit" class="btn  btn-lg" @onclick="@(async () => await SelectPrice(price))">@Loc["Select"]</a>
+                                        <button type="submit" class="btn btn-info btn-lg" @onclick="@(async () => await SelectPrice(price))">@Loc["Select"]</button>
                                     </div>
                                 </div>
                             </div>
                         }
                     </div>
                     <div class="text-center">
-                        <a href="#" class="btn btn-lg" title="@Loc["Back"]" @onclick="Step1"><i class="fa fa-2x fa-arrow-left"></i></a>
+                        <button href="#" class="btn btn-lg" title="@Loc["Back"]" @onclick="Step1"><i class="fa fa-2x fa-arrow-left"></i></button>
                     </div>
                 </div>
             </div>
@@ -291,11 +291,11 @@ else if (Step == "Step3")
                             @if (CurrentPrice.Value == 0)
                             {
 
-                                <button type="submit" class="btn btn-lg" @onclick="@(async () => await ValidAd())"><i class="far fa-arrow-right"></i>@Loc["ValidAd"]</button>
+                                <button type="submit" class="btn btn-success btn-lg" @onclick="@(async () => await ValidAd())"><i class="far fa-arrow-right"></i>@Loc["ValidAd"]</button>
                             }
                             else
                             {
-                                <button type="submit" class="btn btn-lg" @onclick="@(async () => await ProcessPayment())"><i class="far fa-credit-card"></i>@Loc["ProcessPayment"]</button>
+                                <button type="submit" class="btn  btn-successbtn-lg" @onclick="@(async () => await ProcessPayment())"><i class="far fa-credit-card"></i>@Loc["ProcessPayment"]</button>
                             }
                         </div>
                     </div>

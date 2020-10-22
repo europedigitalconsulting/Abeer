@@ -113,29 +113,23 @@
 @if (ModalFormAdVisible)
 {
     <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
-        <div class="modal-dialog modal-lg modal-dialog-scrollable">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">@Loc[TitleForm]</h4>
+                    <h4 class="modal-title">@Loc["EditAdPriceTitle"]</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="@(() => ModalFormAdVisible = false)">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <section class="section">
-                        <div class="section-header">
-                            <h1>@Loc["EditAdPriceTitle"]</h1>
-                            <h2>@Current.PriceName</h2>
-                        </div>
-                        <div class="card">
-                            <div class="card-body">
+                        <div class="section-body">
                                 @if (FormHasError)
                                 {
                                     <div class="alert alert-danger">
                                         @Loc["UpdateFailedError"]
                                     </div>
                                 }
-                                <h3>@Loc["Summary"]</h3>
                                 <div class="form-group col-6 col-sm-12">
                                     <label>@Loc["Name"]</label>
                                     <input type="text" Class="form-control" @bind="Current.PriceName" disabled="@IsFormDisabled" />
@@ -160,13 +154,11 @@
                                     <label>@Loc["MaxViewCount"]</label>
                                     <input type="url" Class="form-control" @bind="Current.MaxViewCount" disabled="@IsFormDisabled" />
                                 </div>
-                            </div>
                         </div>
                     </section>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-warning" @onclick="@(() => ModalFormAdVisible = false)">@Loc["Cancel"]</button>
-                    <button type="button" class="btn btn-success" @onclick="Save">@Loc["Save"]</button>
+                    <button type="button" class="btn btn-success" title="@Loc["Save"]" @onclick="Save"><i class="fa fa-2x fa-save"></i></button>
                 </div>
             </div>
         </div>
@@ -175,6 +167,9 @@
 <section class="section">
     <div class="section-header">
         <h1>@Loc["Title"]</h1>
+    </div>
+    <div class="section-header">
+
         <div class="input-group">
             <input type="search" id="example-input1-group2" name="example-input1-group2" class="form-control" @bind="Term" @onkeyup="countTerm">
             <span class="input-group-btn">
@@ -190,22 +185,27 @@
                 {
                     <div class="card">
                         <div class="card-header">
+                          
                             <h4>@ad.PriceName</h4>
                             <div class="card-header-action">
-                                <a data-dismiss="#mycard-dimiss" class="btn btn-icon btn-primary" href="#">@ad.Value.FormatCurrency()</a>
+                                <i  class="btn btn-icon btn-primary" href="#">@ad.Value.FormatCurrency()</i><br/>
+                                <button class="btn btn-primary" @onclick="@(() => OpenEditModal(ad))"><i class="fas fa-pen-square"></i></button>
+                                <button class="btn btn-danger" @onclick="@(() => OpenDeleteModal(ad))"><i class="fas fa-trash-alt"></i></button>
                             </div>
+                           
                         </div>
                         <div class="card-body">
                             <p class="mb-2">
                                 @ad.PriceDescription
                             </p>
-                            <button class="btn btn-primary" @onclick="@(()=>OpenEditModal(ad))"><i class="fas fa-pen-square"></i></button>
-                            <button class="btn btn-danger" @onclick="@(()=>OpenDeleteModal(ad))"><i class="fas fa-trash-alt"></i></button>
                         </div>
+                       
                     </div>
                 }
-                <button class="btn btn-lg btn-info" @onclick="OpenCreateAd"><i class="fas fa-upload" style="font-size:45px"></i><h5>@Loc["Add"]</h5></button>
             </div>
         </div>
     </div>
 </section>
+<div class="fixed-bottom m-5">
+    <a @onclick="OpenCreateAd" class="btn btn-danger btn-circle btn-xl float-right" title="@Loc["Add"]"><i class="fa fa-2x fa-plus"></i></a>
+</div>

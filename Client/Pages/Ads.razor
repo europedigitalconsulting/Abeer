@@ -58,14 +58,6 @@
             </span>
             <div class="search-backdrop"></div>
         </div>
-        <div class="input-group-btn">
-            <div class="text-center">
-                @if (IsAdmin)
-                {
-                    <a class="btn " href="ManageAds" title="@Loc["ManageAds"]"><i class="fas fa-database"></i></a>
-                }
-            </div>
-        </div>
     </div>
     <div class="section-body">
         <div class="row">
@@ -88,4 +80,10 @@
     </div>
 </section>
 
-<FloatingActionButton ItemUrl="CreateAd"></FloatingActionButton>
+<div class="fixed-bottom m-5">
+    @if (IsAdmin)
+    {
+        <a href="ManageAds" class="btn btn-danger btn-circle btn-xl float-right ml-2"><i class="fa fa-2x fa-database"></i></a>
+    }
+    <a href="CreateAd" class="btn btn-danger btn-circle btn-xl float-right"><i class="fa fa-2x fa-plus"></i></a>
+</div>

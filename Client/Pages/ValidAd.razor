@@ -52,52 +52,53 @@
 <section class="section">
     <div class="section-header">
         <h1>@Loc["Title"]</h1>
-        <h2>@Ad.Title</h2>
     </div>
     <div class="card">
         <div class="card-body">
             <h3>@Loc["Summary"]</h3>
-            <div class="form-group col-6 col-sm-12">
+            <div class="form-group col-lg-6 col-md-6 col-sm-12">
                 <label>@Loc["AdTitle"]</label>
                 <input type="text" Class="form-control" @bind="Ad.Title" disabled="disabled" />
             </div>
-            <div class="form-group col-6 col-sm-12">
+            <div class="form-group col-lg-6 col-md-6 col-sm-12">
                 <label>@Loc["Description"]</label>
                 <textarea type="text" Class="form-control" rows="6" @bind="Ad.Description" disabled="disabled" />
             </div>
-            <div class="form-group col-6 col-sm-12">
+            <div class="form-group col-lg-6 col-md-6 col-sm-12">
                 <label>@Loc["Price"]</label>
                 <input type="number" Class="form-control" @bind="Ad.Price" disabled="disabled" />
             </div>
-            <div class="form-group col-6 col-sm-12">
+            <div class="form-group col-lg-6 col-md-6 col-sm-12">
                 <label>@Loc["Url1"]</label>
                 <input type="url" Class="form-control" @bind="Ad.Url1" disabled="disabled" />
             </div>
-            <div class="form-group col-6 col-sm-12">
+            <hr />
+            <div class="form-group col-lg-6 col-md-6 col-sm-12">
                 <label>@Loc["Url2"]</label>
                 <input type="url" Class="form-control" @bind="Ad.Url2" disabled="disabled" />
             </div>
-            <div class="form-group col-6 col-sm-12">
+            <div class="form-group col-lg-6 col-md-6 col-sm-12">
                 <label>@Loc["Url3"]</label>
                 <input type="url" Class="form-control" @bind="Ad.Url3" disabled="disabled" />
             </div>
-            <div class="form-group col-6 col-sm-12">
+            <div class="form-group col-lg-6 col-md-6 col-sm-12">
                 <label>@Loc["Url4"]</label>
                 <input type="url" Class="form-control" @bind="Ad.Url4" disabled="disabled" />
             </div>
-            <div class="form-group col-6 col-sm-12">
+            <hr />
+            <div class="form-group col-lg-6 col-md-6 col-sm-12">
                 <img src="@Ad.ImageUrl1" />
             </div>
-            <div class="form-group col-6 col-sm-12">
+            <div class="form-group col-lg-6 col-md-6 col-sm-12">
                 <img src="@Ad.ImageUrl2" />
             </div>
-            <div class="form-group col-6 col-sm-12">
+            <div class="form-group col-lg-6 col-md-6 col-sm-12">
                 <img src="@Ad.ImageUrl3" />
             </div>
-            <div class="form-group col-6 col-sm-12">
+            <div class="form-group col-lg-6 col-md-6 col-sm-12">
                 <img src="@Ad.ImageUrl4" />
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
+            @*<div class="col-lg-3 col-md-3 col-sm-12">
                 <div class="card profile-widget border">
                     <div class="profile-widget-header">
                         <h4>@CurrentPrice.PriceName</h4>
@@ -106,10 +107,10 @@
                         <div class="profile-widget-name">@CurrentPrice.PriceDescription</div>
                     </div>
                 </div>
-            </div>
+            </div>*@
             @if (Ad.Id != Guid.Empty)
             {
-                <div class="form-group">
+                <div class="form-group text-center">
                     <button type="submit" class="btn btn-success" @onclick="Finish"><i class="fas fa-upload"></i>@Loc["Finish"]</button>
                 </div>
             }

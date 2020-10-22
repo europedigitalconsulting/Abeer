@@ -11,59 +11,87 @@
     [Parameter]
     public EventCallback<MouseEventArgs> OnDeleteClicked { get; set; }
 }
-<div class="col-12">
     <div class="card">
         <div class="card-header">
             <h4>
-                @Ad.Title <span class="badge badge-primary">@Ad.ViewCount</span> @if (Ad.StartDisplayTime <= DateTime.UtcNow)
-                {
-                    if (Ad.EndDisplayTime >= DateTime.UtcNow)
-                    {
-                        <span class="badge badge-success">@Loc["OnlineBetween"] @Ad.StartDisplayTime / @Ad.EndDisplayTime</span>
-                    }
-                    else
-                    {
-                        <span class="badge badge-success">@Loc["NotOnlineSince"] @Ad.EndDisplayTime</span>
-                    }
-                }
-                else
-                {
-                    <span class="badge badget-secondary">@Loc["WillBeOnline"] @Ad.StartDisplayTime</span>
-                }
+                @Ad.Title
             </h4>
             <div class="card-header-action">
-                <a data-dismiss="#mycard-dimiss" class="btn btn-icon btn-primary" href="#">@Ad.Price</a>
+                <span class="btn btn-icon btn-primary" href="#">@Ad.Price €</span>
             </div>
         </div>
         <div class="card-body">
             <p class="mb-2">
                 @Ad.Description
             </p>
-            <div class="row col-12">
+            <div class="row col-12 mb-2">
                 <div class="gallery gallery-md">
-                    @if (!string.IsNullOrWhiteSpace(Ad.ImageUrl1))
+                    @if (!string.IsNullOrEmpty(Ad.ImageUrl1))
                     {
-                        <div class="gallery-item" data-image="@Ad.ImageUrl1" data-title="Image 1" href="@Ad.ImageUrl1" title="Image 1" style="background-image: url(&quot;@Ad.ImageUrl1&quot;);"></div>
+                        <img class="gallery-item" src="@Ad.ImageUrl1" />
                     }
-                    @if (!string.IsNullOrWhiteSpace(Ad.ImageUrl2))
+                    @if (!string.IsNullOrEmpty(Ad.ImageUrl2))
                     {
-                        <div class="gallery-item" data-image="@Ad.ImageUrl2" data-title="Image 1" href="@Ad.ImageUrl2" title="Image 2" style="background-image: url(&quot;@Ad.ImageUrl2&quot;);"></div>
+                        <img class="gallery-item" src="@Ad.ImageUrl2" />
                     }
-                    @if (!string.IsNullOrWhiteSpace(Ad.ImageUrl3))
+                    @if (!string.IsNullOrEmpty(Ad.ImageUrl3))
                     {
-                        <div class="gallery-item" data-image="@Ad.ImageUrl3" data-title="Image 1" href="@Ad.ImageUrl3" title="Image 3" style="background-image: url(&quot;@Ad.ImageUrl3&quot;);"></div>
+                        <img class="gallery-item" src="@Ad.ImageUrl3" />
                     }
-                    @if (!string.IsNullOrWhiteSpace(Ad.ImageUrl4))
+                    @if (!string.IsNullOrEmpty(Ad.ImageUrl4))
                     {
-                        <div class="gallery-item" data-image="@Ad.ImageUrl4" data-title="Image 1" href="@Ad.ImageUrl4" title="Image 4" style="background-image: url(&quot;@Ad.ImageUrl4&quot;);"></div>
+                        <img class="gallery-item" src="@Ad.ImageUrl4" />
                     }
                 </div>
             </div>
+            <div class="row col-12">
+                @if (!string.IsNullOrEmpty(Ad.Url1))
+                {
+                    <a href="@Ad.Url1" class="mr-2">@Ad.Url1</a>
+                }
+                @if (!string.IsNullOrEmpty(Ad.Url2))
+                {
+                    <a href="@Ad.Url2" class="mr-2">@Ad.Url2</a>
+                }
+                @if (!string.IsNullOrEmpty(Ad.Url3))
+                {
+                    <a href="@Ad.Url3"  class="mr-2">@Ad.Url3</a>
+                }
+                @if (!string.IsNullOrEmpty(Ad.Url4))
+                {
+                    <a href="@Ad.Url4"  class="mr-2">@Ad.Url4</a>
+                }
+
+            </div>
+           
             @if (Editable)
             {
-                <button class="btn btn-primary" @onclick="@OnEditClicked"><i class="fas fa-pen-square"></i></button>
-                <button class="btn btn-danger" @onclick="@OnDeleteClicked"><i class="fas fa-trash-alt"></i></button>
+                <div class="fixed-bottom m-5">
+                    <button class="btn btn-primary btn-circle btn-xl float-right ml-2" @onclick="@OnEditClicked"><i class="fas fa-pen-square"></i></button>
+                    <button class="btn btn-danger btn-circle btn-xl float-right ml-2" @onclick="@OnDeleteClicked"><i class="fas fa-trash-alt"></i></button>
+                </div>
             }
         </div>
+        <div class="card-footer">
+            <p>
+                @Loc["ViewCount"] <span class="badge badge-primary">@Ad.ViewCount</span>
+            </p>
+            <p>
+                @if (Ad.StartDisplayTime <= DateTime.UtcNow)
+                {
+                    if (Ad.EndDisplayTime >= DateTime.UtcNow)
+                    {
+                        <i >@Loc["OnlineBetween"] @Ad.StartDisplayTime / @Ad.EndDisplayTime</i>
+                    }
+                    else
+                    {
+                        <i >@Loc["NotOnlineSince"] @Ad.EndDisplayTime</i>
+                    }
+                }
+                else
+                {
+                    <i >@Loc["WillBeOnline"] @Ad.StartDisplayTime</i>
+                }
+            </p>
+        </div>
     </div>
-</div>
