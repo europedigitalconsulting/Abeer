@@ -37,5 +37,6 @@ namespace Abeer.Data
 
         void EnsureCreated();
         Task DetectChanges();
+        void SetTimeout(int timeout);
     }
 }

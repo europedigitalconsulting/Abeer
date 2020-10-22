@@ -5,6 +5,7 @@ using Abeer.Shared.Functional;
 
 using Microsoft.EntityFrameworkCore;
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -72,6 +73,11 @@ namespace Abeer.Data.Contextes
         {
             ChangeTracker.DetectChanges();
             return Task.CompletedTask;
+        }
+
+        public void SetTimeout(int timeout)
+        {
+            Database.SetCommandTimeout(TimeSpan.FromSeconds(timeout));
         }
 
         public DbSet<UrlShortned> UrlShortneds { get; set; }

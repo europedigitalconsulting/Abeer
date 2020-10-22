@@ -355,3 +355,4 @@ MigrationBackup/
 /Server/StaticFiles/Images
 /Server/Abeer-security.db-wal
 /Server/Abeer-security.db-shm
+/Certificate
