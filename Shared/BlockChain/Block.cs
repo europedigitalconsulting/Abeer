@@ -1,10 +1,8 @@
 ﻿using Newtonsoft.Json;
 
 using System;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 using System.Text;
 
 namespace Abeer.Shared

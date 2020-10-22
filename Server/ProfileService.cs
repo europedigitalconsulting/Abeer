@@ -1,5 +1,4 @@
-﻿using Abeer.Client;
-using Abeer.Shared;
+﻿using Abeer.Shared;
 
 using IdentityModel;
 

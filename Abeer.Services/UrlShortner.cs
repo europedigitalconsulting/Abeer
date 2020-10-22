@@ -12,12 +12,12 @@ namespace Abeer.Services
 {
     public class UrlShortner
     {
-        public UrlShortner(IFunctionalDbContext dbContext)
+        public UrlShortner(FunctionalDbContext dbContext)
         {
             DbContext = dbContext;
         }
 
-        public IFunctionalDbContext DbContext { get; }
+        public FunctionalDbContext DbContext { get; }
 
         public async Task<string> CreateUrl(string scheme, HostString host, string longUrl, string code=null, bool isSingleClick=false, bool isSecure=false, string secureKey=null)
         {
@@ -25,17 +25,15 @@ namespace Abeer.Services
 
             var shortedUrl = UriHelper.BuildAbsolute(scheme, host, $"/shortned/{code}");
 
-            await DbContext.UrlShortneds.AddAsync(new UrlShortned
+            await Task.Run(() => DbContext.UrlShortneds.Add(new UrlShortned
             {
                 Code = code,
                 IsSecure = isSecure,
                 IsSingle = isSingleClick,
                 SecureKey = secureKey,
-                LongUrl = longUrl, 
+                LongUrl = longUrl,
                 ShortUrl = shortedUrl
-            });
-
-            await DbContext.SaveChangesAsync();
+            }));
 
             return shortedUrl;
         }
@@ -45,7 +43,7 @@ namespace Abeer.Services
             var httpRequest = context.Request;
             
             var shortUrl = UriHelper.BuildAbsolute(httpRequest.Scheme, httpRequest.Host, httpRequest.Path.Value);
-            var shortned = await DbContext.UrlShortneds.FirstOrDefaultAsync(u => u.ShortUrl == shortUrl);
+            var shortned = await Task.Run(() => DbContext.UrlShortneds.FirstOrDefault(u => u.ShortUrl == shortUrl));
 
             if (shortned.IsSingle && shortned.IsClicked)
                 throw new UnauthorizedAccessException();
@@ -55,8 +53,6 @@ namespace Abeer.Services
 
             shortned.IsClicked = true;
             shortned.ClickedDate = DateTime.UtcNow;
-
-            await DbContext.SaveChangesAsync();
 
             return shortned;
         }

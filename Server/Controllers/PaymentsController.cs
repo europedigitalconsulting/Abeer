@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Abeer.Server.Data;
 using Abeer.Shared;
 using Abeer.Data.UnitOfworks;
 using Microsoft.AspNetCore.Authorization;
@@ -25,9 +22,9 @@ namespace Abeer.Server.Controllers
 
         // GET: api/Payments
         [HttpGet("{id}")]
-        public async Task<ActionResult<IEnumerable<Payment>>> GetPayment(Guid transactionId)
+        public async Task<ActionResult<IList<Payment>>> GetPayment(Guid transactionId)
         {
-            return await _context.PaymentRepository.GetPayments(transactionId);
+            return Ok(await _context.PaymentRepository.GetPayments(transactionId));
         }
 
         // GET: api/Payments/5
@@ -56,7 +53,6 @@ namespace Abeer.Server.Controllers
             }
 
             await _context.PaymentRepository.Update(payment);
-            await _context.SaveChangesAsync();
 
             return NoContent();
         }
@@ -70,9 +66,8 @@ namespace Abeer.Server.Controllers
             if (payment.TransactionId != Guid.Empty && payment.TransactionId != tid)
                 return BadRequest();
 
-            await _context.PaymentRepository.AddAsync(payment);
+            await _context.PaymentRepository.Add(payment);
 
-            await _context.SaveChangesAsync();
             return CreatedAtAction("GetPayment", new { id = payment.Id }, payment);
         }
 
@@ -88,7 +83,6 @@ namespace Abeer.Server.Controllers
             }
 
             await _context.PaymentRepository.Remove(payment);
-            await _context.SaveChangesAsync();
 
             return payment;
         }

@@ -15,19 +15,18 @@ using IdentityServer4.Services;
 using Abeer.Data.UnitOfworks;
 using Abeer.Services;
 using Microsoft.EntityFrameworkCore;
-using Abeer.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using IdentityModel.Client;
 using Microsoft.Extensions.Logging;
 using System.Net.Http;
-using Abeer.Data.Contextes;
+using Abeer.Data;
 using Abeer.Server.Hubs;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
-using Abeer.Shared.Functional;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Internal;
+using DbProvider.LiteDbProvider;
 
 namespace Abeer.Server
 {
@@ -49,8 +48,21 @@ namespace Abeer.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            AddContext<IFunctionalDbContext, FunctionalDbContext>(services, "FunctionalDbContextConnectionStrings");
-            AddContext<ISecurityDbContext, SecurityDbContext>(services, "SecurityDbContextConnectionStrings");
+            services.Configure<IISServerOptions>(options =>
+            {
+                options.AutomaticAuthentication = false;
+            });
+
+            services.AddDbContext<SecurityDbContext>(options =>
+                options.UseSqlite(
+                    Configuration.GetConnectionString("SecurityDbContextConnectionStrings"), options =>
+                    options.MigrationsAssembly(typeof(SecurityDbContext).Assembly.FullName)), ServiceLifetime.Transient);
+
+            services.Configure<LiteDbProviderOptions>(Configuration.GetSection("Service:Database"));
+            services.AddSingleton<IDbProvider, LiteDbProvider>();
+            services.AddSingleton<FunctionalDbContext>();
+
+            services.AddSignalR();
 
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<SecurityDbContext>()
@@ -104,9 +116,7 @@ namespace Abeer.Server
                 options.SupportedUICultures = supportedCultures;
             });
 
-            AddUnityOfWork<IFunctionalDbContext, FunctionalUnitOfWork>(services);
-            AddUnityOfWork<ISecurityDbContext, SecurityUnitOfWork>(services);
-
+            services.AddTransient<FunctionalUnitOfWork>();
             var templateProviderType = Configuration["EmailSender:MailTemplateProviderType"];
 
             services.AddScoped<ITemplateFileReader>(sp => new TemplateFileReader());
@@ -162,33 +172,13 @@ namespace Abeer.Server
             });
         }
 
-        private void AddUnityOfWork<TDbContext, TUnityOfWork>(IServiceCollection services)
-            where TUnityOfWork : class
-        {
-            services.AddScoped(sp => ActivatorUtilities.CreateInstance<TUnityOfWork>(sp, sp.GetRequiredService<TDbContext>()));
-        }
-
-        private void AddContext<TInterface, TService>(IServiceCollection services, string connectionStringsName)
-            where TService : DbContext, TInterface
-        {
-            services.AddDbContext<TService>(options =>
-                options.UseSqlite(
-                    Configuration.GetConnectionString(connectionStringsName), options =>
-                    options.MigrationsAssembly(typeof(SecurityDbContext).Assembly.FullName)),ServiceLifetime.Transient);
-
-            services.AddTransient(typeof(TInterface), sp =>
-                ActivatorUtilities.GetServiceOrCreateInstance<TService>(sp));
-
-            services.AddSignalR();
-        }
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
 
             using var scope = app.ApplicationServices.CreateScope();
 
-            SeedUserData(scope, env);
+            SeedUserData(scope, env).Wait();
             SeedCountries(scope, env);
 
             app.UseMiddleware<UrlShortnerRewriter>();
@@ -248,11 +238,10 @@ namespace Abeer.Server
             var countriesService = scope.ServiceProvider
                 .GetRequiredService<CountriesService>();
 
-            countriesService.SeedData(env.WebRootPath).Wait();
-
+            countriesService.SeedData(env.WebRootPath);
         }
 
-        private async void SeedUserData(IServiceScope scope, IWebHostEnvironment env)
+        private async Task SeedUserData(IServiceScope scope, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -352,11 +341,10 @@ namespace Abeer.Server
                 }
                 var contact1 = await functionalDb.ContactRepository.Where(c  => c.OwnerId == admin.Id);
                 if (!contact1.Any())
-                    await functionalDb.ContactRepository.AddAsync(new Contact { OwnerId = admin.Id, UserId = hasan.Id });
+                    await functionalDb.ContactRepository.Add(new Contact { OwnerId = admin.Id, UserId = hasan.Id });
                 var contact2 = await functionalDb.ContactRepository.Where(c => c.OwnerId == hasan.Id);
                 if (!contact2.Any())
-                    await functionalDb.ContactRepository.AddAsync(new Contact { OwnerId = hasan.Id, UserId = admin.Id });
-                await functionalDb.SaveChangesAsync();
+                    await functionalDb.ContactRepository.Add(new Contact { OwnerId = hasan.Id, UserId = admin.Id });
 
             }
         }

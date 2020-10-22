@@ -1,7 +1,6 @@
 ﻿using Abeer.Shared;
 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 using System;
 using System.Linq.Expressions;
@@ -11,23 +10,25 @@ namespace Abeer.Data.Repositories
 {
     public class WalletRepository
     {
-        private readonly IFunctionalDbContext _context;
+        private readonly FunctionalDbContext _context;
 
-        public WalletRepository(IFunctionalDbContext context)
+        public WalletRepository(FunctionalDbContext context)
         {
             _context = context;
         }
 
-        public Task<Wallet> FirstOrDefaultAsync(Expression<Func<Wallet, bool>> p)
+        public Task<Wallet> FirstOrDefault(Expression<Func<Wallet, bool>> p)
         {
-            return _context.Wallets.FirstOrDefaultAsync(p);
+            return Task.Run(()=> _context.Wallets.FirstOrDefault(p));
         }
 
-        public async Task<Wallet> AddAsync(Wallet wallet)
+        public  Task<Wallet> Add(Wallet wallet)
         {
-            var entity = await _context.Wallets.AddAsync(wallet);
-            await _context.SaveChangesAsync();
-            return entity.Entity;
+            return Task.Run(() =>
+            {
+                var entity = _context.Wallets.Add(wallet);
+                return entity;
+            });
         }
     }
 }

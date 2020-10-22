@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Hosting;
-using System.IO;
 using System.Globalization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http.Extensions;
@@ -21,7 +20,6 @@ using Abeer.Services;
 using Abeer.Shared;
 using static Abeer.Services.TemplateRenderManager;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Collections.Specialized;
 using Abeer.Data.UnitOfworks;
 
 namespace Abeer.Server.Areas.Identity.Pages.Account
@@ -147,7 +145,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
                     PinDigit = int.Parse(Input.DigitCode)
                 };
 
-                var card = await _functionalUnitOfWork.CardRepository.FirstOrDefaultAsync(c => c.CardNumber == Input.PinCode);
+                var card = await _functionalUnitOfWork.CardRepository.FirstOrDefault(c => c.CardNumber == Input.PinCode);
                 
                 if(card != null && card.PinCode.Equals(Input.DigitCode) && card.IsSold && card.IsUsed == false)
                 {

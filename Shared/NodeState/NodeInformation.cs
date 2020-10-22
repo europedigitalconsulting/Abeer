@@ -1,6 +1,4 @@
-﻿using System.Transactions;
-
-namespace Abeer.Shared
+﻿namespace Abeer.Shared
 {
     public class NodeInformation
     {

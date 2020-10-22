@@ -19,7 +19,6 @@ using Abeer.Services;
 using System;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Configuration;
-using System.Security.Claims;
 
 namespace Abeer.Server.Controllers
 {

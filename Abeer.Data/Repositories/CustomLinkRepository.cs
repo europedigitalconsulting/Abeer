@@ -12,32 +12,29 @@ namespace Abeer.Data.Repositories
 {
     public class CustomLinkRepository
     {
-        public CustomLinkRepository(IFunctionalDbContext applicationDbContext)
+        public CustomLinkRepository(FunctionalDbContext applicationDbContext)
         {
             FunctionalDbContext = applicationDbContext;
         }
 
-        public IFunctionalDbContext FunctionalDbContext { get; }
+        public FunctionalDbContext FunctionalDbContext { get; }
 
-        public async Task<List<CustomLink>> GetCustomLinkLinks(string ownerId) =>
-            await FunctionalDbContext.CustomLinks.Where(u => u.OwnerId == ownerId).ToListAsync();
+        public  Task<IList<CustomLink>> GetCustomLinkLinks(string ownerId) =>
+            Task.Run(() => FunctionalDbContext.CustomLinks.Where(u => u.OwnerId == ownerId));
 
-        public async Task<CustomLink> AddCustomLink(CustomLink CustomLink)
+        public  Task<CustomLink> AddCustomLink(CustomLink CustomLink)
         {
-            await FunctionalDbContext.CustomLinks.AddAsync(CustomLink);
-            await FunctionalDbContext.SaveChangesAsync();
-            return CustomLink;
+            return Task.Run(() => FunctionalDbContext.CustomLinks.Add(CustomLink));
         }
 
-        public async Task<CustomLink> FirstOrDefaultAsync(Expression<Func<CustomLink, bool>> expression)
+        public  Task<CustomLink> FirstOrDefault(Expression<Func<CustomLink, bool>> expression)
         {
-            return await FunctionalDbContext.CustomLinks.FirstOrDefaultAsync(expression);
+            return Task.Run(() => FunctionalDbContext.CustomLinks.FirstOrDefault(expression));
         }
 
-        public async Task Remove(CustomLink network)
+        public  Task Remove(CustomLink network)
         {
-            FunctionalDbContext.CustomLinks.Remove(network);
-            await FunctionalDbContext.SaveChangesAsync();
+            return Task.Run(() => FunctionalDbContext.CustomLinks.Remove(network));
         }
     }
 }

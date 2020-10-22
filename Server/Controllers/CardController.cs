@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
@@ -8,7 +7,6 @@ using Microsoft.AspNetCore.SignalR;
 using Abeer.Data.UnitOfworks;
 using Abeer.Server.Hubs;
 using Abeer.Shared;
-using DocumentFormat.OpenXml.Office2013.Drawing.Chart;
 
 namespace Abeer.Server.Controllers
 {
@@ -60,10 +58,8 @@ namespace Abeer.Server.Controllers
             }
 
             await _UnitOfWork.CardRepository.Update(Card);
-            await _UnitOfWork.SaveChangesAsync();
 
             await _UnitOfWork.CardRepository.AddStatus(new CardStatu { Card = Card, StatusDate = DateTime.UtcNow, Status = CardStatus.Updated, UserId = User.NameIdentifier() });
-            await _UnitOfWork.SaveChangesAsync();
 
             await HubContext.Clients.All.SendAsync("Card.Update", Card);
 
@@ -83,10 +79,8 @@ namespace Abeer.Server.Controllers
             Card.SoldBy = User.NameIdentifier();
 
             await _UnitOfWork.CardRepository.Update(Card);
-            await _UnitOfWork.SaveChangesAsync();
 
             await _UnitOfWork.CardRepository.AddStatus(new CardStatu { Card = Card, StatusDate = DateTime.UtcNow, Status = CardStatus.Sold, UserId = User.NameIdentifier() });
-            await _UnitOfWork.SaveChangesAsync();
 
             await HubContext.Clients.All.SendAsync("Card.Sold", Card);
 
@@ -139,7 +133,7 @@ namespace Abeer.Server.Controllers
 
             while (isFound)
             {
-                var search = await _UnitOfWork.CardRepository.FirstOrDefaultAsync(c => c.CardNumber.Equals(Card.CardNumber));
+                var search = await _UnitOfWork.CardRepository.FirstOrDefault(c => c.CardNumber.Equals(Card.CardNumber));
 
                 if (search != null)
                 {
@@ -167,7 +161,7 @@ namespace Abeer.Server.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Card>> DeleteCard(Guid id)
         {
-            var Card = await _UnitOfWork.CardRepository.FindAsync(id);
+            var Card = await _UnitOfWork.CardRepository.Find(id);
 
             if (Card == null)
             {
@@ -175,7 +169,6 @@ namespace Abeer.Server.Controllers
             }
 
             _UnitOfWork.CardRepository.Remove(Card);
-            await _UnitOfWork.SaveChangesAsync();
 
             return Card;
         }
@@ -183,7 +176,7 @@ namespace Abeer.Server.Controllers
         [HttpGet("GetCsvFile/{id}")]
         public async Task<IActionResult> GetCsvFile(Guid id)
         {
-            var Card = await _UnitOfWork.CardRepository.FindAsync(id);
+            var Card = await _UnitOfWork.CardRepository.Find(id);
 
             if (Card == null)
                 return NotFound();

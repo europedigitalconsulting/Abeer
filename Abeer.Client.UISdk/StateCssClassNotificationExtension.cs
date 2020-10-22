@@ -1,5 +1,4 @@
 ﻿using Abeer.Shared;
-using System.Threading.Tasks;
 
 namespace Abeer.Client
 {

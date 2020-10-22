@@ -1,45 +1,36 @@
 ﻿using Abeer.Shared.Functional;
-
-using Microsoft.EntityFrameworkCore;
-
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Abeer.Data.Repositories
 {
     public class AdPriceRepository
     {
-        private readonly IFunctionalDbContext _context;
-        public AdPriceRepository(IFunctionalDbContext context)
+        private readonly FunctionalDbContext _context;
+        public AdPriceRepository(FunctionalDbContext context)
         {
             _context = context;
         }
 
-        public async Task<AdPrice> AddAsync(AdPrice current)
+        public  Task<AdPrice> Add(AdPrice current)
         {
-            var entity = await _context.AdPrices.AddAsync(current);
-            await _context.SaveChangesAsync();
-            return entity.Entity;
+            return Task.Run(() => _context.AdPrices.Add(current));
         }
 
-        public async Task Update(AdPrice ad)
+        public  Task Update(AdPrice ad)
         {
-            _context.AdPrices.Update(ad);
-            await _context.SaveChangesAsync();
+            return Task.Run(() => _context.AdPrices.Update(ad));
         }
 
-        public async Task DeleteAsync(Guid id)
+        public  Task Delete(Guid id)
         {
-            var ad = await _context.AdPrices.FirstOrDefaultAsync(a => a.Id == id);
-            _context.AdPrices.Remove(ad);
-            await _context.SaveChangesAsync();
+            return Task.Run(() => _context.AdPrices.FirstOrDefault(a => a.Id == id));
         }
 
-        public async Task<List<AdPrice>> AllAsync()
+        public  Task<IList<AdPrice>> All()
         {
-            return await _context.AdPrices.ToListAsync();
+            return Task.Run(() => _context.AdPrices.ToList());
         }
     }
 }

@@ -12,31 +12,28 @@ namespace Abeer.Data.Repositories
 {
     public class SocialNetworkRepository
     {
-        public SocialNetworkRepository(IFunctionalDbContext applicationDbContext)
+        public SocialNetworkRepository(FunctionalDbContext applicationDbContext)
         {
             FunctionalDbContext = applicationDbContext;
         }
-        public IFunctionalDbContext FunctionalDbContext { get; }
+        public FunctionalDbContext FunctionalDbContext { get; }
 
-        public async Task<List<SocialNetwork>> GetSocialNetworkLinks(string ownerId) =>
-            await FunctionalDbContext.SocialNetworks.Where(u => u.OwnerId == ownerId).ToListAsync();
+        public  Task<IList<SocialNetwork>> GetSocialNetworkLinks(string ownerId) =>
+            Task.Run(() => FunctionalDbContext.SocialNetworks.Where(u => u.OwnerId == ownerId));
 
-        public async Task<SocialNetwork> AddSocialNetwork(SocialNetwork socialNetwork)
+        public  Task<SocialNetwork> AddSocialNetwork(SocialNetwork socialNetwork)
         {
-            await FunctionalDbContext.SocialNetworks.AddAsync(socialNetwork);
-            await FunctionalDbContext.SaveChangesAsync();
-            return socialNetwork;
+            return Task.Run(() => FunctionalDbContext.SocialNetworks.Add(socialNetwork));
         }
 
-        public async Task<SocialNetwork> FirstOrDefaultAsync(Expression<Func<SocialNetwork, bool>> expression)
+        public  Task<SocialNetwork> FirstOrDefault(Expression<Func<SocialNetwork, bool>> expression)
         {
-            return await FunctionalDbContext.SocialNetworks.FirstOrDefaultAsync(expression);
+            return Task.Run(() => FunctionalDbContext.SocialNetworks.FirstOrDefault(expression));
         }
 
-        public async Task Remove(SocialNetwork network)
+        public  Task Remove(SocialNetwork network)
         {
-            FunctionalDbContext.SocialNetworks.Remove(network);
-            await FunctionalDbContext.SaveChangesAsync();
+            return Task.Run(() => FunctionalDbContext.SocialNetworks.Remove(network));
         }
     }
 }
