@@ -21,7 +21,7 @@
     },
     "resourceName": {
       "type": "string",
-      "defaultValue": "AbeerServer",
+      "defaultValue": "AbeerServer20201022161231",
       "metadata": {
         "description": "Name of the main resource to be created by this template."
       }

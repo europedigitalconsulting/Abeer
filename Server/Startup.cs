@@ -48,6 +48,11 @@ namespace Abeer.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<IISServerOptions>(options =>
+            {
+                options.AutomaticAuthentication = false;
+            });
+
             services.AddDbContext<SecurityDbContext>(options =>
                 options.UseSqlite(
                     Configuration.GetConnectionString("SecurityDbContextConnectionStrings"), options =>
