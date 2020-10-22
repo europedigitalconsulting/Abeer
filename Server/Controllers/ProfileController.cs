@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Abeer.Shared;
 using Microsoft.AspNetCore.Authorization;
@@ -11,9 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Abeer.Shared.ViewModels;
 using Abeer.Data.UnitOfworks;
 using System.Collections.Generic;
-using Abeer.Client;
 using System.Linq;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Abeer.Server.Controllers
 {

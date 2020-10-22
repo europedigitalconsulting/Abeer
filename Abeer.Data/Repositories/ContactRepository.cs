@@ -1,7 +1,6 @@
 ﻿using Abeer.Shared;
 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 using System;
 using System.Collections.Generic;
@@ -13,49 +12,41 @@ namespace Abeer.Data.Repositories
 {
     public class ContactRepository
     {
-        private readonly IFunctionalDbContext _context;
+        private readonly FunctionalDbContext _context;
 
-        public ContactRepository(IFunctionalDbContext context)
+        public ContactRepository(FunctionalDbContext context)
         {
             _context = context;
         }
 
-        public Task<List<Contact>> GetContacts(string ownerId)
+        public  Task<IList<Contact>> GetContacts(string ownerId)
         {
-            return _context.Contacts.Where(c => c.OwnerId == ownerId).ToListAsync();
+            return Task.Run(() => _context.Contacts.Where(c => c.OwnerId == ownerId));
         }
 
-        public Task<List<Contact>> GetContacts(string ownerId, string term)
+        public  Task<Contact> GetContact(Guid id)
         {
-            throw new NotImplementedException();
-        }
-
-
-        public async Task<Contact> GetContact(Guid id)
-        {
-            return await _context.Contacts.FindAsync(id);
+            return Task.Run(() => _context.Contacts.FirstOrDefault(c=>c.Id == id));
         }
 
         public Task Update(Contact contact)
         {
-            return _context.Update(contact);
+            return Task.Run(() => _context.Contacts.Update(contact));
         }
 
-        public async Task<Contact> AddAsync(Contact contact)
+        public  Task<Contact> Add(Contact contact)
         {
-            var entity =  await _context.Contacts.AddAsync(contact);
-            await _context.SaveChangesAsync();
-            return entity.Entity;
+            return Task.Run(() => _context.Contacts.Add(contact));
         }
 
-        public async Task<Contact> FirstOrDefaultAsync(Expression<Func<Contact, bool>> p)
+        public  Task<Contact> FirstOrDefault(Expression<Func<Contact, bool>> p)
         {
-            return await _context.Contacts.FirstOrDefaultAsync(p);
+            return Task.Run(() => _context.Contacts.FirstOrDefault(p));
         }
 
-        public Task<List<Contact>> Where(Expression<Func<Contact, bool>> p)
+        public  Task<IList<Contact>> Where(Expression<Func<Contact, bool>> p)
         {
-            return _context.Contacts.Where(p).ToListAsync();
+            return Task.Run(() => _context.Contacts.Where(p));
         }
 
         public void Remove(Contact contact)
@@ -63,11 +54,6 @@ namespace Abeer.Data.Repositories
             _context.Contacts.Remove(contact);
         }
 
-        public Task<bool> AnyAsync(Expression<Func<Contact, bool>> p) => _context.Contacts.AnyAsync(p);
-
-        public bool Any(Expression<Func<Contact, bool>> p)
-        {
-            return AnyAsync(p).Result;
-        }
+        public Task<bool> Any(Expression<Func<Contact, bool>> p) => Task.Run(() => _context.Contacts.Any(p));
     }
 }

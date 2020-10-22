@@ -29,7 +29,7 @@ namespace Abeer.Shared
         public string PhoneNumber { get; set; }
         public int NubmerOfView { get; set; }
         public string PhotoUrl { get; set; }
-        public List<SocialNetwork> SocialNetworkConnected { get; set; }
-        public List<CustomLink> CustomLinks { get; set; }
+        public IList<SocialNetwork> SocialNetworkConnected { get; set; }
+        public IList<CustomLink> CustomLinks { get; set; }
     }
 }

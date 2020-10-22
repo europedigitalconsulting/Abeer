@@ -1,9 +1,5 @@
 ﻿using Abeer.Shared.Functional;
-
-using Microsoft.EntityFrameworkCore;
-
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -13,51 +9,46 @@ namespace Abeer.Data.Repositories
 {
     public class AdRepository
     {
-        private readonly IFunctionalDbContext _context;
-        public AdRepository(IFunctionalDbContext context)
+        private readonly FunctionalDbContext _context;
+        public AdRepository(FunctionalDbContext context)
         {
             _context = context;
         }
 
-        public async Task<AdModel> AddAsync(AdModel current)
+        public Task<AdModel> Add(AdModel current)
         {
-            var entity = await _context.Ads.AddAsync(current);
-            await _context.SaveChangesAsync();
-            return entity.Entity;
+            return Task.Run(() => _context.Ads.Add(current));
         }
 
-        public async Task<IEnumerable<AdModel>> GetAllForAUser(string userId)
+        public Task<IList<AdModel>> GetAllForAUser(string userId)
         {
-            return await _context.Ads.Include(a => a.AdPrice).Where(o => o.OwnerId == userId).ToListAsync();
+            return Task.Run(() => _context.Ads.Where(o => o.OwnerId == userId));
         }
 
-        public async Task Update(AdModel ad)
+        public Task Update(AdModel ad)
         {
-            _context.Ads.Update(ad);
-            await _context.SaveChangesAsync();
+            return Task.Run(() => _context.Ads.Update(ad));
         }
 
-        public async Task DeleteAsync(Guid id)
+        public  Task Delete(Guid id)
         {
-            var ad = await _context.Ads.FirstOrDefaultAsync(a => a.Id == id);
-            _context.Ads.Remove(ad);
-            await _context.SaveChangesAsync();
+            return Task.Run(() => _context.Ads.Remove(id));
         }
 
-        public async Task<List<AdModel>> GetVisibled()
+        public  Task<IList<AdModel>> GetVisibled()
         {
-            return await _context.Ads.Include(a => a.AdPrice).Where(a => a.StartDisplayTime <= DateTime.UtcNow && a.EndDisplayTime >= DateTime.UtcNow
-                && a.IsValid == true).ToListAsync();
+            return Task.Run(() => _context.Ads.Where(a => a.StartDisplayTime <= DateTime.UtcNow && a.EndDisplayTime >= DateTime.UtcNow
+                && a.IsValid));
         }
 
-        public async Task<AdModel> FirstOrDefaultAsync(Expression<Func<AdModel, bool>> p)
+        public  Task<AdModel> FirstOrDefault(Expression<Func<AdModel, bool>> p)
         {
-            return await _context.Ads.Include(a=>a.AdPrice).FirstOrDefaultAsync(p);
+            return Task.Run(() => _context.Ads.FirstOrDefault(p));
         }
 
-        public async Task<List<AdModel>> AllAsync()
+        public  Task<List<AdModel>> All()
         {
-            return await _context.Ads.Include(a => a.AdPrice).OrderByDescending(a => a.CreateDate).ToListAsync();
+            return Task.Run(() => (_context.Ads.ToList())?.OrderByDescending(a => a.CreateDate).ToList());
         }
     }
 }

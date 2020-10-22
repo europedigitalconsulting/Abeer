@@ -1,41 +1,33 @@
 ﻿using Abeer.Shared;
 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Query;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Abeer.Data.Repositories
 {
     public class PurchaseRepository
     {
-        private readonly IFunctionalDbContext _context;
+        private readonly FunctionalDbContext _context;
 
-        public PurchaseRepository(IFunctionalDbContext context)
+        public PurchaseRepository(FunctionalDbContext context)
         {
             _context = context;
         }
 
-        IIncludableQueryable<Purchase, List<TransactionStatu>> includableQueryables
-            => _context.Purchase.Include(p => p.PurchaseItems)
-            .Include(p => p.Payments)
-            .Include(p => p.Wallet)
-            .Include(p => p.TransactionStatus);
-
-        public System.Threading.Tasks.Task<List<Purchase>> GetPurchases()
+        public Task<IList<Purchase>> GetPurchases()
         {
-            return includableQueryables.ToListAsync();
+            return Task.Run(() => _context.Purchase.ToList());
         }
 
-        public Task<Purchase> FindAsync(Guid id)
+        public Task<Purchase> Find(Guid id)
         {
-            return includableQueryables.FirstOrDefaultAsync(p => p.Id == id);
+            return Task.Run(() => _context.Purchase.FirstOrDefault(p => p.Id == id));
         }
 
         public void Update(Purchase purchase)
@@ -43,11 +35,9 @@ namespace Abeer.Data.Repositories
             _context.Purchase.Update(purchase);
         }
 
-        public async Task<Purchase> AddAsync(Purchase purchase)
+        public  Task<Purchase> Add(Purchase purchase)
         {
-            var entity = await _context.Purchase.AddAsync(purchase);
-            await _context.SaveChangesAsync();
-            return entity.Entity;
+            return Task.Run(() => _context.Purchase.Add(purchase));
         }
 
         public void Remove(Purchase purchase)
@@ -55,19 +45,19 @@ namespace Abeer.Data.Repositories
             _context.Purchase.Remove(purchase);
         }
 
-        public async Task<List<Purchase>> Where(Expression<Func<Purchase, bool>> expression)
+        public  Task<IList<Purchase>> Where(Expression<Func<Purchase, bool>> expression)
         {
-            return await includableQueryables.Where(expression).ToListAsync();
+            return Task.Run(() => _context.Purchase.Where(expression));
         }
 
-        public Task<Purchase> FirstOrDefaultAsync(Expression<Func<Purchase, bool>> expression)
+        public Task<Purchase> FirstOrDefault(Expression<Func<Purchase, bool>> expression)
         {
-            return includableQueryables.FirstOrDefaultAsync(expression);
+            return Task.Run(() => _context.Purchase.FirstOrDefault(expression));
         }
 
         public Task<bool> Any(Expression<Func<Purchase, bool>> expression)
         {
-            return _context.Purchase.AnyAsync(expression);
+            return Task.Run(() => _context.Purchase.Any(expression));
         }
     }
 }

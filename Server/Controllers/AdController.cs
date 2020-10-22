@@ -1,13 +1,10 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using System.Collections.Concurrent;
 using Abeer.Shared.Functional;
 using System;
-using System.Linq;
 using Abeer.Data.UnitOfworks;
 using System.Collections.Generic;
-using System.Threading;
 
 namespace Abeer.Server.Controllers
 {
@@ -39,7 +36,7 @@ namespace Abeer.Server.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<AdModel>> Get(Guid id)
         {
-            var ad = await functionalUnitOfWork.AdRepository.FirstOrDefaultAsync(a => a.Id == id);
+            var ad = await functionalUnitOfWork.AdRepository.FirstOrDefault(a => a.Id == id);
             return Ok(ad);
         }
 
@@ -60,8 +57,8 @@ namespace Abeer.Server.Controllers
 
             ad.AdPriceId = createAdRequestViewModel.Price.Id;
 
-            await functionalUnitOfWork.AdRepository.AddAsync(ad);
-            var entity = await functionalUnitOfWork.AdRepository.FirstOrDefaultAsync(a => a.Id == ad.Id);
+            await functionalUnitOfWork.AdRepository.Add(ad);
+            var entity = await functionalUnitOfWork.AdRepository.FirstOrDefault(a => a.Id == ad.Id);
             return Ok(entity);
         }
 
@@ -69,7 +66,7 @@ namespace Abeer.Server.Controllers
         [HttpGet("valid/{AdId}")]
         public async Task<ActionResult<AdModel>> Valid(Guid AdId, [FromServices]FunctionalUnitOfWork functionalUnitOfWork)
         {
-            var current = await functionalUnitOfWork.AdRepository.FirstOrDefaultAsync(o => o.Id == AdId);
+            var current = await functionalUnitOfWork.AdRepository.FirstOrDefault(o => o.Id == AdId);
             
             if (current.AdPrice.Value == 0 || !string.IsNullOrEmpty(current.PaymentInformation))
             {
@@ -96,7 +93,7 @@ namespace Abeer.Server.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete(Guid id)
         {
-            await functionalUnitOfWork.AdRepository.DeleteAsync(id);
+            await functionalUnitOfWork.AdRepository.Delete(id);
             return Ok();
         }
 
@@ -105,14 +102,14 @@ namespace Abeer.Server.Controllers
         [HttpGet("admin")]
         public async Task<ActionResult<IEnumerable<AdModel>>> GetForAdministration()
         {
-            return Ok(await functionalUnitOfWork.AdRepository.AllAsync());
+            return Ok(await functionalUnitOfWork.AdRepository.All());
         }
 
         [Authorize]
         [HttpPost("admin")]
         public async Task<ActionResult<AdModel>> CreateByAdmin(AdModel adModel)
         {
-            return Ok(await functionalUnitOfWork.AdRepository.AddAsync(adModel));
+            return Ok(await functionalUnitOfWork.AdRepository.Add(adModel));
         }
 
         [Authorize]

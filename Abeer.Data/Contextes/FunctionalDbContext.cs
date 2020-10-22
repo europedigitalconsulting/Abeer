@@ -3,99 +3,61 @@ using Abeer.Data.Models;
 using Abeer.Shared;
 using Abeer.Shared.Functional;
 
-using Microsoft.EntityFrameworkCore;
-
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Abeer.Data.Contextes
+namespace Abeer.Data
 {
-    public class FunctionalDbContext : DbContext, IFunctionalDbContext
+    public class FunctionalDbContext
     {
-        public FunctionalDbContext(DbContextOptions<FunctionalDbContext> options) : base(options)
-        {
-        }
+        private readonly Abeer.Data.IDbProvider dbProvider;
 
-        protected override void OnModelCreating(ModelBuilder builder)
+        public FunctionalDbContext(Abeer.Data.IDbProvider dbProvider)
         {
-            base.OnModelCreating(builder);
-
-            //Primary keys
-            builder.Entity<Country>().HasKey(p => p.Id);
-            builder.Entity<TokenBatch>().HasKey(p => p.Id);
-            builder.Entity<TokenBatchStatu>().HasOne(p => p.TokenBatch).WithMany(b => b.TokenBatchStatus);
-            builder.Entity<TokenItem>().HasOne(p => p.TokenBatch).WithMany(b => b.TokenItems);
-            builder.Entity<CardStatu>().HasOne(p => p.Card).WithMany(b => b.CardStatus);
-            builder.Entity<PurchaseItem>().HasOne(p => p.Purchase).WithMany(t => t.PurchaseItems);
-            builder.Entity<Purchase>().HasMany(p => p.Payments);
-            builder.Entity<Purchase>().HasMany(p => p.TransactionStatus);
-            builder.Entity<Payment>().HasOne(p => p.Transaction).WithMany(t => t.Payments);
-            builder.Entity<TransactionStatu>().HasOne(p => p.Transaction).WithMany(t => t.TransactionStatus);
+            this.dbProvider = dbProvider;
         }
 
         public int SaveChange()
         {
-            return SaveChangesAsync().Result;
+            return dbProvider.SaveChanges();
         }
 
-        public Task<int> SaveChangesAsync()
+        public void BulkUpdate<T>(IList<T> entities) where T : class
         {
-            return base.SaveChangesAsync();
+            dbProvider.BulkUpdate<T>(entities);
         }
 
-        public Task Update(object entity)
+        public void BulkInsert<T>(IList<T> entities) where T : class
         {
-            Entry(entity).State = EntityState.Modified;
-            return Task.CompletedTask;
-        }
-
-        public Task BulkUpdateAsync<T>(IList<T> entities) where T : class
-        {
-            Parallel.ForEach(entities, entity => Update(entity));
-            return Task.CompletedTask;
-        }
-
-        public Task BulkInsertAsync<T>(IEnumerable<T> items) where T : class
-        {
-            foreach (var item in items)
-                Add(item);
-
-            return Task.CompletedTask;
+            dbProvider.BulkInsert<T>(entities);
         }
 
         public void EnsureCreated()
         {
-            Database.EnsureCreated();
-        }
-
-        public Task DetectChanges()
-        {
-            ChangeTracker.DetectChanges();
-            return Task.CompletedTask;
+            dbProvider.EnsureCreated();
         }
 
         public void SetTimeout(int timeout)
         {
-            Database.SetCommandTimeout(TimeSpan.FromSeconds(timeout));
+            dbProvider.SetTimeout(timeout);
         }
 
-        public DbSet<UrlShortned> UrlShortneds { get; set; }
-        public DbSet<Contact> Contacts { get; set; }
-        public DbSet<TokenBatch> TokenBatches { get; set; }
-        public DbSet<Card> Cards { get; set; }
-        public DbSet<TokenItem> TokenItems { get; set; }
-        public DbSet<TokenBatchStatu> TokenBatchStatus { get; set; }
-        public DbSet<CardStatu> CardStatus { get; set; }
-        public DbSet<Wallet> Wallets { get; set; }
-        public DbSet<Transaction> Transactions { get; set; }
-        public DbSet<TransactionStatu> TransactionStatus { get; set; }
-        public DbSet<Purchase> Purchase { get; set; }
-        public DbSet<Payment> Payment { get; set; }
-        public DbSet<Country> Countries { get; set; }
-        public DbSet<SocialNetwork> SocialNetworks { get; set; }
-        public DbSet<CustomLink> CustomLinks { get; set; }
-        public DbSet<AdModel> Ads { get; set; }
-        public DbSet<AdPrice> AdPrices { get; set; }
+        public IDbSet<UrlShortned> UrlShortneds => dbProvider.Set<UrlShortned>();
+        public IDbSet<Contact> Contacts => dbProvider.Set<Contact>();
+        public IDbSet<TokenBatch> TokenBatches => dbProvider.Set<TokenBatch>();
+        public IDbSet<Card> Cards => dbProvider.Set<Card>();
+        public IDbSet<TokenItem> TokenItems => dbProvider.Set<TokenItem>();
+        public IDbSet<TokenBatchStatu> TokenBatchStatus => dbProvider.Set<TokenBatchStatu>();
+        public IDbSet<CardStatu> CardStatus => dbProvider.Set<CardStatu>();
+        public IDbSet<Wallet> Wallets => dbProvider.Set<Wallet>();
+        public IDbSet<Transaction> Transactions => dbProvider.Set<Transaction>();
+        public IDbSet<TransactionStatu> TransactionStatus => dbProvider.Set<TransactionStatu>();
+        public IDbSet<Purchase> Purchase => dbProvider.Set<Purchase>();
+        public IDbSet<Payment> Payments => dbProvider.Set<Payment>();
+        public IDbSet<Country> Countries => dbProvider.Set<Country>();
+        public IDbSet<SocialNetwork> SocialNetworks => dbProvider.Set<SocialNetwork>();
+        public IDbSet<CustomLink> CustomLinks => dbProvider.Set<CustomLink>();
+        public IDbSet<AdModel> Ads => dbProvider.Set<AdModel>();
+        public IDbSet<AdPrice> AdPrices => dbProvider.Set<AdPrice>();
     }
 }

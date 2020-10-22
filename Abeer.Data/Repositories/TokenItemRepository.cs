@@ -1,57 +1,57 @@
 ﻿using Abeer.Shared;
 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Abeer.Data.Repositories
 {
     public class TokenItemRepository
     {
-        private readonly IFunctionalDbContext _context;
+        private readonly FunctionalDbContext _context;
 
-        public TokenItemRepository(IFunctionalDbContext context)
+        public TokenItemRepository(FunctionalDbContext context)
         {
             _context = context;
         }
 
         public Task<int> CountAll()
         {
-            return _context.TokenItems.CountAsync();
+            return Task.Run(()=> _context.TokenItems.Count());
         }
 
         public Task<int> CountUsed()
         {
-            return _context.TokenItems.CountAsync(t => t.IsUsed);
+            return Task.Run(() => _context.TokenItems.Count(t => t.IsUsed));
         }
 
-        public IQueryable<TokenItem> Where(Expression<Func<TokenItem, bool>> p)
+        public IList<TokenItem> Where(Expression<Func<TokenItem, bool>> p)
         {
-            return _context.TokenItems.Include(t => t.TokenBatch).Where(p);
+            return _context.TokenItems.Where(p);
         }
 
-        public Task<TokenItem> FirstOrDefaultAsync(Expression<Func<TokenItem, bool>> p)
+        public Task<TokenItem> FirstOrDefault(Expression<Func<TokenItem, bool>> p)
         {
-            return _context.TokenItems.Include(t => t.TokenBatch).FirstOrDefaultAsync(p);
+            return Task.Run(() => _context.TokenItems.FirstOrDefault(p));
         }
 
-        public async Task Update(TokenItem token)
+        public  Task Update(TokenItem token)
         {
-            await _context.Update(token);
-            await _context.SaveChangesAsync();
+            return Task.Run(() => _context.TokenItems.Update(token));
         }
 
-        public async Task<TokenItem> AddToken(TokenItem tokenItem)
+        public  Task<TokenItem> AddToken(TokenItem tokenItem)
         {
-            var entity = await _context.TokenItems.AddAsync(tokenItem);
-            await _context.SaveChangesAsync();
-            return entity.Entity;
+            return Task.Run(() =>
+            {
+                var entity = _context.TokenItems.Add(tokenItem);
+                return entity;
+            });
         }
     }
 }

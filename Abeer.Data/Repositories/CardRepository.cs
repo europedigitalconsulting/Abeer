@@ -13,68 +13,69 @@ namespace Abeer.Data.Repositories
 {
     public class CardRepository
     {
-        public CardRepository(IFunctionalDbContext applicationDbContext)
+        public CardRepository(FunctionalDbContext applicationDbContext)
         {
             FunctionalDbContext = applicationDbContext;
         }
-        public IFunctionalDbContext FunctionalDbContext { get; }
+        public FunctionalDbContext FunctionalDbContext { get; }
 
-        public async Task<List<Card>> GetCards() =>
-            await FunctionalDbContext.Cards.Include(c => c.CardStatus).ToListAsync();
+        public  Task<IList<Card>> GetCards() =>
+            Task.Run(() => FunctionalDbContext.Cards.ToList());
 
-        public async Task<Card> GetCard(Guid id) =>
-            await FunctionalDbContext.Cards.Include(c => c.CardStatus).FirstOrDefaultAsync(b => b.Id == id);
+        public  Task<Card> GetCard(Guid id) =>
+            Task.Run(() => FunctionalDbContext.Cards.FirstOrDefault(b => b.Id == id));
 
 
-        public async Task Update(Card card)
+        public  Task Update(Card card)
         {
-            FunctionalDbContext.Cards.Update(card);
-            await FunctionalDbContext.SaveChangesAsync();
+            return Task.Run(() => FunctionalDbContext.Cards.Update(card));
         }
 
         static readonly Random rdm = new Random();
 
-        public async Task<Card> Add(Card card, string userId)
+        public  Task<Card> Add(Card card, string userId)
         {
-            var entity = await FunctionalDbContext.Cards.AddAsync(card);
-            await FunctionalDbContext.SaveChangesAsync();
-
-            card = entity.Entity;
-
-            CardStatu cardStatu = new CardStatu { Card = card, 
-                StatusDate = DateTime.UtcNow, 
-                Status = CardStatus.Created, 
-                UserId = userId
-            };
-
-            await AddStatus(cardStatu);            
-
-            await AddStatus(new CardStatu
+            return Task.Run(() =>
             {
-                Card = card,
-                Status = CardStatus.Generated,
-                StatusDate = DateTime.UtcNow,
-                UserId = userId
+                card = FunctionalDbContext.Cards.Add(card);
+
+                CardStatu cardStatu = new CardStatu
+                {
+                    Card = card,
+                    StatusDate = DateTime.UtcNow,
+                    Status = CardStatus.Created,
+                    UserId = userId
+                };
+
+                AddStatus(cardStatu);
+
+                AddStatus(new CardStatu
+                {
+                    Card = card,
+                    Status = CardStatus.Generated,
+                    StatusDate = DateTime.UtcNow,
+                    UserId = userId
+                });
+
+                card.IsGenerated = true;
+                card.GeneratedDate = DateTime.UtcNow;
+                card.GeneratedBy = userId;
+
+                Update(card);
+
+                return Find(card.Id);
             });
-
-            card.IsGenerated = true;
-            card.GeneratedDate = DateTime.UtcNow;
-            card.GeneratedBy = userId;
-
-            await Update(card);
-
-            return await FindAsync(card.Id);
         }
 
-        public async Task<string[]> GetCardTypes()
+        public  Task<string[]> GetCardTypes()
         {
-            return await FunctionalDbContext.TokenBatches
-                .Select(b => b.TokenType).Distinct().OrderBy(s => s).ToArrayAsync();
+            return Task.Run(() => (FunctionalDbContext.TokenBatches.ToList())
+                .Select(b => b.TokenType).Distinct().OrderBy(s => s).ToArray());
         }
 
-        public async Task<Card> FindAsync(Guid id)
+        public  Task<Card> Find(Guid id)
         {
-            return await FunctionalDbContext.Cards.FindAsync(id);
+            return Task.Run(() => FunctionalDbContext.Cards.FirstOrDefault(c=>c.Id == id));
         }
 
         public void Remove(Card card)
@@ -82,29 +83,25 @@ namespace Abeer.Data.Repositories
             FunctionalDbContext.Cards.Remove(card);
         }
 
-        IIncludableQueryable<Card, List<CardStatu>> IncludableQueryables => FunctionalDbContext.Cards.Include(c => c.CardStatus);
-
-        public Task<bool> AnyAsync(Expression<Func<Card, bool>> p)
+        public Task<bool> Any(Expression<Func<Card, bool>> p)
         {
             
-            return IncludableQueryables.AnyAsync(p);
+            return Task.Run(() => FunctionalDbContext.Cards.Any(p));
         }
 
-        public Task<List<Card>> Where(Expression<Func<Card, bool>> expression)
+        public Task<IList<Card>> Where(Expression<Func<Card, bool>> expression)
         {
-            return IncludableQueryables.Where(expression).ToListAsync();
+            return Task.Run(() => FunctionalDbContext.Cards.Where(expression));
         }
 
-        public async ValueTask<CardStatu> AddStatus(CardStatu cardStatu)
+        public  Task<CardStatu> AddStatus(CardStatu cardStatu)
         {
-            var entity = await FunctionalDbContext.CardStatus.AddAsync(cardStatu);
-            await FunctionalDbContext.SaveChangesAsync();
-            return entity.Entity;
+            return Task.Run(() => FunctionalDbContext.CardStatus.Add(cardStatu));
         }
 
-        public Task<Card> FirstOrDefaultAsync(Expression<Func<Card, bool>> expression)
+        public Task<Card> FirstOrDefault(Expression<Func<Card, bool>> expression)
         {
-            return IncludableQueryables.FirstOrDefaultAsync(expression);
+            return Task.Run(() => FunctionalDbContext.Cards.FirstOrDefault(expression));
         }
     }
 }

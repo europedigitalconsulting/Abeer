@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Hosting;
 
 using Serilog;
-using Serilog.Formatting.Compact;
 
 using System;
 

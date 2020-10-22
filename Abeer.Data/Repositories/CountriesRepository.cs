@@ -1,48 +1,42 @@
 ﻿using Abeer.Shared;
 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Abeer.Data.Repositories
 {
     public class CountriesRepository
     {
-        private readonly IFunctionalDbContext _context;
+        private readonly FunctionalDbContext _context;
 
-        public CountriesRepository(IFunctionalDbContext context)
+        public CountriesRepository(FunctionalDbContext context)
         {
             _context = context;
         }
 
-        public Task<List<Country>> GetCountries(string culture)
+        public Task<IList<Country>> GetCountries(string culture)
         {
-            return _context.Countries.Where(c=>c.Culture == culture).ToListAsync();
+            return Task.Run(() => _context.Countries.Where(c=>c.Culture == culture));
         }
 
         public Task<bool> AnyAsync(Expression<Func<Country, bool>> filter)
         {
-            return _context.Countries.AnyAsync(filter);
+            return Task.Run(() => _context.Countries.Any(filter));
         }
 
-        public async Task<Country> AddAsync(Country country)
+        public bool Any(Expression<Func<Country, bool>> filter)
         {
-            try
-            {
-                var result = await _context.Countries.AddAsync(country);
-                await _context.SaveChangesAsync();
-                return result.Entity;
-            }
-            catch(Exception ex)
-            {
-                throw;
-            }
+            return _context.Countries.Any(filter);
+        }
+
+        public Country Add(Country country)
+        {
+            return _context.Countries.Add(country);
         }
     }
 }

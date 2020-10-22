@@ -21,22 +21,26 @@ namespace Abeer.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<List<SocialNetwork>>> GetSocialNetworks()
         {
-            var socialNetworks = new List<SocialNetwork>
+            var socialNetworks = await Task.Run(() =>
             {
-                new SocialNetwork{BackgroundColor = "bg-primary", Logo = "fab fa-facebook-square", Name="Facebook"},
-                new SocialNetwork{BackgroundColor = "bg-danger", Logo = "fab fa-youtube-square", Name="Youtube"},
-                new SocialNetwork{BackgroundColor = "bg-danger", Logo = "fab fa-instagram-square", Name="Instagram"},
-                new SocialNetwork{BackgroundColor = "bg-primary", Logo = "fab fa-twitter-square", Name="Twitter"},
-                new SocialNetwork{BackgroundColor = "bg-secondary", Logo = "fab fa-pinterest-square", Name="Pinterest"},
-                new SocialNetwork{BackgroundColor = "bg-primary", Logo = "fab fa-linkedin", Name="Linkedin"}
-            };
+                return new List<SocialNetwork>
+                {
+                    new SocialNetwork{BackgroundColor = "bg-primary", Logo = "fab fa-facebook-square", Name="Facebook"},
+                    new SocialNetwork{BackgroundColor = "bg-danger", Logo = "fab fa-youtube-square", Name="Youtube"},
+                    new SocialNetwork{BackgroundColor = "bg-danger", Logo = "fab fa-instagram-square", Name="Instagram"},
+                    new SocialNetwork{BackgroundColor = "bg-primary", Logo = "fab fa-twitter-square", Name="Twitter"},
+                    new SocialNetwork{BackgroundColor = "bg-secondary", Logo = "fab fa-pinterest-square", Name="Pinterest"},
+                    new SocialNetwork{BackgroundColor = "bg-primary", Logo = "fab fa-linkedin", Name="Linkedin"}
+                };
+            });
+
             return Ok(socialNetworks);
         }
 
         [HttpDelete("{UserId}/{networkName}")]
         public async Task<IActionResult> Delete(string UserId, string networkName)
         {
-            var network = await _functionalUnitOfWork.SocialNetworkRepository.FirstOrDefaultAsync(s => s.OwnerId == UserId &&
+            var network = await _functionalUnitOfWork.SocialNetworkRepository.FirstOrDefault(s => s.OwnerId == UserId &&
                 s.Name == networkName);
 
             if (network == null)

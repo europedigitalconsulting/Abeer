@@ -3,9 +3,7 @@
 using Microsoft.Extensions.DependencyInjection;
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace Abeer.Data.UnitOfworks
@@ -25,11 +23,11 @@ namespace Abeer.Data.UnitOfworks
         private AdRepository _AdRepository;
         private AdPriceRepository _AdPriceRepository;
 
-        private IFunctionalDbContext ApplicationDbContext { get; }
+        private FunctionalDbContext ApplicationDbContext { get; }
         private IServiceProvider ServiceProvider { get; }
 
 
-        public FunctionalUnitOfWork(IServiceProvider serviceProvider, IFunctionalDbContext applicationDbContext)
+        public FunctionalUnitOfWork(IServiceProvider serviceProvider, FunctionalDbContext applicationDbContext)
         {
             ApplicationDbContext = applicationDbContext;
             ServiceProvider = serviceProvider;
@@ -124,12 +122,6 @@ namespace Abeer.Data.UnitOfworks
             }
         }
 
-
-        public void DetectChanges()
-        {
-            ApplicationDbContext.DetectChanges();
-        }
-
         public WalletRepository WalletRepository
         {
             get
@@ -180,14 +172,10 @@ namespace Abeer.Data.UnitOfworks
             return ApplicationDbContext.SaveChange();
         }
 
-        public async Task<int> SaveChangesAsync()
-        {
-            return await ApplicationDbContext.SaveChangesAsync();
-        }
 
-        public Task BulkUpdateAsync<T>(IList<T> entities) where T : class
+        public Task BulkUpdate<T>(IList<T> entities) where T : class
         {
-            return ApplicationDbContext.BulkUpdateAsync<T>(entities);
+            return Task.Run(() => ApplicationDbContext.BulkUpdate<T>(entities));
         }
 
         public void EnsureCreated()

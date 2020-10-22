@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Abeer.Shared;
 using Microsoft.AspNetCore.Authorization;
@@ -21,7 +20,7 @@ namespace Abeer.Server.Controllers
         [HttpDelete("{UserId}/{linkId}")]
         public async Task<IActionResult> Delete(string UserId, string linkId)
         {
-            var network = await _functionalUnitOfWork.CustomLinkRepository.FirstOrDefaultAsync(s => s.OwnerId == UserId &&
+            var network = await _functionalUnitOfWork.CustomLinkRepository.FirstOrDefault(s => s.OwnerId == UserId &&
                 s.Id == linkId);
 
             if (network == null)

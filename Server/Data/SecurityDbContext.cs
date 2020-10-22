@@ -1,7 +1,4 @@
-﻿
-using Abeer.Data;
-using Abeer.Data.Models;
-using Abeer.Shared;
+﻿using Abeer.Shared;
 
 using IdentityServer4.EntityFramework.Options;
 
@@ -14,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Abeer.Server.Data
 {
-    public class SecurityDbContext : ApiAuthorizationDbContext<ApplicationUser>, ISecurityDbContext
+    public class SecurityDbContext : ApiAuthorizationDbContext<ApplicationUser>
     {
         public SecurityDbContext(
             DbContextOptions<SecurityDbContext> options,
@@ -27,45 +24,10 @@ namespace Abeer.Server.Data
             base.OnModelCreating(builder);
         }
 
-        public int SaveChange()
-        {
-            return SaveChangesAsync().Result;
-        }
-
         public Task<int> SaveChangesAsync()
         {
             return base.SaveChangesAsync();
         }
 
-        Task ISecurityDbContext.Update(object entity)
-        {
-            Entry(entity).State = EntityState.Modified;
-            return Task.CompletedTask;
-        }
-
-        public Task BulkUpdateAsync<T>(IList<T> entities) where T : class
-        {
-            Parallel.ForEach(entities, entity => Update(entity));
-            return Task.CompletedTask;
-        }
-
-        public Task BulkInsertAsync<T>(IEnumerable<T> items) where T : class
-        {
-            foreach (var item in items)
-                Add(item);
-
-            return Task.CompletedTask;
-        }
-
-        public void EnsureCreated()
-        {
-            Database.EnsureCreated();
-        }
-
-        public Task DetectChanges()
-        {
-            ChangeTracker.DetectChanges();
-            return Task.CompletedTask;
-        }
     }
 }

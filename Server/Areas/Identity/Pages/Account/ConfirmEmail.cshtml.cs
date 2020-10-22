@@ -44,8 +44,11 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl = returnUrl ?? Url.Content("~/");
-            return LocalRedirect(returnUrl);
+            return await Task.Run(() =>
+            {
+                returnUrl ??= Url.Content("~/");
+                return LocalRedirect(returnUrl);
+            });
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Abeer.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AdPrice>>> List()
         {
-            var data = await _functionalUnitOfWork.AdPriceRepository.AllAsync();
+            var data = await _functionalUnitOfWork.AdPriceRepository.All();
             return Ok(data);
         }
 
@@ -31,7 +31,7 @@ namespace Abeer.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(AdPrice adPrice)
         {
-            var entity = await _functionalUnitOfWork.AdPriceRepository.AddAsync(adPrice);
+            var entity = await _functionalUnitOfWork.AdPriceRepository.Add(adPrice);
             return Ok(entity);
         }
 
@@ -47,7 +47,7 @@ namespace Abeer.Server.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            await _functionalUnitOfWork.AdPriceRepository.DeleteAsync(id);
+            await _functionalUnitOfWork.AdPriceRepository.Delete(id);
             return Ok();
         }
     }
