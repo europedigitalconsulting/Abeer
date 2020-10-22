@@ -243,6 +243,7 @@ namespace Abeer.Server
         {
             var db = scope.ServiceProvider.GetRequiredService<FunctionalUnitOfWork>();
             db.EnsureCreated();
+            db.SetTimeout(360);
 
             var countriesService = scope.ServiceProvider
                 .GetRequiredService<CountriesService>();

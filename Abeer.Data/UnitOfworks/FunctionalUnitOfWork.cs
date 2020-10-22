@@ -194,5 +194,10 @@ namespace Abeer.Data.UnitOfworks
         {
             ApplicationDbContext.EnsureCreated();
         }
+
+        public void SetTimeout(int timeout)
+        {
+            ApplicationDbContext.SetTimeout(timeout);
+        }
     }
 }
