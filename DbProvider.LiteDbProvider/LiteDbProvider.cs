@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace DbProvider.LiteDbProvider
@@ -46,6 +47,13 @@ namespace DbProvider.LiteDbProvider
 
             if (settings.BatchSize > 0)
                 batchSize = settings.BatchSize;
+
+            string dataFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data");
+            
+            if (!Directory.Exists(dataFolder))
+                Directory.CreateDirectory(dataFolder);
+
+            var fileName = Path.Combine(dataFolder, connectionString.Filename);
 
             liteDatabase = new LiteDatabase(connectionString);
 
