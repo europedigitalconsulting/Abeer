@@ -92,7 +92,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
             {
                 var user = await _userManager.Users.FirstOrDefaultAsync(u => u.PinCode == Input.PinCode && u.PinDigit == int.Parse(Input.PinDigit));
 
-                if (User == null)
+                if (user == null)
                 {
                     ModelState.AddModelError("", "User is not authorized");
                     return Page();

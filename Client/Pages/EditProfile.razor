@@ -9,7 +9,7 @@
     @if (ModalChangePassword)
     {
 <div class="modal fade show" id="modalChangePassword" style="display:block" aria-modal="true" role="dialog">
-    <div class="modal-dialog  modal-dialog-centered">
+    <div class="modal-dialog  modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">@Loc["ChangePassword"]</h4>
@@ -20,9 +20,9 @@
             <div class="modal-body">
                 @if (ChangePasswordHasError)
                 {
-<div class="alert alert-danger">
-    @ChangePasswordError
-</div>}
+                    <div class="alert alert-danger">
+                        @ChangePasswordError
+                    </div>}
                 <div class="form-group">
                     @Loc["OldPassword"]
                     <input type="password" class="form-control" @bind="OldPassword" />
@@ -35,8 +35,6 @@
                     @Loc["ConfirmPassword"]
                     <input type="password" class="form-control" @bind="ConfirmPassword" />
                 </div>
-            </div>
-            <div class="modal-footer">
                 <div class="text-center">
                     <button type="button" class="btn btn-success" @onclick="ChangePassword">@Loc["ChangePassword"]</button>
                 </div>
@@ -48,7 +46,7 @@
     @if (ModalSocialNetworkVisible)
     {
 <div class="modal fade show" id="modalSocialNetwork" style="display:block" aria-modal="true" role="dialog">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered  modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">@Loc["AddASocialNetwork"]</h4>
@@ -91,7 +89,7 @@
     @if (ModalCustomLinkVisible)
     {
 <div class="modal fade show" id="modalCustomLink" style="display:block" aria-modal="true" role="dialog">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered  modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">@Loc["AddCustomLink"]</h4>
@@ -127,7 +125,7 @@
     @if (ModalChangePhoto)
     {
 <div class="modal fade show" id="modalChangePhoto" style="display:block" aria-modal="true" role="dialog">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered  modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">@Loc["ChangePhoto"]</h4>
@@ -155,9 +153,9 @@
                     @Loc["UseCustomPhoto"]
                     <MediaUploader ImgUrl="@PhotoUrl" OnChange="@((fileUrl)=>PhotoUrl = fileUrl)"></MediaUploader>
                 </div>}
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" @onclick="ChangePhoto">@Loc["ChangePhoto"]</button>
+                <div class="text-center">
+                    <button type="button" class="btn btn-success" @onclick="ChangePhoto">@Loc["ChangePhoto"]</button>
+                </div>
             </div>
         </div>
     </div>
@@ -255,13 +253,14 @@
                 </div>
 
             </div>
-
-            <div class="card-footer text-right">
-                <button type="button" class="btn btn-primary" @onclick="OpenModalCustomLink" data-toggle="tooltip" data-html="true" title="@Loc["AddCustomLinks"]"><i class="fa fa-2x fa-link"></i></button>
-                <button type="button" class="btn btn-primary" @onclick="OpenModalSocialNetwork" data-toggle="tooltip" data-html="true" title="@Loc["AddASocialNetwork"]"><i class="fa fa-2x fa-hashtag"></i></button>
-                <button type="button" class="btn btn-warning" @onclick="ToggleChangePassword" data-toggle="tooltip" data-html="true" title="@Loc["ChangePassword"]"><i class="fa fa-2x fa-key"></i></button>
-                <button type="submit" class="btn btn-success" @onclick="Update" data-toggle="tooltip" data-html="true" title="@Loc["Save"]"><i class="fa fa-2x fa-save"></i></button>
+            
+            <div class="fixed-bottom m-4">
+                <button type="submit" class="btn btn-success btn-circle btn-xl float-right ml-2" @onclick="Update" data-toggle="tooltip" data-html="true" title="@Loc["Save"]"><i class="fa fa-2x fa-save"></i></button>
+                <button type="button" class="btn btn-primary btn-circle btn-xl float-right ml-2" @onclick="OpenModalCustomLink" data-toggle="tooltip" data-html="true" title="@Loc["AddCustomLinks"]"><i class="fa fa-2x fa-link"></i></button>
+                <button type="button" class="btn btn-primary btn-circle btn-xl float-right ml-2" @onclick="OpenModalSocialNetwork" data-toggle="tooltip" data-html="true" title="@Loc["AddASocialNetwork"]"><i class="fa fa-2x fa-hashtag"></i></button>
+                <button type="button" class="btn btn-danger btn-circle btn-xl float-right ml-2" @onclick="ToggleChangePassword" data-toggle="tooltip" data-html="true" title="@Loc["ChangePassword"]"><i class="fa fa-2x fa-key"></i></button>
             </div>
+
         </div>
     </EditForm>
 </section>

@@ -6,179 +6,176 @@
 
 @if (ModalShareProfileVisible)
 {
-<div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">@Loc["ShareProfile"]</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="ToggleModalShareProfile">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <h5><a href="@ProfileUrl">@ProfileUrl</a></h5>
-                <img alt="qrcode" src="/api/QrCodeGenerator?link=@ProfileUrl" style="width:100%" />
+    <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">@Loc["ShareProfile"]</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="ToggleModalShareProfile">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h5><a href="@ProfileUrl">@ProfileUrl</a></h5>
+                    <img alt="qrcode" src="/api/QrCodeGenerator?link=@ProfileUrl" style="width:100%" />
+                </div>
             </div>
         </div>
     </div>
-</div>}
+}
 
 @if (showModal)
 {
-<div class="modal fade show" id="modalUser" style="display:block" aria-modal="true" role="dialog">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="ToggleModalCreateUser">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">@Loc[Mode]</h4>
-            </div>
-            <div class="modal-body">
-                <EditForm Model="current">
-                    <ValidationSummary></ValidationSummary>
-                    <div class="form-group">
-                        @Loc["FirstName"]
-                        <input type="text" @bind="current.FirstName" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        @Loc["LastName"]
-                        <input type="text" @bind="current.LastName" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        @Loc["DisplayName"]
-                        <input type="text" @bind="current.DisplayName" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        @Loc["Title"]
-                        <input type="text" @bind="current.Title" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        @Loc["Description"]
-                        <input type="text" @bind="current.Description" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        @Loc["Address"]
-                        <input type="text" @bind="current.Address" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        @Loc["City"]
-                        <input type="text" @bind="current.City" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        @Loc["Country"]
-                        <input type="text" @bind="current.Country" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        @Loc["Email"]
-                        <input type="text" @bind="current.Email" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        @Loc["PhoneNumber"]
-                        <input type="text" @bind="current.PhoneNumber" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        @Loc["PinCode"]
-                        <input type="text" @bind="current.PinCode" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        @Loc["PinDigit"]
-                        <input type="number" @bind="current.PinDigit" class="form-control" />
-                    </div>
-                </EditForm>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" @onclick="SaveForm">@Loc[Mode]</button>
-                <button type="button" class="btn btn-warning" @onclick="ToggleModalCreateUser">@Loc["Cancel"]</button>
+    <div class="modal fade show" id="modalUser" style="display:block" aria-modal="true" role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">@Loc[Mode]</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="ToggleModalCreateUser">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <EditForm Model="current">
+                        <ValidationSummary></ValidationSummary>
+                        <div class="form-group">
+                            @Loc["FirstName"]
+                            <input type="text" @bind="current.FirstName" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            @Loc["LastName"]
+                            <input type="text" @bind="current.LastName" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            @Loc["DisplayName"]
+                            <input type="text" @bind="current.DisplayName" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            @Loc["Title"]
+                            <input type="text" @bind="current.Title" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            @Loc["Description"]
+                            <input type="text" @bind="current.Description" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            @Loc["Address"]
+                            <input type="text" @bind="current.Address" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            @Loc["City"]
+                            <input type="text" @bind="current.City" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            @Loc["Country"]
+                            <input type="text" @bind="current.Country" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            @Loc["Email"]
+                            <input type="text" @bind="current.Email" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            @Loc["PhoneNumber"]
+                            <input type="text" @bind="current.PhoneNumber" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            @Loc["PinCode"]
+                            <input type="text" @bind="current.PinCode" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            @Loc["PinDigit"]
+                            <input type="number" @bind="current.PinDigit" class="form-control" />
+                        </div>
+                    </EditForm>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" @onclick="SaveForm" title="@Loc[Mode]"><i class="fa fa-2x fa-save"></i></button>
+                </div>
             </div>
         </div>
+    </div>}
+<section class="section">
+    <div class="section-header">
+        <h1>@Loc["Users"]</h1>
     </div>
-</div>}
-<div class="main-content">
-    <section class="section">
-        <div class="section-header">
-            <h1>@Loc["Users"]</h1>
-            <div class="section-header-breadcrumb">
-                <div class="breadcrumb-item active"><a href="#">@Loc["Home"]</a></div>
-                <div class="breadcrumb-item"><a href="#">@Loc["Admin"]</a></div>
-                <div class="breadcrumb-item">@Loc["Users"]</div>
+    <div class="section-body">
+        @if (Data != null)
+        {
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-12">
+                    <UsersStatistics NbOfUsers="@NbOfUsers" NbOfUsersOnline="@NbOfUsersOnline"></UsersStatistics>
+                </div>
             </div>
-        </div>
-        <div class="section-body">
-            @if (Data != null)
-            {
-<p class="section-lead">@Loc["CatchPhrase"].</p>
-                <div class="clearfix"></div>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <UsersStatistics NbOfUsers="@NbOfUsers" NbOfUsersOnline="@NbOfUsersOnline"></UsersStatistics>
-                                    </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body p-2">
+                            <div class="panel">
+                                <div class="input-group">
+                                    <input type="text" id="example-input1-group2" name="example-input1-group2" class="form-control" placeholder="@Loc["Search"]" @bind-value="SearchTerm">
+                                    <span class="input-group-btn pl-2">
+                                        <button type="button" class="btn btn-primary" @onclick="SearchButtonClick"><i class="fa  fa-2x fa-search"></i></button>
+                                    </span>
                                 </div>
-                                                <div class="row">
-                                                    <div class="col-12">
-                                                        <div class="card">
-                                                            <div class="card-body p-2">
-                                                                <div class="panel panel-default">
-                                                                    <div class="panel-body">
-                                                                        <div class="input-group">
-                                                                            <input type="text" id="example-input1-group2" name="example-input1-group2" class="form-control" placeholder="@Loc["Search"]" @bind-value="SearchTerm">
-                                                                            <span class="input-group-btn pl-2">
-                                                                                <button type="button" class="btn btn-effect-ripple btn-primary" @onclick="SearchButtonClick"><i class="fa fa-search"></i></button>
-                                                                                <button type="button" class="btn btn-effect-ripple btn-primary" @onclick="ShowInsertUser" title="@Loc["AddUser"]"><i class="fas fa-plus-square"></i></button>
-                                                                            </span>
-                                                                        </div>
 
-                                                                        <div class="row">
-                                                                            @if (Items?.Any() == true)
-                                                                            {
-                                                                                foreach (var User in Items)
-                                                                                {
-                                                            <div class="col-lg-3 col-md-12 col-sm-12">
-                                                                <div class="panel">
-                                                                    <div class="panel-body p-4">
-                                                                        <div class="media-main">
-                                                                            <a class="pull-left" href="#">
-                                                                                <img class="thumb-lg img-circle bx-s" src="@User.GravatarUrl()" alt="@User.DisplayName">
-                                                                            </a>
-                                                                            <div class="pull-right btn-group-sm">
-                                                                                <button type="button" class="btn btn-success tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Edit" @onclick="@(() => ShowEditUser(User))">
-                                                                                    <i class="fas fa-edit"></i>
-                                                                                </button>
-                                                                                <button type="button" class="btn btn-warning tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Share" @onclick="@(() => ShareProfile(User))">
-                                                                                    <i class="fas fa-share-alt"></i>
-                                                                                </button>
-                                                                                @if (!User.IsOnline)
-                                                                                {
-                                                        <button type="button" class="btn btn-danger tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Delete" @onclick="@(() => ShowDeleteUser(User))">
-                                                            <i class="fas fa-trash"></i>
-                                                        </button>}
-                                                                            </div>
-                                                                            <div class="info">
-                                                                                <h4></h4>
-                                                                                <p class="text-muted">@User.DisplayName/@User.PinCode</p>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="clearfix"></div>
-                                                                        <a class="email-ic mr-3" role="button" title="@User.Email" href="mailto://@User.Email"><i class="far fa-lg fa-envelope"></i></a>
-                                                                        @if (User.IsOnline)
-                                                                        {
-                                                <span class="badge badge-success">@Loc["IsOnline"] @User.LastLogin</span>}
-                                                                    </div>
-                                                                </div>
-                                                            </div> }
-                                                                            }
-                                                                            else
-                                                                            {
-                                                            <div class="alert alert-info">
-                                                                @Loc["NoUserFound"]
-                                                            </div>}
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+                                <div class="row mt-1">
+                                    @if (Items?.Any() == true)
+                                    {
+                                        foreach (var User in Items)
+                                        {
+                                            <div class="col-lg-6 col-md-12 col-sm-12">
+                                                <div class="card">
+                                                    <div class="card-body p-4">
+                                                        <div class="media-main">
+                                                            <div class="float-right btn-group-sm">
+                                                                <button type="button" class="btn btn-success" data-placement="top" data-toggle="tooltip" data-original-title="Edit" @onclick="@(() => ShowEditUser(User))">
+                                                                    <i class="fas fa-edit"></i>
+                                                                </button>
+                                                                <button type="button" class="btn btn-warning" data-placement="top" data-toggle="tooltip" data-original-title="Share" @onclick="@(() => ShareProfile(User))">
+                                                                    <i class="fas fa-share-alt"></i>
+                                                                </button>
+                                                                @if (!User.IsOnline)
+                                                                {
+                                                                    <button type="button" class="btn btn-danger" data-placement="top" data-toggle="tooltip" data-original-title="Delete" @onclick="@(() => ShowDeleteUser(User))">
+                                                                        <i class="fas fa-trash"></i>
+                                                                    </button>
+                                                                }
+                                                            </div>
+                                                            <a class="pull-left" href="#">
+                                                                <img class="thumb-lg img-circle bx-s" src="@User.GravatarUrl()" alt="@User.DisplayName">
+                                                            </a>
+                                                            <div class="info">
+                                                                <h4>@User.DisplayName</h4>
+                                                                <p class="text-muted">@User.PinCode</p>
                                                             </div>
                                                         </div>
+                                                        <div class="clearfix"></div>
+                                                        <a class="mr-3" role="button" title="@User.Email" href="mailto://@User.Email"><i class="far fa-lg fa-envelope"></i></a>
+                                                        @if (User.IsOnline)
+                                                        {
+                                                            <span>@Loc["IsOnline"] @User.LastLogin</span>
+
+                                                        }
                                                     </div>
-                                                </div>}
-        </div>
-    </section>
-</div>
+                                                </div>
+                                            </div> }
+                                    }
+                                    else
+                                    {
+                                        <div class="col-12 m-2">
+                                            <div class="alert alert-info">
+                                                @Loc["NoUserFound"]
+                                            </div>
+                                        </div>}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>}
+    </div>
+    <div class="fixed-bottom m-4">
+        <button type="button" class="btn btn-warning btn-circle btn-xl float-right ml-2" @onclick="ShowInsertUser" title="@Loc["AddUser"]"><i class="fa fa-2x fa-plus"></i></button>
+    </div>
+</section>

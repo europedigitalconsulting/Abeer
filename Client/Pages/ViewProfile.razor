@@ -44,7 +44,7 @@
 
 @if (UserProfile != null)
 {
-    <UserProfileControl DisplayName="@UserProfile.DisplayName" PhotoUrl="@UserProfile.PhotoUrl" Title="@UserProfile.Title" City="@UserProfile.City"
+    <UserProfileControl ReadOnly="true" DisplayName="@UserProfile.DisplayName" PhotoUrl="@UserProfile.PhotoUrl" Title="@UserProfile.Title" City="@UserProfile.City"
                         Country="@UserProfile.Country" Description="@UserProfile.Description"
                         Email="@UserProfile.Email" PhoneNumber="@UserProfile.PhoneNumber"
                         ProfileUrl="@Navigation.ToAbsoluteUri($"/ViewProfile/{UserProfile.Id}").ToString()"

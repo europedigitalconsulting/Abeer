@@ -9,6 +9,8 @@
     }
 
     [Parameter]
+    public bool ReadOnly { get; set; }
+    [Parameter]
     public string ProfileUrl { get; set; }
     [Parameter]
     public string DisplayName { get; set; }
@@ -46,17 +48,20 @@
 
 <section class="section">
     <div class="section-header">
-        <h1>My profile</h1>
+        <h1>@Loc["MyProfile"]</h1>
     </div>
     <div class="section-body">
         <div class="card author-box card-primary">
             <div class="card-body">
                 <div class="author-box-left">
                     <img alt="image" src="@PhotoUrl" class="rounded-circle author-box-picture">
-                    <div class="clearfix"></div>
-                    <a href="/Profile/Edit" class="btn btn-primary mt-3 follow-btn">Edit profile</a>
-                    <div class="clearfix"></div>
-                    <a href="/Contacts" class="btn btn-primary mt-3 follow-btn">Contacts</a>
+                    @if (!ReadOnly)
+                    {
+                        <div class="clearfix"></div>
+                        <a href="/Profile/Edit" class="btn btn-primary mt-3 follow-btn">Edit profile</a>
+                        <div class="clearfix"></div>
+                        <a href="/Contacts" class="btn btn-primary mt-3 follow-btn">Contacts</a>
+                    }
 
                 </div>
                 <div class="author-box-details">
@@ -165,7 +170,7 @@
 
 @if (ModalQrCodeVisible)
 {
-    <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+    <div class="modal fade show" id="modalQrCode" style="display:block" aria-modal="true" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

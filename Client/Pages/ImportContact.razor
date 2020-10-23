@@ -43,47 +43,37 @@
     }
 }
 <!-- Main Content -->
-<div class="main-content">
-    <section class="section">
-        <div class="section-header">
-            <h1>@Loc["ImportContact"]</h1>
-            <div class="section-header-breadcrumb">
-                <div class="breadcrumb-item active"><a href="#">@Loc["Home"]</a></div>
-                <div class="breadcrumb-item"><a href="/MyAccount">@Loc["Contacts"]</a></div>
-                <div class="breadcrumb-item">@Loc["ImportContact"]</div>
-            </div>
-        </div>
-        <div class="section-body">
-            <p class="section-lead">@Loc["CatchPhrase"].</p>
-            <div class="clearfix"></div>
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-body p-0">
-                            <div class="container bootstrap snippets bootdey">
-                                <div class="row">
-                                    <div class="col-12">
-                                        @if (IsValid && Contact != null)
-                                        {
-                                            <div class="alert alert-success">
-                                                <h4>@Loc["MessageSuccess"]</h4>
-                                                <a href="@($"/ViewProfile/{Contact.UserId}")">@Loc["ViewContact"]</a>
-                                                <a href="Contacts"><i class="fas fa-users"></i>@Loc["Contacts"]</a>
-                                            </div>
-                                        }
-                                        else
-                                        {
-                                            <div class="alert alert-danger">
-                                                @ErrorDetail
-                                            </div>
-                                        }
+<section class="section">
+    <div class="section-header">
+        <h1>@Loc["ImportContact"]</h1>
+    </div>
+    <div class="section-body">
+        <div class="clearfix"></div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body p-0">
+                        <div class="container bootstrap snippets bootdey">
+                            <div class="row">
+                                @if (IsValid && Contact != null)
+                                {
+                                    <div class="col-12alert alert-success">
+                                        <h4>@Loc["MessageSuccess"]</h4>
+                                        <a href="@($"/ViewProfile/{Contact.UserId}")">@Loc["ViewContact"]</a>
+                                        <a href="Contacts"><i class="fas fa-users"></i>@Loc["Contacts"]</a>
                                     </div>
-                                </div>
+                                }
+                                else
+                                {
+                                    <div class="col-12 alert alert-danger">
+                                        @ErrorDetail
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-</div>
+    </div>
+</section>

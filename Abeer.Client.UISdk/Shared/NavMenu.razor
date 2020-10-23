@@ -1,7 +1,7 @@
 ﻿@namespace Abeer.Client.Shared
 
 @using System.Security.Claims
-@using Microsoft.AspNetCore.Http
+@inject Microsoft.Extensions.Localization.IStringLocalizer<NavMenu> Loc
 
 @code
 { protected ClaimsPrincipal _user;
@@ -49,7 +49,6 @@
         <a class="navbar-brand" href="/">Smart Clik</a>
     </div>
     <ul class="nav navbar-nav mr-auto">
-        
     </ul>
     <ul class="nav navbar-nav  navbar-right">
         <li class="dropdown">
@@ -60,29 +59,28 @@
                     <div class="d-sm-none d-lg-inline-block">Hi, @_user.FindFirstValue("displayname")</div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
-                    @*<div class="dropdown-title">Logged since @_user.FindFirstValue("lastlogin")</div>*@
                     <a href="profile" class="dropdown-item has-icon">
-                        <i class="far fa-user"></i> Profile
+                        <i class="fa fa-user"></i> @Loc["Profile"]
                     </a>
                     <a href="services" class="dropdown-item has-icon">
-                        <i class="fas fa-concierge-bell"></i> Services
+                        <i class="fa fa-concierge-bell"></i> @Loc["Services"]
                     </a>
                     @if (_user.HasClaim(ClaimTypes.Role, "admin"))
                     {
                         <div class="dropdown-divider"></div>
                         <a href="Users" class="dropdown-item has-icon">
-                            <i class="fas fa-users"></i> Users
+                            <i class="fa fa-users"></i>  @Loc["Users"]
                         </a>
                         <a href="ManageAds" class="dropdown-item has-icon">
-                            <img alt="image" src="assets/img/services/Ad.png" class="rounded-circle profile-widget-picture" style="max-width:16px; max-height:36px;"> Offers
+                            <i class="fa fa-ad"></i>  @Loc["Offers"]
                         </a>
                         <a href="ManageAdPrices" class="dropdown-item has-icon">
-                            <i class="fas fa-money-bill-wave-alt"></i> Prices
+                            <i class="fa fa-money-bill-wave-alt"></i> @Loc["Prices"]
                         </a>
                     }
                     <div class="dropdown-divider"></div>
-                    <a href="identity/account/logout?returnUrl=/" class="dropdown-item has-icon text-danger" >
-                        <i class="fas fa-sign-out-alt"></i> Logout
+                    <a href="identity/account/logout?returnUrl=/" class="dropdown-item has-icon text-danger">
+                        <i class="fa fa-sign-out-alt"></i> @Loc["Logout"]
                     </a>
                 </div>
             }

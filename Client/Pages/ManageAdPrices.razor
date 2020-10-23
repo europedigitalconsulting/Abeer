@@ -113,7 +113,7 @@
 @if (ModalFormAdVisible)
 {
     <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">@Loc["EditAdPriceTitle"]</h4>
@@ -130,27 +130,27 @@
                                         @Loc["UpdateFailedError"]
                                     </div>
                                 }
-                                <div class="form-group col-6 col-sm-12">
+                                <div class="form-group col-lg-12 col-md-12 col-sm-12">
                                     <label>@Loc["Name"]</label>
                                     <input type="text" Class="form-control" @bind="Current.PriceName" disabled="@IsFormDisabled" />
                                 </div>
-                                <div class="form-group col-6 col-sm-12">
+                                <div class="form-group col-lg-12 col-md-12 col-sm-12">
                                     <label>@Loc["Description"]</label>
                                     <textarea type="text" Class="form-control" rows="6" @bind="Current.PriceDescription" disabled="@IsFormDisabled" />
                                 </div>
-                                <div class="form-group col-6 col-sm-12">
+                                <div class="form-group col-lg-12 col-md-12 col-sm-12">
                                     <label>@Loc["Value"]</label>
                                     <input type="number" Class="form-control" @bind="Current.Value" disabled="@IsFormDisabled" />
                                 </div>
-                                <div class="form-group col-6 col-sm-12">
+                                <div class="form-group col-lg-12 col-md-12 col-sm-12">
                                     <label>@Loc["DelayToDisplay"]</label>
                                     <input type="range" min="1" max="10" Class="form-control" @bind="Current.DelayToDisplay" disabled="@IsFormDisabled" />
                                 </div>
-                                <div class="form-group col-6 col-sm-12">
+                                <div class="form-group col-lg-12 col-md-12 col-sm-12">
                                     <label>@Loc["DisplayDuration"]</label>
                                     <input type="number" Class="form-control" @bind="Current.DisplayDuration" disabled="@IsFormDisabled" />
                                 </div>
-                                <div class="form-group col-6 col-sm-12">
+                                <div class="form-group col-lg-12 col-md-12 col-sm-12">
                                     <label>@Loc["MaxViewCount"]</label>
                                     <input type="url" Class="form-control" @bind="Current.MaxViewCount" disabled="@IsFormDisabled" />
                                 </div>
@@ -189,8 +189,7 @@
                             <h4>@ad.PriceName</h4>
                             <div class="card-header-action">
                                 <i  class="btn btn-icon btn-primary" href="#">@ad.Value.FormatCurrency()</i><br/>
-                                <button class="btn btn-primary" @onclick="@(() => OpenEditModal(ad))"><i class="fas fa-pen-square"></i></button>
-                                <button class="btn btn-danger" @onclick="@(() => OpenDeleteModal(ad))"><i class="fas fa-trash-alt"></i></button>
+                                <button class="btn btn-primary ml-2" @onclick="@(() => OpenEditModal(ad))"><i class="fas fa-pen-square"></i></button>
                             </div>
                            
                         </div>
@@ -207,5 +206,5 @@
     </div>
 </section>
 <div class="fixed-bottom m-5">
-    <a @onclick="OpenCreateAd" class="btn btn-danger btn-circle btn-xl float-right" title="@Loc["Add"]"><i class="fa fa-2x fa-plus"></i></a>
+    <button @onclick="OpenCreateAd" class="btn btn-danger btn-circle btn-xl float-right" title="@Loc["Add"]"><i class="fa fa-2x fa-plus"></i></button>
 </div>
