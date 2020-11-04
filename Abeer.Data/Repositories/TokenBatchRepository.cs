@@ -81,7 +81,7 @@ namespace Abeer.Data.Repositories
 
         public  void Remove(TokenBatch tokenBatch)
         {
-            _functionalDbContext.TokenBatches.Remove(tokenBatch);
+            _functionalDbContext.TokenBatches.Remove(tokenBatch.Id);
         }
 
         public Task<bool> Any(Expression<Func<TokenBatch, bool>> p) => Task.Run(() => _functionalDbContext.TokenBatches.Any(p));

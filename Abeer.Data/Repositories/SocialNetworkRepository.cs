@@ -33,7 +33,7 @@ namespace Abeer.Data.Repositories
 
         public  Task Remove(SocialNetwork network)
         {
-            return Task.Run(() => FunctionalDbContext.SocialNetworks.Remove(network));
+            return Task.Run(() => FunctionalDbContext.SocialNetworks.Remove(network.Id));
         }
     }
 }

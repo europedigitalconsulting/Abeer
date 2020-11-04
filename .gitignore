@@ -356,3 +356,4 @@ MigrationBackup/
 /Server/Abeer-security.db-wal
 /Server/Abeer-security.db-shm
 /Certificate
+/Server/Properties/PublishProfiles

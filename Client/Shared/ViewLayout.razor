@@ -30,5 +30,26 @@
 
 <div class="fixed-bottom m-4">
     <a href="@NavigationUrlService.MapUrl" class="btn btn-primary  btn-circle btn-xl float-right ml-2 mr-1" title="Maps" target="_blank"><i class="fa fa-2x fa-map-signs"></i></a>
-    <a href="@NavigationUrlService.ImportContactUrl" class="btn btn-danger  btn-circle btn-xl float-right ml-2 mr-1" title="Import"><i class="fa fa-2x fa-user-plus"></i></a>
+    
+    @if (NavigationUrlService.ShowImport)
+    {
+        <a href="@NavigationUrlService.ImportContactUrl" class="btn btn-danger  btn-circle btn-xl float-right ml-2 mr-1" title="Import"><i class="fa fa-2x fa-user-plus"></i></a>
+    }
+    @if (NavigationUrlService.ShowContacts)
+    {
+        <a href="@NavigationUrlService.ContactsUrl" class="btn btn-warning btn-circle btn-xl float-right ml-2 mr-1" title="Contacts"><i class="fas fa-address-book"></i></a>
+    }
+    @if (NavigationUrlService.ShowMyAds)
+    {
+        <a href="@NavigationUrlService.MyAdsUrl" class="btn btn-warning btn-circle btn-xl float-right ml-2 mr-1" title="Ads"><i class="fas fa-ad"></i></a>
+    }
+    @if (NavigationUrlService.ShowEditProfile)
+    {
+        <a href="@NavigationUrlService.ProfileEdit" class="btn btn-secondary btn-circle btn-xl float-right ml-2 mr-1" title="Edit Profile"><i class="fas fa-user-edit"></i></a>
+    }
+    else
+    {
+        <a href="@NavigationUrlService.ProfileUrl" class="btn btn-secondary btn-circle btn-xl float-right ml-2 mr-1" title="My Profile"><i class="fas fa-user"></i></a>
+    }
+    <a href="@NavigationUrlService.ServicesUrl" class="btn btn-success btn-circle btn-xl float-right ml-2 mr-1" title="Services"><i class="fas fa-concierge-bell"></i></a>
 </div>

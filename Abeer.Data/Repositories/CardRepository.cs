@@ -80,7 +80,7 @@ namespace Abeer.Data.Repositories
 
         public void Remove(Card card)
         {
-            FunctionalDbContext.Cards.Remove(card);
+            FunctionalDbContext.Cards.Remove(card.Id);
         }
 
         public Task<bool> Any(Expression<Func<Card, bool>> p)

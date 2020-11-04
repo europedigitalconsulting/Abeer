@@ -42,7 +42,7 @@ namespace Abeer.Data.Repositories
 
         public void Remove(Purchase purchase)
         {
-            _context.Purchase.Remove(purchase);
+            _context.Purchase.Remove(purchase.Id);
         }
 
         public  Task<IList<Purchase>> Where(Expression<Func<Purchase, bool>> expression)

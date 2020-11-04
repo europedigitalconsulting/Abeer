@@ -1,7 +1,9 @@
 ﻿using Abeer.Shared;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Newtonsoft.Json;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Abeer.Client.Pages
@@ -10,8 +12,10 @@ namespace Abeer.Client.Pages
     {
         [Inject] private NavigationManager NavigationManager { get; set; }
         [Inject] private HttpClient httpClient { get; set; }
+        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
 
         public ViewApplicationUser UserProfile { get; set; } = new ViewApplicationUser();
+        public ClaimsPrincipal User { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -19,8 +23,28 @@ namespace Abeer.Client.Pages
             response.EnsureSuccessStatusCode();
             var json = await response.Content.ReadAsStringAsync();
             UserProfile = JsonConvert.DeserializeObject<ViewApplicationUser>(json);
-            //NavigationUrlService.SetUrls($"https://www.google.com/maps/search/?api=1&query={UserProfile.Address},{UserProfile.City}%20{UserProfile.Country}&query_place_id={UserProfile.DisplayName}",
-            //    null);
+        }
+
+        protected override async Task OnParametersSetAsync()
+        {
+            NavigationUrlService.SetUrls($"https://www.google.com/maps/search/?api=1&query={UserProfile.Address},{UserProfile.City}%20{UserProfile.Country}&query_place_id={UserProfile.DisplayName}",
+                NavigationManager.ToAbsoluteUri($"/ImportContact/{UserProfile.Id}").ToString());
+
+            var authState = await authenticationStateTask;
+
+            User = authState.User;
+
+            if (User.Identity.IsAuthenticated)
+            {
+                NavigationUrlService.ShowContacts = true;
+                NavigationUrlService.ShowMyAds = true;
+
+                if (User.FindFirstValue(ClaimTypes.NameIdentifier).Equals(UserProfile.Id))
+                {
+                    NavigationUrlService.ShowImport = false;
+                    NavigationUrlService.ShowEditProfile = true;
+                }
+            }
         }
     }
 }

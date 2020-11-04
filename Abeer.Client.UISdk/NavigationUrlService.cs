@@ -9,6 +9,51 @@ namespace Abeer.Client.UISdk
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        bool _ShowMyAds;
+        public bool ShowMyAds
+        {
+            get => _ShowMyAds;
+            set
+            {
+                _ShowMyAds = value;
+                OnPropertyChanged();
+            }
+        }
+
+        bool _ShowContacts;
+
+        public bool ShowContacts 
+        { 
+            get => _ShowContacts; 
+            set
+            {
+                _ShowContacts = value;
+                OnPropertyChanged();
+            }
+        }
+
+        bool _ShowEditProfile;
+        public bool ShowEditProfile { 
+            get => _ShowEditProfile;
+            set
+            {
+                _ShowEditProfile = value;
+                OnPropertyChanged();
+            }
+        }
+
+        bool _ShowImport;
+        
+        public bool ShowImport 
+        {
+            get => _ShowImport;
+            set
+            {
+                _ShowImport = value;
+                OnPropertyChanged();
+            }
+        }
+
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -21,6 +66,7 @@ namespace Abeer.Client.UISdk
             _ServicesUrl = navigationManager.ToAbsoluteUri("/services").ToString();
             _ContactsUrl = navigationManager.ToAbsoluteUri("/contacts").ToString();
             _MyAdsUrl = navigationManager.ToAbsoluteUri("/MyAds").ToString();
+            _ProfileEdit = navigationManager.ToAbsoluteUri("/Profile/Edit").ToString();
         }
 
         public void SetUrls(string mapUrl, string importContactUrl)
@@ -94,6 +140,18 @@ namespace Abeer.Client.UISdk
             set
             {
                 _MyAdsUrl = value;
+                OnPropertyChanged();
+            }
+        }
+
+        string _ProfileEdit;
+
+        public string ProfileEdit
+        {
+            get => _ProfileEdit;
+            set
+            {
+                _ProfileEdit = value;
                 OnPropertyChanged();
             }
         }

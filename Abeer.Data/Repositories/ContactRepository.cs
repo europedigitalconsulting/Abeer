@@ -51,7 +51,7 @@ namespace Abeer.Data.Repositories
 
         public void Remove(Contact contact)
         {
-            _context.Contacts.Remove(contact);
+            _context.Contacts.Remove(contact.Id);
         }
 
         public Task<bool> Any(Expression<Func<Contact, bool>> p) => Task.Run(() => _context.Contacts.Any(p));

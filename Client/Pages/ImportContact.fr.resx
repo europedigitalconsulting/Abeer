@@ -135,6 +135,9 @@
   <data name="MessageSuccess" xml:space="preserve">
     <value>La fiche contact a été ajoutée correctement</value>
   </data>
+  <data name="ReturnToHomePage" xml:space="preserve">
+    <value>Revenir à la page d'accueil</value>
+  </data>
   <data name="SelfReference" xml:space="preserve">
     <value>Il semblerait que la fiche contact soit votre propre profil, vous ne pouvez pas ajouter votre fiche en tant que contact</value>
   </data>

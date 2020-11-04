@@ -135,6 +135,9 @@
   <data name="MessageSuccess" xml:space="preserve">
     <value>The contact has been imported successfully</value>
   </data>
+  <data name="ReturnToHomePage" xml:space="preserve">
+    <value>Return to home page</value>
+  </data>
   <data name="SelfReference" xml:space="preserve">
     <value>This contact's profil is your own profil. so you can't import it</value>
   </data>

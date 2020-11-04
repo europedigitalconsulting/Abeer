@@ -4,44 +4,44 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<ImportContact> Loc
 @inject HttpClient HttpClient
 @code
-{
+{ 
     public bool IsValid { get; set; }
 
-    [Parameter]
-    public string ProfileId { get; set; }
+        [Parameter]
+        public string ProfileId { get; set; }
 
-    public Contact Contact { get; set; }
-    public string StatusCode { get; set; }
+        public Contact Contact { get; set; }
+        public string StatusCode { get; set; }
 
-    public string ErrorDetail { get; set; }
+        public string ErrorDetail { get; set; }
 
-    protected override async Task OnParametersSetAsync()
-    {
-        if (!string.IsNullOrEmpty(ProfileId))
+        protected override async Task OnParametersSetAsync()
         {
-            var response = await HttpClient.GetAsync($"/api/Contacts/import/{ProfileId}");
-            response.EnsureSuccessStatusCode();
-            var json = await response.Content.ReadAsStringAsync();
-            var result = Newtonsoft.Json.JsonConvert.DeserializeObject<ImportContactResultViewModel>(json);
-            IsValid = result.IsValid;
-            Contact = result.Contact;
-            StatusCode = result.StatusCode;
-            switch (StatusCode)
+            if (!string.IsNullOrEmpty(ProfileId))
             {
-                case "SelfReference":
-                    ErrorDetail = Loc["SelfReference"];
-                    break;
-                case "Duplicate":
-                    ErrorDetail = Loc["Duplicate"];
-                    break;
-                default:
-                    break;
+                var response = await HttpClient.GetAsync($"/api/Contacts/import/{ProfileId}");
+                response.EnsureSuccessStatusCode();
+                var json = await response.Content.ReadAsStringAsync();
+                var result = Newtonsoft.Json.JsonConvert.DeserializeObject<ImportContactResultViewModel>(json);
+                IsValid = result.IsValid;
+                Contact = result.Contact;
+                StatusCode = result.StatusCode;
+                switch (StatusCode)
+                {
+                    case "SelfReference":
+                        ErrorDetail = Loc["SelfReference"];
+                        break;
+                    case "Duplicate":
+                        ErrorDetail = Loc["Duplicate"];
+                        break;
+                    default:
+                        break;
+                }
             }
-        }
 
-        await base.OnParametersSetAsync();
+            await base.OnParametersSetAsync();
+        } 
     }
-}
 <!-- Main Content -->
 <section class="section">
     <div class="section-header">
@@ -61,12 +61,20 @@
                                         <h4>@Loc["MessageSuccess"]</h4>
                                         <a href="@($"/ViewProfile/{Contact.UserId}")">@Loc["ViewContact"]</a>
                                         <a href="Contacts"><i class="fas fa-users"></i>@Loc["Contacts"]</a>
-                                    </div>
+                                    </div> 
                                 }
                                 else
                                 {
                                     <div class="col-12 alert alert-danger">
                                         @ErrorDetail
+                                        @if (Contact != null)
+                                        {
+                                            <a href="@($"/ViewProfile/{Contact.UserId}")">@Loc["ViewContact"]</a>
+                                        }
+                                        else
+                                        {
+                                            <a href="/">@Loc["ReturnToHomePage"]</a>
+                                        }
                                     </div>
                                 }
                             </div>

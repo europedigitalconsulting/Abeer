@@ -3,13 +3,20 @@
 @inject IHttpClientFactory HttpClientFactory
 @inject NavigationManager Navigation
 @inject Abeer.Client.UISdk.NavigationUrlService NavigationUrlService
+@using System.Security.Claims;
 
 @layout ViewLayout
 @code
 {
+    public ClaimsPrincipal User { get; set; }
+
     [Parameter]
     public string ProfileId { get; set; }
+
     public ViewApplicationUser UserProfile { get; set; }
+
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
 
     protected override Task OnInitializedAsync()
     {
@@ -19,6 +26,18 @@
 
     protected override async Task OnParametersSetAsync()
     {
+        var authState = await authenticationStateTask;
+
+        User = authState.User;
+
+        if (User.Identity.IsAuthenticated)
+        {
+            if (string.IsNullOrEmpty(ProfileId))
+            {
+                ProfileId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            }
+        }
+
         if (!string.IsNullOrEmpty(ProfileId))
         {
             var httpClient = HttpClientFactory.CreateClient("Abeer.Anonymous");
@@ -36,6 +55,20 @@
                 Navigation.ToAbsoluteUri($"/ImportContact/{UserProfile.Id}").ToString());
 
             await InvokeAsync(StateHasChanged);
+        }
+
+        NavigationUrlService.ShowImport = true;
+
+        if(User.Identity.IsAuthenticated)
+        {
+            NavigationUrlService.ShowContacts = true;
+            NavigationUrlService.ShowMyAds = true;
+
+            if (User.FindFirstValue(ClaimTypes.NameIdentifier).Equals(UserProfile.Id))
+            {
+                NavigationUrlService.ShowImport = false;
+                NavigationUrlService.ShowEditProfile = true;
+            }
         }
 
         await base.OnParametersSetAsync();

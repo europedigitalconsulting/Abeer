@@ -5,6 +5,7 @@ using Abeer.Shared.Functional;
 using System;
 using Abeer.Data.UnitOfworks;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Abeer.Server.Controllers
 {
@@ -68,7 +69,9 @@ namespace Abeer.Server.Controllers
         {
             var current = await functionalUnitOfWork.AdRepository.FirstOrDefault(o => o.Id == AdId);
             
-            if (current.AdPrice.Value == 0 || !string.IsNullOrEmpty(current.PaymentInformation))
+            var price = (await functionalUnitOfWork.AdPriceRepository.All()).FirstOrDefault(p => p.Id == current.AdPriceId);
+
+            if (price?.Value == 0 || !string.IsNullOrEmpty(current.PaymentInformation))
             {
                 current.IsValid = true;
                 current.ValidateDate = DateTime.UtcNow;

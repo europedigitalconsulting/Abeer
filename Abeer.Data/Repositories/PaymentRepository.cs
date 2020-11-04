@@ -41,7 +41,7 @@ namespace Abeer.Data.Repositories
 
         public Task Remove(Payment payment)
         {
-            return Task.Run(() => _context.Payments.Remove(payment));
+            return Task.Run(() => _context.Payments.Remove(payment.Id));
         }
 
         public Task<bool> Any(Expression<Func<Payment, bool>> expression)
