@@ -57,9 +57,22 @@ namespace Abeer.Server
                 options.UseSqlite(
                     Configuration.GetConnectionString("SecurityDbContextConnectionStrings"), options =>
                     options.MigrationsAssembly(typeof(SecurityDbContext).Assembly.FullName)), ServiceLifetime.Transient);
+            
+            services.AddSingleton<IDbProvider>(sp =>
+            {
+                var options = new LiteDbProviderOptions
+                {
+                    FileName = Configuration["Service:Database:FileName"],
+                    BatchSize = int.TryParse(Configuration["Service:Database:BatchSize"], out var batchSize) ?
+                    batchSize : 5000,
+                    Connection = Configuration["Service.Database:Connection"] ?? "Shared"
+                };
 
-            services.Configure<LiteDbProviderOptions>(Configuration.GetSection("Service:Database"));
-            services.AddSingleton<IDbProvider, LiteDbProvider>();
+                if (!string.IsNullOrEmpty(Configuration["Service:Database:Password"]))
+                    options.Password = Configuration["Service:Database:Password"];
+
+                return new LiteDbProvider(options);
+            });
             services.AddSingleton<FunctionalDbContext>();
 
             services.AddSignalR();

@@ -17,36 +17,34 @@ namespace DbProvider.LiteDbProvider
         private int batchSize;
         private TimeSpan timeout;
 
-        public LiteDbProvider(IOptions<LiteDbProviderOptions> configuration)
+        public LiteDbProvider(LiteDbProviderOptions configuration)
         {
-            var settings = configuration.Value;
-
             var connectionString = new ConnectionString
             {
-                Filename = settings.FileName, 
+                Filename = configuration.FileName, 
                 Upgrade = true
             };
 
             var connection = ConnectionType.Direct;
 
-            if (!string.IsNullOrEmpty(settings.Connection))
-                Enum.TryParse<ConnectionType>(settings.Connection, out connection);
+            if (!string.IsNullOrEmpty(configuration.Connection))
+                Enum.TryParse<ConnectionType>(configuration.Connection, out connection);
 
             connectionString.Connection = connection;
 
-            if (!string.IsNullOrEmpty(settings.Password))
+            if (!string.IsNullOrEmpty(configuration.Password))
             {
-                connectionString.Password = settings.Password;
+                connectionString.Password = configuration.Password;
             }
 
-            if (settings.InitialSize > 0)
-                connectionString.InitialSize = settings.InitialSize;
+            if (configuration.InitialSize > 0)
+                connectionString.InitialSize = configuration.InitialSize;
 
-            if (!string.IsNullOrEmpty(settings.Collation))
-                connectionString.Collation = new Collation(settings.Collation);
+            if (!string.IsNullOrEmpty(configuration.Collation))
+                connectionString.Collation = new Collation(configuration.Collation);
 
-            if (settings.BatchSize > 0)
-                batchSize = settings.BatchSize;
+            if (configuration.BatchSize > 0)
+                batchSize = configuration.BatchSize;
 
             string dataFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data");
             
@@ -55,6 +53,7 @@ namespace DbProvider.LiteDbProvider
 
             var fileName = Path.Combine(dataFolder, connectionString.Filename);
 
+            connectionString.Filename = fileName;
             liteDatabase = new LiteDatabase(connectionString);
 
             timeout = TimeSpan.FromMinutes(5);

@@ -36,22 +36,12 @@ namespace Abeer.Client.Shared
 
             if (_user.Identity.IsAuthenticated)
             {
-                var json = JsonConvert.SerializeObject(_user, Formatting.Indented, new JsonSerializerSettings
-                { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
-
-                Console.WriteLine($"User {json}");
-
                 _claims = _user.Claims;
                 Name = _user.Identity.Name;
-
-                UserId = $"User Id: {_user.FindFirst(c => c.Type == "sub")?.Value}";
                 IsAuthenticated = true;
-
                 if (string.IsNullOrWhiteSpace(Name))
                     Name = UserId;
-
                 DisplayName = _user.FindFirstValue("displayname");
-
                 if (string.IsNullOrWhiteSpace(DisplayName))
                     DisplayName = Name;
             }

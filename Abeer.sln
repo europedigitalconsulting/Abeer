@@ -25,7 +25,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abeer.Client.UISdk", "Abeer
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Db", "Db", "{530A5085-0048-4FDB-ABBB-6CF97E43CBAE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbProvider.LiteDbProvider", "DbProvider.LiteDbProvider\DbProvider.LiteDbProvider.csproj", "{843DD4FE-D3A5-4A67-B34D-ADC80075FC62}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbProvider.LiteDbProvider", "DbProvider.LiteDbProvider\DbProvider.LiteDbProvider.csproj", "{843DD4FE-D3A5-4A67-B34D-ADC80075FC62}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbProvider.EfCore.SqlServerProvider", "DbProvider.EfCore.SqlServerProvider\DbProvider.EfCore.SqlServerProvider.csproj", "{04094CD4-44A1-4C4D-BFDA-4DA9CC07DB39}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -76,6 +78,12 @@ Global
 		{843DD4FE-D3A5-4A67-B34D-ADC80075FC62}.Ghpages|Any CPU.Build.0 = Debug|Any CPU
 		{843DD4FE-D3A5-4A67-B34D-ADC80075FC62}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{843DD4FE-D3A5-4A67-B34D-ADC80075FC62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04094CD4-44A1-4C4D-BFDA-4DA9CC07DB39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04094CD4-44A1-4C4D-BFDA-4DA9CC07DB39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04094CD4-44A1-4C4D-BFDA-4DA9CC07DB39}.Ghpages|Any CPU.ActiveCfg = Debug|Any CPU
+		{04094CD4-44A1-4C4D-BFDA-4DA9CC07DB39}.Ghpages|Any CPU.Build.0 = Debug|Any CPU
+		{04094CD4-44A1-4C4D-BFDA-4DA9CC07DB39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04094CD4-44A1-4C4D-BFDA-4DA9CC07DB39}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -88,6 +96,7 @@ Global
 		{00901756-E7C5-4F07-9E86-D31AD8765955} = {2C1C6407-2298-494F-9906-B2746435C35F}
 		{9B9CA1ED-92DD-4B48-909F-AFE664847728} = {B88FCDAE-ADA7-4F4F-99D9-4AAC627CAAA6}
 		{843DD4FE-D3A5-4A67-B34D-ADC80075FC62} = {530A5085-0048-4FDB-ABBB-6CF97E43CBAE}
+		{04094CD4-44A1-4C4D-BFDA-4DA9CC07DB39} = {530A5085-0048-4FDB-ABBB-6CF97E43CBAE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {53E6A249-9A9D-4939-B752-5470E5B85C7E}
