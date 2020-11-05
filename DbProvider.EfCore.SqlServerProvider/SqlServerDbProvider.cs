@@ -1,20 +1,31 @@
-﻿using Abeer.Data;
-
+﻿using Abeer.Shared.Data;
 using EFCore.BulkExtensions;
-
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 
 namespace DbProvider.EfCore.SqlServerProvider
 {
-    public class SqlServerDbProvider : Abeer.Data.IDbProvider
+    public class SqlServerDbProvider : IDbProvider
     {
         private readonly SqlServerOptions sqlServerOptions;
-        private readonly SqlContext _sqlContext;
+        private readonly DbContext _sqlContext;
 
-        public SqlServerDbProvider(SqlServerOptions sqlServerOptions)
+        public SqlServerDbProvider(IServiceProvider sp, IConfiguration configuration)
         {
-            this.sqlServerOptions = sqlServerOptions;
+            this.sqlServerOptions = new SqlServerOptions
+            {
+                ConnectionString = configuration.GetConnectionString(configuration["Service:Database:ConnectionStrings"]),
+                EnableDetailedErrors = bool.TryParse(configuration["Service:Database:EnableDetailedErrors"], out var enableDetailedErrors) ?
+                    enableDetailedErrors : false, 
+                EnableSensitiveDataLogging = bool.TryParse(configuration["Service:Database:EnableSensitiveDataLogging"], out var enableSensitiveDataLogging) ?
+                    enableSensitiveDataLogging : false,
+                MigrationAssemblyName = configuration["Service:Database:MigrationAssemblyName"],
+                DbContextType = configuration["Service:Database:DbContext"]
+            };
+
             var dbContextOptionsBuilder = new DbContextOptionsBuilder();
             dbContextOptionsBuilder.EnableDetailedErrors(sqlServerOptions.EnableDetailedErrors);
             dbContextOptionsBuilder.EnableSensitiveDataLogging(sqlServerOptions.EnableSensitiveDataLogging);
@@ -22,42 +33,47 @@ namespace DbProvider.EfCore.SqlServerProvider
                 sqlServerOptions.ConnectionString, c=>
             {
                 c.EnableRetryOnFailure();
-                c.MaxBatchSize(sqlServerOptions.MaxBatchSize);
+
+                if(sqlServerOptions.MaxBatchSize > 0)
+                    c.MaxBatchSize(sqlServerOptions.MaxBatchSize);
+
+                c.MigrationsAssembly(sqlServerOptions.MigrationAssemblyName);
             });
 
-            _sqlContext = new SqlContext(
-                new DbContext(dbContextOptionsBuilder.Options)
-                );
+            _sqlContext = (DbContext)ActivatorUtilities.CreateInstance(sp, Type.GetType(sqlServerOptions.DbContextType), dbContextOptionsBuilder.Options);
+
+            //_sqlContext.Database.EnsureCreated();
+            _sqlContext.Database.Migrate();
         }
 
         public void BulkInsert<T>(IList<T> entities) where T : class
         {
-            _sqlContext._dbContext.BulkInsert<T>(entities);
+            _sqlContext.BulkInsert<T>(entities);
         }
 
         public void BulkUpdate<T>(IList<T> entities) where T : class
         {
-            _sqlContext._dbContext.BulkUpdate<T>(entities);
+            _sqlContext.BulkUpdate<T>(entities);
         }
 
         public void EnsureCreated()
         {
-            _sqlContext._dbContext.Database.EnsureCreated();
+            _sqlContext.Database.EnsureCreated();
         }
 
         public int SaveChanges()
         {
-            return _sqlContext._dbContext.SaveChanges();
+            return _sqlContext.SaveChanges();
         }
 
         public IDbSet<T> Set<T>() where T : class
         {
-            return new SqlServerSet<T>(_sqlContext._dbContext.Set<T>());
+            return new SqlServerSet<T>(_sqlContext.Set<T>(), _sqlContext);
         }
 
         public void SetTimeout(int timeout)
         {
-            _sqlContext._dbContext.Database.SetCommandTimeout(timeout);
+            _sqlContext.Database.SetCommandTimeout(timeout);
         }
     }
 }

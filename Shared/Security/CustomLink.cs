@@ -7,11 +7,11 @@ namespace Abeer.Shared
     {
         public CustomLink()
         {
-            Id = Guid.NewGuid().ToString();
+            Id = Guid.NewGuid();
         }
 
         [Key]
-        public string Id { get; set; }
+        public Guid Id { get; set; }
         public string OwnerId { get; set; }
         public string BackgroundColor { get; set; }
         public string Name { get; set; }

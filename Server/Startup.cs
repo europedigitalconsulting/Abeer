@@ -27,6 +27,7 @@ using System.IO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Internal;
 using DbProvider.LiteDbProvider;
+using Abeer.Shared.Data;
 
 namespace Abeer.Server
 {
@@ -53,26 +54,20 @@ namespace Abeer.Server
                 options.AutomaticAuthentication = false;
             });
 
+            var provider = Configuration["Service:Database:DbProvider"];
+
             services.AddDbContext<SecurityDbContext>(options =>
                 options.UseSqlite(
                     Configuration.GetConnectionString("SecurityDbContextConnectionStrings"), options =>
                     options.MigrationsAssembly(typeof(SecurityDbContext).Assembly.FullName)), ServiceLifetime.Transient);
             
-            services.AddSingleton<IDbProvider>(sp =>
+            services.AddSingleton(sp =>
             {
-                var options = new LiteDbProviderOptions
-                {
-                    FileName = Configuration["Service:Database:FileName"],
-                    BatchSize = int.TryParse(Configuration["Service:Database:BatchSize"], out var batchSize) ?
-                    batchSize : 5000,
-                    Connection = Configuration["Service.Database:Connection"] ?? "Shared"
-                };
-
-                if (!string.IsNullOrEmpty(Configuration["Service:Database:Password"]))
-                    options.Password = Configuration["Service:Database:Password"];
-
-                return new LiteDbProvider(options);
+                var provider = Configuration["Service:Database:DbProvider"];
+                Type instanceType = Type.GetType(provider);
+                return (IDbProvider)ActivatorUtilities.CreateInstance(sp, instanceType, Configuration);
             });
+
             services.AddSingleton<FunctionalDbContext>();
 
             services.AddSignalR();

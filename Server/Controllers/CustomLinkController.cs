@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Abeer.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Abeer.Data.UnitOfworks;
+using System;
 
 namespace Abeer.Server.Controllers
 {
@@ -18,7 +19,7 @@ namespace Abeer.Server.Controllers
         }
 
         [HttpDelete("{UserId}/{linkId}")]
-        public async Task<IActionResult> Delete(string UserId, string linkId)
+        public async Task<IActionResult> Delete(string UserId, Guid linkId)
         {
             var network = await _functionalUnitOfWork.CustomLinkRepository.FirstOrDefault(s => s.OwnerId == UserId &&
                 s.Id == linkId);

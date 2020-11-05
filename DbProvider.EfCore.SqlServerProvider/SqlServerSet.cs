@@ -1,9 +1,9 @@
-﻿using Abeer.Data;
-
+﻿using Abeer.Shared.Data;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace DbProvider.EfCore.SqlServerProvider
@@ -11,55 +11,74 @@ namespace DbProvider.EfCore.SqlServerProvider
     internal class SqlServerSet<T> : IDbSet<T> where T : class
     {
         private DbSet<T> dbSets;
+        private readonly DbContext sqlContext;
 
-        public SqlServerSet(DbSet<T> dbSets)
+        public SqlServerSet(DbSet<T> dbSets, DbContext sqlContext)
         {
             this.dbSets = dbSets;
+            this.sqlContext = sqlContext;
         }
 
         public T Add(T entity)
         {
-            throw new NotImplementedException();
+            this.dbSets.Add(entity);
+            sqlContext.SaveChanges();
+            return entity;
         }
 
         public bool Any(Expression<Func<T, bool>> p)
         {
-            throw new NotImplementedException();
+            return dbSets.Any(p);
         }
 
         public int Count()
         {
-            throw new NotImplementedException();
+            return dbSets.Count();
         }
 
         public int Count(Expression<Func<T, bool>> p)
         {
-            throw new NotImplementedException();
+            return dbSets.Count(p);
         }
 
         public T FirstOrDefault(Expression<Func<T, bool>> p)
         {
-            throw new NotImplementedException();
+            return dbSets.FirstOrDefault(p);
         }
 
         public void Remove(object id)
         {
-            throw new NotImplementedException();
+            var entity = dbSets.Find(id);
+    
+            if(entity != null)
+                dbSets.Remove(entity);
+
+            sqlContext.SaveChanges();
         }
 
         public IList<T> ToList()
         {
-            throw new NotImplementedException();
+            return dbSets.ToList();
         }
 
         public T Update(T entity)
         {
-            throw new NotImplementedException();
+            dbSets.Update(entity);
+            sqlContext.SaveChanges();
+            return entity;
         }
 
         public IList<T> Where(Expression<Func<T, bool>> p, int skip = 0, int limit = int.MaxValue)
         {
-            throw new NotImplementedException();
+            var query = dbSets.Where(p);
+
+            if (skip > 0)
+                query = query.Skip(skip);
+
+            if (limit > 0)
+                query = query.Take(limit);
+
+            return query.ToList();
         }
     }
 }

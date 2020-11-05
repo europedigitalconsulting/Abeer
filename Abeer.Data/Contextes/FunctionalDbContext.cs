@@ -1,6 +1,6 @@
-﻿using Abeer.Data;
-using Abeer.Data.Models;
+﻿using Abeer.Data.Models;
 using Abeer.Shared;
+using Abeer.Shared.Data;
 using Abeer.Shared.Functional;
 
 using System.Collections.Generic;
@@ -10,9 +10,9 @@ namespace Abeer.Data
 {
     public class FunctionalDbContext
     {
-        private readonly Abeer.Data.IDbProvider dbProvider;
+        private readonly IDbProvider dbProvider;
 
-        public FunctionalDbContext(Abeer.Data.IDbProvider dbProvider)
+        public FunctionalDbContext(IDbProvider dbProvider)
         {
             this.dbProvider = dbProvider;
         }

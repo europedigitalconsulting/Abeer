@@ -1,7 +1,6 @@
-﻿using Abeer.Data;
-
+﻿using Abeer.Shared.Data;
 using LiteDB;
-
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
 using System;
@@ -11,40 +10,51 @@ using System.Threading.Tasks;
 
 namespace DbProvider.LiteDbProvider
 {
-    public class LiteDbProvider : Abeer.Data.IDbProvider
+    public class LiteDbProvider : IDbProvider
     {
         LiteDatabase liteDatabase;
         private int batchSize;
         private TimeSpan timeout;
 
-        public LiteDbProvider(LiteDbProviderOptions configuration)
+        public LiteDbProvider(IConfiguration configuration)
         {
+            var options = new LiteDbProviderOptions
+            {
+                FileName = configuration["Service:Database:FileName"],
+                BatchSize = int.TryParse(configuration["Service:Database:BatchSize"], out var batchSize) ?
+                    batchSize : 5000,
+                Connection = configuration["Service.Database:Connection"] ?? "Shared"
+            };
+
+            if (!string.IsNullOrEmpty(configuration["Service:Database:Password"]))
+                options.Password = configuration["Service:Database:Password"];
+
             var connectionString = new ConnectionString
             {
-                Filename = configuration.FileName, 
+                Filename = options.FileName, 
                 Upgrade = true
             };
 
             var connection = ConnectionType.Direct;
 
-            if (!string.IsNullOrEmpty(configuration.Connection))
-                Enum.TryParse<ConnectionType>(configuration.Connection, out connection);
+            if (!string.IsNullOrEmpty(options.Connection))
+                Enum.TryParse<ConnectionType>(options.Connection, out connection);
 
             connectionString.Connection = connection;
 
-            if (!string.IsNullOrEmpty(configuration.Password))
+            if (!string.IsNullOrEmpty(options.Password))
             {
-                connectionString.Password = configuration.Password;
+                connectionString.Password = options.Password;
             }
 
-            if (configuration.InitialSize > 0)
-                connectionString.InitialSize = configuration.InitialSize;
+            if (options.InitialSize > 0)
+                connectionString.InitialSize = options.InitialSize;
 
-            if (!string.IsNullOrEmpty(configuration.Collation))
-                connectionString.Collation = new Collation(configuration.Collation);
+            if (!string.IsNullOrEmpty(options.Collation))
+                connectionString.Collation = new Collation(options.Collation);
 
-            if (configuration.BatchSize > 0)
-                batchSize = configuration.BatchSize;
+            if (options.BatchSize > 0)
+                batchSize = options.BatchSize;
 
             string dataFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data");
             

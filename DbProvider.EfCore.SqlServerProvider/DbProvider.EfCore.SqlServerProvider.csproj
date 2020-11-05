@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Abeer.Data\Abeer.Data.csproj" />
+    <ProjectReference Include="..\Shared\Abeer.Shared.csproj" />
   </ItemGroup>
 
 </Project>

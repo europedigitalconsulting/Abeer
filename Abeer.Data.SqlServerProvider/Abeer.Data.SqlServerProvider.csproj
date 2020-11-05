@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Abeer.Data\Abeer.Data.csproj" />
+    <ProjectReference Include="..\DbProvider.EfCore.SqlServerProvider\DbProvider.EfCore.SqlServerProvider.csproj" />
+    <ProjectReference Include="..\Shared\Abeer.Shared.csproj" />
+  </ItemGroup>
+
+</Project>
