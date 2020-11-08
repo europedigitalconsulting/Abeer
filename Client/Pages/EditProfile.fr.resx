@@ -153,6 +153,9 @@
   <data name="DisplayName" xml:space="preserve">
     <value>Nom à afficher</value>
   </data>
+  <data name="EditProfile" xml:space="preserve">
+    <value>Modifier mon profile</value>
+  </data>
   <data name="Email" xml:space="preserve">
     <value>Email</value>
   </data>
