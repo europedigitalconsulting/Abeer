@@ -153,6 +153,9 @@
   <data name="DisplayName" xml:space="preserve">
     <value>Display name</value>
   </data>
+  <data name="DisplayPinCode" xml:space="preserve">
+    <value>View my Pin Code</value>
+  </data>
   <data name="EditProfile" xml:space="preserve">
     <value>Edit Profile</value>
   </data>

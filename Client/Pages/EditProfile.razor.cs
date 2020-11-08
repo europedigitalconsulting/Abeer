@@ -33,12 +33,16 @@ namespace Abeer.Client.Pages
         bool ModalSocialNetworkVisible;
         bool ModalCustomLinkVisible;
         bool ModalChangePassword;
+        bool ModalDisplayPinCode;
+
         bool ChangePasswordHasError;
         bool ChangePhotoHasError;
         bool ModalChangePhoto;
         string ChangePasswordError = "";
         string ChangePhotoError = "";
         string _PhotoType = "Gravatar";
+        string PinCode;
+        string DigitCode;
 
         public string PhotoType
         {
@@ -70,6 +74,9 @@ namespace Abeer.Client.Pages
             var json = await response.Content.ReadAsStringAsync();
             Console.WriteLine($"user :{json}");
             User = JsonConvert.DeserializeObject<ViewApplicationUser>(json);
+
+            PinCode = User.Pincode;
+            DigitCode = User.DigitCode;
 
             _PhotoUrl = User.PhotoUrl;
 
@@ -205,6 +212,12 @@ namespace Abeer.Client.Pages
             NewSocialLink.Name = name;
             NewSocialLink.BackgroundColor = background;
             NewSocialLink.Logo = logo;
+            await InvokeAsync(StateHasChanged);
+        }
+
+        async Task OpenModalPinCode()
+        {
+            ModalDisplayPinCode = true;
             await InvokeAsync(StateHasChanged);
         }
     }

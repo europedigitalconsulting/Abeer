@@ -54,6 +54,8 @@ namespace Abeer.Server.Controllers
             {
                 City = user.City,
                 Email = user.Email,
+                Pincode = user.PinCode, 
+                DigitCode = user.PinCode,
                 PhoneNumber = user.PhoneNumber,
                 Id = user.Id,
                 SocialNetworkConnected = await _functionalUnitOfWork
@@ -87,6 +89,7 @@ namespace Abeer.Server.Controllers
             user.FirstName = applicationUser.FirstName;
             user.LastName = applicationUser.LastName;
             user.DisplayName = applicationUser.DisplayName;
+            user.Description = applicationUser.Description;
             user.City = applicationUser.City;
             user.Country = applicationUser.Country;
             user.PhotoUrl = applicationUser.PhotoUrl;

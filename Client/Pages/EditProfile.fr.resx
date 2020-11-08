@@ -153,6 +153,9 @@
   <data name="DisplayName" xml:space="preserve">
     <value>Nom à afficher</value>
   </data>
+  <data name="DisplayPinCode" xml:space="preserve">
+    <value>Afficher mon code pin</value>
+  </data>
   <data name="EditProfile" xml:space="preserve">
     <value>Modifier mon profile</value>
   </data>
