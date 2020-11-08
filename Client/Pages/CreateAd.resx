@@ -120,6 +120,9 @@
   <data name="AdTitle" xml:space="preserve">
     <value>Title</value>
   </data>
+  <data name="Back" xml:space="preserve">
+    <value>Retour</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancel and return to ads list</value>
   </data>
@@ -132,11 +135,29 @@
   <data name="Finish" xml:space="preserve">
     <value>Publish my offer</value>
   </data>
+  <data name="Image1" xml:space="preserve">
+    <value>Image (1)</value>
+  </data>
+  <data name="Image2" xml:space="preserve">
+    <value>Image (2)</value>
+  </data>
+  <data name="Image3" xml:space="preserve">
+    <value>Image (3)</value>
+  </data>
+  <data name="Image4" xml:space="preserve">
+    <value>Image (4)</value>
+  </data>
   <data name="Images" xml:space="preserve">
     <value>Image</value>
   </data>
   <data name="Price" xml:space="preserve">
     <value>Price</value>
+  </data>
+  <data name="ProcessPayment" xml:space="preserve">
+    <value>Process to payment</value>
+  </data>
+  <data name="PublishError" xml:space="preserve">
+    <value>Can not publisher your offer or ad, please try later!</value>
   </data>
   <data name="RequireLogin" xml:space="preserve">
     <value>Ad's publishing process requires an user account, if you are not login, you will be redirect to login form</value>
@@ -144,8 +165,20 @@
   <data name="Select" xml:space="preserve">
     <value>Select it</value>
   </data>
+  <data name="SelectYourOffer" xml:space="preserve">
+    <value>Select your display formula</value>
+  </data>
   <data name="StartPublish" xml:space="preserve">
     <value>Start publish your offer</value>
+  </data>
+  <data name="Step1Title" xml:space="preserve">
+    <value>Publish a new ad or offer</value>
+  </data>
+  <data name="Step2Title" xml:space="preserve">
+    <value>Select a display formula</value>
+  </data>
+  <data name="Step3Title" xml:space="preserve">
+    <value>Validate the offer and the formula</value>
   </data>
   <data name="Summary" xml:space="preserve">
     <value>Summary</value>

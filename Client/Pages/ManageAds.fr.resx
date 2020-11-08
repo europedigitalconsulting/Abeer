@@ -117,13 +117,46 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AdTitle" xml:space="preserve">
+    <value>Titre</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="EditAdTitle" xml:space="preserve">
+    <value>Modifier l'offre</value>
+  </data>
   <data name="ManageAdPrices" xml:space="preserve">
-    <value>Gérer les prix d'affichage</value>
+    <value>Gérer les formules</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Prix</value>
   </data>
   <data name="PublishAnAd" xml:space="preserve">
-    <value>Publier une annonce ou une offre</value>
+    <value>Publier une offre</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Enregister</value>
+  </data>
+  <data name="Summary" xml:space="preserve">
+    <value>Résumé</value>
   </data>
   <data name="Title" xml:space="preserve">
     <value>Gérer les offres et annonces</value>
+  </data>
+  <data name="Url1" xml:space="preserve">
+    <value>URL 1</value>
+  </data>
+  <data name="Url2" xml:space="preserve">
+    <value>URL 2</value>
+  </data>
+  <data name="Url3" xml:space="preserve">
+    <value>URL 3</value>
+  </data>
+  <data name="Url4" xml:space="preserve">
+    <value>URL 4</value>
   </data>
 </root>

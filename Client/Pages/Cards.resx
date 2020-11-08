@@ -129,6 +129,9 @@
   <data name="CardNumber" xml:space="preserve">
     <value>Card Number</value>
   </data>
+  <data name="CardType" xml:space="preserve">
+    <value>Card Type</value>
+  </data>
   <data name="ConfirmDelete" xml:space="preserve">
     <value>Are you sure to delete this card</value>
   </data>
@@ -157,7 +160,7 @@
     <value>Insert a card</value>
   </data>
   <data name="LabelCardQuantity" xml:space="preserve">
-    <value>Nombre de carte à créer</value>
+    <value>Quantity</value>
   </data>
   <data name="LabelWebHookAuthentication" xml:space="preserve">
     <value>Authentication</value>
@@ -174,8 +177,23 @@
   <data name="MyCardListCatchPhrase" xml:space="preserve">
     <value>This page helps you to create, edit or delete card to be used by the customers</value>
   </data>
+  <data name="NbOfTokenAvailable" xml:space="preserve">
+    <value>Nb of tokens availabled</value>
+  </data>
+  <data name="NbOfTokens" xml:space="preserve">
+    <value>Nb of tokens</value>
+  </data>
+  <data name="NbOfTokensUsed" xml:space="preserve">
+    <value>Nb of tokens used</value>
+  </data>
   <data name="NoCardFound" xml:space="preserve">
     <value>No card is found please add a new one</value>
+  </data>
+  <data name="NotOnlineSince" xml:space="preserve">
+    <value>Is not online since</value>
+  </data>
+  <data name="OnlineBetween" xml:space="preserve">
+    <value>Is online between </value>
   </data>
   <data name="Pending" xml:space="preserve">
     <value>The generation is pending</value>
@@ -197,5 +215,11 @@
   </data>
   <data name="Value" xml:space="preserve">
     <value>points</value>
+  </data>
+  <data name="ViewCount" xml:space="preserve">
+    <value>View count</value>
+  </data>
+  <data name="WillBeOnline" xml:space="preserve">
+    <value>Will be online from</value>
   </data>
 </root>

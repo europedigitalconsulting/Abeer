@@ -118,22 +118,22 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AddContact" xml:space="preserve">
-    <value>Ajouter un nouveau contact</value>
+    <value>Ajouter un contact</value>
   </data>
   <data name="ById" xml:space="preserve">
-    <value>Vous connaissez l'identifiant du contact, utiliser directement son identifiant</value>
+    <value>Si vous connaissez l'identifiant de l'utilisateur vous pouvez rechercher pour son identifiant</value>
   </data>
   <data name="ByName" xml:space="preserve">
-    <value>Vous ne connaissez pas son identifiant, utiliser son email et son nom</value>
+    <value>Si vous connaissez son nom vous pouvez rechercher par son nom</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Annuler</value>
   </data>
   <data name="ConfirmDelete" xml:space="preserve">
-    <value>Etes-vous sûr de vouloir supprimer la fiche du contact ?</value>
+    <value>Etes-vous sur de vouloir supprimer ce contact ?</value>
   </data>
   <data name="ContactDisplayName" xml:space="preserve">
-    <value>Nom</value>
+    <value>Nom à afficher</value>
   </data>
   <data name="ContactId" xml:space="preserve">
     <value>Identifiant</value>
@@ -145,7 +145,7 @@
     <value>Supprimer</value>
   </data>
   <data name="DeleteTitle" xml:space="preserve">
-    <value>Supprimer la fiche du contact</value>
+    <value>Supprimer le contact</value>
   </data>
   <data name="Home" xml:space="preserve">
     <value>Accueil</value>
@@ -160,16 +160,19 @@
     <value>Liste des contacts</value>
   </data>
   <data name="MyContactListCatchPhrase" xml:space="preserve">
-    <value>Cette page vous permet de gérer un annuaire de contacts, vous pouvez ajouter, modifier ou supprimer vos fiches</value>
+    <value>Cette page vous permet de gérer votre liste de contacts, vous pouvez ajouter, modifier ou supprimer des contacts</value>
   </data>
   <data name="NoContactFound" xml:space="preserve">
-    <value>Aucun contact n'a été trouvé, vous pouvez en ajouter un nouveau</value>
+    <value>Aucun contact n'a été trouvé, vous pouvez ajouter un nouveau contact</value>
   </data>
   <data name="Search" xml:space="preserve">
     <value>Rechercher</value>
   </data>
+  <data name="SearchContact" xml:space="preserve">
+    <value>Rechercher</value>
+  </data>
   <data name="SendTo" xml:space="preserve">
-    <value>Envoyer une transaction à ce contact</value>
+    <value>Envoyer à </value>
   </data>
   <data name="SocialLinks" xml:space="preserve">
     <value>Liens sociaux</value>
@@ -181,6 +184,6 @@
     <value>Modifier</value>
   </data>
   <data name="UpdateTitle" xml:space="preserve">
-    <value>Modifier la fiche du contact</value>
+    <value>Modifier les informations d'un contact</value>
   </data>
 </root>

@@ -120,6 +120,12 @@
   <data name="AddASocialNetwork" xml:space="preserve">
     <value>Connect a new social network</value>
   </data>
+  <data name="AddCustomLink" xml:space="preserve">
+    <value>Add a custom link</value>
+  </data>
+  <data name="AddCustomLinks" xml:space="preserve">
+    <value>Add a custom link</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
@@ -129,11 +135,26 @@
   <data name="ChangePhoto" xml:space="preserve">
     <value>Change my photo</value>
   </data>
+  <data name="ChangePicture" xml:space="preserve">
+    <value>Change picture</value>
+  </data>
   <data name="City" xml:space="preserve">
     <value>City</value>
   </data>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>Confirm new password</value>
+  </data>
+  <data name="Country" xml:space="preserve">
+    <value>Country</value>
+  </data>
+  <data name="CustomLinks" xml:space="preserve">
+    <value>Custom Links</value>
+  </data>
   <data name="DisplayName" xml:space="preserve">
     <value>Display name</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Email</value>
   </data>
   <data name="FirstName" xml:space="preserve">
     <value>First Name</value>
@@ -165,11 +186,29 @@
   <data name="LastName" xml:space="preserve">
     <value>Last Name</value>
   </data>
+  <data name="Logo" xml:space="preserve">
+    <value>Logo</value>
+  </data>
   <data name="MyAccount" xml:space="preserve">
     <value>My Account</value>
   </data>
   <data name="MyWallet" xml:space="preserve">
     <value>My Wallet</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="NewPassword" xml:space="preserve">
+    <value>New Password</value>
+  </data>
+  <data name="OldPassword" xml:space="preserve">
+    <value>Old Password</value>
+  </data>
+  <data name="Phone" xml:space="preserve">
+    <value>Phone</value>
+  </data>
+  <data name="PhotoType" xml:space="preserve">
+    <value>Type of photo</value>
   </data>
   <data name="PinCode" xml:space="preserve">
     <value>Pin Code</value>
@@ -177,14 +216,32 @@
   <data name="PinDigit" xml:space="preserve">
     <value>Pin Digit</value>
   </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
   <data name="SocialNetworkConnected" xml:space="preserve">
     <value>Social Network connected</value>
+  </data>
+  <data name="SocialType" xml:space="preserve">
+    <value>Social network type</value>
+  </data>
+  <data name="SocialUrl" xml:space="preserve">
+    <value>Social Profile Url</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>User Profile</value>
   </data>
   <data name="Update" xml:space="preserve">
     <value>Update</value>
   </data>
-  <data name="UserProfile" xml:space="preserve">
-    <value>User Profile</value>
+  <data name="Url" xml:space="preserve">
+    <value>Url</value>
+  </data>
+  <data name="UseCustomPhoto" xml:space="preserve">
+    <value>Use my custom photo</value>
+  </data>
+  <data name="UseGravatarPhoto" xml:space="preserve">
+    <value>Use gravatar service</value>
   </data>
   <data name="ViewQrCode" xml:space="preserve">
     <value>View and share qr code</value>

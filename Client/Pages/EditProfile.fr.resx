@@ -118,108 +118,132 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AddASocialNetwork" xml:space="preserve">
-    <value>Connecter un autre réseau social</value>
+    <value>Connecter un réseau social</value>
   </data>
-  <data name="AvailableSocialNetwork" xml:space="preserve">
-    <value>Réseau disponible</value>
+  <data name="AddCustomLink" xml:space="preserve">
+    <value>Ajouter un lien personnalisé</value>
+  </data>
+  <data name="AddCustomLinks" xml:space="preserve">
+    <value>Ajouter un lien personnalisé</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Annuler</value>
   </data>
   <data name="CatchPhrase" xml:space="preserve">
-    <value>This page helps you to edit your own profile, you can edit, regenerate pin code or token to encrypt your blockchain</value>
-  </data>
-  <data name="ChangePassword" xml:space="preserve">
-    <value>Modifier son mot de passe</value>
-  </data>
-  <data name="ChangePasswordFailedError" xml:space="preserve">
-    <value>Impossible d'enregister votre nouveau mot de passe, veuillez réessayer plus tard</value>
+    <value>Cette page vous aide à modifier votre propre profil, vous pouvez modifier, régénérer le code pin ou un jeton pour crypter vos données</value>
   </data>
   <data name="ChangePhoto" xml:space="preserve">
     <value>Modifier ma photo</value>
   </data>
+  <data name="ChangePicture" xml:space="preserve">
+    <value>Modifier la photo</value>
+  </data>
   <data name="City" xml:space="preserve">
-    <value>City</value>
+    <value>Ville</value>
   </data>
   <data name="ConfirmPassword" xml:space="preserve">
-    <value>Confirmer votre mot de passe</value>
+    <value>Confirmer le nouveau mot de passe</value>
+  </data>
+  <data name="Country" xml:space="preserve">
+    <value>Pays</value>
   </data>
   <data name="CustomLinks" xml:space="preserve">
     <value>Liens personnalisés</value>
   </data>
   <data name="DisplayName" xml:space="preserve">
-    <value>Display name</value>
+    <value>Nom à afficher</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Email</value>
   </data>
   <data name="FirstName" xml:space="preserve">
-    <value>First Name</value>
+    <value>Prénom</value>
   </data>
   <data name="GeneratePinCode" xml:space="preserve">
-    <value>Generate new Pin Code</value>
+    <value>Générer un nouveau code pin</value>
   </data>
   <data name="GenerateTokens" xml:space="preserve">
-    <value>Generate new tokens</value>
+    <value>Générer un nouveau token</value>
   </data>
   <data name="Home" xml:space="preserve">
-    <value>Home</value>
+    <value>Accueil</value>
   </data>
   <data name="IsAdmin" xml:space="preserve">
-    <value>Is an administrator</value>
+    <value>Est un administrateur</value>
   </data>
   <data name="IsManager" xml:space="preserve">
-    <value>Is manager</value>
+    <value>Est un manager</value>
   </data>
   <data name="IsNotOnline" xml:space="preserve">
-    <value>Is not online</value>
+    <value>n'est pas en ligne</value>
   </data>
   <data name="IsOnline" xml:space="preserve">
-    <value>Is Online since</value>
+    <value>Est en ligne depuis</value>
   </data>
   <data name="IsOperator" xml:space="preserve">
-    <value>Is operator</value>
+    <value>Est un opérateur</value>
   </data>
   <data name="LastName" xml:space="preserve">
-    <value>Last Name</value>
+    <value>Nom de famille</value>
+  </data>
+  <data name="Logo" xml:space="preserve">
+    <value>Logo</value>
   </data>
   <data name="MyAccount" xml:space="preserve">
-    <value>My Account</value>
+    <value>Mon compte</value>
   </data>
   <data name="MyWallet" xml:space="preserve">
-    <value>My Wallet</value>
+    <value>Mon espace</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Nom</value>
   </data>
   <data name="NewPassword" xml:space="preserve">
     <value>Nouveau mot de passe</value>
   </data>
   <data name="OldPassword" xml:space="preserve">
-    <value>Entrer votre ancien mot de passe</value>
+    <value>Ancien mot de passe</value>
   </data>
-  <data name="PasswordFieldEmptyError" xml:space="preserve">
-    <value>Veuillez saisir tous les champs de mot de passe</value>
+  <data name="Phone" xml:space="preserve">
+    <value>Téléphone</value>
   </data>
-  <data name="PasswordNotConfirmedError" xml:space="preserve">
-    <value>Merci de bien vouloir confirmer votre mot de passe</value>
+  <data name="PhotoType" xml:space="preserve">
+    <value>Type de photo</value>
   </data>
   <data name="PinCode" xml:space="preserve">
-    <value>Pin Code</value>
+    <value>Numéro de PIN</value>
   </data>
   <data name="PinDigit" xml:space="preserve">
-    <value>Pin Digit</value>
+    <value>Code PIN</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Enregistrer</value>
   </data>
   <data name="SocialNetworkConnected" xml:space="preserve">
-    <value>Réseaux sociaux</value>
+    <value>Réseaux sociaux connectés</value>
   </data>
   <data name="SocialType" xml:space="preserve">
     <value>Type de réseau</value>
   </data>
   <data name="SocialUrl" xml:space="preserve">
-    <value>URL du profil</value>
+    <value>Url du profile</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Profile utilisateur</value>
   </data>
   <data name="Update" xml:space="preserve">
-    <value>Update</value>
+    <value>Modifier</value>
   </data>
-  <data name="UserProfile" xml:space="preserve">
-    <value>User Profile</value>
+  <data name="Url" xml:space="preserve">
+    <value>Url</value>
+  </data>
+  <data name="UseCustomPhoto" xml:space="preserve">
+    <value>Utiliser une photo personnalisée</value>
+  </data>
+  <data name="UseGravatarPhoto" xml:space="preserve">
+    <value>Utiliser le service gravatar</value>
   </data>
   <data name="ViewQrCode" xml:space="preserve">
-    <value>View and share qr code</value>
+    <value>Voir et partager mon QR Code</value>
   </data>
 </root>

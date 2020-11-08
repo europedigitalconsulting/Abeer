@@ -117,73 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AddContact" xml:space="preserve">
-    <value>Add a new contact</value>
+  <data name="Agencies_description" xml:space="preserve">
+    <value>You want to find one of our physical shop where to buy a smart-clik card</value>
   </data>
-  <data name="ById" xml:space="preserve">
-    <value>You know the user id, you can enter direct his id</value>
+  <data name="Business" xml:space="preserve">
+    <value>Business</value>
   </data>
-  <data name="ByName" xml:space="preserve">
-    <value>You don't know the user id, use his email and display name</value>
+  <data name="Business_description" xml:space="preserve">
+    <value>You can share and manage your business contacts</value>
   </data>
-  <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
+  <data name="Cards_description" xml:space="preserve">
+    <value>You can manage cards, create new one, tracking using</value>
   </data>
-  <data name="ConfirmDelete" xml:space="preserve">
-    <value>Are you sure to delete this contact?</value>
-  </data>
-  <data name="ContactDisplayName" xml:space="preserve">
-    <value>Display Name</value>
-  </data>
-  <data name="ContactId" xml:space="preserve">
-    <value>Contact Id</value>
-  </data>
-  <data name="Contacts" xml:space="preserve">
-    <value>Contacts</value>
-  </data>
-  <data name="Delete" xml:space="preserve">
-    <value>Delete</value>
-  </data>
-  <data name="DeleteTitle" xml:space="preserve">
-    <value>Delete the contact</value>
-  </data>
-  <data name="Home" xml:space="preserve">
-    <value>Home</value>
-  </data>
-  <data name="Insert" xml:space="preserve">
-    <value>Insert</value>
-  </data>
-  <data name="InsertTitle" xml:space="preserve">
-    <value>Insert a new contact</value>
-  </data>
-  <data name="MyContactList" xml:space="preserve">
-    <value>Contact List</value>
-  </data>
-  <data name="MyContactListCatchPhrase" xml:space="preserve">
-    <value>This page allows you to manage your contact list, you can add, edit or delete contacts</value>
-  </data>
-  <data name="NoContactFound" xml:space="preserve">
-    <value>No contact is found, you can add a new contact</value>
-  </data>
-  <data name="Search" xml:space="preserve">
-    <value>Search</value>
-  </data>
-  <data name="SearchContact" xml:space="preserve">
-    <value>Search contact</value>
-  </data>
-  <data name="SendTo" xml:space="preserve">
-    <value>Send a transaction to this contact</value>
-  </data>
-  <data name="SocialLinks" xml:space="preserve">
-    <value>Social links</value>
+  <data name="Profile_description" xml:space="preserve">
+    <value>You can create and view ads to sell or buy stuff</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Contact List</value>
+    <value>Services</value>
   </data>
-  <data name="Update" xml:space="preserve">
-    <value>Update</value>
-  </data>
-  <data name="UpdateTitle" xml:space="preserve">
-    <value>Update the contact details</value>
+  <data name="Users_description" xml:space="preserve">
+    <value>You can add, edit or delete users</value>
   </data>
 </root>

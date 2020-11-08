@@ -120,6 +120,9 @@
   <data name="ManageAds" xml:space="preserve">
     <value>Gérer les annonces et les offres</value>
   </data>
+  <data name="NoAds" xml:space="preserve">
+    <value>Aucune annonce pour l'instant</value>
+  </data>
   <data name="PublishYourAd" xml:space="preserve">
     <value>Publiez votre offre maintenant et gagner en visibilité</value>
   </data>

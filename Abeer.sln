@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbProvider.LiteDbProvider",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbProvider.EfCore.SqlServerProvider", "DbProvider.EfCore.SqlServerProvider\DbProvider.EfCore.SqlServerProvider.csproj", "{04094CD4-44A1-4C4D-BFDA-4DA9CC07DB39}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abeer.Data.SqlServerProvider", "Abeer.Data.SqlServerProvider\Abeer.Data.SqlServerProvider.csproj", "{BF7CF004-176B-462C-BC1C-92914AF54FDC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abeer.Data.SqlServerProvider", "Abeer.Data.SqlServerProvider\Abeer.Data.SqlServerProvider.csproj", "{BF7CF004-176B-462C-BC1C-92914AF54FDC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

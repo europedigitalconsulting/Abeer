@@ -1,5 +1,6 @@
 ﻿@page "/services"
 @using System.Security.Claims
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Services> Loc
 
 @code
 {
@@ -18,13 +19,13 @@
     } }
 <section class="section">
     <div class="section-header">
-        <h1>Services</h1>
+        <h1>@Loc["Title"]</h1>
     </div>
 
     <div class="section-body">
         <div class="card card-primary">
             <div class="card-header">
-                <h3>Business</h3>
+                <h3>@Loc["Business"]</h3>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -32,11 +33,10 @@
                         <a href="profile">
                             <div class="card profile-widget border">
                                 <div class="profile-widget-header">
-                                    <i class="fa fa-8x fa-address-book rounded-circle profile-widget-picture" style="        color: blue
-"></i>
+                                    <i class="fa fa-8x fa-address-book rounded-circle profile-widget-picture" style="color: blue"></i>
                                 </div>
                                 <div class="profile-widget-description pb-0">
-                                    <div class="profile-widget-name">You can share and manage your business contacts</div>
+                                    <div class="profile-widget-name">@Loc["Business_description"]</div>
                                 </div>
                             </div>
                         </a>
@@ -48,7 +48,19 @@
                                     <i class="fa fa-8x fa-ad rounded-circle profile-widget-picture" style="color:blue"></i>
                                 </div>
                                 <div class="profile-widget-description pb-0">
-                                    <div class="profile-widget-name">You can create and view ads to sell or buy stuff</div>
+                                    <div class="profile-widget-name">@Loc["Profile_description"]</div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-12">
+                        <a href="agencies">
+                            <div class="card profile-widget border">
+                                <div class="profile-widget-header">
+                                    <i class="fa fa-8x fa-store rounded-circle profile-widget-picture" style="color: blue"></i>
+                                </div>
+                                <div class="profile-widget-description pb-0">
+                                    <div class="profile-widget-name">@Loc["Agencies_description"]</div>
                                 </div>
                             </div>
                         </a>
@@ -67,12 +79,11 @@
                         <div class="col-lg-3 col-md-3 col-sm-12">
                             <div class="card profile-widget border">
                                 <div class="profile-widget-header">
-                                    <i class="fa fa-8x fa-users rounded-circle profile-widget-picture" style="color: blue
-"></i>
+                                    <i class="fa fa-8x fa-users rounded-circle profile-widget-picture" style="color: blue"></i>
                                 </div>
                                 <div class="profile-widget-description pb-0">
                                     <div class="profile-widget-name">
-                                        <a href="Users" target="_blank">You can manage add, edit or delete users</a>
+                                        <a href="Users" target="_blank">@Loc["Users_description"]</a>
                                     </div>
                                 </div>
                             </div>
@@ -81,16 +92,16 @@
                         <div class="col-lg-3 col-md-3 col-sm-12">
                             <div class="card profile-widget border">
                                 <div class="profile-widget-header">
-                                    <i class="fa fa-8x fa-credit-card rounded-circle profile-widget-picture" style="color: blue
-"></i>
+                                    <i class="fa fa-8x fa-credit-card rounded-circle profile-widget-picture" style="color: blue"></i>
                                 </div>
                                 <div class="profile-widget-description pb-0">
-                                    <div class="profile-widget-name"><a href="Cards">You can manage cards, create new one, tracking using</a></div>
+                                    <div class="profile-widget-name"><a href="Cards">@Loc["Cards_description"]</a></div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>}
+            </div>
+        }
     </div>
 </section>

@@ -120,17 +120,32 @@
   <data name="AdTitle" xml:space="preserve">
     <value>Titre</value>
   </data>
+  <data name="Back" xml:space="preserve">
+    <value>Retour</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Annuler et revenir à la liste des annonces</value>
+    <value>Cancel and return</value>
   </data>
   <data name="Description" xml:space="preserve">
     <value>Description</value>
   </data>
   <data name="DropFileHere" xml:space="preserve">
-    <value>Veuillez déposer ici les photos nécessaire pour votre offre</value>
+    <value>Déposer votre fichier ici</value>
   </data>
   <data name="Finish" xml:space="preserve">
-    <value>Mettre en ligne mon offre</value>
+    <value>Publier mon offre</value>
+  </data>
+  <data name="Image1" xml:space="preserve">
+    <value>Image (1)</value>
+  </data>
+  <data name="Image2" xml:space="preserve">
+    <value>Image (2)</value>
+  </data>
+  <data name="Image3" xml:space="preserve">
+    <value>Image (3)</value>
+  </data>
+  <data name="Image4" xml:space="preserve">
+    <value>Image (4)</value>
   </data>
   <data name="Images" xml:space="preserve">
     <value>Image</value>
@@ -138,37 +153,55 @@
   <data name="Price" xml:space="preserve">
     <value>Prix</value>
   </data>
+  <data name="ProcessPayment" xml:space="preserve">
+    <value>Procéder au paiement</value>
+  </data>
+  <data name="PublishError" xml:space="preserve">
+    <value>Impossible de publier votre annonce veuillez réessayer!</value>
+  </data>
   <data name="RequireLogin" xml:space="preserve">
-    <value>Pour terminer votre processus de publication, vous avez besoin d'être authentifié ou de vous inscrire, si vous n'êtes pas encore authentifié après que vous ayez cliquer sur "Publier l'annonce" vous serez rediriger alors vers le formulaire d'authentification et votre annonce sera prise en compte après authentification. Si vous devez procéder au paiement, vous sera rediriger vers le formulaire d'authentification avant le formulaire de paiement</value>
+    <value>Le processus de publication de l’annonce nécessite un compte d’utilisateur, si vous ne vous connectez pas, vous serez redirigé vers le formulaire de connexion</value>
   </data>
   <data name="Select" xml:space="preserve">
-    <value>Sélectionnez cette formule</value>
+    <value>Selectionner</value>
+  </data>
+  <data name="SelectYourOffer" xml:space="preserve">
+    <value>Sélectionner votre formule</value>
   </data>
   <data name="StartPublish" xml:space="preserve">
-    <value>Commencer à publier votre offre</value>
+    <value>Démarrer la publication</value>
+  </data>
+  <data name="Step1Title" xml:space="preserve">
+    <value>Publier une nouvelle annonce ou offre</value>
+  </data>
+  <data name="Step2Title" xml:space="preserve">
+    <value>Sélectionner votre formule</value>
+  </data>
+  <data name="Step3Title" xml:space="preserve">
+    <value>Valider l'annonce et la formule</value>
   </data>
   <data name="Summary" xml:space="preserve">
-    <value>Récapitulatif</value>
+    <value>Résumé</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Ajouter une offre</value>
+    <value>Ajouter une annonce ou une formule</value>
   </data>
   <data name="UploadFile" xml:space="preserve">
-    <value>Vous pouvez également uploader des fichiers médias</value>
+    <value>Vous pouvez uploader une image ou une photo</value>
   </data>
   <data name="URL1" xml:space="preserve">
-    <value>URL du média à utiliser (1)</value>
+    <value>URL à utiliser (1)</value>
   </data>
   <data name="URL2" xml:space="preserve">
-    <value>URL du média à utiliser (2)</value>
+    <value>URL à utiliser (2)</value>
   </data>
   <data name="URL3" xml:space="preserve">
-    <value>URL du média à utiliser (3)</value>
+    <value>URL à utiliser (3)</value>
   </data>
   <data name="URL4" xml:space="preserve">
-    <value>URL du média à utiliser (4)</value>
+    <value>URL à utiliser (4)</value>
   </data>
   <data name="ValidAd" xml:space="preserve">
-    <value>Publier l'annonce</value>
+    <value>Valider l'offre et la publier</value>
   </data>
 </root>

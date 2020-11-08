@@ -1,0 +1,42 @@
+﻿@page "/agencies"
+
+@inject NavigationManager Navigation
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Agencies> Loc
+@inject IHttpClientFactory HttpClientFactory
+
+<section class="section">
+    <div class="section-header">
+        <h1>@Loc["Title"]</h1>
+    </div>
+    <div class="row">
+        <h2>@Loc["CatchPhrase"]</h2>
+    </div>
+    <div class="section-header">
+        <div class="input-group">
+            <input type="search" id="example-input1-group2" name="example-input1-group2" class="form-control" @bind="Term" @oninput="countSearch">
+            <span class="input-group-btn">
+                <button type="button" class="btn" @onclick="Search"><i class="fa fa-2x  fa-filter"></i></button>
+            </span>
+            <div class="search-backdrop"></div>
+        </div>
+    </div>
+    <div class="section-body">
+        @foreach (var Agency in Items)
+        {
+            <div class="card author-box card-primary">
+                <div class="card-body">
+                    <div class="author-box-left">
+                        <img alt="image" src="@Agency.PhotoUrl" class="rounded-circle author-box-picture">
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="author-box-details">
+                        <div class="author-box-name">
+                            <a href="@Agency.MapUrl" target="_blank">@Agency.AgencyName</a>
+                        </div>
+                        <div class="author-box-job">@Agency.DisplayName - @Agency.Country</div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
