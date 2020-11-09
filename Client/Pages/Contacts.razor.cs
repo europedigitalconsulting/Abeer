@@ -24,17 +24,10 @@ namespace Abeer.Client.Pages
 
         protected override async Task OnParametersSetAsync()
         {
-            var getAllContacts = await HttpClient.GetAsync("/api/Contacts/Suggestions");
-            getAllContacts.EnsureSuccessStatusCode();
-
-            var json = await getAllContacts.Content.ReadAsStringAsync();
-            Suggestions = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ViewContact>>(json);
-            SuggestionItems = Suggestions;
-
             var getMyContacts = await HttpClient.GetAsync("/api/Contacts");
             getMyContacts.EnsureSuccessStatusCode();
 
-            json = await getMyContacts.Content.ReadAsStringAsync();
+            var json = await getMyContacts.Content.ReadAsStringAsync();
             All = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ViewContact>>(json);
 
             Items = All.ToList();
@@ -45,34 +38,35 @@ namespace Abeer.Client.Pages
         public string Term { get; set; } = "";
         public bool ShowContactAddModal { get; set; }
 
-        private void SearchAll()
+        private async Task SearchAll()
         {
-            if (string.IsNullOrWhiteSpace(Term))
-                Items = All.ToList();
-            else
-                Items = All.Where(c => c.FirstName.Contains(Term, StringComparison.OrdinalIgnoreCase)
-                    || c.LastName.Contains(Term, StringComparison.OrdinalIgnoreCase)
-                    || c.Description.Contains(Term, StringComparison.OrdinalIgnoreCase) ||
-                    c.DisplayName.Contains(Term, StringComparison.OrdinalIgnoreCase) ||
-                    c.Email.Contains(Term, StringComparison.OrdinalIgnoreCase) ||
-                    c.Title.Contains(Term, StringComparison.OrdinalIgnoreCase)).ToList();
+            await Task.Run(() =>
+            {
+                if (string.IsNullOrWhiteSpace(Term))
+                    Items = All.ToList();
+                else
+                    Items = All.Where(c => c.FirstName.Contains(Term, StringComparison.OrdinalIgnoreCase)
+                        || c.LastName.Contains(Term, StringComparison.OrdinalIgnoreCase)
+                        || c.Description.Contains(Term, StringComparison.OrdinalIgnoreCase) ||
+                        c.DisplayName.Contains(Term, StringComparison.OrdinalIgnoreCase) ||
+                        c.Email.Contains(Term, StringComparison.OrdinalIgnoreCase) ||
+                        c.Title.Contains(Term, StringComparison.OrdinalIgnoreCase)).ToList();
+            });
 
-            StateHasChanged();
+            await InvokeAsync(StateHasChanged);
         }
 
-        private void Search()
+        private async Task GetSuggestions()
         {
-            if (string.IsNullOrWhiteSpace(Term))
-                SuggestionItems = Suggestions.ToList();
-            else
-                SuggestionItems = Suggestions.Where(c => c.FirstName.Contains(Term, StringComparison.OrdinalIgnoreCase)
-                                   || c.LastName.Contains(Term, StringComparison.OrdinalIgnoreCase)
-                                   || c.Description.Contains(Term, StringComparison.OrdinalIgnoreCase) ||
-                                   c.DisplayName.Contains(Term, StringComparison.OrdinalIgnoreCase) ||
-                                   c.Email.Contains(Term, StringComparison.OrdinalIgnoreCase) ||
-                                   c.Title.Contains(Term, StringComparison.OrdinalIgnoreCase)).ToList();
+            if (!string.IsNullOrWhiteSpace(Term))
+            {
+                var getSuggestion = await HttpClient.GetAsync($"api/Contacts/suggestions?Term={Term}");
+                getSuggestion.EnsureSuccessStatusCode();
+                var json = await getSuggestion.Content.ReadAsStringAsync();
+                SuggestionItems = JsonConvert.DeserializeObject<List<ViewContact>>(json);
+            }
 
-            StateHasChanged();
+            await InvokeAsync(StateHasChanged);
         }
 
         private void ToggleAddContact()
@@ -80,15 +74,16 @@ namespace Abeer.Client.Pages
             ShowContactAddModal = !ShowContactAddModal;
         }
 
-        private void countSearchAll()
+        private async Task CountSearchAll()
         {
             if (Term.Length >= 5)
-                SearchAll();
+                await SearchAll();
         }
-        private void countSearch()
+
+        private async Task CountSuggestion()
         {
             if (Term.Length >= 5)
-                Search();
+                await GetSuggestions();
         }
 
         private void Import(string id)

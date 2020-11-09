@@ -18,9 +18,9 @@
                 <div class="modal-body">
                     <div class="section-header">
                         <div class="input-group">
-                            <input type="search" id="searchContact" name="searchContact" class="form-control" @bind="Term" @oninput="countSearch">
+                            <input type="search" id="searchContact" name="searchContact" class="form-control" @bind="Term" @oninput="CountSuggestion">
                             <span class="input-group-btn">
-                                <button type="button" class="btn btn-lg" @onclick="Search"><i class="fa fa-2x fa-search"></i></button>
+                                <button type="button" class="btn btn-lg" @onclick="GetSuggestions"><i class="fa fa-2x fa-search"></i></button>
                             </span>
                             <div class="search-backdrop"></div>
                         </div>
@@ -79,10 +79,10 @@
     </div>
     <div class="section-header">
         <div class="input-group">
-            <input type="search" id="example-input1-group2" name="example-input1-group2" class="form-control" @bind="Term" @oninput="countSearchAll">
+            <input type="search" id="example-input1-group2" name="example-input1-group2" class="form-control" @bind="Term" @oninput="CountSearchAll">
             <span class="input-group-btn">
                 <button type="button" class="btn" @onclick="SearchAll"><i class="fa fa-2x  fa-filter"></i></button>
-                <button type="button" class="btn" @onclick="ToggleAddContact"><i class="fa fa-2x fa-search"></i></button>
+                <button type="button" class="btn" @onclick="ToggleAddContact"><i class="fas fa-user-plus"></i></button>
             </span>
             <div class="search-backdrop"></div>
         </div>

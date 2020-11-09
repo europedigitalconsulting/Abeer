@@ -94,23 +94,38 @@ namespace Abeer.Server.Controllers
         [HttpGet("Suggestions")]
         public async Task<ActionResult<IEnumerable<ViewContact>>> GetSuggestion(string term)
         {
-            var users = string.IsNullOrEmpty(term) ? await _userManager?.Users.Take(20).ToListAsync() : await _userManager?.Users.Where(u => u.Id.Contains(term) ||
-               u.Email.Contains(term) || u.UserName.Contains(term)).ToListAsync();
+            if (string.IsNullOrEmpty(term))
+                return BadRequest();
+
+            var users = await Task.Run(()=>_userManager?.Users.ToList().Where(c=>
+                 c.FirstName.Contains(term, StringComparison.OrdinalIgnoreCase)
+                        || c.LastName.Contains(term, StringComparison.OrdinalIgnoreCase)
+                        || c.Description.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+                        c.DisplayName.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+                        c.Email.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+                        c.Title.Contains(term, StringComparison.OrdinalIgnoreCase)));
+
+            if (users == null)
+                return NotFound();
 
             ConcurrentBag<ViewContact> contacts = new ConcurrentBag<ViewContact>();
             var allUserContacts = await _UnitOfWork.ContactRepository.GetContacts(User.NameIdentifier());
-            users = users.Where(u => !allUserContacts.Any(c => u.Id == c.UserId || u.Id == User.NameIdentifier())).ToList();
-            users.ForEach(async (user) =>
-            {
-                var contact = await _UnitOfWork.ContactRepository.FirstOrDefault(u => u.UserId == user.Id);
-                if (contact != null)
-                {
-                    var result = users.FirstOrDefault(c => c.Id == contact.UserId);
-                    ViewContact item = new ViewContact(result, contact);
-                    contacts.Add(item);
-                }
+            users = users.Where(u => !allUserContacts.Any(c => u.Id == c.UserId || u.Id == User.NameIdentifier()));
 
-            });
+            if (users != null)
+            {
+                users.ToList().ForEach(async (user) =>
+                {
+                    var contact = await _UnitOfWork.ContactRepository.FirstOrDefault(u => u.UserId == user.Id);
+                    if (contact != null)
+                    {
+                        var result = users.FirstOrDefault(c => c.Id == contact.UserId);
+                        ViewContact item = new ViewContact(result, contact);
+                        contacts.Add(item);
+                    }
+
+                });
+            }
 
             return contacts;
         }
