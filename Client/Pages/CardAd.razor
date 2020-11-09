@@ -55,21 +55,17 @@
                 }
                 @if (!string.IsNullOrEmpty(Ad.Url3))
                 {
-                    <a href="@Ad.Url3"  class="mr-2">@Ad.Url3</a>
+                    <a href="@Ad.Url3" class="mr-2">@Ad.Url3</a>
                 }
                 @if (!string.IsNullOrEmpty(Ad.Url4))
                 {
-                    <a href="@Ad.Url4"  class="mr-2">@Ad.Url4</a>
+                    <a href="@Ad.Url4" class="mr-2">@Ad.Url4</a>
                 }
-
             </div>
-           
             @if (Editable)
             {
-                <div class="fixed-bottom m-5">
-                    <button class="btn btn-primary btn-circle btn-xl float-right ml-2" @onclick="@OnEditClicked"><i class="fas fa-pen-square"></i></button>
-                    <button class="btn btn-danger btn-circle btn-xl float-right ml-2" @onclick="@OnDeleteClicked"><i class="fas fa-trash-alt"></i></button>
-                </div>
+                <button class="btn btn-primary btn-circle btn-xl float-right ml-2" @onclick="@OnEditClicked"><i class="fas fa-pen-square"></i></button>
+                <button class="btn btn-danger btn-circle btn-xl float-right ml-2" @onclick="@OnDeleteClicked"><i class="fas fa-trash-alt"></i></button>
             }
         </div>
         <div class="card-footer">

@@ -50,13 +50,16 @@ namespace Abeer.Server.Controllers
 
             var ad = createAdRequestViewModel.Ad;
 
-            if (createAdRequestViewModel.Price.Value == 0)
+            if (createAdRequestViewModel.Price != null)
             {
-                ad.StartDisplayTime = DateTime.Now.AddDays(createAdRequestViewModel.Price.DelayToDisplay);
-                ad.EndDisplayTime = DateTime.Now.AddDays(createAdRequestViewModel.Price.DisplayDuration.GetValueOrDefault(1));
-            }
+                if (createAdRequestViewModel.Price.Value == 0)
+                {
+                    ad.StartDisplayTime = DateTime.Now.AddDays(createAdRequestViewModel.Price.DelayToDisplay);
+                    ad.EndDisplayTime = DateTime.Now.AddDays(createAdRequestViewModel.Price.DisplayDuration.GetValueOrDefault(1));
+                }
 
-            ad.AdPriceId = createAdRequestViewModel.Price.Id;
+                ad.AdPriceId = createAdRequestViewModel.Price.Id;
+            }
 
             await functionalUnitOfWork.AdRepository.Add(ad);
             var entity = await functionalUnitOfWork.AdRepository.FirstOrDefault(a => a.Id == ad.Id);
@@ -93,7 +96,7 @@ namespace Abeer.Server.Controllers
         }
 
         [Authorize]
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             await functionalUnitOfWork.AdRepository.Delete(id);
@@ -112,6 +115,20 @@ namespace Abeer.Server.Controllers
         [HttpPost("admin")]
         public async Task<ActionResult<AdModel>> CreateByAdmin(AdModel adModel)
         {
+            if(adModel.AdPrice == null)
+            {
+                var price = (await functionalUnitOfWork.AdPriceRepository.All()).FirstOrDefault(p=>p.PriceName == "free");
+
+                if(price == null)
+                {
+                    price = new AdPrice { Value = 0, DelayToDisplay = 2, DisplayDuration = 2, PriceName = "free" };
+                    await functionalUnitOfWork.AdPriceRepository.Add(price);
+                }
+
+                adModel.AdPrice = price;
+                adModel.AdPriceId = price.Id;
+            }
+
             return Ok(await functionalUnitOfWork.AdRepository.Add(adModel));
         }
 
