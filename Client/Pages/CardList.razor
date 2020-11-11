@@ -125,7 +125,7 @@
                                     </SearchForm>
                                     <ChildContent Context="Card">
                                         @{
-                                            var lastStatus = Card.CardStatus.OrderByDescending(b => b.Status).FirstOrDefault();
+                                            var lastStatus = Card.CardStatus?.OrderByDescending(b => b.Status).FirstOrDefault();
                                         }
                                         <div class="col-3 badge-light">
                                             <div class="panel">
@@ -164,7 +164,7 @@
                                                     }
                                                     else
                                                     {
-                                                        switch (lastStatus.Status)
+                                                        switch (lastStatus?.Status)
                                                         {
                                                             case CardStatus.Created:
                                                                 {

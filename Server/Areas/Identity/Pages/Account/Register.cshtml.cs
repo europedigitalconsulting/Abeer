@@ -130,47 +130,65 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
-            if (ModelState.IsValid)
+            var user = new ApplicationUser
             {
-                var user = new ApplicationUser
-                {
-                    UserName = Input.Email,
-                    Email = Input.Email,
-                    FirstName = Input.FirstName,
-                    LastName = Input.LastName,
-                    DisplayName = GetDisplayName(),
-                    PinCode = Input.PinCode, 
-                    City = Input.City,
-                    Country = Input.Country, 
-                    PinDigit = int.Parse(Input.DigitCode)
-                };
+                UserName = Input.Email,
+                Email = Input.Email,
+                FirstName = Input.FirstName,
+                LastName = Input.LastName,
+                DisplayName = GetDisplayName(),
+                PinCode = Input.PinCode,
+                City = Input.City,
+                Country = Input.Country,
+                PinDigit = int.Parse(Input.DigitCode)
+            };
 
-                var card = await _functionalUnitOfWork.CardRepository.FirstOrDefault(c => c.CardNumber == Input.PinCode);
-                
-                if(card != null && card.PinCode.Equals(Input.DigitCode) && card.IsSold && card.IsUsed == false)
-                {
-                    var result = await _userManager.CreateAsync(user, Input.Password);
+            _logger.LogInformation($"start get card {Input.PinCode}");
 
-                    if (result.Succeeded)
-                    {
-                        _logger.LogInformation("User created a new account with password.");
+            var card = await _functionalUnitOfWork.CardRepository.FirstOrDefault(c => c.CardNumber == Input.PinCode);
 
-                        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+            if (card == null)
+            {
+                ModelState.AddModelError("", "card not existed");
+                return Page();
+            }
 
-                        var callbackUrl = Url.Page(
-                            "/Account/ConfirmEmail",
-                            pageHandler: null,
-                            values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
-                            protocol: Request.Scheme);
+            else if (card.IsUsed)
+            {
+                ModelState.AddModelError("", "Card is used");
+                return Page();
+            }
 
-                        var frontWebSite = UriHelper.BuildAbsolute(Request.Scheme, Request.Host);
-                        var logoUrl = UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/assets/img/logo_full.png");
-                        var unSubscribeUrl = await _urlShortner.CreateUrl(Request.Scheme, Request.Host, UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/Account/UnSubscribe"));
+            else if (card.PinCode != Input.DigitCode)
+            {
+                ModelState.AddModelError("PinCode", "Pincode is not valid");
+                return Page();
+            }
 
-                        callbackUrl = await _urlShortner.CreateUrl(Request.Scheme, Request.Host, callbackUrl);
+            var result = await _userManager.CreateAsync(user, Input.Password);
 
-                        await SendEmailTemplate("email-confirmation", new Dictionary<string, string>()
+            if (result.Succeeded)
+            {
+                _logger.LogInformation("User created a new account with password.");
+
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+
+                var callbackUrl = Url.Page(
+                    "/Account/ConfirmEmail",
+                    pageHandler: null,
+                    values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
+                    protocol: Request.Scheme);
+
+                var frontWebSite = UriHelper.BuildAbsolute(Request.Scheme, Request.Host);
+                var logoUrl = UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/assets/img/logo_full.png");
+                var unSubscribeUrl = await _urlShortner.CreateUrl(Request.Scheme, Request.Host, UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/Account/UnSubscribe"));
+
+                callbackUrl = await _urlShortner.CreateUrl(Request.Scheme, Request.Host, callbackUrl);
+
+                _logger.LogInformation($"Send Email confirmation to {Input.Email}.");
+
+                await SendEmailTemplate("email-confirmation", new Dictionary<string, string>()
                         {
                             {"frontWebSite", frontWebSite },
                             {"logoUrl", logoUrl },
@@ -178,20 +196,23 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
                             {"callbackUrl", callbackUrl }
                         });
 
-                        card.IsUsed = true;
-                        await _functionalUnitOfWork.CardRepository.Update(card);
+                _logger.LogInformation("set card is used");
 
-                        return RedirectToPage("RegisterConfirmation",
-                            new { email = Input.Email, returnUrl = returnUrl });
-                    }
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, error.Description);
-                    }
+                card.IsUsed = true;
+                await _functionalUnitOfWork.CardRepository.Update(card);
+
+                _logger.LogInformation("Redirect to register confirmation page");
+
+                return RedirectToPage("RegisterConfirmation",
+                    new { email = Input.Email, returnUrl = returnUrl });
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    _logger.LogError(error.Description);
+                    ModelState.AddModelError(string.Empty, error.Description);
                 }
-
-
-               
             }
 
             // If we got this far, something failed, redisplay form

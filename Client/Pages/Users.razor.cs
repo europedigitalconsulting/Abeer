@@ -131,6 +131,27 @@ namespace Abeer.Client.Pages
             await InvokeAsync(StateHasChanged);
         }
 
+        async Task ValidateUser(ApplicationUser user)
+        {
+            var response = await HttpClient.PutAsJsonAsync<ApplicationUser>($"api/Users/Validate/{user.Id}", user);
+            response.EnsureSuccessStatusCode();
+            await InvokeAsync(StateHasChanged);
+        }
+
+        async Task LockUser(ApplicationUser user)
+        {
+            var response = await HttpClient.PutAsJsonAsync<ApplicationUser>($"api/Users/Lock/{user.Id}", user);
+            response.EnsureSuccessStatusCode();
+            await InvokeAsync(StateHasChanged);
+        }
+
+        async Task UnLockUser(ApplicationUser user)
+        {
+            var response = await HttpClient.PutAsJsonAsync<ApplicationUser>($"api/Users/UnLock/{user.Id}", user);
+            response.EnsureSuccessStatusCode();
+            await InvokeAsync(StateHasChanged);
+        }
+
         async Task Delete()
         {
             var response = await HttpClient.DeleteAsync($"api/Users/{current.Id}");
@@ -145,7 +166,7 @@ namespace Abeer.Client.Pages
 
         Task ShareProfile(ApplicationUser user)
         {
-            ProfileUrl = navigationManager.ToAbsoluteUri($"/viewProfile/{user.Id}").ToString();
+            ProfileUrl = navigationManager.ToAbsoluteUri($"/viewProfile/{user.PinCode}").ToString();
             return ToggleModalShareProfile();
         }
 

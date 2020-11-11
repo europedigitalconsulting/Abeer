@@ -52,6 +52,15 @@ namespace Abeer.Server.Controllers
         public async Task<ActionResult<IEnumerable<ApplicationUser>>> GetUsers()
         {
             var data = await _userManager.Users.ToListAsync();
+
+            if (data.Any())
+            {
+                foreach (var user in data)
+                {
+                    user.IsLocked = await _userManager.IsLockedOutAsync(user);
+                }
+            }
+
             return data;
         }
 
@@ -288,6 +297,82 @@ namespace Abeer.Server.Controllers
                 return Forbid();
 
             await _userManager.DeleteAsync(user);
+
+            return user;
+        }
+
+        [HttpPut("validate/{id}")]
+        public async Task<ActionResult<ApplicationUser>> ValidateUser(string id, ApplicationUser applicationUser)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+
+            if (user == null)
+                return NotFound();
+
+            if (user.IsOnline)
+                return Forbid();
+
+            if (user.Id != applicationUser.Id)
+                return BadRequest();
+
+            if (user.Id == User.NameIdentifier())
+                return BadRequest();
+
+            if (await _userManager.IsEmailConfirmedAsync(user))
+                return BadRequest();
+
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            await _userManager.ConfirmEmailAsync(user, token);
+
+            return user;
+        }
+
+        [HttpPut("Lock/{id}")]
+        public async Task<ActionResult<ApplicationUser>> LockUser(string id, ApplicationUser applicationUser)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+
+            if (user == null)
+                return NotFound();
+
+            if (user.IsOnline)
+                return Forbid();
+
+            if (user.Id != applicationUser.Id)
+                return BadRequest();
+
+            if (user.Id == User.NameIdentifier())
+                return BadRequest();
+
+            var result = await _userManager.SetLockoutEnabledAsync(user, true);
+
+            if (result.Succeeded)
+                await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.MaxValue);
+
+            return user;
+        }
+
+        [HttpPut("UnLock/{id}")]
+        public async Task<ActionResult<ApplicationUser>> UnLockUser(string id, ApplicationUser applicationUser)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+
+            if (user == null)
+                return NotFound();
+
+            if (user.IsOnline)
+                return Forbid();
+
+            if (user.Id != applicationUser.Id)
+                return BadRequest();
+
+            if (user.Id == User.NameIdentifier())
+                return BadRequest();
+
+            var result = await _userManager.SetLockoutEnabledAsync(user, false);
+
+            if (result.Succeeded)
+                await _userManager.ResetAccessFailedCountAsync(user);
 
             return user;
         }

@@ -354,6 +354,61 @@ namespace Abeer.Server
                 if (!contact2.Any())
                     await functionalDb.ContactRepository.Add(new Contact { OwnerId = hasan.Id, UserId = admin.Id });
 
+                var tony = await userManager.FindByEmailAsync("tony@abeer.io");
+                
+                if (tony == null)
+                {
+                    tony = new ApplicationUser
+                    {
+                        UserName = "customer@abeer.io",
+                        Country = "France",
+                        DisplayName = "Hasan Basri",
+                        Email = "customer@abeer.io",
+                        Title = "World's Master",
+                        Description = "Lorem ipsum dolor sit amet,consectetur adipiscing elit,sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
+                        EmailConfirmed = true,
+                        FirstName = "Hasan",
+                        LastName = "Basri",
+                        City = "Paris",
+                        PhoneNumber = "+66 624796927"
+                    };
+
+                    var addtony = await userManager.CreateAsync(tony, "Xc9wf8or&");
+
+                    if (addtony.Succeeded)
+                    {
+                        await functionalDb.SocialNetworkRepository.AddSocialNetwork(new SocialNetwork
+                        {
+                            OwnerId = tony.Id,
+                            Name = "Facebook",
+                            Logo = "fab fa-facebook-square",
+                            DisplayInfo = "hasan.basri",
+                            BackgroundColor = "bg-primary",
+                            Url = "https://www.facebook.com/tony.abouzeid"
+                        });
+
+                        await functionalDb.SocialNetworkRepository.AddSocialNetwork(new SocialNetwork
+                        {
+                            OwnerId = tony.Id,
+                            Name = "Instagram",
+                            Logo = "fab fa-instagram-square",
+                            DisplayInfo = "@hasan.basri",
+                            BackgroundColor = "bg-danger",
+                            Url = "https://www.instagram.com/tony.abouzeid"
+                        });
+
+                        await functionalDb.SocialNetworkRepository.AddSocialNetwork(new SocialNetwork
+                        {
+                            OwnerId = tony.Id,
+                            Name = "Whatsapp",
+                            Logo = "fab fa-whatsapp-square",
+                            DisplayInfo = "+66 624796927",
+                            BackgroundColor = "bg-success",
+                            Url = "whatsapp:66624796927"
+                        });
+                    }
+                }
+
             }
         }
     }

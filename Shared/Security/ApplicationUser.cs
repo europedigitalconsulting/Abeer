@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Abeer.Shared
 {
@@ -12,6 +13,8 @@ namespace Abeer.Shared
         public string Title { get; set; }
         public string Description { get; set; }
         public bool IsOnline { get; set; }
+        [NotMapped]
+        public bool IsLocked { get; set; }
         public DateTime LastLogin { get; set; }
         public bool IsAdmin { get; set; }
         public bool IsManager { get; set; }

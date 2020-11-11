@@ -74,15 +74,17 @@ namespace Abeer.Server.Controllers
                 return BadRequest();
             }
 
-            Card.IsSold = true;
-            Card.SoldDate = DateTime.UtcNow;
-            Card.SoldBy = User.NameIdentifier();
+            var current = await _UnitOfWork.CardRepository.FirstOrDefault(c => c.Id == id);
 
-            await _UnitOfWork.CardRepository.Update(Card);
+            current.IsSold = true;
+            current.SoldDate = DateTime.UtcNow;
+            current.SoldBy = User.NameIdentifier();
 
-            await _UnitOfWork.CardRepository.AddStatus(new CardStatu { Card = Card, StatusDate = DateTime.UtcNow, Status = CardStatus.Sold, UserId = User.NameIdentifier() });
+            await _UnitOfWork.CardRepository.Update(current);
 
-            await HubContext.Clients.All.SendAsync("Card.Sold", Card);
+            await _UnitOfWork.CardRepository.AddStatus(new CardStatu { Card = current, StatusDate = DateTime.UtcNow, Status = CardStatus.Sold, UserId = User.NameIdentifier() });
+
+            await HubContext.Clients.All.SendAsync("Card.Sold", current);
 
             return NoContent();
         }
