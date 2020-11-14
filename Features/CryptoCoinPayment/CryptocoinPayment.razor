@@ -1,0 +1,15 @@
+﻿
+<button class="@CssClass" @onclick="ValidPayment"> Paiement Par CryptoCoin</button>
+
+@code {
+    [Parameter] public string CssClass { get; set; }
+    [Parameter] public string ClientId { get; set; }
+    [Parameter] public string ClientSecret { get; set; }
+    [Parameter] public string DomainApiPayment { get; set; }
+    [Parameter] public string RedirectSuccessServer { get; set; }
+    [Parameter] public string RedirectErrorServer { get; set; }
+    [Parameter] public string RedirectSuccess { get; set; }
+    [Parameter] public string RedirectError { get; set; }
+    [Parameter] public decimal Price { get; set; }
+    [Parameter] public List<Tuple<string, decimal>> Items { get; set; }
+}
