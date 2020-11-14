@@ -40,18 +40,10 @@ namespace Abeer.Client
 
             builder.Services.AddSingleton<NavigationUrlService>();
 
-            var host = builder.Build();
-            var jsInterop = host.Services.GetRequiredService<IJSRuntime>();
-            var result = await jsInterop.InvokeAsync<string>("blazorCulture.get");
-            
-            if (result != null)
-            {
-                var culture = new CultureInfo(result);
-                CultureInfo.DefaultThreadCurrentCulture = culture;
-                CultureInfo.DefaultThreadCurrentUICulture = culture;
-            }
-            
-            await host.RunAsync();
+            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(CultureInfo.CurrentCulture.Name); 
+            CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo(CultureInfo.CurrentCulture.Name); 
+             
+            await builder.Build().RunAsync();
         }
     }
 }
