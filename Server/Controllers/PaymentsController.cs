@@ -20,6 +20,18 @@ namespace Abeer.Server.Controllers
             _context = context;
         }
 
+        [AllowAnonymous]
+        [HttpGet("ProcessingCryptoCoinSuccess/{OrderNumber}")]
+        public async void ProcessingCryptoCoinSuccess(string OrderNumber)
+        {
+
+        }
+        [AllowAnonymous]
+        [HttpGet("ProcessingCryptoCoinFailed/{OrderNumber}")]
+        public async void ProcessingCryptoCoinFailed(string OrderNumber)
+        {
+
+        }
         // GET: api/Payments
         [HttpGet("{id}")]
         public async Task<ActionResult<IList<Payment>>> GetPayment(Guid transactionId)
@@ -31,7 +43,7 @@ namespace Abeer.Server.Controllers
         [HttpGet("{tid}/{id}")]
         public async Task<ActionResult<Payment>> GetPayment(Guid tid, Guid id)
         {
-            var payment = await _context.PaymentRepository.GetPayment(p=>p.TransactionId == tid && p.Id == id);
+            var payment = await _context.PaymentRepository.GetPayment(p => p.TransactionId == tid && p.Id == id);
 
             if (payment == null)
             {
@@ -75,7 +87,7 @@ namespace Abeer.Server.Controllers
         [HttpDelete("{tid}/{id}")]
         public async Task<ActionResult<Payment>> DeletePayment(Guid tid, Guid id)
         {
-            var payment = await _context.PaymentRepository.GetPayment(p=>p.TransactionId == tid && p.Id == id);
+            var payment = await _context.PaymentRepository.GetPayment(p => p.TransactionId == tid && p.Id == id);
 
             if (payment == null)
             {

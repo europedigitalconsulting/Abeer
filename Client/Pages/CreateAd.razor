@@ -10,7 +10,17 @@
     public AdModel Ad { get; set; } = new AdModel();
     public AdPrice CurrentPrice { get; set; } = new AdPrice();
     public List<AdPrice> AdPrices { get; set; } = new List<AdPrice>();
+    private List<Tuple<string, decimal>> Cart { get; set; } = new List<Tuple<string, decimal>>();
 
+    protected override async Task OnInitializedAsync()
+    {
+        Cart = new List<Tuple<string, decimal>>()
+    {
+            new Tuple<string, decimal>("Pass Premium", 99.9M),
+            new Tuple<string, decimal>("Pass Ultimate", 199.99M)
+        };
+        await base.OnInitializedAsync();
+    }
     async Task Step1()
     {
         Step = "Step1";
@@ -107,60 +117,60 @@
             <h1>@Loc["Step1Title"]</h1>
         </div>
         <div class="section-body">
-        <div class="card">
-            <div class="card-body">
-                <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
-                    <label>@Loc["AdTitle"]</label>
-                    <input type="text" Class="form-control" @bind="Ad.Title"/>
-                </div>
-                <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
-                    <label>@Loc["Description"]</label>
-                    <textarea type="text" Class="form-control h-100" rows="6" @bind="Ad.Description" cols="6"></textarea>
-                </div>
-                <div class="form-group form-group col-lg-6 col-md-6 col-sm-6">
-                    <label>@Loc["Price"]</label>
-                    <input type="number" Class="form-control" @bind="Ad.Price" />
-                </div>
-                <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
-                    <label>@Loc["Url1"]</label>
-                    <input type="url" Class="form-control" @bind="Ad.Url1" />
-                </div>
-                <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
-                    <label>@Loc["Url2"]</label>
-                    <input type="url" Class="form-control" @bind="Ad.Url2" />
-                </div>
-                <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
-                    <label>@Loc["Url3"]</label>
-                    <input type="url" Class="form-control" @bind="Ad.Url3" />
-                </div>
-                <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
-                    <label>@Loc["Url4"]</label>
-                    <input type="url" Class="form-control" @bind="Ad.Url4" />
-                </div>
-                <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
-                    <label>@Loc["Image1"]</label>
-                    <MediaUploader Id="AssignImageUrl1" OnChange="AssignImageUrl1"></MediaUploader>
-                </div>
-                <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
-                    <label>@Loc["Image2"]</label>
-                    <MediaUploader Id="AssignImageUrl2" OnChange="AssignImageUrl2"></MediaUploader>
-                </div>
-                <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
-                    <label>@Loc["Image3"]</label>
-                    <MediaUploader Id="AssignImageUrl3" OnChange="AssignImageUrl3"></MediaUploader>
-                </div>
-                <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
-                    <label>@Loc["Image4"]</label>
-                    <MediaUploader Id="AssignImageUrl4" OnChange="AssignImageUrl4"></MediaUploader>
-                </div>
-                <div class="form-group">
-                    <div class="text-center">
-                        <a href="Ads" class="btn btn-lg" title="@Loc["Cancel"]"><i class="fa fa-2x fa-arrow-left"></i></a>
-                        <a type="submit" class="btn btn-lg" @onclick="Step2" title="@Loc["StartPublish"]"><i class="fa fa-2x fa-arrow-right"></i></a>
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
+                        <label>@Loc["AdTitle"]</label>
+                        <input type="text" Class="form-control" @bind="Ad.Title" />
+                    </div>
+                    <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
+                        <label>@Loc["Description"]</label>
+                        <textarea type="text" Class="form-control h-100" rows="6" @bind="Ad.Description" cols="6"></textarea>
+                    </div>
+                    <div class="form-group form-group col-lg-6 col-md-6 col-sm-6">
+                        <label>@Loc["Price"]</label>
+                        <input type="number" Class="form-control" @bind="Ad.Price" />
+                    </div>
+                    <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
+                        <label>@Loc["Url1"]</label>
+                        <input type="url" Class="form-control" @bind="Ad.Url1" />
+                    </div>
+                    <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
+                        <label>@Loc["Url2"]</label>
+                        <input type="url" Class="form-control" @bind="Ad.Url2" />
+                    </div>
+                    <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
+                        <label>@Loc["Url3"]</label>
+                        <input type="url" Class="form-control" @bind="Ad.Url3" />
+                    </div>
+                    <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
+                        <label>@Loc["Url4"]</label>
+                        <input type="url" Class="form-control" @bind="Ad.Url4" />
+                    </div>
+                    <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
+                        <label>@Loc["Image1"]</label>
+                        <MediaUploader Id="AssignImageUrl1" OnChange="AssignImageUrl1"></MediaUploader>
+                    </div>
+                    <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
+                        <label>@Loc["Image2"]</label>
+                        <MediaUploader Id="AssignImageUrl2" OnChange="AssignImageUrl2"></MediaUploader>
+                    </div>
+                    <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
+                        <label>@Loc["Image3"]</label>
+                        <MediaUploader Id="AssignImageUrl3" OnChange="AssignImageUrl3"></MediaUploader>
+                    </div>
+                    <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
+                        <label>@Loc["Image4"]</label>
+                        <MediaUploader Id="AssignImageUrl4" OnChange="AssignImageUrl4"></MediaUploader>
+                    </div>
+                    <div class="form-group">
+                        <div class="text-center">
+                            <a href="Ads" class="btn btn-lg" title="@Loc["Cancel"]"><i class="fa fa-2x fa-arrow-left"></i></a>
+                            <a type="submit" class="btn btn-lg" @onclick="Step2" title="@Loc["StartPublish"]"><i class="fa fa-2x fa-arrow-right"></i></a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         </div>
     </section>
 }
@@ -295,6 +305,14 @@ else if (Step == "Step3")
                             }
                             else
                             {
+                                <CryptocoinPayment ClientId="client_id_mvc" ClientSecret="client_secret_mvc"
+                                                   DomainApiPayment="https://localhost:44354"
+                                                   RedirectSuccessServer="https://localhost:44355/api/Payments/ProcessingCryptoCoinSuccess"
+                                                   RedirectErrorServer="https://localhost:44355/api/Payments/ProcessingCryptoCoinFailed"
+                                                   RedirectSuccess="https://localhost:44355/payment/Success"
+                                                   RedirectError="https://localhost:44355/payment/Error"
+                                                   Items=@Cart CssClass="btn btn-success" Price=156.99M>
+                                </CryptocoinPayment>
                                 <button type="submit" class="btn  btn-successbtn-lg" @onclick="@(async () => await ProcessPayment())"><i class="far fa-credit-card"></i>@Loc["ProcessPayment"]</button>
                             }
                         </div>

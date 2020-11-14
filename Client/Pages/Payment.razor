@@ -1,0 +1,20 @@
+﻿@page "/payment/{state}"
+
+@if (state == "Success")
+{
+    <h3>SUCCESS</h3>
+}
+else
+{
+    <h1>ERROR</h1>
+}
+
+@code {
+    [Parameter] public string state { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine(state);
+        await base.OnInitializedAsync();
+    }
+}
