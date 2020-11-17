@@ -47,7 +47,7 @@ namespace Abeer.Client.Pages
                 navigationManager.NavigateTo("/authentication/Login", true);
             }
 
-            var getAll = await HttpClient.GetAsync("/api/ad/admin");
+            var getAll = await HttpClient.GetAsync("/api/adss/admin");
             getAll.EnsureSuccessStatusCode();
             var json = await getAll.Content.ReadAsStringAsync();
             All = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Abeer.Shared.Functional.AdModel>>(json);
@@ -97,7 +97,7 @@ namespace Abeer.Client.Pages
             {
                 case "Insert":
                     {
-                        var postResponse = await HttpClient.PostAsJsonAsync<Abeer.Shared.Functional.AdModel>("/api/ad/admin", Current);
+                        var postResponse = await HttpClient.PostAsJsonAsync<Abeer.Shared.Functional.AdModel>("/api/adss/admin", Current);
                         FormHasError = !postResponse.IsSuccessStatusCode;
 
                         if (FormHasError)
@@ -114,7 +114,7 @@ namespace Abeer.Client.Pages
                     }
                 case "Edit":
                     {
-                        var putResponse = await HttpClient.PutAsJsonAsync<Abeer.Shared.Functional.AdModel>("/api/ad/admin", Current);
+                        var putResponse = await HttpClient.PutAsJsonAsync<Abeer.Shared.Functional.AdModel>("/api/adss/admin", Current);
                         FormHasError = !putResponse.IsSuccessStatusCode;
 
                         if (FormHasError)
@@ -130,7 +130,7 @@ namespace Abeer.Client.Pages
                     }
                 case "Delete":
                     {
-                        var deleteResponse = await HttpClient.DeleteAsync($"/api/ad/{Current.Id}");
+                        var deleteResponse = await HttpClient.DeleteAsync($"/api/adss/{Current.Id}");
                         FormHasError = !deleteResponse.IsSuccessStatusCode;
 
                         if (FormHasError)

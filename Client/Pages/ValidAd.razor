@@ -21,7 +21,7 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        var response = await httpClient.GetAsync($"api/Ad/{AdId}");
+        var response = await httpClient.GetAsync($"api/adss/{AdId}");
 
         if (!response.IsSuccessStatusCode)
         {
@@ -45,7 +45,7 @@
 
     async Task Finish()
     {
-        var response = await httpClient.GetAsync($"api/Ad/valid/{Ad.Id}");
+        var response = await httpClient.GetAsync($"api/adss/valid/{Ad.Id}");
         response.EnsureSuccessStatusCode();
         NavigationManager.NavigateTo("/MyAds");
     } }

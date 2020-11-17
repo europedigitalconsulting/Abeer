@@ -42,7 +42,7 @@
 
     async Task Delete()
     {
-        var update = await HttpClient.DeleteAsync($"/api/Ad/{Current.Id}");
+        var update = await HttpClient.DeleteAsync($"/api/adss/{Current.Id}");
         update.EnsureSuccessStatusCode();
         ModalDeleteAdVisible = false;
         await InvokeAsync(StateHasChanged);
