@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Abeer.Shared.Functional;
@@ -11,11 +11,11 @@ namespace Abeer.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AdController : ControllerBase
+    public class AdssController : ControllerBase
     {
         private readonly FunctionalUnitOfWork functionalUnitOfWork;
 
-        public AdController(FunctionalUnitOfWork functionalUnitOfWork)
+        public AdssController(FunctionalUnitOfWork functionalUnitOfWork)
         {
             this.functionalUnitOfWork = functionalUnitOfWork;
         }

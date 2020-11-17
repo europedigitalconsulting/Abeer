@@ -23,7 +23,7 @@
     protected override async Task OnInitializedAsync()
     {
         var httpClient = HttpClientFactory.CreateClient("Abeer.Anonymous");
-        var getAll = await httpClient.GetAsync("/api/ad/visibled");
+        var getAll = await httpClient.GetAsync("/api/Adss/Visibled");
         getAll.EnsureSuccessStatusCode();
         var json = await getAll.Content.ReadAsStringAsync();
         All = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Abeer.Shared.Functional.AdModel>>(json);
