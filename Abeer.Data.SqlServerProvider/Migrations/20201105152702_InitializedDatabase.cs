@@ -187,6 +187,7 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     Title = table.Column<string>(nullable: true),
+                    OrderNumber = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
                     Price = table.Column<decimal>(nullable: false),
                     Url1 = table.Column<string>(nullable: true),

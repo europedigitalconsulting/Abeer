@@ -38,11 +38,6 @@ namespace Abeer.Data.SqlServerProvider
         public DbSet<TokenItem> TokenItem { get; set; }
         public DbSet<TokenBatchStatu> TokenBatchStatu { get; set; }
         public DbSet<CardStatu> CardStatu { get; set; }
-        public DbSet<Wallet> Wallet { get; set; }
-        public DbSet<Transaction> Transaction { get; set; }
-        public DbSet<TransactionStatu> TransactionStatu { get; set; }
-        public DbSet<Purchase> Purchase { get; set; }
-        public DbSet<Payment> Payment { get; set; }
         public DbSet<Country> Country { get; set; }
         public DbSet<SocialNetwork> SocialNetwork { get; set; }
         public DbSet<CustomLink> CustomLink { get; set; }

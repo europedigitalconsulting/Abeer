@@ -12,8 +12,6 @@ namespace Abeer.Client.Pages
         public string CurrentMonth => System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(DateTime.Now.Month);
 
         public IEnumerable<Article> Articles { get; set; }
-        public IEnumerable<Transaction> LastTransactions { get; set; }
-        public IEnumerable<Transaction> Transactions { get; set; }
 
         ClaimsPrincipal User;
 

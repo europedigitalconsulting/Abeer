@@ -69,6 +69,7 @@ namespace Abeer.Server
             });
 
             services.AddSingleton<FunctionalDbContext>();
+            services.AddTransient<FunctionalUnitOfWork>();
 
             services.AddSignalR();
 
@@ -86,7 +87,7 @@ namespace Abeer.Server
             services.AddTransient<IProfileService, ProfileService>();
 
             services.AddTransient<IEmailSenderService, EmailSenderFactory>();
-
+              
             services.ConfigureApplicationCookie(o =>
             {
                 o.ExpireTimeSpan = TimeSpan.FromDays(5);
@@ -126,7 +127,7 @@ namespace Abeer.Server
 
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(CultureInfo.CurrentCulture.Name);
             CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo(CultureInfo.CurrentCulture.Name);
-            services.AddTransient<FunctionalUnitOfWork>();
+
             var templateProviderType = Configuration["EmailSender:MailTemplateProviderType"];
 
             services.AddScoped<ITemplateFileReader>(sp => new TemplateFileReader());

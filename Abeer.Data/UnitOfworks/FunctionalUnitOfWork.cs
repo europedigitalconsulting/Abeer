@@ -12,9 +12,6 @@ namespace Abeer.Data.UnitOfworks
     {
         private CardRepository _CardRepository;
         private ContactRepository _ContactRepository;
-        private PaymentRepository _PaymentRepository;
-        private PurchaseRepository _PurchaseRepository;
-        private WalletRepository _WalletRepository;
         private TokenBatchRepository _TokenBatchRepository;
         private TokenItemRepository _TokenItemRepository;
         private CountriesRepository _CountriesRepository;
@@ -77,28 +74,6 @@ namespace Abeer.Data.UnitOfworks
             }
         }
 
-        public PaymentRepository PaymentRepository
-        {
-            get
-            {
-                if (_PaymentRepository == null)
-                    _PaymentRepository = ActivatorUtilities.CreateInstance<PaymentRepository>(ServiceProvider);
-
-                return _PaymentRepository;
-            }
-        }
-
-        public PurchaseRepository PurchaseRepository
-        {
-            get
-            {
-                if (_PurchaseRepository == null)
-                    _PurchaseRepository = ActivatorUtilities.CreateInstance<PurchaseRepository>(ServiceProvider);
-
-                return _PurchaseRepository;
-            }
-        }
-
         public AdRepository AdRepository
         {
             get
@@ -122,16 +97,6 @@ namespace Abeer.Data.UnitOfworks
             }
         }
 
-        public WalletRepository WalletRepository
-        {
-            get
-            {
-                if (_WalletRepository == null)
-                    _WalletRepository = ActivatorUtilities.CreateInstance<WalletRepository>(ServiceProvider);
-
-                return _WalletRepository;
-            }
-        }
         public TokenBatchRepository TokenBatchRepository
         {
             get

@@ -1,6 +1,7 @@
 ﻿using Abeer.Shared.Functional;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Abeer.Data.Repositories
@@ -28,6 +29,10 @@ namespace Abeer.Data.Repositories
             return Task.Run(() => _context.AdPrices.FirstOrDefault(a => a.Id == id));
         }
 
+        public Task<AdPrice> FirstOrDefault(Expression<Func<AdPrice, bool>> p)
+        {
+            return Task.Run(() => _context.AdPrices.FirstOrDefault(p));
+        }
         public  Task<IList<AdPrice>> All()
         {
             return Task.Run(() => _context.AdPrices.ToList());

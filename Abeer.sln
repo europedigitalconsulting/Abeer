@@ -31,6 +31,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbProvider.EfCore.SqlServer
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abeer.Data.SqlServerProvider", "Abeer.Data.SqlServerProvider\Abeer.Data.SqlServerProvider.csproj", "{BF7CF004-176B-462C-BC1C-92914AF54FDC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Features", "Features", "{95A8BEEB-1809-419B-A564-79ADAF92F10E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cryptocoin.Payment", "Features\CryptoCoinPayment\Cryptocoin.Payment.csproj", "{E484DFDC-3287-4CA1-A01E-5DE965818D14}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -92,6 +96,12 @@ Global
 		{BF7CF004-176B-462C-BC1C-92914AF54FDC}.Ghpages|Any CPU.Build.0 = Debug|Any CPU
 		{BF7CF004-176B-462C-BC1C-92914AF54FDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF7CF004-176B-462C-BC1C-92914AF54FDC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E484DFDC-3287-4CA1-A01E-5DE965818D14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E484DFDC-3287-4CA1-A01E-5DE965818D14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E484DFDC-3287-4CA1-A01E-5DE965818D14}.Ghpages|Any CPU.ActiveCfg = Release|Any CPU
+		{E484DFDC-3287-4CA1-A01E-5DE965818D14}.Ghpages|Any CPU.Build.0 = Release|Any CPU
+		{E484DFDC-3287-4CA1-A01E-5DE965818D14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E484DFDC-3287-4CA1-A01E-5DE965818D14}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -106,6 +116,8 @@ Global
 		{843DD4FE-D3A5-4A67-B34D-ADC80075FC62} = {530A5085-0048-4FDB-ABBB-6CF97E43CBAE}
 		{04094CD4-44A1-4C4D-BFDA-4DA9CC07DB39} = {530A5085-0048-4FDB-ABBB-6CF97E43CBAE}
 		{BF7CF004-176B-462C-BC1C-92914AF54FDC} = {85412552-6211-4957-AD24-9CCF55A0C988}
+		{95A8BEEB-1809-419B-A564-79ADAF92F10E} = {B88FCDAE-ADA7-4F4F-99D9-4AAC627CAAA6}
+		{E484DFDC-3287-4CA1-A01E-5DE965818D14} = {95A8BEEB-1809-419B-A564-79ADAF92F10E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {53E6A249-9A9D-4939-B752-5470E5B85C7E}

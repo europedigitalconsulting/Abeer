@@ -126,6 +126,9 @@
   <data name="Cancel" xml:space="preserve">
     <value>Cancel and return to ads list</value>
   </data>
+  <data name="CreateCryptoPayment" xml:space="preserve">
+    <value>Payment by CryptoCoin</value>
+  </data>
   <data name="Description" xml:space="preserve">
     <value>Description</value>
   </data>

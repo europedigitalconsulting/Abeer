@@ -6,6 +6,7 @@ using System;
 using Abeer.Data.UnitOfworks;
 using System.Collections.Generic;
 using System.Linq;
+using Abeer.Shared.ViewModels;
 
 namespace Abeer.Server.Controllers
 {
@@ -15,6 +16,7 @@ namespace Abeer.Server.Controllers
     {
         private readonly FunctionalUnitOfWork functionalUnitOfWork;
 
+        private readonly Random rdm = new Random();
         public AdssController(FunctionalUnitOfWork functionalUnitOfWork)
         {
             this.functionalUnitOfWork = functionalUnitOfWork;
@@ -44,26 +46,27 @@ namespace Abeer.Server.Controllers
         [HttpPost]
         [AllowAnonymous]
         public async Task<ActionResult<AdModel>> Create(CreateAdRequestViewModel createAdRequestViewModel)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+        { 
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
 
-            var ad = createAdRequestViewModel.Ad;
+                var ad = createAdRequestViewModel.Ad;
 
-            if (createAdRequestViewModel.Price != null)
-            {
-                if (createAdRequestViewModel.Price.Value == 0)
+                if (createAdRequestViewModel.Price != null)
                 {
-                    ad.StartDisplayTime = DateTime.Now.AddDays(createAdRequestViewModel.Price.DelayToDisplay);
-                    ad.EndDisplayTime = DateTime.Now.AddDays(createAdRequestViewModel.Price.DisplayDuration.GetValueOrDefault(1));
+                    ad.OrderNumber = string.Concat(DateTime.UtcNow.ToString("yyyMMddHHmmss"), rdm.Next(100000, 999999));
+                    if (createAdRequestViewModel.Price.Value == 0)
+                    {
+                        ad.StartDisplayTime = DateTime.Now.AddDays(createAdRequestViewModel.Price.DelayToDisplay);
+                        ad.EndDisplayTime = DateTime.Now.AddDays(createAdRequestViewModel.Price.DisplayDuration.GetValueOrDefault(1));
+                    }
+
+                    ad.AdPriceId = createAdRequestViewModel.Price.Id;
                 }
 
-                ad.AdPriceId = createAdRequestViewModel.Price.Id;
-            }
-
-            await functionalUnitOfWork.AdRepository.Add(ad);
-            var entity = await functionalUnitOfWork.AdRepository.FirstOrDefault(a => a.Id == ad.Id);
-            return Ok(entity);
+                await functionalUnitOfWork.AdRepository.Add(ad);
+                var entity = await functionalUnitOfWork.AdRepository.FirstOrDefault(a => a.Id == ad.Id);
+                return Ok(entity); 
         }
 
         [Authorize]

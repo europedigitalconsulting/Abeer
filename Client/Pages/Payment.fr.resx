@@ -1,0 +1,399 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Balance" xml:space="preserve">
+    <value>My Balance</value>
+  </data>
+  <data name="CatchPhrase" xml:space="preserve">
+    <value>Welcome on Purchase Page. This page helps you to purchase new contract. You can add any contract available on our marketplace</value>
+  </data>
+  <data name="ConvertorTitle" xml:space="preserve">
+    <value>Current Currency</value>
+  </data>
+  <data name="FinishPayment" xml:space="preserve">
+    <value>Finish and pay</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="Iban" xml:space="preserve">
+    <value>Iban</value>
+  </data>
+  <data name="LabelAcceptPayment" xml:space="preserve">
+    <value>J'ai bien compris que des frais supplémentaires me seront facturés en fonction des charges facturées par l'opérateur Paypal et que la durée de traitement dépend de l'opérateur Paypal</value>
+  </data>
+  <data name="LabelAcceptPayment1" xml:space="preserve">
+    <value>J'ai bien compris que des frais supplémentaires me seront facturés en fonction des charges facturées par l'opérateur Paypal et que la durée de traitement dépend de l'opérateur Paypal</value>
+  </data>
+  <data name="LabelBilledTo" xml:space="preserve">
+    <value>Facturé à</value>
+  </data>
+  <data name="LabelBilledTo1" xml:space="preserve">
+    <value>Facturé à</value>
+  </data>
+  <data name="LabelCancel" xml:space="preserve">
+    <value>Annuler la commande</value>
+  </data>
+  <data name="LabelCancel1" xml:space="preserve">
+    <value>Annuler la commande</value>
+  </data>
+  <data name="LabelCardHolderName" xml:space="preserve">
+    <value>Nom du porpriétaire de la carte</value>
+  </data>
+  <data name="LabelCardHolderName1" xml:space="preserve">
+    <value>Nom du porpriétaire de la carte</value>
+  </data>
+  <data name="LabelCardNumber" xml:space="preserve">
+    <value>Numéro de la carte</value>
+  </data>
+  <data name="LabelCardNumber1" xml:space="preserve">
+    <value>Numéro de la carte</value>
+  </data>
+  <data name="LabelFees" xml:space="preserve">
+    <value>Charges</value>
+  </data>
+  <data name="LabelFees1" xml:space="preserve">
+    <value>Charges</value>
+  </data>
+  <data name="LabelFillByCash" xml:space="preserve">
+    <value>Recharger votre compte en payant</value>
+  </data>
+  <data name="LabelFillByCash1" xml:space="preserve">
+    <value>Recharger votre compte en payant</value>
+  </data>
+  <data name="LabelFillByCryptoCoinCard" xml:space="preserve">
+    <value>Recharger votre compte en utilisant une carte de recharger</value>
+  </data>
+  <data name="LabelFillByCryptoCoinCard1" xml:space="preserve">
+    <value>Recharger votre compte en utilisant une carte de recharger</value>
+  </data>
+  <data name="LabelHasError" xml:space="preserve">
+    <value>Your form has some error, please correct them and continues</value>
+  </data>
+  <data name="LabelHasError1" xml:space="preserve">
+    <value>Attention votre formulaire contient des erreurs, veuillez le modifier avant de continuer</value>
+  </data>
+  <data name="LabelHasError2" xml:space="preserve">
+    <value>Attention votre formulaire contient des erreurs, veuillez le modifier avant de continuer</value>
+  </data>
+  <data name="LabelIdReceiver" xml:space="preserve">
+    <value>Identifiant du bénéficiaire</value>
+  </data>
+  <data name="LabelIdReceiver1" xml:space="preserve">
+    <value>Identifiant du bénéficiaire</value>
+  </data>
+  <data name="LabelInvoice" xml:space="preserve">
+    <value>Facture</value>
+  </data>
+  <data name="LabelInvoice1" xml:space="preserve">
+    <value>Facture</value>
+  </data>
+  <data name="LabelItem" xml:space="preserve">
+    <value>Produit</value>
+  </data>
+  <data name="LabelItem1" xml:space="preserve">
+    <value>Produit</value>
+  </data>
+  <data name="LabelOrderDate" xml:space="preserve">
+    <value>Date de commande</value>
+  </data>
+  <data name="LabelOrderDate1" xml:space="preserve">
+    <value>Date de commande</value>
+  </data>
+  <data name="LabelOrderNumber" xml:space="preserve">
+    <value>Numéro de la commande</value>
+  </data>
+  <data name="LabelOrderNumber1" xml:space="preserve">
+    <value>Numéro de la commande</value>
+  </data>
+  <data name="LabelOrderSummary" xml:space="preserve">
+    <value>Résumé</value>
+  </data>
+  <data name="LabelOrderSummary1" xml:space="preserve">
+    <value>Résumé</value>
+  </data>
+  <data name="LabelPaymentInformation" xml:space="preserve">
+    <value>Information pour le paiement</value>
+  </data>
+  <data name="LabelPaymentInformation1" xml:space="preserve">
+    <value>Information pour le paiement</value>
+  </data>
+  <data name="LabelPaymentMethod" xml:space="preserve">
+    <value>Méthode de paiement</value>
+  </data>
+  <data name="LabelPaymentMethod1" xml:space="preserve">
+    <value>Méthode de paiement</value>
+  </data>
+  <data name="LabelPaymentReference" xml:space="preserve">
+    <value>Référence uniquement pour le paiement</value>
+  </data>
+  <data name="LabelPaymentReference1" xml:space="preserve">
+    <value>Référence uniquement pour le paiement</value>
+  </data>
+  <data name="LabelPinCode" xml:space="preserve">
+    <value>Code PIN</value>
+  </data>
+  <data name="LabelPinCode1" xml:space="preserve">
+    <value>Code PIN</value>
+  </data>
+  <data name="LabelPrice" xml:space="preserve">
+    <value>Prix</value>
+  </data>
+  <data name="LabelPrice1" xml:space="preserve">
+    <value>Prix</value>
+  </data>
+  <data name="LabelPrint" xml:space="preserve">
+    <value>Imprimer une facture</value>
+  </data>
+  <data name="LabelPrint1" xml:space="preserve">
+    <value>Imprimer une facture</value>
+  </data>
+  <data name="LabelProcessFinish" xml:space="preserve">
+    <value>Terminer mon achat</value>
+  </data>
+  <data name="LabelProcessFinish1" xml:space="preserve">
+    <value>Terminer mon achat</value>
+  </data>
+  <data name="LabelProcessPayment" xml:space="preserve">
+    <value>Procéder au paiement</value>
+  </data>
+  <data name="LabelProcessPayment1" xml:space="preserve">
+    <value>Procéder au paiement</value>
+  </data>
+  <data name="LabelQuantity" xml:space="preserve">
+    <value>Quantité</value>
+  </data>
+  <data name="LabelQuantity1" xml:space="preserve">
+    <value>Quantité</value>
+  </data>
+  <data name="LabelQuantityToPurchase" xml:space="preserve">
+    <value>Quantity to purchase</value>
+  </data>
+  <data name="LabelQuantityToPurchase1" xml:space="preserve">
+    <value>2. Vous préferez entrer la quantité en crypocoin</value>
+  </data>
+  <data name="LabelQuantityToPurchase2" xml:space="preserve">
+    <value>2. Vous préferez entrer la quantité en crypocoin</value>
+  </data>
+  <data name="LabelReceiverAddress" xml:space="preserve">
+    <value>Adresse</value>
+  </data>
+  <data name="LabelReceiverAddress1" xml:space="preserve">
+    <value>Adresse</value>
+  </data>
+  <data name="LabelReceiverBic" xml:space="preserve">
+    <value>BIC</value>
+  </data>
+  <data name="LabelReceiverBic1" xml:space="preserve">
+    <value>BIC</value>
+  </data>
+  <data name="LabelReceiverCountry" xml:space="preserve">
+    <value>Pays</value>
+  </data>
+  <data name="LabelReceiverCountry1" xml:space="preserve">
+    <value>Pays</value>
+  </data>
+  <data name="LabelReceiverIban" xml:space="preserve">
+    <value>IBAN</value>
+  </data>
+  <data name="LabelReceiverIban1" xml:space="preserve">
+    <value>IBAN</value>
+  </data>
+  <data name="LabelReceiverName" xml:space="preserve">
+    <value>Nom</value>
+  </data>
+  <data name="LabelReceiverName1" xml:space="preserve">
+    <value>Nom</value>
+  </data>
+  <data name="LabelSearch" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="LabelSearch1" xml:space="preserve">
+    <value>Rechercher</value>
+  </data>
+  <data name="LabelSearch2" xml:space="preserve">
+    <value>Rechercher</value>
+  </data>
+  <data name="LabelSepaCatchPhrase" xml:space="preserve">
+    <value>Merci d'effectuer votre virement SEPA au nom du bénéficiaire</value>
+  </data>
+  <data name="LabelSepaCatchPhrase1" xml:space="preserve">
+    <value>Merci d'effectuer votre virement SEPA au nom du bénéficiaire</value>
+  </data>
+  <data name="LabelSubTotal" xml:space="preserve">
+    <value>Sous total</value>
+  </data>
+  <data name="LabelSubTotal1" xml:space="preserve">
+    <value>Sous total</value>
+  </data>
+  <data name="LabelTotal" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="LabelTotal1" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="LabelValueInCurrency" xml:space="preserve">
+    <value>1. Vous préferez entrer la valeur en {0}</value>
+  </data>
+  <data name="LabelValueInCurrency1" xml:space="preserve">
+    <value>1. Vous préferez entrer la valeur en {0}</value>
+  </data>
+  <data name="OrderSummaryCatchPhrase" xml:space="preserve">
+    <value>A ce stade vous ne pouvez plus modifier votre commande, cependant vous pouvez annuler ou confirmer pour terminer et effectuer le paiement nécessaire</value>
+  </data>
+  <data name="OrderSummaryCatchPhrase1" xml:space="preserve">
+    <value>A ce stade vous ne pouvez plus modifier votre commande, cependant vous pouvez annuler ou confirmer pour terminer et effectuer le paiement nécessaire</value>
+  </data>
+  <data name="PayerBankCheckTitle2" xml:space="preserve">
+    <value>If you want to pay per bank check, the duration time depend on you bank delay</value>
+  </data>
+  <data name="PayerBankTransferTitle2" xml:space="preserve">
+    <value>Payment per bank transfer can have fees and can take more time depend on bank duration</value>
+  </data>
+  <data name="PaymentLimit1" xml:space="preserve">
+    <value>Purchase on line</value>
+  </data>
+  <data name="PaymentLimit2" xml:space="preserve">
+    <value>Purchase with one human support</value>
+  </data>
+  <data name="PaymentLimit3" xml:space="preserve">
+    <value>Recharger avec une carte</value>
+  </data>
+  <data name="PayPerBankCard" xml:space="preserve">
+    <value>Pay per Paypal</value>
+  </data>
+  <data name="PayPerBankCardDescription" xml:space="preserve">
+    <value>Paypal allows you to pay with your bank card. some fees can be added depend on your paypal account</value>
+  </data>
+  <data name="PayPerBankCheck" xml:space="preserve">
+    <value>Pay per bank check</value>
+  </data>
+  <data name="PayPerBankCheckDescription" xml:space="preserve">
+    <value>You can pay directly by bank check</value>
+  </data>
+  <data name="PayPerBankTransfer" xml:space="preserve">
+    <value>Pay per bank transfer</value>
+  </data>
+  <data name="PayPerBankTransferDescription" xml:space="preserve">
+    <value>You can pay directly by bank transfer</value>
+  </data>
+  <data name="ValidationPaymentFailed" xml:space="preserve">
+    <value>Can not validate your wallet card, please check your card number and pin code</value>
+  </data>
+</root>

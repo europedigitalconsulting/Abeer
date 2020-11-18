@@ -49,11 +49,6 @@ namespace Abeer.Data
         public IDbSet<TokenItem> TokenItems => dbProvider.Set<TokenItem>();
         public IDbSet<TokenBatchStatu> TokenBatchStatus => dbProvider.Set<TokenBatchStatu>();
         public IDbSet<CardStatu> CardStatus => dbProvider.Set<CardStatu>();
-        public IDbSet<Wallet> Wallets => dbProvider.Set<Wallet>();
-        public IDbSet<Transaction> Transactions => dbProvider.Set<Transaction>();
-        public IDbSet<TransactionStatu> TransactionStatus => dbProvider.Set<TransactionStatu>();
-        public IDbSet<Purchase> Purchase => dbProvider.Set<Purchase>();
-        public IDbSet<Payment> Payments => dbProvider.Set<Payment>();
         public IDbSet<Country> Countries => dbProvider.Set<Country>();
         public IDbSet<SocialNetwork> SocialNetworks => dbProvider.Set<SocialNetwork>();
         public IDbSet<CustomLink> CustomLinks => dbProvider.Set<CustomLink>();

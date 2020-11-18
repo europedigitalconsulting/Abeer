@@ -48,14 +48,16 @@ namespace Abeer.Client.Pages
             }
 
             var getAll = await HttpClient.GetAsync("/api/adss/admin");
-            getAll.EnsureSuccessStatusCode();
-            var json = await getAll.Content.ReadAsStringAsync();
-            All = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Abeer.Shared.Functional.AdModel>>(json);
-            if (All != null)
+            if (getAll.IsSuccessStatusCode)
             {
-                Items = All.ToList();
-            }
-
+                getAll.EnsureSuccessStatusCode();
+                var json = await getAll.Content.ReadAsStringAsync();
+                All = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Abeer.Shared.Functional.AdModel>>(json);
+                if (All != null)
+                {
+                    Items = All.ToList();
+                }
+            } 
         }
 
         void Search()

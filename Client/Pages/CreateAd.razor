@@ -7,10 +7,10 @@
 @code
 {
     public string Step { get; set; } = "Step1";
-    public AdModel Ad { get; set; } = new AdModel();
-    public AdPrice CurrentPrice { get; set; } = new AdPrice();
-    public List<AdPrice> AdPrices { get; set; } = new List<AdPrice>();
-    private List<Tuple<string, decimal>> Cart { get; set; } = new List<Tuple<string, decimal>>();
+    private AdModel Ad { get; set; } = new AdModel();
+    private AdPrice CurrentPrice { get; set; } = new AdPrice();
+    private List<AdPrice> AdPrices { get; set; } = new List<AdPrice>(); 
+    private bool PublishHasError { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -28,29 +28,21 @@
 
         var httpClient = HttpClientFactory.CreateClient("Abeer.Anonymous");
         var getAll = await httpClient.GetAsync("/api/adprice");
-        getAll.EnsureSuccessStatusCode();
-        var json = await getAll.Content.ReadAsStringAsync();
-        AdPrices = Newtonsoft.Json.JsonConvert.DeserializeObject<List<AdPrice>>(json);
+        if (getAll.IsSuccessStatusCode)
+        {
+            var json = await getAll.Content.ReadAsStringAsync();
+            AdPrices = JsonConvert.DeserializeObject<List<AdPrice>>(json);
+        }
 
         await InvokeAsync(StateHasChanged);
-    }
-
-    protected override async Task OnParametersSetAsync()
-    {
-        await base.OnParametersSetAsync();
     }
 
     async Task SelectPrice(AdPrice currentPrice)
     {
-        var tmp = new Tuple<string, decimal>(currentPrice.PriceName, currentPrice.Value);
-        Cart.Add(tmp);
-
         CurrentPrice = currentPrice;
         Step = "Step3";
         await InvokeAsync(StateHasChanged);
     }
-
-    bool PublishHasError;
 
     async Task ValidAd()
     {
@@ -65,7 +57,7 @@
         if (!PublishHasError)
         {
             var json = await response.Content.ReadAsStringAsync();
-            var Ad = Newtonsoft.Json.JsonConvert.DeserializeObject<AdModel>(json);
+            var Ad =  JsonConvert.DeserializeObject<AdModel>(json);
             NavigationManager.NavigateTo($"/ValidAd/{Ad.Id}", true);
         }
 
@@ -88,21 +80,20 @@
             Price = CurrentPrice
         };
 
-        var httpClient = HttpClientFactory.CreateClient("Abeer.Anonymous");
-        var response = await httpClient.PostAsJsonAsync<CreateAdRequestViewModel>("/api/Ad", CreateAdRequest);
-        PublishHasError = !response.IsSuccessStatusCode;
+        var response = await InsertAd(CreateAdRequest);
 
         if (!PublishHasError)
         {
             var json = await response.Content.ReadAsStringAsync();
-            var Ad = Newtonsoft.Json.JsonConvert.DeserializeObject<AdModel>(json);
+            var Ad = JsonConvert.DeserializeObject<AdModel>(json);
             NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri($"PayAd/{Ad.Id}").ToString(), true);
         }
 
         await InvokeAsync(StateHasChanged);
     }
 
-    protected async Task<string> CreatePayment(){
+    protected async Task CreateCryptoPayment()
+    {
         var CreateAdRequest = new CreateAdRequestViewModel
         {
             Ad = Ad,
@@ -110,9 +101,12 @@
         };
 
         var response = await InsertAd(CreateAdRequest);
-        var json = await response.Content.ReadAsStringAsync();
-        var AdReturn = Newtonsoft.Json.JsonConvert.DeserializeObject<AdModel>(json);
-        return AdReturn.Id.ToString();
+        if (response.IsSuccessStatusCode)
+        {
+            var json = await response.Content.ReadAsStringAsync();
+            Ad = JsonConvert.DeserializeObject<AdModel>(json);
+            NavigationManager.NavigateTo($"/payment/{Ad.OrderNumber}");
+        }
     }
 
     void AssignImageUrl1(string imgUrl) => Ad.ImageUrl1 = imgUrl;
@@ -315,16 +309,9 @@ else if (Step == "Step3")
                                 <button type="submit" class="btn btn-success btn-lg" @onclick="@(async () => await ValidAd())"><i class="far fa-arrow-right"></i>@Loc["ValidAd"]</button>
                             }
                             else
-                            {
-                                <CryptocoinPayment ClientId="client_id_mvc" ClientSecret="client_secret_mvc"
-                                                   DomainApiPayment="https://localhost:5001" BeforeValidationPayment="@CreatePayment"
-                                                   RedirectSuccessServer="https://localhost:44399/api/Payments/ProcessingCryptoCoinSuccess"
-                                                   RedirectErrorServer="https://localhost:44399/api/Payments/ProcessingCryptoCoinFailed"
-                                                   RedirectSuccess="https://localhost:44399/payment/Success"
-                                                   RedirectError="https://localhost:44399/payment/Error"
-                                                   Items=@Cart CssClass="btn btn-success" Price=@CurrentPrice.Value>
-                                </CryptocoinPayment>
-                                <button type="submit" class="btn  btn-successbtn-lg" @onclick="@(async () => await ProcessPayment())"><i class="far fa-credit-card"></i>@Loc["ProcessPayment"]</button>
+                            { 
+                                <button type="submit" class="btn  btn-primary btn-lg" @onclick="@(async () => await CreateCryptoPayment())"><i class="far fa-credit-card"></i>@Loc["CreateCryptoPayment"]</button>
+                                <button type="submit" class="btn  btn-success btn-lg" @onclick="@(async () => await ProcessPayment())"><i class="far fa-credit-card"></i>@Loc["ProcessPayment"]</button>
                             }
                         </div>
                     </div>
@@ -332,4 +319,4 @@ else if (Step == "Step3")
             </div>
         </div>
     </section>
-}
+} 

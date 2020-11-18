@@ -1,20 +1,128 @@
-﻿@page "/payment/{state}"
+﻿@page "/payment/{OrderNumber}"
 
-@if (state == "Success")
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@inject IHttpClientFactory HttpClientFactory
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Payment> Localizer
+@inject NavigationManager NavigationManager
+
+@if (isReady)
 {
-    <h3>Transfère réussi.</h3>
-}
-else
-{
-    <h1>ERROR</h1>
+    <div class="col-12">
+        <div class="invoice">
+            <div class="invoice-print">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="invoice-title">
+                            <h2> @Localizer["LabelInvoice"]</h2>
+                            <div class="invoice-number"> @Localizer["LabelOrderNumber"] @Ad.OrderNumber</div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <address>
+                                    <strong> @Localizer["LabelBilledTo"]:</strong><br>
+                                    ##BilledTo<br>
+                                    ##BilledToAddress<br>
+                                    ##BilledToCity
+                                </address>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <address>
+                                    <strong> @Localizer["LabelPaymentMethod"]:</strong><br>
+                                    CryptoCoin
+                                </address>
+                            </div>
+                            <div class="col-md-6 text-md-right">
+                                <address>
+                                    <strong> @Localizer["LabelOrderDate"]:</strong><br>
+                                    @Ad.CreateDate.ToLongDateString()<br><br>
+                                </address>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <div class="section-title"> @Localizer["LabelOrderSummary"]</div>
+                        <p class="section-lead"> @Localizer["OrderSummaryCatchPhrase"]</p>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover table-md">
+                                <tr>
+                                    <th data-width="40">#</th>
+                                    <th> @Localizer["LabelItem"]</th>
+                                    <th class="text-center"> @Localizer["LabelPrice"]</th>
+                                    <th class="text-center"> @Localizer["LabelQuantity"]</th>
+                                    <th class="text-right"> @Localizer["LabelTotal"]</th>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td> @Ad.AdPrice?.PriceName</td>
+                                    <td class="text-center"> @Ad.AdPrice?.Value</td>
+                                    <td class="text-center"> 1</td>
+                                    <td class="text-right"> @Ad.AdPrice?.Value</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-lg-8">
+                            </div>
+                            <div class="col-lg-4 text-right">
+                                <hr class="mt-2 mb-2">
+                                <div class="invoice-detail-item">
+                                    <div class="invoice-detail-name">Total</div>
+                                    <div class="invoice-detail-value invoice-detail-value-lg"> @Ad.AdPrice?.Value</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="text-md-right">
+                <div class="float-lg-left mb-lg-0 mb-3">
+                    <CryptocoinPayment ClientId="client_id_mvc" ClientSecret="client_secret_mvc"
+                                       OrderNumber="@Ad.OrderNumber" Price="@(Ad.AdPrice?.Value == null ? 0 : Ad.AdPrice.Value)" Items=@Cart
+                                       CssClass="btn btn-success btn-icon icon-left" DomainApiPayment="https://localhost:5001"
+                                       RedirectSuccessServer="https://localhost:7002/api/Payments/ProcessingCryptoCoinSuccess"
+                                       RedirectErrorServer="https://localhost:7002/api/Payments/ProcessingCryptoCoinFailed"
+                                       RedirectSuccess="https://localhost:7002/ConfirmPayment/Success"
+                                       RedirectError="https://localhost:7002/ConfirmPayment/Error">
+                    </CryptocoinPayment>
+                    <button class="btn btn-danger btn-icon icon-left"><i class="fas fa-times"></i>@Localizer["LabelCancel"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 
-@code {
-    [Parameter] public string state { get; set; }
+@code{
+    [Parameter] public string OrderNumber { get; set; }
+    private bool isReady { get; set; }
+    private List<Tuple<string, decimal>> Cart { get; set; } = new List<Tuple<string, decimal>>();
+    private AdModel Ad { get; set; } = new AdModel();
 
     protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine(state);
+
+        var httpClient = HttpClientFactory.CreateClient("Abeer.ServerAPI");
+        var getInvoice = await httpClient.GetAsync($"/api/Payments/GetInvoice/{OrderNumber}");
+        if (getInvoice.IsSuccessStatusCode)
+        {
+            var json = await getInvoice.Content.ReadAsStringAsync();
+            Ad = JsonConvert.DeserializeObject<AdModel>(json);
+
+            var tmp = new Tuple<string, decimal>(Ad.AdPrice.PriceName, Ad.AdPrice.Value);
+            Cart.Add(tmp);
+            isReady = true;
+            StateHasChanged();
+        }
+        else
+        {
+            NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri($"/").ToString(), true);
+        }
         await base.OnInitializedAsync();
     }
 }
