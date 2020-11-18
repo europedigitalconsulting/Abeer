@@ -5,11 +5,16 @@
     [Parameter] public string CssClass { get; set; }
     [Parameter] public string ClientId { get; set; }
     [Parameter] public string ClientSecret { get; set; }
+    [Parameter] public string OrderNumber { get; set; }
     [Parameter] public string DomainApiPayment { get; set; }
     [Parameter] public string RedirectSuccessServer { get; set; }
     [Parameter] public string RedirectErrorServer { get; set; }
     [Parameter] public string RedirectSuccess { get; set; }
     [Parameter] public string RedirectError { get; set; }
     [Parameter] public decimal Price { get; set; }
+    /// <summary>
+    /// Lors de la création de la commande il faut retourner le numero de commande pour que CryptoPayment puisse le traiter
+    /// </summary>
+    [Parameter] public Func<Task<string>> BeforeValidationPayment { get; set; }
     [Parameter] public List<Tuple<string, decimal>> Items { get; set; }
 }

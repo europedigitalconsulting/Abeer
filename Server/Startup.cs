@@ -124,6 +124,8 @@ namespace Abeer.Server
                 options.SupportedUICultures = supportedCultures;
             });
 
+            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(CultureInfo.CurrentCulture.Name);
+            CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo(CultureInfo.CurrentCulture.Name);
             services.AddTransient<FunctionalUnitOfWork>();
             var templateProviderType = Configuration["EmailSender:MailTemplateProviderType"];
 

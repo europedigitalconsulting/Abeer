@@ -5,6 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using Abeer.Shared;
 using Abeer.Data.UnitOfworks;
 using Microsoft.AspNetCore.Authorization;
+using Abeer.Shared.Technical;
+using System.Net.Http;
+using System.Net.Http.Json;
+using Microsoft.Extensions.Configuration;
 
 namespace Abeer.Server.Controllers
 {
@@ -14,23 +18,35 @@ namespace Abeer.Server.Controllers
     public class PaymentsController : ControllerBase
     {
         private readonly FunctionalUnitOfWork _context;
+        private readonly IConfiguration _configuration;
 
-        public PaymentsController(FunctionalUnitOfWork context)
+        public PaymentsController(FunctionalUnitOfWork context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         [AllowAnonymous]
-        [HttpGet("ProcessingCryptoCoinSuccess/{OrderNumber}")]
-        public async void ProcessingCryptoCoinSuccess(string OrderNumber)
+        [HttpPost("ProcessingCryptoCoinSuccess")]
+        public async void ProcessingCryptoCoinSuccess(CryptoPaymentInfo cryptoPaymentInfo)
         {
+            var client = new HttpClient();
+            var result = await client.PostAsJsonAsync($"{_configuration["Service:CryptoPayment:VerifyApiValidationToken"]}", cryptoPaymentInfo);
+            if (result.IsSuccessStatusCode)
+            {
 
+            }
         }
         [AllowAnonymous]
-        [HttpGet("ProcessingCryptoCoinFailed/{OrderNumber}")]
-        public async void ProcessingCryptoCoinFailed(string OrderNumber)
+        [HttpPost("ProcessingCryptoCoinFailed")]
+        public async void ProcessingCryptoCoinFailed(CryptoPaymentInfo cryptoPaymentInfo)
         {
+            var client = new HttpClient();
+            var result = await client.PostAsJsonAsync($"{_configuration["Service:CryptoPayment:VerifyApiValidationToken"]}", cryptoPaymentInfo);
+            if (result.IsSuccessStatusCode)
+            {
 
+            }
         }
         // GET: api/Payments
         [HttpGet("{id}")]

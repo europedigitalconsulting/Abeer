@@ -73,15 +73,15 @@
     }
 
     async Task<HttpResponseMessage> InsertAd(CreateAdRequestViewModel CreateAdRequest)
-    { 
+    {
         var httpClient = HttpClientFactory.CreateClient("Abeer.Anonymous");
-        var response = await httpClient.PostAsJsonAsync<CreateAdRequestViewModel>("/api/Ad", CreateAdRequest);
+        var response = await httpClient.PostAsJsonAsync<CreateAdRequestViewModel>("/api/Adss", CreateAdRequest);
         PublishHasError = !response.IsSuccessStatusCode;
         return response;
     }
 
     async Task ProcessPayment()
-    { 
+    {
         var CreateAdRequest = new CreateAdRequestViewModel
         {
             Ad = Ad,
@@ -100,6 +100,19 @@
         }
 
         await InvokeAsync(StateHasChanged);
+    }
+
+    protected async Task<string> CreatePayment(){
+        var CreateAdRequest = new CreateAdRequestViewModel
+        {
+            Ad = Ad,
+            Price = CurrentPrice
+        };
+
+        var response = await InsertAd(CreateAdRequest);
+        var json = await response.Content.ReadAsStringAsync();
+        var AdReturn = Newtonsoft.Json.JsonConvert.DeserializeObject<AdModel>(json);
+        return AdReturn.Id.ToString();
     }
 
     void AssignImageUrl1(string imgUrl) => Ad.ImageUrl1 = imgUrl;
@@ -304,12 +317,12 @@ else if (Step == "Step3")
                             else
                             {
                                 <CryptocoinPayment ClientId="client_id_mvc" ClientSecret="client_secret_mvc"
-                                                   DomainApiPayment="https://localhost:44354"
+                                                   DomainApiPayment="https://localhost:5001" BeforeValidationPayment="@CreatePayment"
                                                    RedirectSuccessServer="https://localhost:44399/api/Payments/ProcessingCryptoCoinSuccess"
                                                    RedirectErrorServer="https://localhost:44399/api/Payments/ProcessingCryptoCoinFailed"
                                                    RedirectSuccess="https://localhost:44399/payment/Success"
                                                    RedirectError="https://localhost:44399/payment/Error"
-                                                   Items=@Cart CssClass="btn btn-success" Price=156.99M>
+                                                   Items=@Cart CssClass="btn btn-success" Price=@CurrentPrice.Value>
                                 </CryptocoinPayment>
                                 <button type="submit" class="btn  btn-successbtn-lg" @onclick="@(async () => await ProcessPayment())"><i class="far fa-credit-card"></i>@Loc["ProcessPayment"]</button>
                             }
