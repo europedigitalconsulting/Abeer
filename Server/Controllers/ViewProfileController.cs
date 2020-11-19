@@ -29,7 +29,7 @@ namespace Abeer.Server.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ViewApplicationUser>> Get(string id)
         {
-            var user = await _userManager.FindByIdAsync(id) ?? await _userManager.Users.FirstOrDefaultAsync(u=>u.PinCode == id)
+            var user = await _userManager.FindByIdAsync(id) ?? await _userManager.Users.FirstOrDefaultAsync(u => u.PinCode == id)
                 ?? await _userManager.FindByEmailAsync(id);
 
             if (user == null)
@@ -38,7 +38,9 @@ namespace Abeer.Server.Controllers
             return Ok(new ViewApplicationUser
             {
                 City = user.City,
-                Email = user.Email, PhoneNumber = user.PhoneNumber, Id = user.Id,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                Id = user.Id,
                 SocialNetworkConnected = await _functionalUnitOfWork.SocialNetworkRepository.GetSocialNetworkLinks(user.Id) ?? new List<SocialNetwork>(),
                 CustomLinks = await _functionalUnitOfWork.CustomLinkRepository.GetCustomLinkLinks(user.Id) ?? new List<CustomLink>(),
                 Address = user.Address,
@@ -52,7 +54,8 @@ namespace Abeer.Server.Controllers
                 IsOperator = user.IsOperator,
                 LastLogin = user.LastLogin,
                 LastName = user.LastName,
-                Title = user.Title
+                Title = user.Title,
+                PhotoUrl = user.PhotoUrl
             });
         }
     }

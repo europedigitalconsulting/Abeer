@@ -161,7 +161,7 @@
                                                                 }
                                                             </div>
                                                             <a class="pull-left" href="#">
-                                                                <img class="thumb-lg img-circle bx-s" src="@User.GravatarUrl()" alt="@User.DisplayName">
+                                                                <img width="80" height="80" class="thumb-lg img-circle bx-s" src="@(string.IsNullOrEmpty(User.PhotoUrl) ? User.GravatarUrl() : User.PhotoUrl)" alt="@User.DisplayName">
                                                             </a>
                                                             <div class="info">
                                                                 <h4>@User.DisplayName</h4>
