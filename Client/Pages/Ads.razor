@@ -16,7 +16,7 @@
 
     void countTerm(KeyboardEventArgs e)
     {
-        if (Term.Length > 5)
+        if (Term?.Length > 5)
             Search();
     }
 
@@ -45,7 +45,7 @@
 
     void Search()
     {
-        Items = All?.Where(a => a.Title.Contains(Term) || a.Description.Contains(Term)).ToList();
+        Items = All?.Where(a => (a.Title != null && a.Title.Contains(Term)) || (a.Description != null && a.Description.Contains(Term))).ToList();
     }
 }
 
