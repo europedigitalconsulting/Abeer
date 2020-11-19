@@ -92,7 +92,7 @@
         await InvokeAsync(StateHasChanged);
     }
 
-    protected async Task CreateCryptoPayment()
+    protected async Task CreateCryptoPayment(string methodPayment)
     {
         var CreateAdRequest = new CreateAdRequestViewModel
         {
@@ -105,7 +105,7 @@
         {
             var json = await response.Content.ReadAsStringAsync();
             Ad = JsonConvert.DeserializeObject<AdModel>(json);
-            NavigationManager.NavigateTo($"/payment/{Ad.OrderNumber}");
+            NavigationManager.NavigateTo($"/payment/{methodPayment}/{Ad.OrderNumber}");
         }
     }
 
@@ -310,8 +310,8 @@ else if (Step == "Step3")
                             }
                             else
                             { 
-                                <button type="submit" class="btn  btn-success btn-lg" @onclick="@(async () => await CreateCryptoPayment())"><i class="far fa-credit-card"></i>@Loc["CreateCryptoPayment"]</button>
-                                <button type="submit" class="btn  btn-primary btn-lg" @onclick="@(async () => await CreateCryptoPayment())"><i class="far fa-credit-card"></i>Paiement Paypal</button>
+                                <button type="submit" class="btn  btn-success btn-lg" @onclick="@(async () => await CreateCryptoPayment("1"))"><i class="far fa-credit-card"></i>@Loc["CreateCryptoPayment"]</button>
+                                <button type="submit" class="btn  btn-primary btn-lg" @onclick="@(async () => await CreateCryptoPayment("2"))"><i class="far fa-credit-card"></i>Paiement Paypal</button>
                                 <button type="submit" class="btn  btn-info btn-lg" @onclick="@(async () => await ProcessPayment())"><i class="far fa-credit-card"></i>@Loc["ProcessPayment"]</button>
                             }
                         </div>

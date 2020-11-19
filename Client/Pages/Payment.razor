@@ -1,4 +1,4 @@
-﻿@page "/payment/{OrderNumber}"
+﻿@page "/payment/{MethodPayment}/{OrderNumber}"
 
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
 @inject IHttpClientFactory HttpClientFactory
@@ -83,7 +83,7 @@
             <hr>
             <div class="text-md-right">
                 <div class="float-lg-left mb-lg-0 mb-3">
-                    @if (true)
+                    @if (MethodPayment == "1")
                     {
                         <CryptocoinPayment ClientId="client_id_mvc" ClientSecret="client_secret_mvc" BeforeCallPayment="CreatePayment"
                                            OrderNumber="@Ad.OrderNumber" Price="@Ad.AdPrice.Value" Items=@Cart
@@ -94,10 +94,10 @@
                                            RedirectError="https://localhost:7001/ConfirmPayment/Error">
                         </CryptocoinPayment>
                     }
-                    else
+                    else if(MethodPayment == "2")
                     {
 
-                        <button class="btn btn-danger btn-icon icon-left" @onclick="PaypalPayment"><i class="fas fa-times"></i>Paypal</button>
+                        <button class="btn btn-primary btn-icon icon-left" @onclick="PaypalPayment"> Payer avec Paypal</button>
 
                     }
 
@@ -110,6 +110,7 @@
 
 @code{
     [Parameter] public string OrderNumber { get; set; }
+    [Parameter] public string MethodPayment { get; set; }
     private List<Tuple<string, decimal>> Cart { get; set; } = new List<Tuple<string, decimal>>();
     private AdModel Ad { get; set; } = new AdModel();
 
