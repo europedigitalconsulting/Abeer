@@ -5,7 +5,7 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Payment> Localizer
 @inject NavigationManager NavigationManager
 
-@if (isReady)
+@if (Ad?.AdPrice != null)
 {
     <div class="col-12">
         <div class="invoice">
@@ -84,14 +84,14 @@
             <div class="text-md-right">
                 <div class="float-lg-left mb-lg-0 mb-3">
                     <CryptocoinPayment ClientId="client_id_mvc" ClientSecret="client_secret_mvc"
-                                       OrderNumber="@Ad.OrderNumber" Price="@(Ad.AdPrice?.Value == null ? 0 : Ad.AdPrice.Value)" Items=@Cart
+                                       OrderNumber="@Ad.OrderNumber" Price="@Ad.AdPrice.Value" Items=@Cart
                                        CssClass="btn btn-success btn-icon icon-left" DomainApiPayment="https://localhost:5001"
                                        RedirectSuccessServer="https://localhost:7002/api/Payments/ProcessingCryptoCoinSuccess"
                                        RedirectErrorServer="https://localhost:7002/api/Payments/ProcessingCryptoCoinFailed"
                                        RedirectSuccess="https://localhost:7002/ConfirmPayment/Success"
                                        RedirectError="https://localhost:7002/ConfirmPayment/Error">
                     </CryptocoinPayment>
-                    <button class="btn btn-danger btn-icon icon-left"><i class="fas fa-times"></i>@Localizer["LabelCancel"]</button>
+                    <button class="btn btn-danger btn-icon icon-left" @onclick="GoToBack"><i class="fas fa-times"></i>@Localizer["LabelCancel"]</button>
                 </div>
             </div>
         </div>
@@ -100,7 +100,6 @@
 
 @code{
     [Parameter] public string OrderNumber { get; set; }
-    private bool isReady { get; set; }
     private List<Tuple<string, decimal>> Cart { get; set; } = new List<Tuple<string, decimal>>();
     private AdModel Ad { get; set; } = new AdModel();
 
@@ -116,13 +115,17 @@
 
             var tmp = new Tuple<string, decimal>(Ad.AdPrice.PriceName, Ad.AdPrice.Value);
             Cart.Add(tmp);
-            isReady = true;
             StateHasChanged();
         }
         else
         {
-            NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri($"/").ToString(), true);
+            NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri("/").ToString(), true);
         }
         await base.OnInitializedAsync();
+    }
+
+    private void GoToBack()
+    {
+        NavigationManager.NavigateTo("/", true);
     }
 }
