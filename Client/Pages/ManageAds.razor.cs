@@ -31,7 +31,7 @@ namespace Abeer.Client.Pages
 
         void countTerm(KeyboardEventArgs e)
         {
-            if (Term.Length > 5)
+            if (Term?.Length > 5)
                 Search();
         }
 
@@ -49,8 +49,7 @@ namespace Abeer.Client.Pages
 
             var getAll = await HttpClient.GetAsync("/api/adss/admin");
             if (getAll.IsSuccessStatusCode)
-            {
-                getAll.EnsureSuccessStatusCode();
+            { 
                 var json = await getAll.Content.ReadAsStringAsync();
                 All = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Abeer.Shared.Functional.AdModel>>(json);
                 if (All != null)
@@ -62,8 +61,10 @@ namespace Abeer.Client.Pages
 
         void Search()
         {
-            if (All != null)
-                Items = All.Where(a => a.Title.Contains(Term) || a.Description.Contains(Term)).ToList();
+            Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(All));
+            Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(Items));
+            if (All != null && All.Count > 0)
+                Items = All.Where(a => (a.Title != null && a.Title.Contains(Term)) || (a.Description != null && a.Description.Contains(Term))).ToList();
         }
 
         void OpenEditModal(Abeer.Shared.Functional.AdModel adModel)
