@@ -21,9 +21,9 @@
                             <div class="col-md-6">
                                 <address>
                                     <strong> @Localizer["LabelBilledTo"]:</strong><br>
-                                    ##BilledTo<br>
-                                    ##BilledToAddress<br>
-                                    ##BilledToCity
+                                    @User.FindFirstValue(ClaimTypes.Surname)  @User.FindFirstValue(ClaimTypes.GivenName) <br> 
+                                    @User.FindFirstValue("city") <br />
+                                    @User.FindFirstValue("country")
                                 </address>
                             </div>
                         </div>
@@ -109,13 +109,17 @@
 }
 
 @code{
+    [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
     [Parameter] public string OrderNumber { get; set; }
     [Parameter] public string MethodPayment { get; set; }
     private List<Tuple<string, decimal>> Cart { get; set; } = new List<Tuple<string, decimal>>();
     private AdModel Ad { get; set; } = new AdModel();
-
+    private ClaimsPrincipal User;
     protected override async Task OnInitializedAsync()
     {
+        var authenticateSate = await authenticationStateTask;
+
+        User = authenticateSate.User;
 
         var httpClient = HttpClientFactory.CreateClient("Abeer.ServerAPI");
         var getInvoice = await httpClient.GetAsync($"/api/Payments/GetInvoice/{OrderNumber}");
