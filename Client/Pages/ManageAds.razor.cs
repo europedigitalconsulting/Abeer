@@ -60,9 +60,7 @@ namespace Abeer.Client.Pages
         }
 
         void Search()
-        {
-            Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(All));
-            Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(Items));
+        { 
             if (All != null && All.Count > 0)
                 Items = All.Where(a => (a.Title != null && a.Title.Contains(Term)) || (a.Description != null && a.Description.Contains(Term))).ToList();
         }
