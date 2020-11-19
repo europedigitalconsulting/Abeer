@@ -44,15 +44,13 @@ namespace Abeer.Data
 
         public IDbSet<UrlShortned> UrlShortneds => dbProvider.Set<UrlShortned>();
         public IDbSet<Contact> Contacts => dbProvider.Set<Contact>();
-        public IDbSet<TokenBatch> TokenBatches => dbProvider.Set<TokenBatch>();
         public IDbSet<Card> Cards => dbProvider.Set<Card>();
-        public IDbSet<TokenItem> TokenItems => dbProvider.Set<TokenItem>();
-        public IDbSet<TokenBatchStatu> TokenBatchStatus => dbProvider.Set<TokenBatchStatu>();
         public IDbSet<CardStatu> CardStatus => dbProvider.Set<CardStatu>();
         public IDbSet<Country> Countries => dbProvider.Set<Country>();
         public IDbSet<SocialNetwork> SocialNetworks => dbProvider.Set<SocialNetwork>();
         public IDbSet<CustomLink> CustomLinks => dbProvider.Set<CustomLink>();
         public IDbSet<AdModel> Ads => dbProvider.Set<AdModel>();
         public IDbSet<AdPrice> AdPrices => dbProvider.Set<AdPrice>();
+        public IDbSet<PaymentModel> Payments => dbProvider.Set<PaymentModel>();
     }
 }

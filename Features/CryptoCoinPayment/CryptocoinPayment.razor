@@ -12,5 +12,6 @@
     [Parameter] public string RedirectSuccess { get; set; }
     [Parameter] public string RedirectError { get; set; } 
     [Parameter] public decimal Price { get; set; }
+    [Parameter] public EventCallback BeforeCallPayment { get; set; }
     [Parameter] public List<Tuple<string, decimal>> Items { get; set; }
 }

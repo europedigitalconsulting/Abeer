@@ -11,14 +11,13 @@ namespace Abeer.Data.UnitOfworks
     public class FunctionalUnitOfWork
     {
         private CardRepository _CardRepository;
-        private ContactRepository _ContactRepository;
-        private TokenBatchRepository _TokenBatchRepository;
-        private TokenItemRepository _TokenItemRepository;
+        private ContactRepository _ContactRepository; 
         private CountriesRepository _CountriesRepository;
         private SocialNetworkRepository _SocialNetworkRepository;
         private CustomLinkRepository _CustomLinkRepository;
         private AdRepository _AdRepository;
         private AdPriceRepository _AdPriceRepository;
+        private PaymentRepository _PaymentRepository;
 
         private FunctionalDbContext ApplicationDbContext { get; }
         private IServiceProvider ServiceProvider { get; }
@@ -95,31 +94,8 @@ namespace Abeer.Data.UnitOfworks
 
                 return _AdPriceRepository;
             }
-        }
-
-        public TokenBatchRepository TokenBatchRepository
-        {
-            get
-            {
-                if (_TokenBatchRepository == null)
-                    _TokenBatchRepository = ActivatorUtilities.CreateInstance<TokenBatchRepository>(ServiceProvider);
-
-                return _TokenBatchRepository;
-            }
-        }
-
-
-        public TokenItemRepository TokenItemRepository
-        {
-            get
-            {
-                if (_TokenItemRepository == null)
-                    _TokenItemRepository = ActivatorUtilities.CreateInstance<TokenItemRepository>(ServiceProvider);
-
-                return _TokenItemRepository;
-            }
-        }
-
+        } 
+         
         public CountriesRepository CountriesRepository
         {
             get
@@ -128,6 +104,17 @@ namespace Abeer.Data.UnitOfworks
                     _CountriesRepository = ActivatorUtilities.CreateInstance<CountriesRepository>(ServiceProvider);
 
                 return _CountriesRepository;
+            }
+        }
+
+        public PaymentRepository PaymentRepository
+        {
+            get
+            {
+                if (_PaymentRepository == null)
+                    _PaymentRepository = ActivatorUtilities.CreateInstance<PaymentRepository>(ServiceProvider);
+
+                return _PaymentRepository;
             }
         }
 

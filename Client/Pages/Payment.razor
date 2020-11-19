@@ -83,14 +83,24 @@
             <hr>
             <div class="text-md-right">
                 <div class="float-lg-left mb-lg-0 mb-3">
-                    <CryptocoinPayment ClientId="client_id_mvc" ClientSecret="client_secret_mvc"
-                                       OrderNumber="@Ad.OrderNumber" Price="@Ad.AdPrice.Value" Items=@Cart
-                                       CssClass="btn btn-success btn-icon icon-left" DomainApiPayment="https://localhost:5001"
-                                       RedirectSuccessServer="https://localhost:7002/api/Payments/ProcessingCryptoCoinSuccess"
-                                       RedirectErrorServer="https://localhost:7002/api/Payments/ProcessingCryptoCoinFailed"
-                                       RedirectSuccess="https://localhost:7002/ConfirmPayment/Success"
-                                       RedirectError="https://localhost:7002/ConfirmPayment/Error">
-                    </CryptocoinPayment>
+                    @if (true)
+                    {
+                        <CryptocoinPayment ClientId="client_id_mvc" ClientSecret="client_secret_mvc" BeforeCallPayment="CreatePayment"
+                                           OrderNumber="@Ad.OrderNumber" Price="@Ad.AdPrice.Value" Items=@Cart
+                                           CssClass="btn btn-success btn-icon icon-left" DomainApiPayment="https://localhost:5001"
+                                           RedirectSuccessServer="https://localhost:7001/api/Cryptocoin/ProcessingCryptoCoinSuccess"
+                                           RedirectErrorServer="https://localhost:7001/api/Cryptocoin/ProcessingCryptoCoinFailed"
+                                           RedirectSuccess="https://localhost:7001/ConfirmPayment/Success"
+                                           RedirectError="https://localhost:7001/ConfirmPayment/Error">
+                        </CryptocoinPayment>
+                    }
+                    else
+                    {
+
+                        <button class="btn btn-danger btn-icon icon-left" @onclick="PaypalPayment"><i class="fas fa-times"></i>Paypal</button>
+
+                    }
+
                     <button class="btn btn-danger btn-icon icon-left" @onclick="GoToBack"><i class="fas fa-times"></i>@Localizer["LabelCancel"]</button>
                 </div>
             </div>
@@ -124,6 +134,19 @@
         await base.OnInitializedAsync();
     }
 
+    private async Task CreatePayment()
+    {
+        var httpClient = HttpClientFactory.CreateClient("Abeer.ServerAPI");
+        var result = await httpClient.GetAsync($"/api/Payments/Create/{Ad.Id}", HttpCompletionOption.ResponseContentRead);
+        if (!result.IsSuccessStatusCode)
+        {
+            NavigationManager.NavigateTo("https://localhost:7001/ConfirmPayment/Error", true);
+        }
+    }
+    private void PaypalPayment()
+    {
+        NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri($"/api/Paypal/Create/{Ad.Id}").ToString(), true);
+    }
     private void GoToBack()
     {
         NavigationManager.NavigateTo("/", true);

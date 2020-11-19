@@ -32,16 +32,13 @@ namespace Abeer.Data.SqlServerProvider
         }
 
         public DbSet<UrlShortned> UrlShortned { get; set; }
-        public DbSet<Contact> Contact { get; set; }
-        public DbSet<TokenBatch> TokenBatch { get; set; }
-        public DbSet<Card> Card { get; set; }
-        public DbSet<TokenItem> TokenItem { get; set; }
-        public DbSet<TokenBatchStatu> TokenBatchStatu { get; set; }
+        public DbSet<Contact> Contact { get; set; } 
         public DbSet<CardStatu> CardStatu { get; set; }
         public DbSet<Country> Country { get; set; }
         public DbSet<SocialNetwork> SocialNetwork { get; set; }
         public DbSet<CustomLink> CustomLink { get; set; }
         public DbSet<AdModel> Ad { get; set; }
         public DbSet<AdPrice> AdPrice { get; set; }
+        public DbSet<PaymentModel> Payment { get; set; }
     }
 }

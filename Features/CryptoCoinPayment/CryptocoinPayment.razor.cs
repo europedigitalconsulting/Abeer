@@ -16,7 +16,8 @@ namespace Cryptocoin.Payment
        
         private async Task ValidPayment()
         {
-            Console.WriteLine(OrderNumber);
+            await BeforeCallPayment.InvokeAsync(null);
+
             if (!string.IsNullOrEmpty(OrderNumber))
             {
                 var response = await HttpClient.PostAsJsonAsync($"{DomainApiPayment}/api/Payment/GetAccessToken", new

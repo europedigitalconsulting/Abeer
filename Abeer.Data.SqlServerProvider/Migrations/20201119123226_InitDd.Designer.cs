@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Abeer.Data.SqlServerProvider.Migrations
 {
     [DbContext(typeof(FunctionalContext))]
-    [Migration("20201105152702_InitializedDatabase")]
-    partial class InitializedDatabase
+    [Migration("20201119123226_InitDd")]
+    partial class InitDd
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -271,6 +271,9 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                     b.Property<bool>("IsValid")
                         .HasColumnType("bit");
 
+                    b.Property<string>("OrderNumber")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("OwnerId")
                         .HasColumnType("nvarchar(max)");
 
@@ -340,87 +343,39 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                     b.ToTable("AdPrice");
                 });
 
-            modelBuilder.Entity("Abeer.Shared.Payment", b =>
+            modelBuilder.Entity("Abeer.Shared.Functional.PaymentModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal>("AmountCurrency")
-                        .HasColumnType("decimal(18,5)");
-
-                    b.Property<string>("CurrencyCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("CurrencyRate")
-                        .HasColumnType("decimal(18,5)");
-
-                    b.Property<DateTime?>("DepositedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeposit")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsStarting")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsValid")
-                        .HasColumnType("bit");
+                    b.Property<Guid>("AdId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsValidated")
                         .HasColumnType("bit");
 
+                    b.Property<string>("PayerID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaymentMethod")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("PaymentReference")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PaymentType")
-                        .HasColumnType("int");
+                    b.Property<string>("TokenId")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("StartingDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("TransactionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("ValidatedDate")
+                    b.Property<DateTime>("ValidatedDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("TransactionId");
 
                     b.ToTable("Payment");
-                });
-
-            modelBuilder.Entity("Abeer.Shared.PurchaseItem", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ItemId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ItemReference")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ItemType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("PurchaseId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Value")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PurchaseId");
-
-                    b.ToTable("PurchaseItem");
                 });
 
             modelBuilder.Entity("Abeer.Shared.SocialNetwork", b =>
@@ -452,271 +407,6 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                     b.ToTable("SocialNetwork");
                 });
 
-            modelBuilder.Entity("Abeer.Shared.TokenBatch", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("BatchNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("CsvFileContent")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("ErrorMessage")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ErrorType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("GeneratedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsError")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsGenerated")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("OperatorId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("OperatorName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PartsItemsCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TokenType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("WebHookAuthentication")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("WebHookProtocolType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("WebHookUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TokenBatch");
-                });
-
-            modelBuilder.Entity("Abeer.Shared.TokenBatchStatu", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<short>("Status")
-                        .HasColumnType("smallint");
-
-                    b.Property<DateTime>("StatusDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("StatusMessage")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("TokenBatchId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<long?>("TokenBatchId1")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TokenBatchId1");
-
-                    b.ToTable("TokenBatchStatu");
-                });
-
-            modelBuilder.Entity("Abeer.Shared.TokenItem", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CardId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("CardNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Error")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("GeneratedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsError")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsGenerated")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsProcessing")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsUsed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("PartNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("PartPosition")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("PinCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("ProcessingDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long>("TokenBatchId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("UsedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UsedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TokenBatchId");
-
-                    b.ToTable("TokenItem");
-                });
-
-            modelBuilder.Entity("Abeer.Shared.Transaction", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ErrorMessage")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ErrorType")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Generated")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Identifier")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("Index")
-                        .HasColumnType("bigint");
-
-                    b.Property<bool>("IsError")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsProcessing")
-                        .HasColumnType("bit");
-
-                    b.Property<byte[]>("Receipt")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("Signature")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("StartProcessing")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("TransactionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("TransactionReference")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TransactionType")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Validated")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("ValidatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("WalletId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("WalletId");
-
-                    b.ToTable("Transaction");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Transaction");
-                });
-
-            modelBuilder.Entity("Abeer.Shared.TransactionStatu", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ErrorMessage")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsError")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid?>("TransactionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("TransactionStatuDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("TransactionStatus")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TransactionId");
-
-                    b.ToTable("TransactionStatu");
-                });
-
-            modelBuilder.Entity("Abeer.Shared.Wallet", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Identifier")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("OwnerId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Wallet");
-                });
-
-            modelBuilder.Entity("Abeer.Shared.Purchase", b =>
-                {
-                    b.HasBaseType("Abeer.Shared.Transaction");
-
-                    b.HasDiscriminator().HasValue("Purchase");
-                });
-
             modelBuilder.Entity("Abeer.Shared.CardStatu", b =>
                 {
                     b.HasOne("Abeer.Shared.Card", "Card")
@@ -733,54 +423,6 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                         .HasForeignKey("AdPriceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Abeer.Shared.Payment", b =>
-                {
-                    b.HasOne("Abeer.Shared.Transaction", "Transaction")
-                        .WithMany("Payments")
-                        .HasForeignKey("TransactionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Abeer.Shared.PurchaseItem", b =>
-                {
-                    b.HasOne("Abeer.Shared.Purchase", "Purchase")
-                        .WithMany("PurchaseItems")
-                        .HasForeignKey("PurchaseId");
-                });
-
-            modelBuilder.Entity("Abeer.Shared.TokenBatchStatu", b =>
-                {
-                    b.HasOne("Abeer.Shared.TokenBatch", "TokenBatch")
-                        .WithMany("TokenBatchStatus")
-                        .HasForeignKey("TokenBatchId1");
-                });
-
-            modelBuilder.Entity("Abeer.Shared.TokenItem", b =>
-                {
-                    b.HasOne("Abeer.Shared.TokenBatch", "TokenBatch")
-                        .WithMany("TokenItems")
-                        .HasForeignKey("TokenBatchId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Abeer.Shared.Transaction", b =>
-                {
-                    b.HasOne("Abeer.Shared.Wallet", "Wallet")
-                        .WithMany("Transactions")
-                        .HasForeignKey("WalletId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Abeer.Shared.TransactionStatu", b =>
-                {
-                    b.HasOne("Abeer.Shared.Transaction", "Transaction")
-                        .WithMany("TransactionStatus")
-                        .HasForeignKey("TransactionId");
                 });
 #pragma warning restore 612, 618
         }

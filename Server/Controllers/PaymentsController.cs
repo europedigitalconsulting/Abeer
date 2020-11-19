@@ -21,7 +21,6 @@ namespace Abeer.Server.Controllers
     {
         private readonly FunctionalUnitOfWork _functionalUnitOfWork;
         private readonly IConfiguration _configuration;
-        private readonly IServiceProvider _serviceProvider;
 
         public PaymentsController(FunctionalUnitOfWork context, IConfiguration configuration)
         {
@@ -29,49 +28,22 @@ namespace Abeer.Server.Controllers
             _configuration = configuration;
         }
 
-        [AllowAnonymous]
-        [HttpPost("ProcessingCryptoCoinSuccess")]
-        public async Task ProcessingCryptoCoinSuccess(CryptoPaymentInfo cryptoPaymentInfo)
+        [HttpGet("Create/{AdId}")]
+        public async Task<ActionResult<AdModel>> GetInvoice(Guid AdId)
         {
-            try
+            var payment = await _functionalUnitOfWork.PaymentRepository.Add(new Shared.Functional.PaymentModel
             {
-                var client = new HttpClient();
-                var result = await client.PostAsJsonAsync($"{_configuration["Service:CryptoPayment:VerifyApiValidationToken"]}", cryptoPaymentInfo);
-                if (result.IsSuccessStatusCode)
-                {  
-                        var ad = await _functionalUnitOfWork.AdRepository.FirstOrDefault(a => a.OrderNumber == cryptoPaymentInfo.OrderNumber && !a.IsValid);
-                        ad.IsValid = true;
-                        ad.ValidateDate = DateTime.Now;
-                        _functionalUnitOfWork.SaveChanges(); 
-                }
-            }
-            catch (Exception ex)
-            {
+                AdId = AdId,
+                UserId = User.NameIdentifier(),
+                PaymentMethod = "CryptoCoin",
+            });
 
-                throw;
-            }
-        }
-        [AllowAnonymous]
-        [HttpPost("ProcessingCryptoCoinFailed")]
-        public async Task ProcessingCryptoCoinFailed(CryptoPaymentInfo cryptoPaymentInfo)
-        {
-            try
-            {
-                var client = new HttpClient();
-                var result = await client.PostAsJsonAsync($"{_configuration["Service:CryptoPayment:VerifyApiValidationToken"]}", cryptoPaymentInfo);
-                if (result.IsSuccessStatusCode)
-                {
-
-                }
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
+            if (payment != null)
+                return Ok();
+            else
+                return BadRequest();
         }
 
-        [Authorize]
         [HttpGet("GetInvoice/{OrderNumber}")]
         public async Task<ActionResult<AdModel>> GetInvoice(string orderNumber)
         {
@@ -81,6 +53,10 @@ namespace Abeer.Server.Controllers
             ad.AdPrice = await _functionalUnitOfWork.AdPriceRepository.FirstOrDefault(x => x.Id == ad.AdPriceId);
             if (ad.AdPrice == null)
                 return BadRequest();
+
+            ad.OwnerId = User.NameIdentifier();
+            _functionalUnitOfWork.SaveChanges();
+
             return Ok(ad);
         }
     }

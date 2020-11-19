@@ -310,8 +310,9 @@ else if (Step == "Step3")
                             }
                             else
                             { 
-                                <button type="submit" class="btn  btn-primary btn-lg" @onclick="@(async () => await CreateCryptoPayment())"><i class="far fa-credit-card"></i>@Loc["CreateCryptoPayment"]</button>
-                                <button type="submit" class="btn  btn-success btn-lg" @onclick="@(async () => await ProcessPayment())"><i class="far fa-credit-card"></i>@Loc["ProcessPayment"]</button>
+                                <button type="submit" class="btn  btn-success btn-lg" @onclick="@(async () => await CreateCryptoPayment())"><i class="far fa-credit-card"></i>@Loc["CreateCryptoPayment"]</button>
+                                <button type="submit" class="btn  btn-primary btn-lg" @onclick="@(async () => await CreateCryptoPayment())"><i class="far fa-credit-card"></i>Paiement Paypal</button>
+                                <button type="submit" class="btn  btn-info btn-lg" @onclick="@(async () => await ProcessPayment())"><i class="far fa-credit-card"></i>@Loc["ProcessPayment"]</button>
                             }
                         </div>
                     </div>

@@ -69,8 +69,8 @@ namespace Abeer.Data.Repositories
 
         public  Task<string[]> GetCardTypes()
         {
-            return Task.Run(() => (FunctionalDbContext.TokenBatches.ToList())
-                .Select(b => b.TokenType).Distinct().OrderBy(s => s).ToArray());
+            return Task.Run(() => (FunctionalDbContext.Cards.ToList())
+                .Select(b => b.CardType).Distinct().OrderBy(s => s).ToArray());
         }
 
         public  Task<Card> Find(Guid id)
