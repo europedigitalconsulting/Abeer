@@ -21,8 +21,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Configuration;
 
 namespace Abeer.Server.Controllers
-{
-    [Authorize]
+{ 
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -208,12 +207,13 @@ namespace Abeer.Server.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        [Consumes(MediaTypeNames.Application.Json)]
+        //[Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [AllowAnonymous]
         public async Task<ActionResult<ApplicationUser>> PostUser(ApplicationUser user)
         {
-            var temporaryPassword = GeneratePassword();
+            var temporaryPassword = "Xc9wf8or&";// GeneratePassword();
             var result = await _userManager.CreateAsync(user, temporaryPassword);
 
             if (result.Succeeded)
@@ -230,13 +230,13 @@ namespace Abeer.Server.Controllers
                 var templatePath = Path.Combine(_env.WebRootPath,
                     "Templates",
                     "Email",
-                    $"email-create-user.{CultureInfo.CurrentCulture.TwoLetterISOLanguageName.ToLower()}.html");
+                    $"email-confirmation.{CultureInfo.CurrentCulture.TwoLetterISOLanguageName.ToLower()}.html");
 
                 if (!System.IO.File.Exists(templatePath))
                     templatePath = Path.Combine(_env.WebRootPath,
                     "Templates",
                     "Email",
-                    $"email-create-user.html");
+                    $"email-confirmation.html");
 
                 string htmlBody = "";
 

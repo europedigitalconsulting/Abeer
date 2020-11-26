@@ -1,0 +1,73 @@
+﻿@page "/register"
+@namespace Abeer.Client.Pages
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Users> Loc
+@inject IHttpClientFactory HttpClientFactory
+@inject NavigationManager NavigationManager
+
+<div class="simple-form">
+    <EditForm Model="ViewUserForm">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <fieldset>
+            <div class="form-group">
+                <label for="year">@Loc["FirstName"]</label>
+                <input @bind="@ViewUserForm.FirstName" type="text" class="form-control" id="ViewUserForm-FirstName" />
+            </div>
+            <div class="form-group">
+                <label for="year">@Loc["LastName"]</label>
+                <input @bind="@ViewUserForm.LastName" type="text" class="form-control" id="ViewUserForm-LastName" />
+            </div>
+            <div class="form-group">
+                <label for="year">@Loc["DisplayName"]</label>
+                <input @bind="@ViewUserForm.DisplayName" type="text" class="form-control" id="ViewUserForm-displayname" />
+            </div>
+            <div class="form-group">
+                <label for="year">@Loc["Email"]</label>
+                <input @bind="@ViewUserForm.Email" type="email" class="form-control" id="ViewUserForm-email" />
+            </div>
+            <div class="form-group">
+                <label for="year">@Loc["UserName"]</label>
+                <input @bind="@ViewUserForm.UserName" type="email" class="form-control" id="ViewUserForm-userName" />
+            </div>
+            <div class="form-group">
+                <label for="year">@Loc["City"]</label>
+                <input @bind="@ViewUserForm.City" type="text" class="form-control" id="ViewUserForm-City" />
+            </div>
+            <div class="form-group">
+                <label for="year">@Loc["Country"]</label>
+                <input @bind="@ViewUserForm.Country" type="text" class="form-control" id="ViewUserForm-Country" />
+            </div>
+            <div class="form-group">
+                <label for="year">@Loc["PinCode"]</label>
+                <input @bind="@ViewUserForm.PinCode" type="text" class="form-control" id="ViewUserForm-PinCOde" />
+            </div>
+        </fieldset>
+        <button class="btn btn-primary" @onclick="FormRegister">S'inscrire</button>
+    </EditForm>
+</div>
+@code {
+    private ApplicationUser ViewUserForm = new ApplicationUser();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Random rnd = new Random();
+        string alea = rnd.Next(10000000, 99999999).ToString();
+        Console.WriteLine(JsonConvert.SerializeObject(ViewUserForm));
+        ViewUserForm.Email = $"mabsalon{alea}@gmail.com";
+        ViewUserForm.UserName = $"mabsalon{alea}@gmail.com";  
+        ViewUserForm.PinCode = $"123456789{alea}";
+        StateHasChanged();
+        await base.OnInitializedAsync();
+    }
+    protected async Task FormRegister()
+    {
+        var httpClient = HttpClientFactory.CreateClient("Abeer.Anonymous");
+        var result = await httpClient.PostAsJsonAsync<ApplicationUser>("api/Users", ViewUserForm);
+        if (result.IsSuccessStatusCode)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+        Console.WriteLine("azerty poigfd jkldf ");
+    }
+}
