@@ -357,3 +357,7 @@ MigrationBackup/
 /Server/Abeer-security.db-shm
 /Certificate
 /Server/Properties/PublishProfiles
+
+Server/wwwroot/App_data/Emails/
+
+Server/Properties/launchSettings.json
