@@ -14,7 +14,7 @@ namespace Abeer.Server
             Console.Title = "SmartClick.ApiServer";
             try
             {
-                Log.Information("Smart Click server starting");
+                Log.Information("Smart-Clik server starting");
                 CreateHostBuilder(args).Build().Run();
             }
             catch(Exception ex)
