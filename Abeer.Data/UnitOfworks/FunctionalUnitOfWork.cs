@@ -18,6 +18,7 @@ namespace Abeer.Data.UnitOfworks
         private AdRepository _AdRepository;
         private AdPriceRepository _AdPriceRepository;
         private PaymentRepository _PaymentRepository;
+        private SubscriptionPackRepository _SubscriptionPackRepository;
 
         private FunctionalDbContext ApplicationDbContext { get; }
         private IServiceProvider ServiceProvider { get; }
@@ -115,6 +116,16 @@ namespace Abeer.Data.UnitOfworks
                     _PaymentRepository = ActivatorUtilities.CreateInstance<PaymentRepository>(ServiceProvider);
 
                 return _PaymentRepository;
+            }
+        }
+        public SubscriptionPackRepository SubscriptionPackRepository
+        {
+            get
+            {
+                if (_SubscriptionPackRepository == null)
+                    _SubscriptionPackRepository = ActivatorUtilities.CreateInstance<SubscriptionPackRepository>(ServiceProvider);
+
+                return _SubscriptionPackRepository;
             }
         }
 

@@ -1,0 +1,18 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
+
+namespace Abeer.Shared.Functional
+{
+    public class SubscriptionPack
+    {
+        [Key]
+        public Guid Id { get; set; }
+        public string Label { get; set; }
+        public string Description { get; set; }
+        public double Price { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+    }
+}

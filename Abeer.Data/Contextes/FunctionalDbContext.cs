@@ -52,5 +52,6 @@ namespace Abeer.Data
         public IDbSet<AdModel> Ads => dbProvider.Set<AdModel>();
         public IDbSet<AdPrice> AdPrices => dbProvider.Set<AdPrice>();
         public IDbSet<PaymentModel> Payments => dbProvider.Set<PaymentModel>();
+        public IDbSet<SubscriptionPack> SubscriptionPacks => dbProvider.Set<SubscriptionPack>();
     }
 }

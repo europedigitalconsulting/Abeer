@@ -4,14 +4,16 @@ using Abeer.Data.SqlServerProvider;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Abeer.Data.SqlServerProvider.Migrations
 {
     [DbContext(typeof(FunctionalContext))]
-    partial class FunctionalContextModelSnapshot : ModelSnapshot
+    [Migration("20201126213847_Add-SubscriptionPack")]
+    partial class AddSubscriptionPack
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -339,41 +341,6 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("AdPrice");
-                });
-
-            modelBuilder.Entity("Abeer.Shared.Functional.PaymentModel", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AdId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsValidated")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("PayerID")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PaymentMethod")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PaymentReference")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TokenId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ValidatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Payment");
                 });
 
             modelBuilder.Entity("Abeer.Shared.Functional.SubscriptionPack", b =>

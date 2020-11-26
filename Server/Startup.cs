@@ -28,6 +28,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Internal;
 using DbProvider.LiteDbProvider;
 using Abeer.Shared.Data;
+using Abeer.Shared.Functional;
 
 namespace Abeer.Server
 {
@@ -60,7 +61,7 @@ namespace Abeer.Server
                 options.UseSqlite(
                     Configuration.GetConnectionString("SecurityDbContextConnectionStrings"), options =>
                     options.MigrationsAssembly(typeof(SecurityDbContext).Assembly.FullName)), ServiceLifetime.Transient);
-            
+
             services.AddSingleton(sp =>
             {
                 var provider = Configuration["Service:Database:DbProvider"];
@@ -83,11 +84,12 @@ namespace Abeer.Server
             services.AddAuthentication()
                 .AddIdentityServerJwt();
 
+            services.AddCors();
             services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, UserClaimsPrincipalFactory>();
             services.AddTransient<IProfileService, ProfileService>();
 
             services.AddTransient<IEmailSenderService, EmailSenderFactory>();
-              
+
             services.ConfigureApplicationCookie(o =>
             {
                 o.ExpireTimeSpan = TimeSpan.FromDays(5);
@@ -209,10 +211,10 @@ namespace Abeer.Server
             //var rewriteUrlShortner = new RewriteOptions().AddRewrite(@"^\/shortned\/([0-9A-z-]+)", ")
             app.UseHttpsRedirection();
             app.UseBlazorFrameworkFiles();
-            
+
             app.UseStaticFiles();
             var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), @"StaticFiles");
-            
+
             if (!Directory.Exists(directoryPath))
                 Directory.CreateDirectory(directoryPath);
 
@@ -223,6 +225,10 @@ namespace Abeer.Server
             });
 
             app.UseRouting();
+            app.UseCors(builder => builder
+    .AllowAnyOrigin()
+    .AllowAnyHeader()
+    .AllowAnyMethod());
 
             app.UseIdentityServer();
             app.UseAuthentication();
@@ -264,6 +270,16 @@ namespace Abeer.Server
 
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
+                var subscriptionPack = await functionalDb.SubscriptionPackRepository.All();
+
+                if (subscriptionPack == null || subscriptionPack.Count == 0)
+                {
+                    subscriptionPack.Add(await functionalDb.SubscriptionPackRepository.AddSubscriptionPack(new SubscriptionPack { Label = "Free", Price = 0, Description = "Abonnement Gratuit", StartDate = new DateTime(2020, 10, 1), EndDate = new DateTime(2030, 10, 1) }));
+                    subscriptionPack.Add(await functionalDb.SubscriptionPackRepository.AddSubscriptionPack(new SubscriptionPack { Label = "Standard", Price = 100, Description = "Abonnement Standard", StartDate = new DateTime(2020, 10, 1), EndDate = new DateTime(2030, 10, 1) }));
+                    subscriptionPack.Add(await functionalDb.SubscriptionPackRepository.AddSubscriptionPack(new SubscriptionPack { Label = "Premium", Price = 400, Description = "Abonnement Premium", StartDate = new DateTime(2020, 10, 1), EndDate = new DateTime(2030, 10, 1) }));
+                    functionalDb.SaveChanges();
+                }
+
                 var admin = await userManager.FindByEmailAsync("admin@abeer.io");
 
                 if (admin == null)
@@ -283,7 +299,8 @@ namespace Abeer.Server
                         PhoneNumber = "+33 7 80 81 10 24",
                         PinCode = "12345678901234567",
                         PinDigit = 12345,
-                        IsAdmin = true
+                        IsAdmin = true,
+                        SubscriptionPackId = subscriptionPack[0].Id
                     };
 
                     var addResult = await userManager.CreateAsync(admin, "Xc9wf8or&");
@@ -294,8 +311,6 @@ namespace Abeer.Server
                         await functionalDb.SocialNetworkRepository.AddSocialNetwork(new SocialNetwork { OwnerId = admin.Id, Name = "Instagram", Logo = "fab fa-instagram-square", DisplayInfo = "@michel.bruchet", BackgroundColor = "bg-danger", Url = "https://www.instagram.com" });
                         await functionalDb.SocialNetworkRepository.AddSocialNetwork(new SocialNetwork { OwnerId = admin.Id, Name = "Whatsapp", Logo = "fab fa-whatsapp-square", DisplayInfo = "+33 780811024", BackgroundColor = "bg-success", Url = "whatsapp:33780811024" });
                     }
-
-                   
                 }
                 var hasan = await userManager.FindByEmailAsync("customer@abeer.io");
                 if (hasan == null)
@@ -350,7 +365,7 @@ namespace Abeer.Server
                         });
                     }
                 }
-                var contact1 = await functionalDb.ContactRepository.Where(c  => c.OwnerId == admin.Id);
+                var contact1 = await functionalDb.ContactRepository.Where(c => c.OwnerId == admin.Id);
                 if (!contact1.Any())
                     await functionalDb.ContactRepository.Add(new Contact { OwnerId = admin.Id, UserId = hasan.Id });
                 var contact2 = await functionalDb.ContactRepository.Where(c => c.OwnerId == hasan.Id);
@@ -358,7 +373,7 @@ namespace Abeer.Server
                     await functionalDb.ContactRepository.Add(new Contact { OwnerId = hasan.Id, UserId = admin.Id });
 
                 var tony = await userManager.FindByEmailAsync("tony@abeer.io");
-                
+
                 if (tony == null)
                 {
                     tony = new ApplicationUser
@@ -373,7 +388,8 @@ namespace Abeer.Server
                         FirstName = "Hasan",
                         LastName = "Basri",
                         City = "Paris",
-                        PhoneNumber = "+66 624796927"
+                        PhoneNumber = "+66 624796927",
+                        SubscriptionPackId = subscriptionPack[0].Id
                     };
 
                     var addtony = await userManager.CreateAsync(tony, "Xc9wf8or&");
