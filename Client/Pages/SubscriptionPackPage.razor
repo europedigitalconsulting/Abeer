@@ -1,0 +1,36 @@
+﻿@page "/subscription-pack"
+@using System.Security.Claims
+@inject HttpClient httpClient
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SubscriptionPack> Loc
+
+<section class="section">
+    <div class="section-header">
+        <h1>@Loc["Title"]</h1>
+    </div>
+    @foreach (var item in listSubscriptionPack)
+    {
+        <div class="card col-3">
+            <div class="card-body">
+                <h5 class="card-title">@item.Label</h5>
+                <h6 class="card-subtitle mb-2 text-muted">@item.Price</h6>
+                <p class="card-text">>@item.Description</p>
+                <a href="#" class="card-link">Sélectionner</a>
+            </div>
+        </div>
+    }
+</section>
+@code {
+    private List<SubscriptionPack> listSubscriptionPack;
+
+    protected override async Task OnInitializedAsync()
+    { 
+        var subscriptionPacks = await httpClient.GetAsync("/api/SubscriptionPack/GetAll", HttpCompletionOption.ResponseContentRead);
+        if (subscriptionPacks.IsSuccessStatusCode)
+        {
+            var json = await subscriptionPacks.Content.ReadAsStringAsync();
+            Console.WriteLine(json);
+            listSubscriptionPack = JsonConvert.DeserializeObject<List<SubscriptionPack>>(json);
+        }
+        await base.OnInitializedAsync();
+    }
+}
