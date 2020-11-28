@@ -19,22 +19,39 @@ namespace Abeer.Server.Controllers
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class SubscriptionPackController : ControllerBase
+    public class SubPackController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly FunctionalUnitOfWork _functionalUnitOfWork;
 
-        public SubscriptionPackController(UserManager<ApplicationUser> userManager, FunctionalUnitOfWork functionalUnitOfWork)
+        public SubPackController(UserManager<ApplicationUser> userManager, FunctionalUnitOfWork functionalUnitOfWork)
         {
             _userManager = userManager;
             _functionalUnitOfWork = functionalUnitOfWork;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<SubscriptionPack>> GetAll([FromQuery] string userId)
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetAll()
         {
-            var list = await _functionalUnitOfWork.SubscriptionPackRepository.Where(x => x.StartDate < DateTime.Now && x.EndDate > DateTime.Now);
+            var list = await _functionalUnitOfWork.SubscriptionPackRepository.Where(x => x.Enable);
             return Ok(list);
+        }
+        [HttpPost("Select")]
+        public async Task<IActionResult> Select(SubscriptionPack subscriptionPack)
+        {
+            var user = await _userManager.FindByNameAsync(User.UserName());
+            if (user == null)
+                return BadRequest();
+
+            SubscriptionHistory newSub = new SubscriptionHistory();
+            newSub.Enable = true;
+            newSub.Created = DateTime.Now;
+            newSub.EndSubscription = DateTime.MaxValue;
+            newSub.SubscriptionPackId = subscriptionPack.Id;
+            newSub.UserId = Guid.Parse(user.Id);
+
+            await _functionalUnitOfWork.SubscriptionHistoryRepository.AddSubscriptionHistory(newSub);
+            return Ok();
         }
     }
 }

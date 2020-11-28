@@ -1,3 +1,4 @@
+using Abeer.Data.UnitOfworks;
 using Abeer.Services;
 using Abeer.Shared;
 
@@ -33,14 +34,16 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
         private readonly UrlShortner _urlShortner;
         private readonly IWebHostEnvironment _env;
         private readonly string _webRoot;
+        private readonly FunctionalUnitOfWork _functionalUnitOfWork;
 
         public LoginModel(SignInManager<ApplicationUser> signInManager, 
-            ILogger<LoginModel> logger,
+            ILogger<LoginModel> logger, FunctionalUnitOfWork functionalUnitOfWork,
             UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            _functionalUnitOfWork = functionalUnitOfWork;
         }
 
         [BindProperty]
@@ -154,6 +157,10 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
                 var principal = new ClaimsPrincipal(identity);
                 await HttpContext.SignInAsync("Identity.Application", principal);
 
+                if (await _functionalUnitOfWork.SubscriptionHistoryRepository.SubscriptionValid(Guid.Parse(user.Id)) == null)
+                {
+                    return LocalRedirect("/subscription-pack");
+                }
                 return LocalRedirect(returnUrl);
             }
 

@@ -1,36 +1,55 @@
 ﻿@page "/subscription-pack"
-@using System.Security.Claims
 @inject HttpClient httpClient
+@inject NavigationManager navigationManager
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
 @inject Microsoft.Extensions.Localization.IStringLocalizer<SubscriptionPack> Loc
 
 <section class="section">
     <div class="section-header">
         <h1>@Loc["Title"]</h1>
     </div>
-    @foreach (var item in listSubscriptionPack)
-    {
-        <div class="card col-3">
-            <div class="card-body">
-                <h5 class="card-title">@item.Label</h5>
-                <h6 class="card-subtitle mb-2 text-muted">@item.Price</h6>
-                <p class="card-text">>@item.Description</p>
-                <a href="#" class="card-link">Sélectionner</a>
+    <div class="row">
+        @foreach (var item in listSubscriptionPack)
+        {
+            <div class="card col-3">
+                <div class="card-body">
+                    <h5 class="card-title">@item.Label</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">@item.Price</h6>
+                    <p class="card-text">@item.Description</p>
+                    <button @onclick="() => Select(item)" class="btn btn-primary">Sélectionner</button>
+                </div>
             </div>
-        </div>
-    }
+        }
+    </div>
 </section>
 @code {
-    private List<SubscriptionPack> listSubscriptionPack;
+    private List<SubscriptionPack> listSubscriptionPack { get; set; } = new List<SubscriptionPack>();
 
     protected override async Task OnInitializedAsync()
-    { 
-        var subscriptionPacks = await httpClient.GetAsync("/api/SubscriptionPack/GetAll", HttpCompletionOption.ResponseContentRead);
+    {
+        var subscriptionPacks = await httpClient.GetAsync("api/SubPack/GetAll");
         if (subscriptionPacks.IsSuccessStatusCode)
         {
             var json = await subscriptionPacks.Content.ReadAsStringAsync();
-            Console.WriteLine(json);
+            Console.WriteLine($"user :{json}");
             listSubscriptionPack = JsonConvert.DeserializeObject<List<SubscriptionPack>>(json);
         }
         await base.OnInitializedAsync();
+    }
+    protected async Task Select(SubscriptionPack item)
+    {
+        if (item.Price == 0)
+        {
+            var subscriptionPack = await httpClient.PostAsJsonAsync<SubscriptionPack>("/api/SubPack/Select", item);
+            if (subscriptionPack.IsSuccessStatusCode)
+            {
+                navigationManager.NavigateTo("/", true);
+            }
+        }
+        else
+        {
+
+            navigationManager.NavigateTo("/payment", true);
+        }
     }
 }
