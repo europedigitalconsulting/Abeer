@@ -4,14 +4,16 @@ using Abeer.Data.SqlServerProvider;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Abeer.Data.SqlServerProvider.Migrations
 {
     [DbContext(typeof(FunctionalContext))]
-    partial class FunctionalContextModelSnapshot : ModelSnapshot
+    [Migration("20201128222637_add_column")]
+    partial class add_column
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -347,7 +349,7 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("AdId")
+                    b.Property<Guid>("AdId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsValidated")
@@ -362,7 +364,7 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                     b.Property<string>("PaymentReference")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("SubscriptionId")
+                    b.Property<Guid>("SubscriptionId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("TokenId")

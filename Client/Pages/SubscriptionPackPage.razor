@@ -47,9 +47,8 @@
             }
         }
         else
-        {
-
-            navigationManager.NavigateTo("/payment", true);
+        { 
+            navigationManager.NavigateTo($"/payment-subscription/{item.Id}", true);
         }
     }
 }

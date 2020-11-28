@@ -36,6 +36,12 @@ namespace Abeer.Server.Controllers
             var list = await _functionalUnitOfWork.SubscriptionPackRepository.Where(x => x.Enable);
             return Ok(list);
         }
+        [HttpGet("Get/{SubscriptionId}")]
+        public async Task<IActionResult> Get(Guid SubscriptionId)
+        {
+            var result = await _functionalUnitOfWork.SubscriptionPackRepository.FirstOrDefault(x => x.Id == SubscriptionId);
+            return Ok(result);
+        }
         [HttpPost("Select")]
         public async Task<IActionResult> Select(SubscriptionPack subscriptionPack)
         {

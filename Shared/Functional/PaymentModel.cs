@@ -9,7 +9,8 @@ namespace Abeer.Shared.Functional
     {
         [Key]
         public Guid Id { get; set; }
-        public Guid AdId { get; set; }
+        public Guid? AdId { get; set; }
+        public Guid? SubscriptionId { get; set; }
         public string UserId { get; set; }
         public string PaymentReference { get; set; }
         public string PaymentMethod { get; set; }

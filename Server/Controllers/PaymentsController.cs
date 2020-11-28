@@ -28,12 +28,27 @@ namespace Abeer.Server.Controllers
             _configuration = configuration;
         }
 
-        [HttpGet("Create/{AdId}")]
-        public async Task<ActionResult<AdModel>> GetInvoice(Guid AdId)
+        [HttpGet("Create-payment-ad/{AdId}")]
+        public async Task<ActionResult<AdModel>> CreatePaymentAd(Guid AdId)
         {
             var payment = await _functionalUnitOfWork.PaymentRepository.Add(new Shared.Functional.PaymentModel
             {
                 AdId = AdId,
+                UserId = User.NameIdentifier(),
+                PaymentMethod = "CryptoCoin",
+            });
+
+            if (payment != null)
+                return Ok();
+            else
+                return BadRequest();
+        }
+        [HttpGet("Create-payment-subscription/{AdId}")]
+        public async Task<ActionResult<AdModel>> Create(Guid SubscriptionId)
+        {
+            var payment = await _functionalUnitOfWork.PaymentRepository.Add(new Shared.Functional.PaymentModel
+            {
+                SubscriptionId = SubscriptionId,
                 UserId = User.NameIdentifier(),
                 PaymentMethod = "CryptoCoin",
             });
