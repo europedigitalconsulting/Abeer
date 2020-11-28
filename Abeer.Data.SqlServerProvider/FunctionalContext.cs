@@ -41,5 +41,6 @@ namespace Abeer.Data.SqlServerProvider
         public DbSet<AdPrice> AdPrice { get; set; }
         public DbSet<PaymentModel> Payment { get; set; }
         public DbSet<SubscriptionPack> SubscriptionPack { get; set; }
+        public DbSet<SubscriptionHistory> SubscriptionHistory { get; set; }
     }
 }

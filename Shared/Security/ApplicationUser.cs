@@ -28,6 +28,5 @@ namespace Abeer.Shared
         public string Address { get; set; }
         public int NubmerOfView { get; set; }
         public string PhotoUrl { get; set; }
-        public Guid SubscriptionPackId { get; set; }
     }
 }

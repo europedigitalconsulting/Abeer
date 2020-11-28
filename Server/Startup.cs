@@ -274,9 +274,9 @@ namespace Abeer.Server
 
                 if (subscriptionPack == null || subscriptionPack.Count == 0)
                 {
-                    subscriptionPack.Add(await functionalDb.SubscriptionPackRepository.AddSubscriptionPack(new SubscriptionPack { Label = "Free", Price = 0, Description = "Abonnement Gratuit", StartDate = new DateTime(2020, 10, 1), EndDate = new DateTime(2030, 10, 1) }));
-                    subscriptionPack.Add(await functionalDb.SubscriptionPackRepository.AddSubscriptionPack(new SubscriptionPack { Label = "Standard", Price = 100, Description = "Abonnement Standard", StartDate = new DateTime(2020, 10, 1), EndDate = new DateTime(2030, 10, 1) }));
-                    subscriptionPack.Add(await functionalDb.SubscriptionPackRepository.AddSubscriptionPack(new SubscriptionPack { Label = "Premium", Price = 400, Description = "Abonnement Premium", StartDate = new DateTime(2020, 10, 1), EndDate = new DateTime(2030, 10, 1) }));
+                    subscriptionPack.Add(await functionalDb.SubscriptionPackRepository.AddSubscriptionPack(new SubscriptionPack { Enable = true, Label = "Free", Price = 0, Description = "Abonnement Gratuit", Duration = 0 }));
+                    subscriptionPack.Add(await functionalDb.SubscriptionPackRepository.AddSubscriptionPack(new SubscriptionPack { Enable = true, Label = "Standard", Price = 100, Description = "Abonnement Standard", Duration = 12 }));
+                    subscriptionPack.Add(await functionalDb.SubscriptionPackRepository.AddSubscriptionPack(new SubscriptionPack { Enable = true, Label = "Premium", Price = 400, Description = "Abonnement Premium", Duration = 12 }));
                     functionalDb.SaveChanges();
                 }
 
@@ -300,7 +300,6 @@ namespace Abeer.Server
                         PinCode = "12345678901234567",
                         PinDigit = 12345,
                         IsAdmin = true,
-                        SubscriptionPackId = subscriptionPack[0].Id
                     };
 
                     var addResult = await userManager.CreateAsync(admin, "Xc9wf8or&");
@@ -389,7 +388,6 @@ namespace Abeer.Server
                         LastName = "Basri",
                         City = "Paris",
                         PhoneNumber = "+66 624796927",
-                        SubscriptionPackId = subscriptionPack[0].Id
                     };
 
                     var addtony = await userManager.CreateAsync(tony, "Xc9wf8or&");
