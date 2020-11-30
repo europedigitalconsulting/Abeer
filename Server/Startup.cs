@@ -29,6 +29,9 @@ using Microsoft.EntityFrameworkCore.Internal;
 using DbProvider.LiteDbProvider;
 using Abeer.Shared.Data;
 using Abeer.Shared.Functional;
+using System.Net;
+using Abeer.Shared.Security;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Abeer.Server
 {
@@ -69,6 +72,7 @@ namespace Abeer.Server
                 return (IDbProvider)ActivatorUtilities.CreateInstance(sp, instanceType, Configuration);
             });
 
+
             services.AddSingleton<FunctionalDbContext>();
             services.AddTransient<FunctionalUnitOfWork>();
 
@@ -80,7 +84,12 @@ namespace Abeer.Server
 
             services.AddIdentityServer()
                 .AddApiAuthorization<ApplicationUser, SecurityDbContext>();
-
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("OnlySubscribers",
+                    policy => policy.Requirements.Add(new OnlySubscribersRequirement()));
+            });
+            services.AddSingleton<IAuthorizationHandler, OnlySubscribersRequirement>();
             services.AddAuthentication()
                 .AddIdentityServerJwt();
 
@@ -274,7 +283,6 @@ namespace Abeer.Server
 
                 if (subscriptionPack == null || subscriptionPack.Count == 0)
                 {
-                    subscriptionPack.Add(await functionalDb.SubscriptionPackRepository.AddSubscriptionPack(new SubscriptionPack { Enable = true, Label = "Free", Price = 0, Description = "Abonnement Gratuit", Duration = 0 }));
                     subscriptionPack.Add(await functionalDb.SubscriptionPackRepository.AddSubscriptionPack(new SubscriptionPack { Enable = true, Label = "Standard", Price = 100, Description = "Abonnement Standard", Duration = 12 }));
                     subscriptionPack.Add(await functionalDb.SubscriptionPackRepository.AddSubscriptionPack(new SubscriptionPack { Enable = true, Label = "Premium", Price = 400, Description = "Abonnement Premium", Duration = 12 }));
                     functionalDb.SaveChanges();

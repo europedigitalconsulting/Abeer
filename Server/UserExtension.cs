@@ -18,6 +18,24 @@ namespace Abeer.Server
         {
             return claimsPrincipal.FindFirstValue("displayname");
         }
+        public static DateTime? SubscriptionStart(this ClaimsPrincipal claimsPrincipal)
+        {
+            var value = claimsPrincipal.FindFirstValue("subscribeStart");
+            DateTime subscribeStart;
+
+            if (DateTime.TryParse(value, out subscribeStart))
+                return subscribeStart;
+            return null;
+        }
+        public static DateTime? SubscriptionEnd(this ClaimsPrincipal claimsPrincipal)
+        {
+            var value = claimsPrincipal.FindFirstValue("subscribeEnd");
+            DateTime subscribeEnd;
+
+            if (DateTime.TryParse(value, out subscribeEnd))
+                return subscribeEnd;
+            return null;
+        }
 
         public static string UserName(this ClaimsPrincipal claimsPrincipal)
         {
@@ -56,6 +74,6 @@ namespace Abeer.Server
             }
 
             return Task.FromResult(user);
-        }        
+        }
     }
 }

@@ -6,15 +6,16 @@
 {
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
+    private AuthenticationState authenticateState { get; set; }
     public bool IsAdmin { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        var authenticateSate = await authenticationStateTask;
+        authenticateState = await authenticationStateTask;
 
-        if (authenticateSate.User?.Identity.IsAuthenticated == true)
+        if (authenticateState.User?.Identity.IsAuthenticated == true)
         {
-            IsAdmin = (authenticateSate.User.Identity.IsAuthenticated && authenticateSate.User.HasClaim(ClaimTypes.Role, "admin"));
+            IsAdmin = (authenticateState.User.Identity.IsAuthenticated && authenticateState.User.HasClaim(ClaimTypes.Role, "admin"));
         }
     } }
 <section class="section">
@@ -65,14 +66,30 @@
                             </div>
                         </a>
                     </div>
+                    @if (authenticateState.User?.Identity.IsAuthenticated == false)
+                    {
+                        <div class="col-lg-3 col-md-3 col-sm-12">
+                            <a href="/Identity/Account/register">
+                                <div class="card profile-widget border">
+                                    <div class="profile-widget-header">
+                                        <i class="fa fa-8x fa-shopping-cart rounded-circle profile-widget-picture" style="color: blue"></i>
+                                    </div>
+                                    <div class="profile-widget-description pb-0">
+                                        <div class="profile-widget-name">Inscrivez-vous </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    }
+
                     <div class="col-lg-3 col-md-3 col-sm-12">
-                        <a href="register">
+                        <a href="subscription-pack">
                             <div class="card profile-widget border">
                                 <div class="profile-widget-header">
-                                    <i class="fa fa-8x fa-shopping-cart rounded-circle profile-widget-picture" style="color: blue"></i>
+                                    <i class="fa fa-8x fa-handshake rounded-circle profile-widget-picture" style="color: blue"></i>
                                 </div>
                                 <div class="profile-widget-description pb-0">
-                                    <div class="profile-widget-name">Inscrivez-vous </div>
+                                    <div class="profile-widget-name">Souscrire un à abonnement</div>
                                 </div>
                             </div>
                         </a>

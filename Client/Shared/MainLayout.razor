@@ -11,6 +11,15 @@
                  LabelUserList="@Loc["UserList"]"></NavMenu>
 
         <div class="main-content" style="min-height: 839px;">
+            @if (authenticationState?.User?.Identity.IsAuthenticated == true && SubscriptionEnd.HasValue)
+            {
+                @if (DateTime.Now.AddDays(5) >= SubscriptionEnd.Value.Date)
+                {
+                    <div class="text-danger pb-3">
+                        <strong>ATTENTION : Votre abonnement prendra fin le @SubscriptionEnd.Value.Date.ToShortDateString()</strong>
+                    </div>
+                }
+            }
             @Body
         </div>
     </div>

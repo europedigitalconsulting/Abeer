@@ -9,6 +9,7 @@ using BlazorAnimate;
 using Microsoft.JSInterop;
 using Abeer.Client.UISdk;
 using Tewr.Blazor.FileReader;
+using Abeer.Shared.Security;
 
 namespace Abeer.Client
 {
@@ -37,7 +38,8 @@ namespace Abeer.Client
             });
             builder.Services.AddScoped<IAdPhotoRepository, AdHttpPhotoRepository>();
             builder.Services.AddFileReaderService(o => o.UseWasmSharedBuffer = true);
-
+            builder.Services.AddAuthorizationCore(options => options.AddPolicy("OnlySubscribers",
+                    policy => policy.Requirements.Add(new OnlySubscribersRequirement()))); 
             builder.Services.AddSingleton<NavigationUrlService>();
 
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(CultureInfo.CurrentCulture.Name); 

@@ -16,6 +16,8 @@ namespace Abeer.Shared
         [NotMapped]
         public bool IsLocked { get; set; }
         public DateTime LastLogin { get; set; }
+        public DateTime? SubscriptionStartDate { get; set; }
+        public DateTime? SubscriptionEndDate { get; set; }
         public bool IsAdmin { get; set; }
         public bool IsManager { get; set; }
         public bool IsOperator { get; set; }

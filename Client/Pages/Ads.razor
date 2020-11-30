@@ -1,5 +1,6 @@
 ﻿@page "/ads"
 @using System.Security.Claims
+@attribute [Authorize(Policy = "OnlySubscribers")]
 @inject IHttpClientFactory HttpClientFactory
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Ads> Loc
 
@@ -22,8 +23,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var httpClient = HttpClientFactory.CreateClient("Abeer.Anonymous");
-        var getAll = await httpClient.GetAsync("/api/Adss/Visibled"); 
+        var httpClient = HttpClientFactory.CreateClient("Abeer.ServerAPI");
+        var getAll = await httpClient.GetAsync("/api/Adss/Visibled");
         if (getAll.IsSuccessStatusCode)
         {
             var json = await getAll.Content.ReadAsStringAsync();

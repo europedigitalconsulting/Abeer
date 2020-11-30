@@ -11,6 +11,7 @@ using Abeer.Shared.ViewModels;
 namespace Abeer.Server.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Policy = "OnlySubscribers")]
     [ApiController]
     public class AdssController : ControllerBase
     {
@@ -21,21 +22,19 @@ namespace Abeer.Server.Controllers
         {
             this.functionalUnitOfWork = functionalUnitOfWork;
         }
-        [Authorize]
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AdModel>>> List()
         {
             return Ok(await functionalUnitOfWork.AdRepository.GetAllForAUser(User.NameIdentifier()));
         }
-
-        [AllowAnonymous]
+         
         [HttpGet("Visibled")]
         public async Task<ActionResult<IEnumerable<AdModel>>> GetVisibled()
         {
             return Ok(await functionalUnitOfWork.AdRepository.GetVisibled());
         }
-
-        [Authorize]
+         
         [HttpGet("{id}")]
         public async Task<ActionResult<AdModel>> Get(Guid id)
         {
@@ -43,8 +42,7 @@ namespace Abeer.Server.Controllers
             return Ok(ad);
         }
 
-        [HttpPost]
-        [AllowAnonymous]
+        [HttpPost] 
         public async Task<ActionResult<AdModel>> Create(CreateAdRequestViewModel createAdRequestViewModel)
         { 
                 if (!ModelState.IsValid)
@@ -68,8 +66,7 @@ namespace Abeer.Server.Controllers
                 var entity = await functionalUnitOfWork.AdRepository.FirstOrDefault(a => a.Id == ad.Id);
                 return Ok(entity); 
         }
-
-        [Authorize]
+         
         [HttpGet("valid/{AdId}")]
         public async Task<ActionResult<AdModel>> Valid(Guid AdId, [FromServices]FunctionalUnitOfWork functionalUnitOfWork)
         {
@@ -89,32 +86,27 @@ namespace Abeer.Server.Controllers
 
             return BadRequest();
         }
-
-        [Authorize]
+         
         [HttpPut]
         public async Task<IActionResult> Update(AdModel ad)
         {
             await functionalUnitOfWork.AdRepository.Update(ad);
             return Ok();
         }
-
-        [Authorize]
+         
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             await functionalUnitOfWork.AdRepository.Delete(id);
             return Ok();
         }
-
-
-        [Authorize]
+         
         [HttpGet("admin")]
         public async Task<ActionResult<IEnumerable<AdModel>>> GetForAdministration()
         {
             return Ok(await functionalUnitOfWork.AdRepository.All());
         }
-
-        [Authorize]
+         
         [HttpPost("admin")]
         public async Task<ActionResult<AdModel>> CreateByAdmin(AdModel adModel)
         {
@@ -134,8 +126,7 @@ namespace Abeer.Server.Controllers
 
             return Ok(await functionalUnitOfWork.AdRepository.Add(adModel));
         }
-
-        [Authorize]
+         
         [HttpPut("admin")]
         public async Task<IActionResult> UpdateByAdmin(AdModel adModel)
         {

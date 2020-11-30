@@ -1,5 +1,5 @@
 ﻿@page "/agencies"
-
+@attribute [Authorize(Policy = "OnlySubscribers")]
 @inject NavigationManager Navigation
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Agencies> Loc
 @inject IHttpClientFactory HttpClientFactory

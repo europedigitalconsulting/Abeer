@@ -1,4 +1,5 @@
 ﻿using Abeer.Shared.Functional;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -22,9 +23,9 @@ namespace Abeer.Data.Repositories
         {
             return Task.Run(() => FunctionalDbContext.SubscriptionHistories.Add(SubscriptionHistory));
         }
-        public async Task<SubscriptionHistory> SubscriptionValid(Guid userId)
-        { 
-            return await Task.Run(() => FunctionalDbContext.SubscriptionHistories.FirstOrDefault(x => x.UserId == userId && x.Created < DateTime.Now && x.EndSubscription > DateTime.Now && x.Enable));
+        public Task<SubscriptionHistory> SubscriptionValid(Guid userId)
+        {
+            return Task.Run(() => FunctionalDbContext.SubscriptionHistories.FirstOrDefault(x => x.UserId == userId && x.Created < DateTime.Now && x.EndSubscription > DateTime.Now && x.Enable));
         }
 
         public Task<SubscriptionHistory> FirstOrDefault(Expression<Func<SubscriptionHistory, bool>> expression)

@@ -14,7 +14,7 @@
                 <div class="col-lg-12">
                     <div class="invoice-title">
                         <h2> @Localizer["LabelInvoice"]</h2>
-                        <div class="invoice-number"> @Localizer["LabelOrderNumber"]</div>
+                        <div class="invoice-number"> @Localizer["LabelOrderNumber"] @OrderNumber</div>
                     </div>
                     <hr>
                     <div class="row">
@@ -29,10 +29,6 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <address>
-                                <strong> @Localizer["LabelPaymentMethod"]:</strong><br>
-                                CryptoCoin
-                            </address>
                         </div>
                         <div class="col-md-6 text-md-right">
                             <address>
@@ -95,8 +91,6 @@
 
                 <button class="btn btn-primary btn-icon icon-left" @onclick="PaypalPayment"> Payer avec Paypal</button>
 
-
-
                 <button class="btn btn-danger btn-icon icon-left" @onclick="GoToBack"><i class="fas fa-times"></i>@Localizer["LabelCancel"]</button>
             </div>
         </div>
@@ -106,7 +100,7 @@
 @code{
     [CascadingParameter] private Task<AuthenticationState> AuthenticationStateTask { get; set; }
     [Parameter] public string SubscriptionId { get; set; }
-    public string OrderNumber { get; set; }
+    private string OrderNumber { get; set; }
     private List<Tuple<string, decimal>> Cart { get; set; } = new List<Tuple<string, decimal>>();
     private SubscriptionPack SubPack { get; set; } = new SubscriptionPack();
     private ClaimsPrincipal User;

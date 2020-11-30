@@ -36,7 +36,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
         private readonly string _webRoot;
         private readonly FunctionalUnitOfWork _functionalUnitOfWork;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, 
+        public LoginModel(SignInManager<ApplicationUser> signInManager,
             ILogger<LoginModel> logger, FunctionalUnitOfWork functionalUnitOfWork,
             UserManager<ApplicationUser> userManager)
         {
@@ -125,7 +125,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
                 identity.AddClaim(new Claim("isonline", user.IsOnline.ToString()));
                 identity.AddClaim(new Claim("lastlogin", user.LastLogin.ToString("s")));
 
-                if(!string.IsNullOrWhiteSpace(user.Title))
+                if (!string.IsNullOrWhiteSpace(user.Title))
                     identity.AddClaim(new Claim("title", user.Title));
 
                 if (!string.IsNullOrWhiteSpace(user.Description))
@@ -151,16 +151,17 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
                 if (user.IsManager)
                     identity.AddClaim(new Claim(ClaimTypes.Role, "manager"));
 
+ 
+                    identity.AddClaim(new Claim("subscribeStart", (user?.SubscriptionStartDate != null) ? user.SubscriptionStartDate.Value.ToString() : "" ));
+                if (user.SubscriptionEndDate != null)
+                    identity.AddClaim(new Claim("subscribeEnd", (user?.SubscriptionEndDate != null) ? user.SubscriptionEndDate.Value.ToString() : ""));
+
                 if (user.IsOperator)
                     identity.AddClaim(new Claim(ClaimTypes.Role, "operator"));
 
                 var principal = new ClaimsPrincipal(identity);
                 await HttpContext.SignInAsync("Identity.Application", principal);
 
-                if (await _functionalUnitOfWork.SubscriptionHistoryRepository.SubscriptionValid(Guid.Parse(user.Id)) == null)
-                {
-                    return LocalRedirect("/subscription-pack");
-                }
                 return LocalRedirect(returnUrl);
             }
 
