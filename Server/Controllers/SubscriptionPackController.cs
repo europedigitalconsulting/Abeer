@@ -56,7 +56,7 @@ namespace Abeer.Server.Controllers
             newSub.SubscriptionPackId = subscriptionPack.Id;
             newSub.UserId = Guid.Parse(user.Id);
 
-            await _functionalUnitOfWork.SubscriptionHistoryRepository.AddSubscriptionHistory(newSub);
+            await _functionalUnitOfWork.SubscriptionHistoryRepository.Add(newSub);
             return Ok();
         }
     }

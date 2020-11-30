@@ -27,8 +27,8 @@ namespace Abeer.Server.Controllers
             _configuration = configuration;
         }
 
-        [HttpPost("ProcessingCryptoCoinSuccess")]
-        public async Task ProcessingCryptoCoinSuccess(CryptoPaymentInfo cryptoPaymentInfo)
+        [HttpPost("ProcessCryptoAdSuccess")]
+        public async Task ProcessCryptoAdSuccess(CryptoPaymentInfo cryptoPaymentInfo)
         {
             try
             {
@@ -36,23 +36,55 @@ namespace Abeer.Server.Controllers
                 var result = await client.PostAsJsonAsync($"{_configuration["Service:CryptoPayment:VerifyApiValidationToken"]}", cryptoPaymentInfo);
                 if (result.IsSuccessStatusCode)
                 {
-                    var ad = await _functionalUnitOfWork.AdRepository.FirstOrDefault(a => a.OrderNumber == cryptoPaymentInfo.OrderNumber && !a.IsValid);
+                    var payment = await _functionalUnitOfWork.PaymentRepository.FirstOrDefault(a => a.OrderNumber == cryptoPaymentInfo.OrderNumber);
 
-                    var payment = await _functionalUnitOfWork.PaymentRepository.FirstOrDefault(x => x.AdId == ad.Id);
                     payment.IsValidated = true;
                     payment.ValidatedDate = DateTime.Now;
-                    payment.PaymentReference = cryptoPaymentInfo.OrderNumber;
+                    payment.OrderNumber = cryptoPaymentInfo.OrderNumber;
+                    payment.TokenId = cryptoPaymentInfo.Token;
                 }
             }
             catch (Exception ex)
             {
-
                 throw;
             }
         }
 
-        [HttpPost("ProcessingCryptoCoinFailed")]
-        public async Task ProcessingCryptoCoinFailed(CryptoPaymentInfo cryptoPaymentInfo)
+        [HttpPost("ProcessCryptoSubSuccess")]
+        public async Task ProcessCryptoSubSuccess(CryptoPaymentInfo cryptoPaymentInfo)
+        {
+            try
+            {
+                var client = new HttpClient();
+                var result = await client.PostAsJsonAsync($"{_configuration["Service:CryptoPayment:VerifyApiValidationToken"]}", cryptoPaymentInfo);
+                if (result.IsSuccessStatusCode)
+                {
+                    var payment = await _functionalUnitOfWork.PaymentRepository.FirstOrDefault(a => a.OrderNumber == cryptoPaymentInfo.OrderNumber);
+                    var subscription = await _functionalUnitOfWork.SubscriptionPackRepository.FirstOrDefault(x => x.Id == payment.SubscriptionId.Value);
+
+                    payment.IsValidated = true;
+                    payment.ValidatedDate = DateTime.Now;
+                    payment.OrderNumber = cryptoPaymentInfo.OrderNumber;
+                    payment.TokenId = cryptoPaymentInfo.Token;
+
+                    SubscriptionHistory subHisto = new SubscriptionHistory();
+                    subHisto.Created = DateTime.Now;
+                    subHisto.EndSubscription = DateTime.Now.AddMonths(subscription.Duration);
+                    subHisto.Enable = true;
+                    subHisto.UserId = Guid.Parse(payment.UserId);
+                    subHisto.SubscriptionPackId = payment.SubscriptionId.Value;
+
+                    await _functionalUnitOfWork.SubscriptionHistoryRepository.Add(subHisto);
+                }
+            }
+            catch (Exception ex)
+            { 
+                throw;
+            }
+        }
+
+        [HttpPost("ProcessCryptoFailed")]
+        public async Task ProcessCryptoFailed(CryptoPaymentInfo cryptoPaymentInfo)
         {
             try
             {
@@ -69,6 +101,5 @@ namespace Abeer.Server.Controllers
                 throw;
             }
         }
-
     }
 }

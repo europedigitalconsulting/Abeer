@@ -18,13 +18,13 @@ namespace Abeer.Data.Repositories
         public Task<IList<SubscriptionHistory>> All() =>
             Task.Run(() => FunctionalDbContext.SubscriptionHistories.ToList());
 
-        public Task<SubscriptionHistory> AddSubscriptionHistory(SubscriptionHistory SubscriptionHistory)
+        public Task<SubscriptionHistory> Add(SubscriptionHistory SubscriptionHistory)
         {
             return Task.Run(() => FunctionalDbContext.SubscriptionHistories.Add(SubscriptionHistory));
         }
-        public Task<SubscriptionHistory> SubscriptionValid(Guid userId)
-        {
-            return Task.Run(() => FirstOrDefault(x => x.UserId == userId && x.Created < DateTime.Now && x.EndSubscription > DateTime.Now && x.Enable));
+        public async Task<SubscriptionHistory> SubscriptionValid(Guid userId)
+        { 
+            return await Task.Run(() => FunctionalDbContext.SubscriptionHistories.FirstOrDefault(x => x.UserId == userId && x.Created < DateTime.Now && x.EndSubscription > DateTime.Now && x.Enable));
         }
 
         public Task<SubscriptionHistory> FirstOrDefault(Expression<Func<SubscriptionHistory, bool>> expression)

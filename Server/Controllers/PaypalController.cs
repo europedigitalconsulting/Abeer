@@ -33,17 +33,40 @@ namespace Abeer.Server.Controllers
             _functionalUnitOfWork = functionalUnitOfWork;
         }
 
-
-        [HttpGet("Create/{adId}")]
-        public async Task<IActionResult> Create(Guid adId)
+        [HttpGet("CreateAd/{Id}")]
+        public async Task<IActionResult> CreateAd(Guid Id)
         {
-            var ad = await _functionalUnitOfWork.AdRepository.FirstOrDefault(p => p.Id == adId);
+            var ad = await _functionalUnitOfWork.AdRepository.FirstOrDefault(p => p.Id == Id);
 
             if (ad == null)
+                return NotFound(); 
+
+            PaymentModel paymentModel = new PaymentModel();
+            paymentModel.PaymentMethod = "Paypal";
+            paymentModel.UserId = ad.OwnerId;
+            paymentModel.AdId = ad.Id;
+
+            return await ProcessCreate(paymentModel, ad.Price);
+        } 
+        [HttpGet("CreateSubscription/{Id}")]
+        public async Task<IActionResult> CreateSubscription(Guid Id)
+        {
+            var subscription = await _functionalUnitOfWork.SubscriptionPackRepository.FirstOrDefault(p => p.Id == Id);
+
+            if (subscription == null)
                 return NotFound();
 
+            PaymentModel paymentModel = new PaymentModel();
+            paymentModel.PaymentMethod = "Paypal";
+            paymentModel.AdId = subscription.Id;
+            paymentModel.UserId =  User.NameIdentifier();
+
+            return await ProcessCreate(paymentModel, subscription.Price);
+        } 
+        private async Task<IActionResult> ProcessCreate(PaymentModel paymentModel, decimal price)
+        {
             _logger.LogInformation("Creating payment against Paypal API SDK");
-            var payment = await CreatePayment(ad);
+            var payment = await CreatePayment(paymentModel, price);
 
             _logger.LogInformation($"Created payment successfully : '{payment}' from the Paypal API SDK");
 
@@ -57,7 +80,7 @@ namespace Abeer.Server.Controllers
             }
 
             return NotFound();
-        }
+        } 
 
         [HttpGet("success")]
         public async Task<IActionResult> ExecuteSuccess(string paymentID, string token, string payerID, [FromServices] IServiceProvider serviceProvider)
@@ -100,7 +123,7 @@ namespace Abeer.Server.Controllers
             return response.Result<PayPal.v1.Payments.Payment>();
         }
 
-        private async Task<PayPal.v1.Payments.Payment> CreatePayment(AdModel adModel)
+        private async Task<PayPal.v1.Payments.Payment> CreatePayment(PaymentModel model, decimal value)
         {
             var environment = new SandboxEnvironment(_configuration["Service:Paypal:ClientId"], _configuration["Service:Paypal:ClientSecret"]);
             var client = new PayPalHttpClient(environment);
@@ -114,7 +137,7 @@ namespace Abeer.Server.Controllers
                     {
                         Amount = new Amount()
                         {
-                            Total = string.Format(CultureInfo.InvariantCulture, "{0:0.00}", adModel?.AdPrice?.Value)
+                            Total = string.Format(CultureInfo.InvariantCulture, "{0:0.00}", value)
                                 .Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."),
                             Currency = "EUR"
                         }
@@ -141,14 +164,9 @@ namespace Abeer.Server.Controllers
                 var statusCode = response.StatusCode;
 
                 PayPal.v1.Payments.Payment result = response.Result<PayPal.v1.Payments.Payment>();
+                model.PaymentReference = result.Id;
 
-                await _functionalUnitOfWork.PaymentRepository.Add(new Shared.Functional.PaymentModel
-                {
-                    AdId= adModel.Id,
-                    PaymentReference = result.Id,                    
-                    UserId = adModel.OwnerId,
-                    PaymentMethod = "Paypal"
-                });
+                await _functionalUnitOfWork.PaymentRepository.Add(model); 
 
                 return result;
             }

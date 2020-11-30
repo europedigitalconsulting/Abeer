@@ -85,10 +85,10 @@
             <div class="float-lg-left mb-lg-0 mb-3">
 
                 <CryptocoinPayment ClientId="client_id_mvc" ClientSecret="client_secret_mvc" BeforeCallPayment="CreatePayment"
-                                   OrderNumber="OrderNumber" Price="@SubPack.Price" Items=@Cart
+                                   OrderNumber="@OrderNumber" Price="@SubPack.Price" Items=@Cart
                                    CssClass="btn btn-success btn-icon icon-left" DomainApiPayment="https://localhost:5001"
-                                   RedirectSuccessServer="https://localhost:7001/api/Cryptocoin/ProcessingCryptoCoinSuccess"
-                                   RedirectErrorServer="https://localhost:7001/api/Cryptocoin/ProcessingCryptoCoinFailed"
+                                   RedirectSuccessServer="https://localhost:7001/api/Cryptocoin/ProcessCryptoSubSuccess"
+                                   RedirectErrorServer="https://localhost:7001/api/Cryptocoin/ProcessCryptoFailed"
                                    RedirectSuccess="https://localhost:7001/ConfirmPayment/Success"
                                    RedirectError="https://localhost:7001/ConfirmPayment/Error">
                 </CryptocoinPayment>
@@ -113,6 +113,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        Random rnd = new Random(); 
         var authenticateSate = await AuthenticationStateTask;
         User = authenticateSate.User;
 
@@ -123,7 +124,7 @@
             var json = await result.Content.ReadAsStringAsync();
             SubPack = JsonConvert.DeserializeObject<SubscriptionPack>(json);
             Cart.Add(new Tuple<string, decimal>(SubPack.Label, SubPack.Price));
-            OrderNumber = "99999";
+            OrderNumber = string.Concat(DateTime.UtcNow.ToString("yyyMMddHHmmss"), rnd.Next(100000, 999999));
             StateHasChanged();
         }
         else
@@ -136,7 +137,7 @@
     private async Task CreatePayment()
     {
         var httpClient = HttpClientFactory.CreateClient("Abeer.ServerAPI");
-        var result = await httpClient.GetAsync($"/api/Payments/Create-payment-ad/{SubPack.Id}", HttpCompletionOption.ResponseContentRead);
+        var result = await httpClient.GetAsync($"/api/Payments/create-payment-subscribe/{SubPack.Id}/{OrderNumber}", HttpCompletionOption.ResponseContentRead);
         if (!result.IsSuccessStatusCode)
         {
             NavigationManager.NavigateTo("https://localhost:7001/ConfirmPayment/Error", true);
@@ -144,7 +145,7 @@
     }
     private void PaypalPayment()
     {
-        NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri($"/api/Paypal/Create/{SubPack.Id}").ToString(), true);
+        NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri($"/api/Paypal/CreateSubscription/{SubPack.Id}").ToString(), true);
     }
     private void GoToBack()
     {

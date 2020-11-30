@@ -28,11 +28,12 @@ namespace Abeer.Server.Controllers
             _configuration = configuration;
         }
 
-        [HttpGet("Create-payment-ad/{AdId}")]
-        public async Task<ActionResult<AdModel>> CreatePaymentAd(Guid AdId)
+        [HttpGet("create-payment-ad/{AdId}/{OrderNumber}")]
+        public async Task<ActionResult<AdModel>> CreatePaymentAd(Guid AdId, string OrderNumber)
         {
-            var payment = await _functionalUnitOfWork.PaymentRepository.Add(new Shared.Functional.PaymentModel
+            var payment = await _functionalUnitOfWork.PaymentRepository.Add(new PaymentModel
             {
+                OrderNumber = OrderNumber,
                 AdId = AdId,
                 UserId = User.NameIdentifier(),
                 PaymentMethod = "CryptoCoin",
@@ -43,11 +44,12 @@ namespace Abeer.Server.Controllers
             else
                 return BadRequest();
         }
-        [HttpGet("Create-payment-subscription/{AdId}")]
-        public async Task<ActionResult<AdModel>> Create(Guid SubscriptionId)
+        [HttpGet("create-payment-subscribe/{SubscriptionId}/{OrderNumber}")]
+        public async Task<ActionResult<AdModel>> Create(Guid SubscriptionId, string OrderNumber)
         {
-            var payment = await _functionalUnitOfWork.PaymentRepository.Add(new Shared.Functional.PaymentModel
+            var payment = await _functionalUnitOfWork.PaymentRepository.Add(new PaymentModel
             {
+                OrderNumber = OrderNumber,
                 SubscriptionId = SubscriptionId,
                 UserId = User.NameIdentifier(),
                 PaymentMethod = "CryptoCoin",

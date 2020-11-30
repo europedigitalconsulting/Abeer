@@ -2,7 +2,7 @@
 @inject HttpClient httpClient
 @inject NavigationManager navigationManager
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
-@inject Microsoft.Extensions.Localization.IStringLocalizer<SubscriptionPack> Loc
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SubscriptionPack> Loc 
 
 <section class="section">
     <div class="section-header">
@@ -26,12 +26,11 @@
     private List<SubscriptionPack> listSubscriptionPack { get; set; } = new List<SubscriptionPack>();
 
     protected override async Task OnInitializedAsync()
-    {
+    { 
         var subscriptionPacks = await httpClient.GetAsync("api/SubPack/GetAll");
         if (subscriptionPacks.IsSuccessStatusCode)
         {
             var json = await subscriptionPacks.Content.ReadAsStringAsync();
-            Console.WriteLine($"user :{json}");
             listSubscriptionPack = JsonConvert.DeserializeObject<List<SubscriptionPack>>(json);
         }
         await base.OnInitializedAsync();
@@ -47,7 +46,7 @@
             }
         }
         else
-        { 
+        {
             navigationManager.NavigateTo($"/payment-subscription/{item.Id}", true);
         }
     }
