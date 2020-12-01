@@ -86,7 +86,7 @@ namespace Abeer.Client.Pages
             
             var found = Cards?.Where(c => c.CardNumber?.Contains(SearchTerm) == true)?.ToList();
 
-            Items = found.OrderBy(c=>c.CardNumber).ToList();
+            Items =  found.OrderBy(c=>c.CardNumber).ToList();
             Console.WriteLine($"{found.Count} Token Batches found");
             StateHasChanged();
         }
@@ -103,8 +103,6 @@ namespace Abeer.Client.Pages
         {
             current = new Card
             {
-                CardNumber = string.Concat(DateTime.UtcNow.ToString("yyyMMddHHmmss"), rdm.Next(100000, 999999)),
-                PinCode = rdm.Next(10000, 99999).ToString(),
                 Quantity = 1
             };
             Mode = "Insert";
@@ -127,13 +125,13 @@ namespace Abeer.Client.Pages
         }
         async Task Insert()
         {
+            Console.WriteLine(current);
             var response = await HttpClient.PostAsJsonAsync<Card>("api/Card", current);
             response.EnsureSuccessStatusCode();
             var json = await response.Content.ReadAsStringAsync();
-            Console.WriteLine($"insert result : {json}");
-            var Card = JsonConvert.DeserializeObject<Card>(json);
-            Cards.Add(Card);
-            Items.Add(Card);
+            Console.WriteLine($"insert result : {json}"); 
+            Cards = JsonConvert.DeserializeObject<List<Card>>(json);
+            Items = Cards.OrderBy(c => c.CardNumber).ToList();
             IsModalVisible = false;
             await InvokeAsync(StateHasChanged);
         }

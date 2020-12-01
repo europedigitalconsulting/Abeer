@@ -19,63 +19,60 @@ namespace Abeer.Data.Repositories
         }
         public FunctionalDbContext FunctionalDbContext { get; }
 
-        public  Task<IList<Card>> GetCards() =>
+        public Task<IList<Card>> GetCards() =>
             Task.Run(() => FunctionalDbContext.Cards.ToList());
 
-        public  Task<Card> GetCard(Guid id) =>
+        public Task<Card> GetCard(Guid id) =>
             Task.Run(() => FunctionalDbContext.Cards.FirstOrDefault(b => b.Id == id));
 
 
-        public  Task Update(Card card)
+        public Task Update(Card card)
         {
             return Task.Run(() => FunctionalDbContext.Cards.Update(card));
         }
 
         static readonly Random rdm = new Random();
 
-        public  Task<Card> Add(Card card, string userId)
+        public async Task<Card> Add(Card card, string userId)
         {
-            return Task.Run(() =>
+            card = FunctionalDbContext.Cards.Add(card);
+
+            CardStatu cardStatu = new CardStatu
             {
-                card = FunctionalDbContext.Cards.Add(card);
+                Card = card,
+                StatusDate = DateTime.UtcNow,
+                Status = CardStatus.Created,
+                UserId = userId
+            };
 
-                CardStatu cardStatu = new CardStatu
-                {
-                    Card = card,
-                    StatusDate = DateTime.UtcNow,
-                    Status = CardStatus.Created,
-                    UserId = userId
-                };
+            await AddStatus(cardStatu);
 
-                AddStatus(cardStatu);
-
-                AddStatus(new CardStatu
-                {
-                    Card = card,
-                    Status = CardStatus.Generated,
-                    StatusDate = DateTime.UtcNow,
-                    UserId = userId
-                });
-
-                card.IsGenerated = true;
-                card.GeneratedDate = DateTime.UtcNow;
-                card.GeneratedBy = userId;
-
-                Update(card);
-
-                return Find(card.Id);
+            await  AddStatus(new CardStatu
+            {
+                Card = card,
+                Status = CardStatus.Generated,
+                StatusDate = DateTime.UtcNow,
+                UserId = userId
             });
+
+            card.IsGenerated = true;
+            card.GeneratedDate = DateTime.UtcNow;
+            card.GeneratedBy = userId;
+
+            await  Update(card);
+
+            return card;
         }
 
-        public  Task<string[]> GetCardTypes()
+        public Task<string[]> GetCardTypes()
         {
             return Task.Run(() => (FunctionalDbContext.Cards.ToList())
                 .Select(b => b.CardType).Distinct().OrderBy(s => s).ToArray());
         }
 
-        public  Task<Card> Find(Guid id)
+        public Task<Card> Find(Guid id)
         {
-            return Task.Run(() => FunctionalDbContext.Cards.FirstOrDefault(c=>c.Id == id));
+            return Task.Run(() => FunctionalDbContext.Cards.FirstOrDefault(c => c.Id == id));
         }
 
         public void Remove(Card card)
@@ -85,7 +82,7 @@ namespace Abeer.Data.Repositories
 
         public Task<bool> Any(Expression<Func<Card, bool>> p)
         {
-            
+
             return Task.Run(() => FunctionalDbContext.Cards.Any(p));
         }
 
@@ -94,7 +91,7 @@ namespace Abeer.Data.Repositories
             return Task.Run(() => FunctionalDbContext.Cards.Where(expression));
         }
 
-        public  Task<CardStatu> AddStatus(CardStatu cardStatu)
+        public Task<CardStatu> AddStatus(CardStatu cardStatu)
         {
             return Task.Run(() => FunctionalDbContext.CardStatus.Add(cardStatu));
         }

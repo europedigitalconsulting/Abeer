@@ -95,68 +95,38 @@ namespace Abeer.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<IEnumerable<Card>>> PostCard(Card Card)
         {
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
             else
             {
-                if (Card.Quantity == 1)
+                for (int i = 0; i < Card.Quantity; i++)
                 {
-                    Card = await AddCard(Card);
-                }
-                else
-                {
-                    for(int i = 0; i < Card.Quantity; i++)
+                    await AddCard(new Card
                     {
-                        await AddCard(new Card
-                        {
-                            CardType = Card.CardType,
-                            CreatorId = User.NameIdentifier(),
-                            GeneratedBy = User.NameIdentifier(),
-                            GeneratedDate = DateTime.UtcNow,
-                            Icon = Card.Icon,
-                            IsGenerated = true,
-                            PinCode = rdm.Next(100000, 999999).ToString(),
-                            Quantity = 1,
-                            Value = Card.Value
-                        });
-                    }
+                        CardType = Card.CardType,
+                        CreatorId = User.NameIdentifier(),
+                        GeneratedBy = User.NameIdentifier(),
+                        GeneratedDate = DateTime.UtcNow,
+                        Icon = Card.Icon,
+                        IsGenerated = true,
+                        CardNumber = string.Concat(DateTime.UtcNow.ToString("yyyMMddHHmmss"), rdm.Next(100, 999)),
+                        PinCode = rdm.Next(10000, 99999).ToString(),
+                        Quantity = 1,
+                        Value = Card.Value
+                    });
                 }
-                return CreatedAtAction("GetCard", new { id = Card.Id }, Card);
+                return Ok(await _UnitOfWork.CardRepository.GetCards());
             }
         }
 
         private async Task<Card> AddCard(Card Card)
         {
-            bool isFound = true;
-
-            await CreateNumber(Card);
-
-            while (isFound)
-            {
-                var search = await _UnitOfWork.CardRepository.FirstOrDefault(c => c.CardNumber.Equals(Card.CardNumber));
-
-                if (search != null)
-                {
-                    await CreateNumber(Card);
-                }
-                else
-                {
-                    isFound = false;
-                }
-            }
-
             Card = await _UnitOfWork.CardRepository.Add(Card, User.NameIdentifier());
             await HubContext.Clients.All.SendAsync("Card.Insert", Card);
             return Card;
-        }
-
-        private async Task CreateNumber(Card Card)
-        {
-            var firstPart = DateTime.UtcNow.ToString("yyyMMdd");
-            var cardMax = ((await _UnitOfWork.CardRepository.Where(c => c.CardNumber.StartsWith(firstPart)))?.Count ?? 0) + 1;
-            Card.CardNumber = string.Concat(firstPart, cardMax.ToString().PadLeft(9, '0'));
         }
 
         // DELETE: api/Cards/5
