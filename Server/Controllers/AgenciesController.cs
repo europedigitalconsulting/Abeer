@@ -36,7 +36,6 @@ namespace Abeer.Server.Controllers
             {
                 new Shared.Functional.Agency
                 {
-
                     AgencyName = "Institut Abir Hourany", 
                     DisplayName = "Institut Abir Hourany",
                     Address = "Cardinal Sayegh street",

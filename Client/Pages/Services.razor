@@ -81,19 +81,21 @@
                             </a>
                         </div>
                     }
-
-                    <div class="col-lg-3 col-md-3 col-sm-12">
-                        <a href="subscription-pack">
-                            <div class="card profile-widget border">
-                                <div class="profile-widget-header">
-                                    <i class="fa fa-8x fa-handshake rounded-circle profile-widget-picture" style="color: blue"></i>
+                    @if (authenticateState?.User?.Identity.IsAuthenticated == true)
+                    {
+                        <div class="col-lg-3 col-md-3 col-sm-12">
+                            <a href="subscription-pack">
+                                <div class="card profile-widget border">
+                                    <div class="profile-widget-header">
+                                        <i class="fa fa-8x fa-handshake rounded-circle profile-widget-picture" style="color: blue"></i>
+                                    </div>
+                                    <div class="profile-widget-description pb-0">
+                                        <div class="profile-widget-name">Souscrire un à abonnement</div>
+                                    </div>
                                 </div>
-                                <div class="profile-widget-description pb-0">
-                                    <div class="profile-widget-name">Souscrire un à abonnement</div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
+                            </a>
+                        </div>
+                    }
                 </div>
             </div>
         </div>

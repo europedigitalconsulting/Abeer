@@ -29,8 +29,8 @@ namespace Abeer.Shared
         public string PhoneNumber { get; set; }
         public int NubmerOfView { get; set; }
         public string PhotoUrl { get; set; }
-        public string Pincode { get; set; }
         public string DigitCode { get; set; }
+        public int PinCode { get; set; }
         public IList<SocialNetwork> SocialNetworkConnected { get; set; }
         public IList<CustomLink> CustomLinks { get; set; }
     }

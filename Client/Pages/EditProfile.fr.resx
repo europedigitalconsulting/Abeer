@@ -120,6 +120,9 @@
   <data name="AddASocialNetwork" xml:space="preserve">
     <value>Connecter un réseau social</value>
   </data>
+  <data name="AddCard" xml:space="preserve">
+    <value>Ajouter la carte</value>
+  </data>
   <data name="AddCustomLink" xml:space="preserve">
     <value>Ajouter un lien personnalisé</value>
   </data>
@@ -217,10 +220,10 @@
     <value>Type de photo</value>
   </data>
   <data name="PinCode" xml:space="preserve">
-    <value>Numéro de PIN</value>
+    <value>Code PIN</value>
   </data>
   <data name="PinDigit" xml:space="preserve">
-    <value>Code PIN</value>
+    <value>Numéro de carte</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>Enregistrer</value>

@@ -39,31 +39,39 @@
                 <input @bind="@ViewUserForm.Country" type="text" class="form-control" id="ViewUserForm-Country" />
             </div>
             <div class="form-group">
+                <label for="year">@Loc["Country"]</label>
+                <input @bind="@ViewUserForm.Country" type="text" class="form-control" id="ViewUserForm-Country" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.DigitCode">@Loc["DigitCode"]</label>
+                <input @bind="ViewUserForm.DigitCode" class="form-control" id="ViewUserForm-DigitCode" />
+            </div>
+            <div class="form-group">
                 <label for="year">@Loc["PinCode"]</label>
-                <input @bind="@ViewUserForm.PinCode" type="text" class="form-control" id="ViewUserForm-PinCOde" />
+                <input @bind="@ViewUserForm.PinCode" type="text" class="form-control" id="ViewUserForm-PinCode" />
             </div>
         </fieldset>
         <button class="btn btn-primary" @onclick="FormRegister">S'inscrire</button>
     </EditForm>
 </div>
 @code {
-    private ApplicationUser ViewUserForm = new ApplicationUser();
+    private RegisterViewModel ViewUserForm = new RegisterViewModel();
 
     protected override async Task OnInitializedAsync()
     {
         Random rnd = new Random();
         string alea = rnd.Next(10000000, 99999999).ToString();
-        Console.WriteLine(JsonConvert.SerializeObject(ViewUserForm));
+
         ViewUserForm.Email = $"mabsalon{alea}@gmail.com";
         ViewUserForm.UserName = $"mabsalon{alea}@gmail.com";  
-        ViewUserForm.PinCode = $"123456789{alea}";
+        ViewUserForm.DigitCode = $"123456789{alea}";
         StateHasChanged();
         await base.OnInitializedAsync();
     }
     protected async Task FormRegister()
     {
         var httpClient = HttpClientFactory.CreateClient("Abeer.Anonymous");
-        var result = await httpClient.PostAsJsonAsync<ApplicationUser>("api/Users", ViewUserForm);
+        var result = await httpClient.PostAsJsonAsync<RegisterViewModel>("api/Users", ViewUserForm);
         if (result.IsSuccessStatusCode)
         {
             NavigationManager.NavigateTo("/");

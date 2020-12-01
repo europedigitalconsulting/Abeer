@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -10,7 +11,6 @@ namespace Abeer.Shared.Security
 {
     public class OnlySubscribersRequirement : AuthorizationHandler<OnlySubscribersRequirement>, IAuthorizationRequirement
     {
-
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, OnlySubscribersRequirement requirement)
         {
             if (context.User.HasClaim(ClaimTypes.Role, "admin"))

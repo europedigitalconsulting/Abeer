@@ -29,7 +29,7 @@ namespace Abeer.Server.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ViewApplicationUser>> Get(string id)
         {
-            var user = await _userManager.FindByIdAsync(id) ?? await _userManager.Users.FirstOrDefaultAsync(u => u.PinCode == id)
+            var user = await _userManager.FindByIdAsync(id) ?? await _userManager.Users.FirstOrDefaultAsync(u => u.PinDigit == id)
                 ?? await _userManager.FindByEmailAsync(id);
 
             if (user == null)

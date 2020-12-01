@@ -23,8 +23,8 @@ namespace Abeer.Shared
         public bool IsOperator { get; set; }
         public string Country { get; set; } = "France";
         public string City { get; set; } = "Palaiseau";
-        public string PinCode { get; set; }
-        public int PinDigit { get; set; } = 12345;
+        public string PinDigit { get; set; }
+        public int PinCode { get; set; } = 12345;
         public byte[] EncryptionIv { get; set; } //Iv = Initialization vector
         public byte[] EncryptionKey { get; set; }
         public string Address { get; set; }

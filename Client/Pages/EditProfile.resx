@@ -120,6 +120,9 @@
   <data name="AddASocialNetwork" xml:space="preserve">
     <value>Connect a new social network</value>
   </data>
+  <data name="AddCard" xml:space="preserve">
+    <value>Add card</value>
+  </data>
   <data name="AddCustomLink" xml:space="preserve">
     <value>Add a custom link</value>
   </data>
@@ -220,7 +223,7 @@
     <value>Pin Code</value>
   </data>
   <data name="PinDigit" xml:space="preserve">
-    <value>Pin Digit</value>
+    <value>Card number</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>Save</value>

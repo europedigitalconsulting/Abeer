@@ -4,13 +4,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Abeer.Shared;
 using Abeer.Data.UnitOfworks;
-using Microsoft.AspNetCore.Authorization;
 using Abeer.Shared.Technical;
 using System.Net.Http;
 using System.Net.Http.Json;
 using Microsoft.Extensions.Configuration;
 using Abeer.Shared.Functional;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
 
 namespace Abeer.Server.Controllers
@@ -33,23 +31,16 @@ namespace Abeer.Server.Controllers
         [HttpPost("ProcessCryptoAdSuccess")]
         public async Task ProcessCryptoAdSuccess(CryptoPaymentInfo cryptoPaymentInfo)
         {
-            try
+            var client = new HttpClient();
+            var result = await client.PostAsJsonAsync($"{_configuration["Service:CryptoPayment:VerifyApiValidationToken"]}", cryptoPaymentInfo);
+            if (result.IsSuccessStatusCode)
             {
-                var client = new HttpClient();
-                var result = await client.PostAsJsonAsync($"{_configuration["Service:CryptoPayment:VerifyApiValidationToken"]}", cryptoPaymentInfo);
-                if (result.IsSuccessStatusCode)
-                {
-                    var payment = await _functionalUnitOfWork.PaymentRepository.FirstOrDefault(a => a.OrderNumber == cryptoPaymentInfo.OrderNumber);
+                var payment = await _functionalUnitOfWork.PaymentRepository.FirstOrDefault(a => a.OrderNumber == cryptoPaymentInfo.OrderNumber);
 
-                    payment.IsValidated = true;
-                    payment.ValidatedDate = DateTime.Now;
-                    payment.OrderNumber = cryptoPaymentInfo.OrderNumber;
-                    payment.TokenId = cryptoPaymentInfo.Token;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw;
+                payment.IsValidated = true;
+                payment.ValidatedDate = DateTime.Now;
+                payment.OrderNumber = cryptoPaymentInfo.OrderNumber;
+                payment.TokenId = cryptoPaymentInfo.Token;
             }
         }
 
@@ -82,15 +73,15 @@ namespace Abeer.Server.Controllers
                     user.SubscriptionStartDate = user.SubscriptionStartDate.HasValue ? user.SubscriptionStartDate : subHisto.Created;
                     if (user.SubscriptionEndDate.HasValue)
                     {
-                        if (user.SubscriptionEndDate.Value < DateTime.Now) 
-                            user.SubscriptionEndDate = DateTime.Now.AddMonths(subscription.Duration); 
+                        if (user.SubscriptionEndDate.Value < DateTime.Now)
+                            user.SubscriptionEndDate = DateTime.Now.AddMonths(subscription.Duration);
                         else
                             user.SubscriptionEndDate = user.SubscriptionEndDate.Value.AddMonths(subscription.Duration);
                     }
                     else
-                        user.SubscriptionEndDate = subHisto.EndSubscription;  
+                        user.SubscriptionEndDate = subHisto.EndSubscription;
 
-                    await _userManager.UpdateAsync(user); 
+                    await _userManager.UpdateAsync(user);
                 }
             }
             catch (Exception ex)
@@ -102,19 +93,11 @@ namespace Abeer.Server.Controllers
         [HttpPost("ProcessCryptoFailed")]
         public async Task ProcessCryptoFailed(CryptoPaymentInfo cryptoPaymentInfo)
         {
-            try
-            {
-                var client = new HttpClient();
-                var result = await client.PostAsJsonAsync($"{_configuration["Service:CryptoPayment:VerifyApiValidationToken"]}", cryptoPaymentInfo);
-                if (result.IsSuccessStatusCode)
-                {
-
-                }
-            }
-            catch (Exception ex)
+            var client = new HttpClient();
+            var result = await client.PostAsJsonAsync($"{_configuration["Service:CryptoPayment:VerifyApiValidationToken"]}", cryptoPaymentInfo);
+            if (result.IsSuccessStatusCode)
             {
 
-                throw;
             }
         }
     }

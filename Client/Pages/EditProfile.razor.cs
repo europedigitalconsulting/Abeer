@@ -41,8 +41,10 @@ namespace Abeer.Client.Pages
         string ChangePasswordError = "";
         string ChangePhotoError = "";
         string _PhotoType = "Gravatar";
-        string PinCode;
         string DigitCode;
+        int PinCode;
+        string NewDigitCode;
+        int NewPinCode;
 
         public string PhotoType
         {
@@ -57,6 +59,7 @@ namespace Abeer.Client.Pages
         public string ConfirmPassword { get; set; }
 
         private string _PhotoUrl;
+        private string Error;
 
         public string PhotoUrl
         {
@@ -75,8 +78,8 @@ namespace Abeer.Client.Pages
             Console.WriteLine($"user :{json}");
             User = JsonConvert.DeserializeObject<ViewApplicationUser>(json);
 
-            PinCode = User.Pincode;
             DigitCode = User.DigitCode;
+            PinCode = User.PinCode;
 
             _PhotoUrl = User.PhotoUrl;
 
@@ -100,6 +103,30 @@ namespace Abeer.Client.Pages
             });
         }
 
+        async Task SaveNewCard()
+        {
+            ApplicationUser user = new ApplicationUser();
+
+            user.PinDigit =  NewDigitCode ;
+            user.PinCode = NewPinCode;
+
+            var response = await HttpClient.PostAsJsonAsync($"api/Profile/SaveNewCard", user);
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync(); 
+                var result = JsonConvert.DeserializeObject<ApplicationUser>(json);
+
+                PinCode = result.PinCode;
+                DigitCode = result.PinDigit.ToString();
+                NewDigitCode = "";
+                NewPinCode = 0;
+            }
+            else
+            {
+                Error = await response.Content.ReadAsStringAsync(); 
+            }
+            StateHasChanged();
+        }
         async Task ChangePhoto()
         {
             User.PhotoUrl = PhotoUrl;

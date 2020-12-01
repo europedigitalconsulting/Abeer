@@ -19,6 +19,7 @@ using Abeer.Services;
 using System;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Configuration;
+using Abeer.Shared.ViewModels;
 
 namespace Abeer.Server.Controllers
 { 
@@ -68,7 +69,7 @@ namespace Abeer.Server.Controllers
         {
             var users = await _userManager.Users.Where(u => u.DisplayName.Contains(term)
                 || u.Email.Contains(term) || u.FirstName.Contains(term) || u.LastName.Contains(term)
-                || u.PinCode.Contains(term) || u.UserName.Contains(term)).ToListAsync();
+                || u.PinDigit.Contains(term) || u.UserName.Contains(term)).ToListAsync();
 
             if (string.IsNullOrWhiteSpace(roles))
                 return users;
@@ -207,14 +208,25 @@ namespace Abeer.Server.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        //[Consumes(MediaTypeNames.Application.Json)]
+        [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [AllowAnonymous]
-        public async Task<ActionResult<ApplicationUser>> PostUser(ApplicationUser user)
+        public async Task<ActionResult<RegisterViewModel>> PostUser(RegisterViewModel Input)
         {
-            var temporaryPassword = "Xc9wf8or&";// GeneratePassword();
-            var result = await _userManager.CreateAsync(user, temporaryPassword);
+            var user = new ApplicationUser
+            {
+                UserName = Input.Email,
+                Email = Input.Email,
+                FirstName = Input.FirstName,
+                LastName = Input.LastName,
+                DisplayName = GetDisplayName(Input),
+                PinCode = Input.NoCard ? -1 : Input.PinCode,
+                City = Input.City,
+                Country = Input.Country,
+                PinDigit = Input.NoCard ? string.Empty : Input.DigitCode 
+            };
+            var result = await _userManager.CreateAsync(user, Input.Password);
 
             if (result.Succeeded)
             {
@@ -256,12 +268,12 @@ namespace Abeer.Server.Controllers
                 message = message.Replace("[CallBackUrl]", callbackUrl, StringComparison.OrdinalIgnoreCase);
                 message = message.Replace("[UnSubscribeUrl]", unSubscribeUrl, StringComparison.OrdinalIgnoreCase);
                 message = message.Replace("[PostalAddress]", _configuration["Company:PostalAddress"]);
-                message = message.Replace("[TempPassword]", temporaryPassword);
+                message = message.Replace("[TempPassword]", Input.Password);
                 message = message.Replace("[Login]", user.UserName);
 
                 await _emailSender.SendEmailAsync(user.Email, "email_created_subject", message);
 
-                return user;
+                return Input;
             }
 
             return BadRequest();
@@ -380,6 +392,26 @@ namespace Abeer.Server.Controllers
         private async Task<bool> UserExists(string id)
         {
             return (await _userManager.FindByIdAsync(id)) != null;
+        }
+        private string GetDisplayName(RegisterViewModel Input)
+        {
+            if (!string.IsNullOrWhiteSpace(Input.DisplayName))
+                return Input.DisplayName;
+
+            if (!string.IsNullOrWhiteSpace(Input.LastName))
+            {
+                var parts = new List<string>
+                {
+                    Input.LastName
+                };
+
+                if (!string.IsNullOrWhiteSpace(Input.FirstName))
+                    parts.Add(Input.FirstName);
+
+                return string.Join(" ", parts);
+            }
+            else
+                return Input.Email;
         }
     }
 }

@@ -144,6 +144,9 @@
   <data name="LastName" xml:space="preserve">
     <value>Nom de famille</value>
   </data>
+  <data name="NotCard" xml:space="preserve">
+    <value>Je ne possède pas encore de carte</value>
+  </data>
   <data name="Password" xml:space="preserve">
     <value>Mot de passe</value>
   </data>

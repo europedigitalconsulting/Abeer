@@ -45,7 +45,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
             ILogger<RegisterModel> logger,
             IWebHostEnvironment env,
             IEmailSender emailSender,
-            IConfiguration configuration, 
+            IConfiguration configuration,
             UrlShortner urlShortner, CountriesService countriesService, FunctionalUnitOfWork functionalUnitOfWork)
         {
             _serviceProvider = serviceProvider;
@@ -69,7 +69,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
         private List<SelectListItem> GetCountries()
         {
             var countries = countriesService.GetCountries(CultureInfo.CurrentCulture.TwoLetterISOLanguageName.ToLower()).Result
-                .Select(c=> new SelectListItem(c.Name, c.Estatcode)).ToList();
+                .Select(c => new SelectListItem(c.Name, c.Estatcode)).ToList();
 
             return countries;
         }
@@ -97,7 +97,8 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
 
-            public string PinCode { get; set; }
+            public bool NoCard { get; set; }
+            public int PinCode { get; set; }
             public string DigitCode { get; set; }
 
             public string FirstName { get; set; }
@@ -112,15 +113,15 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
         public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
-            
+
             if (Input == null)
                 Input = new InputModel();
 
             Input.DigitCode = rdm.Next(10000, 99999).ToString();
-    
-            if(Request?.Query?.ContainsKey("PinCode") == true)
-                Input.PinCode = Request.Query["PinCode"];
-            
+
+            if (Request?.Query?.ContainsKey("PinCode") == true)
+                Input.PinCode = int.Parse(Request.Query["PinCode"]);
+
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
@@ -130,6 +131,12 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
+            if (!Input.NoCard && Input.PinCode > 0 || string.IsNullOrEmpty(Input.DigitCode))
+            {
+                ModelState.AddModelError("", "DigitCode/PinCode required");
+                return Page();
+            }
+
             var user = new ApplicationUser
             {
                 UserName = Input.Email,
@@ -137,32 +144,37 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
                 FirstName = Input.FirstName,
                 LastName = Input.LastName,
                 DisplayName = GetDisplayName(),
-                PinCode = Input.PinCode,
+                PinDigit = Input.NoCard ? string.Empty : Input.DigitCode,
+                PinCode = Input.NoCard ? -1 : Input.PinCode,
                 City = Input.City,
                 Country = Input.Country,
-                PinDigit = int.Parse(Input.DigitCode)
+                SubscriptionStartDate = DateTime.Now,
+                SubscriptionEndDate = DateTime.Now.AddDays(5)
             };
 
             _logger.LogInformation($"start get card {Input.PinCode}");
 
-            var card = await _functionalUnitOfWork.CardRepository.FirstOrDefault(c => c.CardNumber == Input.PinCode);
+            var card = await _functionalUnitOfWork.CardRepository.FirstOrDefault(c => c.CardNumber == Input.DigitCode);
 
-            if (card == null)
+            if (!Input.NoCard)
             {
-                ModelState.AddModelError("", "card not existed");
-                return Page();
-            }
+                if (card == null)
+                {
+                    ModelState.AddModelError("", "card not existed");
+                    return Page();
+                }
 
-            else if (card.IsUsed)
-            {
-                ModelState.AddModelError("", "Card is used");
-                return Page();
-            }
+                else if (card.IsUsed)
+                {
+                    ModelState.AddModelError("", "Card is used");
+                    return Page();
+                }
 
-            else if (card.PinCode != Input.DigitCode)
-            {
-                ModelState.AddModelError("PinCode", "Pincode is not valid");
-                return Page();
+                else if (card.PinCode != Input.DigitCode)
+                {
+                    ModelState.AddModelError("PinCode", "Pincode is not valid");
+                    return Page();
+                }
             }
 
             var result = await _userManager.CreateAsync(user, Input.Password);
@@ -198,8 +210,11 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
 
                 _logger.LogInformation("set card is used");
 
-                card.IsUsed = true;
-                await _functionalUnitOfWork.CardRepository.Update(card);
+                if (!Input.NoCard)
+                {
+                    card.IsUsed = true;
+                    await _functionalUnitOfWork.CardRepository.Update(card);
+                }
 
                 _logger.LogInformation("Redirect to register confirmation page");
 
@@ -221,7 +236,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
 
         private async Task SendEmailTemplate(string templatePattern, Dictionary<string, string> parameters)
         {
-            var message = GenerateHtmlTemplate(_serviceProvider, _env.WebRootPath, templatePattern , parameters);
+            var message = GenerateHtmlTemplate(_serviceProvider, _env.WebRootPath, templatePattern, parameters);
             await _emailSender.SendEmailAsync(Input.Email, "Confirm your email", message);
         }
 

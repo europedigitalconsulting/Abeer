@@ -84,12 +84,13 @@ namespace Abeer.Server
 
             services.AddIdentityServer()
                 .AddApiAuthorization<ApplicationUser, SecurityDbContext>();
+             
+            services.AddSingleton<IAuthorizationHandler, OnlySubscribersRequirement>();
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("OnlySubscribers",
                     policy => policy.Requirements.Add(new OnlySubscribersRequirement()));
             });
-            services.AddSingleton<IAuthorizationHandler, OnlySubscribersRequirement>();
             services.AddAuthentication()
                 .AddIdentityServerJwt();
 
@@ -305,8 +306,8 @@ namespace Abeer.Server
                         LastName = "Bruchet",
                         City = "Quincy Sous senart",
                         PhoneNumber = "+33 7 80 81 10 24",
-                        PinCode = "12345678901234567",
-                        PinDigit = 12345,
+                        PinDigit = "12345678901234567",
+                        PinCode = 12345,
                         IsAdmin = true,
                     };
 

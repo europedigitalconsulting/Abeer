@@ -57,15 +57,29 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            @Loc["PinCode"]
-                            <input type="text" class="form-control" @bind="PinCode" readonly="readonly" />
-                        </div>
-                        <div class="form-group">
                             @Loc["DigitCode"]
                             <input type="text" class="form-control" @bind="DigitCode" readonly="readonly" />
                         </div>
+                        <div class="form-group">
+                            @Loc["PinCode"]
+                            <input type="text" class="form-control" @bind="PinCode" readonly="readonly" />
+                        </div>
                         <div class="text-center">
                             <button type="button" class="btn btn-success" @onclick="@(() => ModalDisplayPinCode = false)">@Loc["Close"]</button>
+                        </div>
+                        <h4 class="modal-title mt-1">Associer une nouvelle carte</h4>
+
+                        <div class="form-group">
+                            @Loc["DigitCode"]
+                            <input type="text" class="form-control" @bind="NewDigitCode" />
+                        </div>
+                        <div class="form-group">
+                            @Loc["PinCode"]
+                            <input type="text" class="form-control" @bind="NewPinCode" />
+                            <span class="text-danger">@Error</span>
+                        </div>
+                        <div class="text-center">
+                            <button type="button" class="btn btn-success" @onclick="@(() => SaveNewCard())">@Loc["AddCard"]</button>
                         </div>
                     </div>
                 </div>

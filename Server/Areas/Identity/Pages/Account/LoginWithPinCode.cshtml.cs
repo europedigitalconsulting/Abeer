@@ -62,13 +62,13 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [BindProperty(Name ="PinCode", SupportsGet =true)]
-            [Display(Name = "Pin Code")]
-            public string PinCode { get; set; }
+            [BindProperty(Name = "PinCode", SupportsGet = true)]
+            [Display(Name = "Pin Digit")]
+            public string PinDigit { get; set; }
 
             [DataType(DataType.Password)]
-            [Display(Name = "Pin Digit"), MaxLength(6)]
-            public string PinDigit { get; set; }
+            [Display(Name = "Pin Code")]
+            public int PinCode { get; set; }
         }
 
         public async Task<IActionResult> OnGetAsync(string returnUrl = null)
@@ -80,15 +80,15 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
 
             if (!string.IsNullOrEmpty(Request.Query?["PinCode"]))
             {
-                Input.PinCode = Request.Query?["PinCode"];
+                Input.PinCode = int.Parse(Request.Query?["PinCode"]);
             }
 
-            if (!string.IsNullOrEmpty(Input.PinCode))
+            if (Input.PinCode > 0)
             {
                 var user = await _userManager.Users.Where(u => u.PinCode == Input.PinCode).ToListAsync();
 
                 if (user == null || user.Count == 0)
-                    return Redirect($"./Register?PinCode={Request.Query?["PinCode"]}");
+                    return Redirect($"./Register?PinDigit={Request.Query?["PinDigit"]}");
             }
 
             return Page();
@@ -100,7 +100,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                var user = await _userManager.Users.FirstOrDefaultAsync(u => u.PinCode == Input.PinCode && u.PinDigit == int.Parse(Input.PinDigit));
+                var user = await _userManager.Users.FirstOrDefaultAsync(u => u.PinCode == Input.PinCode && u.PinDigit ==  Input.PinDigit );
 
                 if (User == null)
                 {

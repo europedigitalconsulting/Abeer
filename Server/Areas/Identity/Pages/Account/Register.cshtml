@@ -70,8 +70,8 @@
                                         <select asp-for="Input.Country" class="form-control">
                                             @foreach (var country in Model.Countries)
                                             {
-                                <option value="@country.Value">@country.Text</option>
-}
+                                                <option value="@country.Value">@country.Text</option>
+                                            }
                                         </select>
                                         <span asp-validation-for="Input.Country" class="text-danger"></span>
                                     </div>
@@ -79,6 +79,15 @@
                                         <label asp-for="Input.Password">@localizer["Password"]</label>
                                         <input asp-for="Input.Password" class="form-control" />
                                         <span asp-validation-for="Input.Password" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="Input.ConfirmPassword">@localizer["ConfirmPassword"]</label>
+                                        <input asp-for="Input.ConfirmPassword" class="form-control" />
+                                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="checkbox" asp-for="Input.NoCard" />
+                                        <label asp-for="Input.NoCard">@localizer["NotCard"]</label>
                                     </div>
                                     <div class="form-group">
                                         <label asp-for="Input.PinCode">@localizer["PinCode"]</label>
@@ -89,11 +98,6 @@
                                         <label asp-for="Input.DigitCode">@localizer["DigitCode"]</label>
                                         <input asp-for="Input.DigitCode" class="form-control" />
                                         <span asp-validation-for="Input.DigitCode" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="Input.ConfirmPassword">@localizer["ConfirmPassword"]</label>
-                                        <input asp-for="Input.ConfirmPassword" class="form-control" />
-                                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
                                     </div>
                                     <div class="form-group">
                                         <input type="checkbox" readonly="readonly" />@localizer["RequestCertificate"]

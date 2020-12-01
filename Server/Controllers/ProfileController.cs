@@ -54,8 +54,8 @@ namespace Abeer.Server.Controllers
             {
                 City = user.City,
                 Email = user.Email,
-                Pincode = user.PinCode, 
-                DigitCode = user.PinCode,
+                PinCode = user.PinCode, 
+                DigitCode = user.PinDigit.ToString(),
                 PhoneNumber = user.PhoneNumber,
                 Id = user.Id,
                 SocialNetworkConnected = await _functionalUnitOfWork
@@ -80,7 +80,35 @@ namespace Abeer.Server.Controllers
             };
             return Ok(value);
         }
+        [HttpPost("SaveNewCard")]
+        public async Task<ActionResult<ApplicationUser>> SaveNewCard(ApplicationUser userForm)
+        {
+            var user = await _userManager.FindByIdAsync(User.NameIdentifier());
 
+            var card = await _functionalUnitOfWork.CardRepository.FirstOrDefault(c => c.CardNumber == userForm.PinDigit);
+            if (card == null)
+            { 
+                return NotFound("card not existed");
+            }
+
+            else if (card.IsUsed)
+            { 
+                return NotFound("Card is used");
+            }
+
+            else if (card.PinCode != userForm.PinCode.ToString())
+            { 
+                return NotFound("Pincode is not valid");
+            }
+            user.PinCode = userForm.PinCode;
+            user.PinDigit = userForm.PinDigit;
+            await _userManager.UpdateAsync(user);
+
+            card.IsUsed = true;
+            await _functionalUnitOfWork.CardRepository.Update(card);
+            return Ok(userForm);
+
+        }
         [HttpPut]
         public async Task<ActionResult<ApplicationUser>> UpdateUser(ApplicationUser applicationUser)
         {
@@ -126,8 +154,8 @@ namespace Abeer.Server.Controllers
         {
             var user = await _userManager.FindByIdAsync(id);
 
-            user.PinCode = KeyGenerator.GeneratePinCode(8).ToString();
-            user.PinDigit = KeyGenerator.GeneratePinCode(6);
+            user.PinDigit = KeyGenerator.GeneratePinCode(8).ToString();
+            user.PinCode = KeyGenerator.GeneratePinCode(6);
 
             var result = await _userManager.UpdateAsync(user);
 

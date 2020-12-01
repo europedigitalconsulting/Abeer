@@ -11,12 +11,18 @@
                  LabelUserList="@Loc["UserList"]"></NavMenu>
 
         <div class="main-content" style="min-height: 839px;">
-            @if (authenticationState?.User?.Identity.IsAuthenticated == true && SubscriptionEnd.HasValue)
+            @if (authenticationState?.User?.Identity.IsAuthenticated == true)
             {
-                @if (DateTime.Now.AddDays(5) >= SubscriptionEnd.Value.Date)
+                @if (SubscriptionEnd.HasValue && DateTime.Now.AddDays(5) >= SubscriptionEnd.Value.Date)
                 {
                     <div class="text-danger pb-3">
                         <strong>ATTENTION : Votre abonnement prendra fin le @SubscriptionEnd.Value.Date.ToShortDateString()</strong>
+                    </div>
+                }
+                else if (!SubscriptionEnd.HasValue || SubscriptionEnd.Value.Date < DateTime.Now.Date)
+                {
+                    <div class="text-danger pb-3">
+                        <strong>ATTENTION : Vous n'avez pas d'abonnement en cours, veuillez vous abonner pour utiliser nos différents services.</strong>
                     </div>
                 }
             }
