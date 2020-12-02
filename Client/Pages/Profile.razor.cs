@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Newtonsoft.Json;
+using System;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -18,7 +19,7 @@ namespace Abeer.Client.Pages
         public ClaimsPrincipal User { get; set; }
 
         protected override async Task OnParametersSetAsync()
-        {
+        { 
             var authState = await authenticationStateTask;
 
             User = authState.User;
@@ -26,21 +27,23 @@ namespace Abeer.Client.Pages
             if (User.Identity.IsAuthenticated)
             {
                 var response = await httpClient.GetAsync("api/Profile");
-                response.EnsureSuccessStatusCode();
-                var json = await response.Content.ReadAsStringAsync();
-                UserProfile = JsonConvert.DeserializeObject<ViewApplicationUser>(json);
-
-                NavigationUrlService.SetUrls($"https://www.google.com/maps/search/?api=1&query={UserProfile.Address},{UserProfile.City}%20{UserProfile.Country}&query_place_id={UserProfile.DisplayName}",
-                    NavigationManager.ToAbsoluteUri($"/ImportContact/{UserProfile.Id}").ToString());
-
-                NavigationUrlService.ShowContacts = true;
-                NavigationUrlService.ShowMyAds = true;
-
-                if (User.FindFirstValue(ClaimTypes.NameIdentifier).Equals(UserProfile.Id))
+                if (response.IsSuccessStatusCode)
                 {
-                    NavigationUrlService.ShowImport = false;
-                    NavigationUrlService.ShowEditProfile = true;
-                }
+                    var json = await response.Content.ReadAsStringAsync();
+                    UserProfile = JsonConvert.DeserializeObject<ViewApplicationUser>(json);
+
+                    NavigationUrlService.SetUrls($"https://www.google.com/maps/search/?api=1&query={UserProfile.Address},{UserProfile.City}%20{UserProfile.Country}&query_place_id={UserProfile.DisplayName}",
+                        NavigationManager.ToAbsoluteUri($"/ImportContact/{UserProfile.Id}").ToString());
+
+                    NavigationUrlService.ShowContacts = true;
+                    NavigationUrlService.ShowMyAds = true;
+
+                    if (User.FindFirstValue(ClaimTypes.NameIdentifier).Equals(UserProfile.Id))
+                    {
+                        NavigationUrlService.ShowImport = false;
+                        NavigationUrlService.ShowEditProfile = true;
+                    }
+                } 
             }
         }
     }

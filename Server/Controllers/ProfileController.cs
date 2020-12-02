@@ -14,7 +14,7 @@ using System.Linq;
 
 namespace Abeer.Server.Controllers
 {
-    [Authorize]
+    [Authorize(Policy = "OnlySubscribers")]
     [Route("api/[controller]")]
     [ApiController]
     public class ProfileController : ControllerBase
@@ -54,8 +54,8 @@ namespace Abeer.Server.Controllers
             {
                 City = user.City,
                 Email = user.Email,
-                PinCode = user.PinCode, 
-                DigitCode = user.PinDigit.ToString(),
+                PinCode = user.PinCode,
+                DigitCode = user.PinDigit?.ToString(),
                 PhoneNumber = user.PhoneNumber,
                 Id = user.Id,
                 SocialNetworkConnected = await _functionalUnitOfWork
@@ -87,17 +87,17 @@ namespace Abeer.Server.Controllers
 
             var card = await _functionalUnitOfWork.CardRepository.FirstOrDefault(c => c.CardNumber == userForm.PinDigit);
             if (card == null)
-            { 
+            {
                 return NotFound("card not existed");
             }
 
             else if (card.IsUsed)
-            { 
+            {
                 return NotFound("Card is used");
             }
 
             else if (card.PinCode != userForm.PinCode.ToString())
-            { 
+            {
                 return NotFound("Pincode is not valid");
             }
             user.PinCode = userForm.PinCode;
@@ -113,7 +113,7 @@ namespace Abeer.Server.Controllers
         public async Task<ActionResult<ApplicationUser>> UpdateUser(ApplicationUser applicationUser)
         {
             var user = await _userManager.FindByIdAsync(applicationUser.Id);
-            
+
             user.FirstName = applicationUser.FirstName;
             user.LastName = applicationUser.LastName;
             user.DisplayName = applicationUser.DisplayName;
@@ -123,7 +123,7 @@ namespace Abeer.Server.Controllers
             user.PhotoUrl = applicationUser.PhotoUrl;
 
             var result = await _userManager.UpdateAsync(user);
-            
+
             if (result.Succeeded)
                 return Ok(applicationUser);
 
@@ -137,7 +137,7 @@ namespace Abeer.Server.Controllers
                 return BadRequest();
 
             var user = await _userManager.FindByIdAsync(changePasswordViewModel.UserId);
-            
+
             if (user == null)
                 return NotFound();
 
@@ -150,7 +150,7 @@ namespace Abeer.Server.Controllers
         }
 
         [HttpGet("PinCode/{id}")]
-        public async Task <ActionResult<ApplicationUser>> GeneratePinCode(string id)
+        public async Task<ActionResult<ApplicationUser>> GeneratePinCode(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
 
