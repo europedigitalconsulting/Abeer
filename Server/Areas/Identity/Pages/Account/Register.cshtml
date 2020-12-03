@@ -90,14 +90,14 @@
                                         <label asp-for="Input.NoCard">@localizer["NotCard"]</label>
                                     </div>
                                     <div class="form-group">
-                                        <label asp-for="Input.PinCode">@localizer["PinCode"]</label>
-                                        <input asp-for="Input.PinCode" class="form-control" />
-                                        <span asp-validation-for="Input.PinCode" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group">
                                         <label asp-for="Input.DigitCode">@localizer["DigitCode"]</label>
                                         <input asp-for="Input.DigitCode" class="form-control" />
                                         <span asp-validation-for="Input.DigitCode" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="Input.PinCode">@localizer["PinCode"]</label>
+                                        <input asp-for="Input.PinCode" class="form-control" />
+                                        <span asp-validation-for="Input.PinCode" class="text-danger"></span>
                                     </div>
                                     <div class="form-group">
                                         <input type="checkbox" readonly="readonly" />@localizer["RequestCertificate"]

@@ -131,7 +131,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
-            if (!Input.NoCard && Input.PinCode > 0 || string.IsNullOrEmpty(Input.DigitCode))
+            if (!Input.NoCard && Input?.PinCode.ToString().Length != 5 || string.IsNullOrEmpty(Input.DigitCode))
             {
                 ModelState.AddModelError("", "DigitCode/PinCode required");
                 return Page();
@@ -170,7 +170,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
                     return Page();
                 }
 
-                else if (card.PinCode != Input.DigitCode)
+                else if (card.PinCode != Input.PinCode.ToString())
                 {
                     ModelState.AddModelError("PinCode", "Pincode is not valid");
                     return Page();
