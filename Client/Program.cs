@@ -41,6 +41,9 @@ namespace Abeer.Client
             builder.Services.AddAuthorizationCore(options => options.AddPolicy("OnlySubscribers",
                     policy => policy.Requirements.Add(new OnlySubscribersRequirement()))); 
             builder.Services.AddSingleton<NavigationUrlService>();
+            builder.Services.AddCors((opt) => {
+                opt.AddDefaultPolicy(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyMethod());
+                });
 
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(CultureInfo.CurrentCulture.Name); 
             CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo(CultureInfo.CurrentCulture.Name); 

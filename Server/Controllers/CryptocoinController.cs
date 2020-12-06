@@ -10,6 +10,10 @@ using System.Net.Http.Json;
 using Microsoft.Extensions.Configuration;
 using Abeer.Shared.Functional;
 using Microsoft.AspNetCore.Identity;
+using Abeer.Client;
+using Cryptocoin.Payment;
+using Newtonsoft.Json;
+using System.Net.Http.Headers;
 
 namespace Abeer.Server.Controllers
 {
@@ -47,46 +51,39 @@ namespace Abeer.Server.Controllers
         [HttpPost("ProcessCryptoSubSuccess")]
         public async Task ProcessCryptoSubSuccess(CryptoPaymentInfo cryptoPaymentInfo)
         {
-            try
+            var client = new HttpClient();
+            var result = await client.PostAsJsonAsync($"{_configuration["Service:CryptoPayment:VerifyApiValidationToken"]}", cryptoPaymentInfo);
+            if (result.IsSuccessStatusCode)
             {
-                var client = new HttpClient();
-                var result = await client.PostAsJsonAsync($"{_configuration["Service:CryptoPayment:VerifyApiValidationToken"]}", cryptoPaymentInfo);
-                if (result.IsSuccessStatusCode)
+                var payment = await _functionalUnitOfWork.PaymentRepository.FirstOrDefault(a => a.OrderNumber == cryptoPaymentInfo.OrderNumber);
+                var subscription = await _functionalUnitOfWork.SubscriptionPackRepository.FirstOrDefault(x => x.Id == payment.SubscriptionId.Value);
+
+                payment.IsValidated = true;
+                payment.ValidatedDate = DateTime.Now;
+                payment.OrderNumber = cryptoPaymentInfo.OrderNumber;
+                payment.TokenId = cryptoPaymentInfo.Token;
+
+                SubscriptionHistory subHisto = new SubscriptionHistory();
+                subHisto.Created = DateTime.Now;
+                subHisto.EndSubscription = DateTime.Now.AddMonths(subscription.Duration);
+                subHisto.Enable = true;
+                subHisto.UserId = Guid.Parse(payment.UserId);
+                subHisto.SubscriptionPackId = payment.SubscriptionId.Value;
+                await _functionalUnitOfWork.SubscriptionHistoryRepository.Add(subHisto);
+
+                var user = await _userManager.FindByIdAsync(payment.UserId);
+                user.SubscriptionStartDate = user.SubscriptionStartDate.HasValue ? user.SubscriptionStartDate : subHisto.Created;
+                if (user.SubscriptionEndDate.HasValue)
                 {
-                    var payment = await _functionalUnitOfWork.PaymentRepository.FirstOrDefault(a => a.OrderNumber == cryptoPaymentInfo.OrderNumber);
-                    var subscription = await _functionalUnitOfWork.SubscriptionPackRepository.FirstOrDefault(x => x.Id == payment.SubscriptionId.Value);
-
-                    payment.IsValidated = true;
-                    payment.ValidatedDate = DateTime.Now;
-                    payment.OrderNumber = cryptoPaymentInfo.OrderNumber;
-                    payment.TokenId = cryptoPaymentInfo.Token;
-
-                    SubscriptionHistory subHisto = new SubscriptionHistory();
-                    subHisto.Created = DateTime.Now;
-                    subHisto.EndSubscription = DateTime.Now.AddMonths(subscription.Duration);
-                    subHisto.Enable = true;
-                    subHisto.UserId = Guid.Parse(payment.UserId);
-                    subHisto.SubscriptionPackId = payment.SubscriptionId.Value;
-                    await _functionalUnitOfWork.SubscriptionHistoryRepository.Add(subHisto);
-
-                    var user = await _userManager.FindByIdAsync(payment.UserId);
-                    user.SubscriptionStartDate = user.SubscriptionStartDate.HasValue ? user.SubscriptionStartDate : subHisto.Created;
-                    if (user.SubscriptionEndDate.HasValue)
-                    {
-                        if (user.SubscriptionEndDate.Value < DateTime.Now)
-                            user.SubscriptionEndDate = DateTime.Now.AddMonths(subscription.Duration);
-                        else
-                            user.SubscriptionEndDate = user.SubscriptionEndDate.Value.AddMonths(subscription.Duration);
-                    }
+                    if (user.SubscriptionEndDate.Value < DateTime.Now)
+                        user.SubscriptionEndDate = DateTime.Now.AddMonths(subscription.Duration);
                     else
-                        user.SubscriptionEndDate = subHisto.EndSubscription;
-
-                    await _userManager.UpdateAsync(user);
+                        user.SubscriptionEndDate = user.SubscriptionEndDate.Value.AddMonths(subscription.Duration);
                 }
-            }
-            catch (Exception ex)
-            {
-                throw;
+                else
+                    user.SubscriptionEndDate = subHisto.EndSubscription;
+
+                await _userManager.UpdateAsync(user);
             }
         }
 

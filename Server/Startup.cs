@@ -32,6 +32,7 @@ using Abeer.Shared.Functional;
 using System.Net;
 using Abeer.Shared.Security;
 using Microsoft.AspNetCore.Authorization;
+using Abeer.Client;
 
 namespace Abeer.Server
 {
@@ -96,7 +97,7 @@ namespace Abeer.Server
 
             services.AddCors();
             services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, UserClaimsPrincipalFactory>();
-            services.AddTransient<IProfileService, ProfileService>();
+            services.AddTransient<IProfileService, ProfileService>(); 
 
             services.AddTransient<IEmailSenderService, EmailSenderFactory>();
 
@@ -320,15 +321,15 @@ namespace Abeer.Server
                         await functionalDb.SocialNetworkRepository.AddSocialNetwork(new SocialNetwork { OwnerId = admin.Id, Name = "Whatsapp", Logo = "fab fa-whatsapp-square", DisplayInfo = "+33 780811024", BackgroundColor = "bg-success", Url = "whatsapp:33780811024" });
                     }
                 }
-                var hasan = await userManager.FindByEmailAsync("customer@abeer.io");
+                var hasan = await userManager.FindByEmailAsync("manager@abeer.io");
                 if (hasan == null)
                 {
                     hasan = new ApplicationUser
                     {
-                        UserName = "customer@abeer.io",
+                        UserName = "manager@abeer.io",
                         Country = "France",
                         DisplayName = "Hasan Basri",
-                        Email = "customer@abeer.io",
+                        Email = "manager@abeer.io",
                         Title = "World's Master",
                         Description = "Lorem ipsum dolor sit amet,consectetur adipiscing elit,sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
                         EmailConfirmed = true,
@@ -380,7 +381,7 @@ namespace Abeer.Server
                 if (!contact2.Any())
                     await functionalDb.ContactRepository.Add(new Contact { OwnerId = hasan.Id, UserId = admin.Id });
 
-                var tony = await userManager.FindByEmailAsync("tony@abeer.io");
+                var tony = await userManager.FindByEmailAsync("customer@abeer.io");
 
                 if (tony == null)
                 {

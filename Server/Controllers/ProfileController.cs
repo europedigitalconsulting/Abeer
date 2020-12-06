@@ -11,6 +11,7 @@ using Abeer.Shared.ViewModels;
 using Abeer.Data.UnitOfworks;
 using System.Collections.Generic;
 using System.Linq;
+using Abeer.Client;
 
 namespace Abeer.Server.Controllers
 {
@@ -25,10 +26,10 @@ namespace Abeer.Server.Controllers
         private readonly UrlShortner _urlShortner;
         private readonly IEmailSender _emailSender;
         private readonly IConfiguration _configuration;
-        private readonly FunctionalUnitOfWork _functionalUnitOfWork;
+        private readonly FunctionalUnitOfWork _functionalUnitOfWork; 
 
         public ProfileController(UserManager<ApplicationUser> userManager,
-            IAuthorizationService authorizationService,
+            IAuthorizationService authorizationService, 
             IWebHostEnvironment env, UrlShortner urlShortner, IEmailSender emailSender,
             IConfiguration configuration, FunctionalUnitOfWork functionalUnitOfWork)
         {
@@ -38,12 +39,12 @@ namespace Abeer.Server.Controllers
             _urlShortner = urlShortner;
             _emailSender = emailSender;
             _configuration = configuration;
-            _functionalUnitOfWork = functionalUnitOfWork;
+            _functionalUnitOfWork = functionalUnitOfWork; 
         }
 
         [HttpGet]
         public async Task<ActionResult<ApplicationUser>> GetUserProfile([FromQuery] string userId)
-        {
+        { 
             if (string.IsNullOrEmpty(userId))
                 userId = User.NameIdentifier();
 

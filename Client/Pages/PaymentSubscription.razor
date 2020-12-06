@@ -80,13 +80,9 @@
         <div class="text-md-right">
             <div class="float-lg-left mb-lg-0 mb-3">
 
-                <CryptocoinPayment ClientId="client_id_mvc" ClientSecret="client_secret_mvc" BeforeCallPayment="CreatePayment"
+                <CryptocoinPayment BeforeCallPayment="CreatePayment" CryptoConfig="cryptoPaymentViewModel"
                                    OrderNumber="@OrderNumber" Price="@SubPack.Price" Items=@Cart
-                                   CssClass="btn btn-success btn-icon icon-left" DomainApiPayment="https://localhost:5001"
-                                   RedirectSuccessServer="https://localhost:7001/api/Cryptocoin/ProcessCryptoSubSuccess"
-                                   RedirectErrorServer="https://localhost:7001/api/Cryptocoin/ProcessCryptoFailed"
-                                   RedirectSuccess="https://localhost:7001/ConfirmPayment/Success"
-                                   RedirectError="https://localhost:7001/ConfirmPayment/Error">
+                                   CssClass="btn btn-success btn-icon icon-left">
                 </CryptocoinPayment>
 
                 <button class="btn btn-primary btn-icon icon-left" @onclick="PaypalPayment"> Payer avec Paypal</button>
@@ -104,27 +100,30 @@
     private List<Tuple<string, decimal>> Cart { get; set; } = new List<Tuple<string, decimal>>();
     private SubscriptionPack SubPack { get; set; } = new SubscriptionPack();
     private ClaimsPrincipal User;
+    private CryptoPaymentModel cryptoPaymentViewModel;
 
     protected override async Task OnInitializedAsync()
     {
-        Random rnd = new Random(); 
+        Random rnd = new Random();
         var authenticateSate = await AuthenticationStateTask;
         User = authenticateSate.User;
 
         var httpClient = HttpClientFactory.CreateClient("Abeer.ServerAPI");
+
+        var resultConfig = await httpClient.GetAsync($"/api/SubPack/GetConfigCrypto");
+        resultConfig.EnsureSuccessStatusCode();
+
+        var jsonConfig = await resultConfig.Content.ReadAsStringAsync();
+        cryptoPaymentViewModel = JsonConvert.DeserializeObject<CryptoPaymentModel>(jsonConfig); 
+
         var result = await httpClient.GetAsync($"/api/SubPack/Get/{SubscriptionId}");
-        if (result.IsSuccessStatusCode)
-        {
-            var json = await result.Content.ReadAsStringAsync();
-            SubPack = JsonConvert.DeserializeObject<SubscriptionPack>(json);
-            Cart.Add(new Tuple<string, decimal>(SubPack.Label, SubPack.Price));
-            OrderNumber = string.Concat(DateTime.UtcNow.ToString("yyyMMddHHmmss"), rnd.Next(100000, 999999));
-            StateHasChanged();
-        }
-        else
-        {
-            NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri("/").ToString(), true);
-        }
+        result.EnsureSuccessStatusCode();
+
+        var json = await result.Content.ReadAsStringAsync();
+        SubPack = JsonConvert.DeserializeObject<SubscriptionPack>(json);
+        Cart.Add(new Tuple<string, decimal>(SubPack.Label, SubPack.Price));
+        OrderNumber = string.Concat(DateTime.UtcNow.ToString("yyyMMddHHmmss"), rnd.Next(100000, 999999));
+        StateHasChanged();
         await base.OnInitializedAsync();
     }
 

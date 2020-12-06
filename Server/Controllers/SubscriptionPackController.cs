@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Abeer.Shared.Functional;
 using System;
+using Cryptocoin.Payment;
 
 namespace Abeer.Server.Controllers
 {
@@ -23,11 +24,13 @@ namespace Abeer.Server.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly FunctionalUnitOfWork _functionalUnitOfWork;
+        private readonly IConfiguration _configuration;
 
-        public SubPackController(UserManager<ApplicationUser> userManager, FunctionalUnitOfWork functionalUnitOfWork)
+        public SubPackController(UserManager<ApplicationUser> userManager, FunctionalUnitOfWork functionalUnitOfWork, IConfiguration configuration)
         {
             _userManager = userManager;
             _functionalUnitOfWork = functionalUnitOfWork;
+            _configuration = configuration;
         }
 
         [HttpGet("GetAll")]
@@ -39,8 +42,21 @@ namespace Abeer.Server.Controllers
         [HttpGet("Get/{SubscriptionId}")]
         public async Task<IActionResult> Get(Guid SubscriptionId)
         {
-            var result = await _functionalUnitOfWork.SubscriptionPackRepository.FirstOrDefault(x => x.Id == SubscriptionId);
-            return Ok(result);
+            var subPack = await _functionalUnitOfWork.SubscriptionPackRepository.FirstOrDefault(x => x.Id == SubscriptionId);
+            return Ok(subPack);
+        }
+        [HttpGet("GetConfigCrypto")]
+        public async Task<IActionResult> GetConfigCrypto()
+        {
+            CryptoPaymentModel cryptoPaymentViewModel = new CryptoPaymentModel();
+            cryptoPaymentViewModel.ClientId = _configuration["Service:CryptoPayment:ClientId"];
+            cryptoPaymentViewModel.ClientSecret = _configuration["Service:CryptoPayment:ClientSecret"];
+            cryptoPaymentViewModel.DomainApiPayment = _configuration["Service:CryptoPayment:DomainApiPayment"];
+            cryptoPaymentViewModel.RedirectSuccessServer = _configuration["Service:CryptoPayment:RedirectSuccessSubServer"];
+            cryptoPaymentViewModel.RedirectErrorServer = _configuration["Service:CryptoPayment:RedirectErrorServer"];
+            cryptoPaymentViewModel.RedirectSuccess = _configuration["Service:CryptoPayment:RedirectSuccess"];
+            cryptoPaymentViewModel.RedirectError = _configuration["Service:CryptoPayment:RedirectError"];
+            return await Task.Run(() => Ok(cryptoPaymentViewModel));
         }
         [HttpPost("Select")]
         public async Task<IActionResult> Select(SubscriptionPack subscriptionPack)

@@ -26,7 +26,7 @@
     {
         Step = "Step2";
 
-        var httpClient = HttpClientFactory.CreateClient("Abeer.Anonymous");
+        var httpClient = HttpClientFactory.CreateClient("Abeer.ServerAPI");
         var getAll = await httpClient.GetAsync("/api/adprice");
         if (getAll.IsSuccessStatusCode)
         {
@@ -66,7 +66,7 @@
 
     async Task<HttpResponseMessage> InsertAd(CreateAdRequestViewModel CreateAdRequest)
     {
-        var httpClient = HttpClientFactory.CreateClient("Abeer.Anonymous");
+        var httpClient = HttpClientFactory.CreateClient("Abeer.ServerAPI");
         var response = await httpClient.PostAsJsonAsync<CreateAdRequestViewModel>("/api/Adss", CreateAdRequest);
         PublishHasError = !response.IsSuccessStatusCode;
         return response;

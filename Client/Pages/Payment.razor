@@ -85,20 +85,14 @@
                 <div class="float-lg-left mb-lg-0 mb-3">
                     @if (MethodPayment == "1")
                     {
-                        <CryptocoinPayment ClientId="client_id_mvc" ClientSecret="client_secret_mvc" BeforeCallPayment="CreatePayment"
+                        <CryptocoinPayment BeforeCallPayment="CreatePayment" CryptoConfig="cryptoPaymentViewModel"
                                            OrderNumber="@Ad.OrderNumber" Price="@Ad.AdPrice.Value" Items=@Cart
-                                           CssClass="btn btn-success btn-icon icon-left" DomainApiPayment="https://localhost:5001"
-                                           RedirectSuccessServer="https://localhost:7001/api/Cryptocoin/ProcessCryptoAdSuccess"
-                                           RedirectErrorServer="https://localhost:7001/api/Cryptocoin/ProcessCryptoFailed"
-                                           RedirectSuccess="https://localhost:7001/ConfirmPayment/Success"
-                                           RedirectError="https://localhost:7001/ConfirmPayment/Error">
+                                           CssClass="btn btn-success btn-icon icon-left" >
                         </CryptocoinPayment>
                     }
                     else if (MethodPayment == "2")
-                    {
-
-                        <button class="btn btn-primary btn-icon icon-left" @onclick="PaypalPayment"> Payer avec Paypal</button>
-
+                    { 
+                        <button class="btn btn-primary btn-icon icon-left" @onclick="PaypalPayment"> Payer avec Paypal</button> 
                     }
 
                     <button class="btn btn-danger btn-icon icon-left" @onclick="GoToBack"><i class="fas fa-times"></i>@Localizer["LabelCancel"]</button>
@@ -115,14 +109,21 @@
     private List<Tuple<string, decimal>> Cart { get; set; } = new List<Tuple<string, decimal>>();
     private AdModel Ad { get; set; } = new AdModel();
     private ClaimsPrincipal User;
-    private Settings Config;
+    private CryptoPaymentModel cryptoPaymentViewModel;
     protected override async Task OnInitializedAsync()
     {
         var authenticateSate = await authenticationStateTask;
 
-        User = authenticateSate.User; 
+        User = authenticateSate.User;
 
-    var httpClient = HttpClientFactory.CreateClient("Abeer.ServerAPI");
+        var httpClient = HttpClientFactory.CreateClient("Abeer.ServerAPI");
+
+        var resultConfig = await httpClient.GetAsync($"/api/Payments/GetConfigCrypto");
+        resultConfig.EnsureSuccessStatusCode();
+
+        var jsonConfig = await resultConfig.Content.ReadAsStringAsync();
+        cryptoPaymentViewModel = JsonConvert.DeserializeObject<CryptoPaymentModel>(jsonConfig);
+
         var getInvoice = await httpClient.GetAsync($"/api/Payments/GetInvoice/{OrderNumber}");
         if (getInvoice.IsSuccessStatusCode)
         {
