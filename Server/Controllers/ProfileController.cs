@@ -42,6 +42,38 @@ namespace Abeer.Server.Controllers
             _functionalUnitOfWork = functionalUnitOfWork; 
         }
 
+        [AllowAnonymous]
+        [HttpGet("GetUserProfileNoDetail")]
+        public async Task<ActionResult<ApplicationUser>> GetUserProfileNoDetail([FromQuery] string userId)
+        { 
+            if (string.IsNullOrEmpty(userId))
+                userId = User.NameIdentifier();
+
+            var user = await _userManager
+                .FindByIdAsync(userId);
+
+            var value = new ViewApplicationUser
+            {
+                City = user.City,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                Id = user.Id,
+                SocialNetworkConnected = await _functionalUnitOfWork
+                    .SocialNetworkRepository
+                    .GetSocialNetworkLinks(user.Id) ?? new List<SocialNetwork>(),
+                CustomLinks = await _functionalUnitOfWork
+                    .CustomLinkRepository
+                    .GetCustomLinkLinks(user.Id) ?? new List<CustomLink>(), 
+                Country = user.Country,
+                Description = user.Description,
+                DisplayName = user.DisplayName, 
+                LastLogin = user.LastLogin,
+                LastName = user.LastName,
+                Title = user.Title,
+                PhotoUrl = string.IsNullOrWhiteSpace(user.PhotoUrl) ? user.GravatarUrl() : user.PhotoUrl
+            };
+            return Ok(value);
+        }
         [HttpGet]
         public async Task<ActionResult<ApplicationUser>> GetUserProfile([FromQuery] string userId)
         { 

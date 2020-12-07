@@ -79,17 +79,17 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
 
             InputExternalModel Input = new InputExternalModel();
 
-            if (!string.IsNullOrEmpty(Request.Query?["PinCode"]))
+            if (!string.IsNullOrEmpty(Request.Query?["PinDigit"]))
             {
-                Input.PinCode = int.Parse(Request.Query?["PinCode"]);
+                Input.PinCode = int.Parse(Request.Query?["PinDigit"]);
             }
 
             if (Input.PinCode > 0)
             {
-                var user = await _userManager.Users.Where(u => u.PinCode == Input.PinCode).ToListAsync();
+                var user = await _userManager.Users.Where(u => u.PinDigit == Input.PinDigit).ToListAsync();
 
                 if (user == null || user.Count == 0)
-                    return Redirect($"./Register?PinCode={Request.Query?["PinCode"]}");
+                    return Redirect($"./Register?PinDigit={Request.Query?["PinDigit"]}");
             }
 
             return Page();

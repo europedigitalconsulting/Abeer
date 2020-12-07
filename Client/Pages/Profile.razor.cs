@@ -26,7 +26,7 @@ namespace Abeer.Client.Pages
 
             if (User.Identity.IsAuthenticated)
             {
-                var response = await httpClient.GetAsync("api/Profile");
+                var response = await httpClient.GetAsync("api/Profile/GetUserProfileNoDetail");
                 if (response.IsSuccessStatusCode)
                 {
                     var json = await response.Content.ReadAsStringAsync();

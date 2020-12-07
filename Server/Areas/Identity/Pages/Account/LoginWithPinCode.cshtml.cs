@@ -62,7 +62,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [BindProperty(Name = "PinCode", SupportsGet = true)]
+            [BindProperty(Name = "PinDigit", SupportsGet = true)]
             [Display(Name = "Pin Digit")]
             public string PinDigit { get; set; }
 
@@ -102,7 +102,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
             {
                 var user = await _userManager.Users.FirstOrDefaultAsync(u => u.PinCode == Input.PinCode && u.PinDigit ==  Input.PinDigit );
 
-                if (User == null)
+                if (user == null)
                 {
                     ModelState.AddModelError("", "User is not authorized");
                     return Page();

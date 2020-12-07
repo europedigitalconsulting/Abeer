@@ -1,5 +1,5 @@
 ﻿@page "/Profile/Edit"
-@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@attribute [Authorize(Policy = "OnlySubscribers")]
 @inject Microsoft.Extensions.Localization.IStringLocalizer<EditProfile> Loc
 
 <section class="section">

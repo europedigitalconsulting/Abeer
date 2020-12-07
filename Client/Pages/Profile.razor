@@ -1,5 +1,5 @@
 ﻿@page "/Profile"
-@attribute [Authorize(Policy = "OnlySubscribers")]
+@attribute [Authorize]
 @inject Microsoft.Extensions.Localization.IStringLocalizer<EditProfile> Loc
 @inject Abeer.Client.UISdk.NavigationUrlService NavigationUrlService
 

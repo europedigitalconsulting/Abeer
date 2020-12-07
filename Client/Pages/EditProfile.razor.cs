@@ -73,34 +73,36 @@ namespace Abeer.Client.Pages
         protected override async Task OnInitializedAsync()
         {
             var response = await HttpClient.GetAsync($"api/Profile");
-            response.EnsureSuccessStatusCode();
-            var json = await response.Content.ReadAsStringAsync();
-            Console.WriteLine($"user :{json}");
-            User = JsonConvert.DeserializeObject<ViewApplicationUser>(json);
+            if (response.IsSuccessStatusCode)
+            { 
+                var json = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"user :{json}");
+                User = JsonConvert.DeserializeObject<ViewApplicationUser>(json);
 
-            DigitCode = User.DigitCode;
-            PinCode = User.PinCode;
+                DigitCode = User.DigitCode;
+                PinCode = User.PinCode;
 
-            _PhotoUrl = User.PhotoUrl;
+                _PhotoUrl = User.PhotoUrl;
 
-            NewSocialLink = new SocialNetwork { OwnerId = User.Id };
+                NewSocialLink = new SocialNetwork { OwnerId = User.Id };
 
-            SocialNetworkConnected = User.SocialNetworkConnected.ToList();
-            CustomLinks = User.CustomLinks.ToList();
+                SocialNetworkConnected = User.SocialNetworkConnected.ToList();
+                CustomLinks = User.CustomLinks.ToList();
 
-            var responseSocialNetwork = await HttpClient.GetAsync("api/socialnetwork");
-            response.EnsureSuccessStatusCode();
+                var responseSocialNetwork = await HttpClient.GetAsync("api/socialnetwork");
+                response.EnsureSuccessStatusCode();
 
-            var jsonSocialNetwork = await responseSocialNetwork.Content.ReadAsStringAsync();
-            AvailableSocialNetworks = JsonConvert.DeserializeObject<List<SocialNetwork>>(jsonSocialNetwork);
+                var jsonSocialNetwork = await responseSocialNetwork.Content.ReadAsStringAsync();
+                AvailableSocialNetworks = JsonConvert.DeserializeObject<List<SocialNetwork>>(jsonSocialNetwork);
 
-            AvailableSocialNetworks.ForEach(a =>
-            {
-                if (!User.SocialNetworkConnected.ToList().Exists(c => a.Name.Equals(c.Name, StringComparison.OrdinalIgnoreCase)))
+                AvailableSocialNetworks.ForEach(a =>
                 {
-                    AvailableSocialNetworksToAdd.Add(a);
-                }
-            });
+                    if (!User.SocialNetworkConnected.ToList().Exists(c => a.Name.Equals(c.Name, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        AvailableSocialNetworksToAdd.Add(a);
+                    }
+                });
+            }          
         }
 
         async Task SaveNewCard()
