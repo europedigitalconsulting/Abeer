@@ -13,7 +13,7 @@ namespace Abeer.Shared.Security
     {
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, OnlySubscribersRequirement requirement)
         {
-            if (context.User.HasClaim(ClaimTypes.Role, "admin"))
+            if (context.User.HasClaim(ClaimTypes.Role, "admin") || context.User.HasClaim("IsUnlimited", "True"))
             {
                 return Task.Run(() => context.Succeed(requirement));
             }

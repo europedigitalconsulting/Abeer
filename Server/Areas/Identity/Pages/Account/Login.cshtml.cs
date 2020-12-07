@@ -153,6 +153,8 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
                     if (!string.IsNullOrWhiteSpace(user.Address))
                         identity.AddClaim(new Claim("address", user.Address));
 
+                    identity.AddClaim(new Claim("IsUnlimited", user.IsUnlimited.ToString()));
+
                     if (user.IsAdmin)
                         identity.AddClaim(new Claim(ClaimTypes.Role, "admin"));
 

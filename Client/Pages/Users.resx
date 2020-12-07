@@ -168,6 +168,9 @@
   <data name="IsOnline" xml:space="preserve">
     <value>Is online</value>
   </data>
+  <data name="IsUnlimited" xml:space="preserve">
+    <value>Unlimited subscription</value>
+  </data>
   <data name="LastName" xml:space="preserve">
     <value>Last Name</value>
   </data>

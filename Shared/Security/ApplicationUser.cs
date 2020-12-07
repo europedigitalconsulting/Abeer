@@ -14,7 +14,8 @@ namespace Abeer.Shared
         public string Description { get; set; }
         public bool IsOnline { get; set; }
         [NotMapped]
-        public bool IsLocked { get; set; }
+        public bool IsLocked { get; set; } 
+        public bool IsUnlimited { get; set; }
         public DateTime LastLogin { get; set; }
         public DateTime? SubscriptionStartDate { get; set; }
         public DateTime? SubscriptionEndDate { get; set; }

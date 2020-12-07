@@ -13,7 +13,13 @@
         <div class="main-content" style="min-height: 839px;">
             @if (authenticationState?.User?.Identity.IsAuthenticated == true)
             {
-                @if (SubscriptionEnd.HasValue && DateTime.Now.AddDays(5) >= SubscriptionEnd.Value.Date)
+                @if (IsUnlimited)
+                {
+                    <div class="text-danger pb-3">
+                        <strong>Compte illimité</strong>
+                    </div>
+                }
+                else if (SubscriptionEnd.HasValue && DateTime.Now.AddDays(5) >= SubscriptionEnd.Value.Date)
                 {
                     <div class="text-danger pb-3">
                         <strong>ATTENTION : Votre abonnement prendra fin le @SubscriptionEnd.Value.Date.ToShortDateString()</strong>

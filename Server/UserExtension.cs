@@ -36,7 +36,10 @@ namespace Abeer.Server
                 return subscribeEnd;
             return null;
         }
-
+        public static string IsUnlimited(this ClaimsPrincipal claimsPrincipal)
+        {
+            return claimsPrincipal.FindFirstValue("IsUnlimited");
+        }
         public static string UserName(this ClaimsPrincipal claimsPrincipal)
         {
             if (!string.IsNullOrWhiteSpace(claimsPrincipal.Identity.Name))

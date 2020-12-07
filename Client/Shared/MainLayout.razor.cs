@@ -19,6 +19,7 @@ namespace Abeer.Client.Shared
         protected bool IsAuthenticated = false;
         protected string DisplayName;
         protected DateTime? SubscriptionEnd;
+        protected bool IsUnlimited;
 
         [CascadingParameter]
         private Task<AuthenticationState> authenticationStateTask { get; set; }
@@ -47,6 +48,8 @@ namespace Abeer.Client.Shared
                     DisplayName = Name;
                 if (!string.IsNullOrWhiteSpace(_user.FindFirstValue("subscribeEnd")))
                     SubscriptionEnd = DateTime.Parse(_user.FindFirstValue("subscribeEnd"));
+                if (!string.IsNullOrWhiteSpace(_user.FindFirstValue("IsUnlimited")))
+                    IsUnlimited = bool.Parse(_user.FindFirstValue("IsUnlimited"));
             }
         }
 

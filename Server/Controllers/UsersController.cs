@@ -22,7 +22,7 @@ using Microsoft.Extensions.Configuration;
 using Abeer.Shared.ViewModels;
 
 namespace Abeer.Server.Controllers
-{ 
+{
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -138,6 +138,8 @@ namespace Abeer.Server.Controllers
                 applicationUser.PinCode = User.PinCode;
                 applicationUser.PinDigit = User.PinDigit;
 
+                applicationUser.IsUnlimited = User.IsUnlimited;
+
                 if (applicationUser.EmailConfirmed && !applicationUser.Email.Equals(User.Email))
                 {
                     applicationUser.EmailConfirmed = false;
@@ -224,7 +226,8 @@ namespace Abeer.Server.Controllers
                 PinCode = Input.NoCard ? -1 : Input.PinCode,
                 City = Input.City,
                 Country = Input.Country,
-                PinDigit = Input.NoCard ? string.Empty : Input.DigitCode 
+                PinDigit = Input.NoCard ? string.Empty : Input.DigitCode,
+                IsUnlimited = Input.IsUnlimited
             };
             var result = await _userManager.CreateAsync(user, Input.Password);
 
