@@ -86,23 +86,23 @@
                                         <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
                                     </div>
                                     <div class="form-group">
-                                        <input type="checkbox" asp-for="Input.NoCard" />
+                                        <input id="no-card" onclick="DisplayFormCode()"  type="checkbox" asp-for="Input.NoCard" />
                                         <label asp-for="Input.NoCard">@localizer["NotCard"]</label>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group digit-code">
                                         <label asp-for="Input.DigitCode">@localizer["DigitCode"]</label>
                                         <input asp-for="Input.DigitCode" class="form-control" />
                                         <span asp-validation-for="Input.DigitCode" class="text-danger"></span>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group pin-code">
                                         <label asp-for="Input.PinCode">@localizer["PinCode"]</label>
                                         <input asp-for="Input.PinCode" class="form-control" />
                                         <span asp-validation-for="Input.PinCode" class="text-danger"></span>
                                     </div>
-                                    <div class="form-group">
-                                        <input type="checkbox" readonly="readonly" />@localizer["RequestCertificate"]
+                                    <div class="form-group group-disclaimer">
+                                        <input id="disclaimer" onclick="CheckDisclaimer()" type="checkbox" readonly="readonly" />@localizer["RequestCertificate"]
                                     </div>
-                                    <button type="submit" class="btn btn-primary">@localizer["Register"]</button>
+                                    <button type="button" onclick="Submit()" class="btn btn-primary">@localizer["Register"]</button>
                                 </form>
                             </div>
                         </div>
@@ -137,6 +137,36 @@
 
     <!-- General JS Scripts -->
     <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        DisplayFormCode();
+        function CheckDisclaimer() {
+            if ($('#disclaimer').is(':checked')) { 
+                $("group-disclaimer").removeClass("text-danger"); 
+            } else {
+                $("group-disclaimer").addClass("text-danger"); 
+            }
+        }
+        function DisplayFormCode() {
+            if ($('#no-card').is(':checked')) {
+                $('.digit-code').hide();
+                $('.pin-code').hide(); 
+            } else {
+                $('.digit-code').show();
+                $('.pin-code').show();
+            }
+        }
+        function Submit() {
+            if ($('#disclaimer').is(':checked')) {
+                $("group-disclaimer").removeClass("text-danger"); 
+                $("form").submit();
+                return;
+            }
+            else {
+                $(".group-disclaimer").addClass("text-danger"); 
+            }
+        } 
 
+
+    </script>
 </body>
 </html>
