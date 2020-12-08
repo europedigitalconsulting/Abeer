@@ -20,6 +20,7 @@ namespace Abeer.Client.Shared
         protected string DisplayName;
         protected DateTime? SubscriptionEnd;
         protected bool IsUnlimited;
+        protected bool IsAdmin;
 
         [CascadingParameter]
         private Task<AuthenticationState> authenticationStateTask { get; set; }
@@ -41,6 +42,8 @@ namespace Abeer.Client.Shared
                 _claims = _user.Claims;
                 Name = _user.Identity.Name;
                 IsAuthenticated = true;
+
+                IsAdmin = authenticationState.User.HasClaim(ClaimTypes.Role, "admin");
                 if (string.IsNullOrWhiteSpace(Name))
                     Name = UserId;
                 DisplayName = _user.FindFirstValue("displayname");

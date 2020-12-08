@@ -3,7 +3,7 @@
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
 @inject IHttpClientFactory HttpClientFactory
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Payment> Localizer
-@inject NavigationManager NavigationManager 
+@inject NavigationManager NavigationManager
 
 @if (Ad?.AdPrice != null)
 {
@@ -20,23 +20,23 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <address>
-                                    <strong> @Localizer["LabelBilledTo"]:</strong><br>
+                                    <strong> @Localizer["LabelBilledTo"]</strong><br>
                                     @User.FindFirstValue(ClaimTypes.Surname)  @User.FindFirstValue(ClaimTypes.GivenName) <br>
-                                    @User.FindFirstValue("city") <br />
-                                    @User.FindFirstValue("country")
+                                    @User.FindFirstValue("LabelCity") <br />
+                                    @User.FindFirstValue("LabelCountry")
                                 </address>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <address>
-                                    <strong> @Localizer["LabelPaymentMethod"]:</strong><br>
+                                    <strong> @Localizer["LabelPaymentMethod"]</strong><br>
                                     CryptoCoin
                                 </address>
                             </div>
                             <div class="col-md-6 text-md-right">
                                 <address>
-                                    <strong> @Localizer["LabelOrderDate"]:</strong><br>
+                                    <strong> @Localizer["LabelOrderDate"]</strong><br>
                                     @Ad.CreateDate.ToLongDateString()<br><br>
                                 </address>
                             </div>
@@ -72,7 +72,7 @@
                             <div class="col-lg-4 text-right">
                                 <hr class="mt-2 mb-2">
                                 <div class="invoice-detail-item">
-                                    <div class="invoice-detail-name">Total</div>
+                                    <div class="invoice-detail-name">@Localizer["Total"]</div>
                                     <div class="invoice-detail-value invoice-detail-value-lg"> @Ad.AdPrice?.Value</div>
                                 </div>
                             </div>
@@ -86,16 +86,16 @@
                     @if (MethodPayment == "1")
                     {
                         <CryptocoinPayment BeforeCallPayment="CreatePayment" CryptoConfig="cryptoPaymentViewModel"
-                                           OrderNumber="@Ad.OrderNumber" Price="@Ad.AdPrice.Value" Items=@Cart
-                                           CssClass="btn btn-success btn-icon icon-left" >
+                                           OrderNumber="@Ad.OrderNumber" Price="@Ad.AdPrice.Value" Items=@Cart PagePaymentError="/ConfirmPayment/Error"
+                                           CssClass="btn btn-success btn-icon icon-left" LabelBtn="@Localizer["PayWithPaypal"]">
                         </CryptocoinPayment>
                     }
                     else if (MethodPayment == "2")
-                    { 
-                        <button class="btn btn-primary btn-icon icon-left" @onclick="PaypalPayment"> Payer avec Paypal</button> 
+                    {
+                        <button class="btn btn-primary btn-icon icon-left" @onclick="PaypalPayment"> @Localizer["PayWithPaypal"]</button>
                     }
 
-                    <button class="btn btn-danger btn-icon icon-left" @onclick="GoToBack"><i class="fas fa-times"></i>@Localizer["LabelCancel"]</button>
+                    <button class="btn btn-danger btn-icon icon-left" @onclick="GoToBack"><i class="fas fa-times"></i>@Localizer["CancelOrder"]</button>
                 </div>
             </div>
         </div>
@@ -119,25 +119,34 @@
         var httpClient = HttpClientFactory.CreateClient("Abeer.ServerAPI");
 
         var resultConfig = await httpClient.GetAsync($"/api/Payments/GetConfigCrypto");
-        resultConfig.EnsureSuccessStatusCode();
 
-        var jsonConfig = await resultConfig.Content.ReadAsStringAsync();
-        cryptoPaymentViewModel = JsonConvert.DeserializeObject<CryptoPaymentModel>(jsonConfig);
-
-        var getInvoice = await httpClient.GetAsync($"/api/Payments/GetInvoice/{OrderNumber}");
-        if (getInvoice.IsSuccessStatusCode)
+        if (resultConfig.IsSuccessStatusCode)
         {
-            var json = await getInvoice.Content.ReadAsStringAsync();
-            Ad = JsonConvert.DeserializeObject<AdModel>(json);
+            var jsonConfig = await resultConfig.Content.ReadAsStringAsync();
+            cryptoPaymentViewModel = JsonConvert.DeserializeObject<CryptoPaymentModel>(jsonConfig);
 
-            var tmp = new Tuple<string, decimal>(Ad.AdPrice.PriceName, Ad.AdPrice.Value);
-            Cart.Add(tmp);
-            StateHasChanged();
+            var getInvoice = await httpClient.GetAsync($"/api/Payments/GetInvoice/{OrderNumber}");
+            if (getInvoice.IsSuccessStatusCode)
+            {
+                var json = await getInvoice.Content.ReadAsStringAsync();
+                Ad = JsonConvert.DeserializeObject<AdModel>(json);
+
+                var tmp = new Tuple<string, decimal>(Ad.AdPrice.PriceName, Ad.AdPrice.Value);
+                Cart.Add(tmp);
+                StateHasChanged();
+            }
+            else
+            {
+                NavigationManager.NavigateTo("/ConfirmPayment/Error", true);
+                return;
+            }
         }
         else
         {
-            NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri("/").ToString(), true);
+            NavigationManager.NavigateTo("/ConfirmPayment/Error", true);
+            return;
         }
+
         await base.OnInitializedAsync();
     }
 
@@ -147,12 +156,13 @@
         var result = await httpClient.GetAsync($"/api/Payments/create-payment-ad/{Ad.Id}/{OrderNumber}", HttpCompletionOption.ResponseContentRead);
         if (!result.IsSuccessStatusCode)
         {
-            NavigationManager.NavigateTo("https://localhost:7001/ConfirmPayment/Error", true);
+            NavigationManager.NavigateTo("/ConfirmPayment/Error", true);
+            return;
         }
     }
     private void PaypalPayment()
     {
-        NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri($"/api/Paypal/CreateAd/{Ad.Id}").ToString(), true);
+        NavigationManager.NavigateTo($"/api/Paypal/CreateAd/{Ad.Id}", true);
     }
     private void GoToBack()
     {

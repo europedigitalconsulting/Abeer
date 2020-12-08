@@ -237,6 +237,9 @@
   <data name="Notifications" xml:space="preserve">
     <value>Notifications</value>
   </data>
+  <data name="NotSubscription" xml:space="preserve">
+    <value>ATTENTION : Vous n'avez pas d'abonnement en cours, veuillez vous abonner pour utiliser nos différents services.</value>
+  </data>
   <data name="OperatorStatistics" xml:space="preserve">
     <value>Quelques informations sur les jetons</value>
   </data>
@@ -300,6 +303,9 @@
   <data name="Status" xml:space="preserve">
     <value>Status</value>
   </data>
+  <data name="SubscriptionWillEnd" xml:space="preserve">
+    <value>ATTENTION : Votre abonnement prendra fin le</value>
+  </data>
   <data name="ThisYear" xml:space="preserve">
     <value>Cette année</value>
   </data>
@@ -326,6 +332,9 @@
   </data>
   <data name="Transactions" xml:space="preserve">
     <value>Transactions</value>
+  </data>
+  <data name="UnlimitedAccount" xml:space="preserve">
+    <value>Compte illimité</value>
   </data>
   <data name="Unpaid" xml:space="preserve">
     <value>Non payé</value>

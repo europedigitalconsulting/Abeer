@@ -1,7 +1,9 @@
 ﻿
-<button class="@CssClass" @onclick="ValidPayment"> Payer avec CryptoCoin</button>
+<button class="@CssClass" @onclick="ValidPayment"> @LabelBtn</button>
 
 @code {
+    [Parameter] public string PagePaymentError { get; set; } 
+    [Parameter] public string LabelBtn { get; set; } 
     [Parameter] public string CssClass { get; set; } 
     [Parameter] public string OrderNumber { get; set; } 
     [Parameter] public decimal Price { get; set; }

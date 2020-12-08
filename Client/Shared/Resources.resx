@@ -243,6 +243,9 @@
   <data name="Notifications" xml:space="preserve">
     <value>Notifications</value>
   </data>
+  <data name="NotSubscription" xml:space="preserve">
+    <value>WARNING: You do not have a current subscription, please subscribe to use our different services.</value>
+  </data>
   <data name="Operator" xml:space="preserve">
     <value>Operateur</value>
   </data>
@@ -309,6 +312,9 @@
   <data name="Status" xml:space="preserve">
     <value>Status</value>
   </data>
+  <data name="SubscriptionWillEnd" xml:space="preserve">
+    <value>WARNING: Your subscription will end on</value>
+  </data>
   <data name="ThisWeek" xml:space="preserve">
     <value>This week</value>
   </data>
@@ -338,6 +344,9 @@
   </data>
   <data name="Transactions" xml:space="preserve">
     <value>Transactions</value>
+  </data>
+  <data name="UnlimitedAccount" xml:space="preserve">
+    <value>Unlimited account</value>
   </data>
   <data name="Unpaid" xml:space="preserve">
     <value>Unpaid</value>

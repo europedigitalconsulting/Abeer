@@ -117,8 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ConnectMyCard" xml:space="preserve">
+    <value>Connect with my card</value>
+  </data>
   <data name="Copyright" xml:space="preserve">
     <value>Copyright &amp;copy; Made with 💙 by Smart-Clik</value>
+  </data>
+  <data name="CreateAccount" xml:space="preserve">
+    <value>Create an account</value>
   </data>
   <data name="Email" xml:space="preserve">
     <value>Email</value>

@@ -13,22 +13,22 @@
         <div class="main-content" style="min-height: 839px;">
             @if (authenticationState?.User?.Identity.IsAuthenticated == true)
             {
-                @if (IsUnlimited)
+                @if (IsUnlimited || IsAdmin)
                 {
                     <div class="text-danger pb-3">
-                        <strong>Compte illimité</strong>
+                        <strong>@Loc["UnlimitedAccount"]</strong>
                     </div>
                 }
                 else if (SubscriptionEnd.HasValue && DateTime.Now.AddDays(5) >= SubscriptionEnd.Value.Date)
                 {
                     <div class="text-danger pb-3">
-                        <strong>ATTENTION : Votre abonnement prendra fin le @SubscriptionEnd.Value.Date.ToShortDateString()</strong>
+                        <strong>@Loc["SubscriptionWillEnd"] @SubscriptionEnd.Value.Date.ToShortDateString()</strong>
                     </div>
                 }
                 else if (!SubscriptionEnd.HasValue || SubscriptionEnd.Value.Date < DateTime.Now.Date)
                 {
                     <div class="text-danger pb-3">
-                        <strong>ATTENTION : Vous n'avez pas d'abonnement en cours, veuillez vous abonner pour utiliser nos différents services.</strong>
+                        <strong>@Loc["NotSubscription"]</strong>
                     </div>
                 }
             }

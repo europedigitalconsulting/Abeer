@@ -117,112 +117,49 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="LabelAcceptPayment" xml:space="preserve">
-    <value>J'ai bien compris que des frais supplémentaires me seront facturés en fonction des charges facturées par l'opérateur Paypal et que la durée de traitement dépend de l'opérateur Paypal</value>
+  <data name="CancelOrder" xml:space="preserve">
+    <value>Cancel the order</value>
   </data>
   <data name="LabelBilledTo" xml:space="preserve">
-    <value>Facturé à</value>
+    <value>Billed to :</value>
   </data>
-  <data name="LabelCancel" xml:space="preserve">
-    <value>Annuler la commande</value>
+  <data name="LabelCity" xml:space="preserve">
+    <value>City</value>
   </data>
-  <data name="LabelCardHolderName" xml:space="preserve">
-    <value>Nom du porpriétaire de la carte</value>
-  </data>
-  <data name="LabelCardNumber" xml:space="preserve">
-    <value>Numéro de la carte</value>
-  </data>
-  <data name="LabelFees" xml:space="preserve">
-    <value>Charges</value>
-  </data>
-  <data name="LabelFillByCash" xml:space="preserve">
-    <value>Recharger votre compte en payant</value>
-  </data>
-  <data name="LabelFillByCryptoCoinCard" xml:space="preserve">
-    <value>Recharger votre compte en utilisant une carte de recharger</value>
-  </data>
-  <data name="LabelHasError" xml:space="preserve">
-    <value>Attention votre formulaire contient des erreurs, veuillez le modifier avant de continuer</value>
-  </data>
-  <data name="LabelIdReceiver" xml:space="preserve">
-    <value>Identifiant du bénéficiaire</value>
+  <data name="LabelCountry" xml:space="preserve">
+    <value>Country</value>
   </data>
   <data name="LabelInvoice" xml:space="preserve">
-    <value>Facture</value>
+    <value>Invoice</value>
   </data>
   <data name="LabelItem" xml:space="preserve">
-    <value>Produit</value>
+    <value>Product</value>
   </data>
   <data name="LabelOrderDate" xml:space="preserve">
-    <value>Date de commande</value>
+    <value>Date of order</value>
   </data>
   <data name="LabelOrderNumber" xml:space="preserve">
-    <value>Numéro de la commande</value>
+    <value>Order number</value>
   </data>
   <data name="LabelOrderSummary" xml:space="preserve">
-    <value>Résumé</value>
-  </data>
-  <data name="LabelPaymentInformation" xml:space="preserve">
-    <value>Information pour le paiement</value>
-  </data>
-  <data name="LabelPaymentMethod" xml:space="preserve">
-    <value>Méthode de paiement</value>
-  </data>
-  <data name="LabelPaymentReference" xml:space="preserve">
-    <value>Référence uniquement pour le paiement</value>
-  </data>
-  <data name="LabelPinCode" xml:space="preserve">
-    <value>Code PIN</value>
+    <value>Summary</value>
   </data>
   <data name="LabelPrice" xml:space="preserve">
-    <value>Prix</value>
-  </data>
-  <data name="LabelPrint" xml:space="preserve">
-    <value>Imprimer une facture</value>
-  </data>
-  <data name="LabelProcessFinish" xml:space="preserve">
-    <value>Terminer mon achat</value>
-  </data>
-  <data name="LabelProcessPayment" xml:space="preserve">
-    <value>Procéder au paiement</value>
+    <value>Price</value>
   </data>
   <data name="LabelQuantity" xml:space="preserve">
-    <value>Quantité</value>
-  </data>
-  <data name="LabelQuantityToPurchase" xml:space="preserve">
-    <value>2. Vous préferez entrer la quantité en crypocoin</value>
-  </data>
-  <data name="LabelReceiverAddress" xml:space="preserve">
-    <value>Adresse</value>
-  </data>
-  <data name="LabelReceiverBic" xml:space="preserve">
-    <value>BIC</value>
-  </data>
-  <data name="LabelReceiverCountry" xml:space="preserve">
-    <value>Pays</value>
-  </data>
-  <data name="LabelReceiverIban" xml:space="preserve">
-    <value>IBAN</value>
-  </data>
-  <data name="LabelReceiverName" xml:space="preserve">
-    <value>Nom</value>
-  </data>
-  <data name="LabelSearch" xml:space="preserve">
-    <value>Rechercher</value>
-  </data>
-  <data name="LabelSepaCatchPhrase" xml:space="preserve">
-    <value>Merci d'effectuer votre virement SEPA au nom du bénéficiaire</value>
-  </data>
-  <data name="LabelSubTotal" xml:space="preserve">
-    <value>Sous total</value>
+    <value>Quantity</value>
   </data>
   <data name="LabelTotal" xml:space="preserve">
     <value>Total</value>
   </data>
-  <data name="LabelValueInCurrency" xml:space="preserve">
-    <value>1. Vous préferez entrer la valeur en {0}</value>
-  </data>
   <data name="OrderSummaryCatchPhrase" xml:space="preserve">
-    <value>A ce stade vous ne pouvez plus modifier votre commande, cependant vous pouvez annuler ou confirmer pour terminer et effectuer le paiement nécessaire</value>
+    <value>At this point you can no longer modify your order, however you can cancel or confirm to complete and make the necessary payment.</value>
+  </data>
+  <data name="PayWithCrypto" xml:space="preserve">
+    <value>Pay with Cryptocoin</value>
+  </data>
+  <data name="PayWithPaypal" xml:space="preserve">
+    <value>Pay with Paypal</value>
   </data>
 </root>

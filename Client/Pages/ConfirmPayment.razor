@@ -4,11 +4,11 @@
 @inject IHttpClientFactory HttpClientFactory
 @if (state == "Success")
 {
-    <h3>Transfère réussi.</h3>
+    <h3>Le paiement s'est déroulé.</h3>
 }
 else
 {
-    <h1>ERROR</h1>
+    <h1>une erreur</h1>
 }
 @code{
     [Parameter] public string state { get; set; }

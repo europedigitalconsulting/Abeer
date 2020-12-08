@@ -129,6 +129,9 @@
   <data name="AddCustomLinks" xml:space="preserve">
     <value>Ajouter un lien personnalisé</value>
   </data>
+  <data name="AssociateNewCard" xml:space="preserve">
+    <value>Associer une nouvelle carte</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Annuler</value>
   </data>

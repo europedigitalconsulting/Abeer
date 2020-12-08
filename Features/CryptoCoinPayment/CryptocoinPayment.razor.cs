@@ -35,13 +35,12 @@ namespace Cryptocoin.Payment
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    //   NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri(CryptoConfig.RedirectError).ToString(), true);
+                       NavigationManager.NavigateTo($"/{PagePaymentError}", true);
                 }
                 else
                 {
                     string OrderNumberReturn = await response.Content.ReadAsStringAsync();
-                    OrderNumberReturn = JsonConvert.DeserializeObject<string>(OrderNumberReturn);
-                    Console.WriteLine($"{CryptoConfig.DomainApiPayment}/Payment/{OrderNumberReturn}");
+                    OrderNumberReturn = JsonConvert.DeserializeObject<string>(OrderNumberReturn); 
                     NavigationManager.NavigateTo($"{CryptoConfig.DomainApiPayment}/Payment/{OrderNumberReturn}", true);
                 }
             }
