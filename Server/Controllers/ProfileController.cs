@@ -12,6 +12,11 @@ using Abeer.Data.UnitOfworks;
 using System.Collections.Generic;
 using System.Linq;
 using Abeer.Client;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Text;
+using Microsoft.AspNetCore.Http.Extensions;
+using static Abeer.Services.TemplateRenderManager;
+using System;
 
 namespace Abeer.Server.Controllers
 {
@@ -26,10 +31,12 @@ namespace Abeer.Server.Controllers
         private readonly UrlShortner _urlShortner;
         private readonly IEmailSender _emailSender;
         private readonly IConfiguration _configuration;
-        private readonly FunctionalUnitOfWork _functionalUnitOfWork; 
+        private readonly FunctionalUnitOfWork _functionalUnitOfWork;
+        private readonly IServiceProvider _serviceProvider;
 
         public ProfileController(UserManager<ApplicationUser> userManager,
-            IAuthorizationService authorizationService, 
+            IAuthorizationService authorizationService,
+            IServiceProvider serviceProvider,
             IWebHostEnvironment env, UrlShortner urlShortner, IEmailSender emailSender,
             IConfiguration configuration, FunctionalUnitOfWork functionalUnitOfWork)
         {
@@ -39,7 +46,8 @@ namespace Abeer.Server.Controllers
             _urlShortner = urlShortner;
             _emailSender = emailSender;
             _configuration = configuration;
-            _functionalUnitOfWork = functionalUnitOfWork; 
+            _functionalUnitOfWork = functionalUnitOfWork;
+            _serviceProvider = serviceProvider;
         }
 
         [AllowAnonymous]
@@ -181,6 +189,58 @@ namespace Abeer.Server.Controllers
 
             return BadRequest(result.Errors?.FirstOrDefault()?.Code);
         }
+        [HttpPut("ChangeEmail")]
+        public async Task<ActionResult> ChangeEmail(ChangeMailViewModel changeMailViewModel)
+        {
+            if (changeMailViewModel.UserId != User.NameIdentifier())
+                return BadRequest();
+
+            var mailExist = await _userManager.FindByEmailAsync(changeMailViewModel.NewMail);
+
+            if (mailExist != null)
+                return Conflict();
+
+            var user = await _userManager.FindByIdAsync(changeMailViewModel.UserId);
+            if (mailExist != null ||user == null || changeMailViewModel.NewMail == user.Email || user.EmailConfirmed == false)
+                return NotFound();
+
+            try
+            {
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+
+                var callbackUrl = Url.Page(
+                    "/Account/ConfirmEmail",
+                    pageHandler: null,
+                    values: new { area = "Identity", userId = user.Id, code = code, returnUrl = Url.Content("~/") },
+                    protocol: Request.Scheme);
+
+                var frontWebSite = UriHelper.BuildAbsolute(Request.Scheme, Request.Host);
+                var logoUrl = UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/assets/img/logo_full.png");
+                var unSubscribeUrl = await _urlShortner.CreateUrl(Request.Scheme, Request.Host, UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/Account/UnSubscribe"));
+
+                callbackUrl = await _urlShortner.CreateUrl(Request.Scheme, Request.Host, callbackUrl);
+
+                await SendEmailTemplate(changeMailViewModel.NewMail, "email-confirmation", new Dictionary<string, string>()
+                        {
+                            {"frontWebSite", frontWebSite },
+                            {"logoUrl", logoUrl },
+                            {"unSubscribeUrl", unSubscribeUrl },
+                            {"callbackUrl", callbackUrl }
+                        });
+
+                user.EmailConfirmed = false;
+                user.UserName = user.Email = changeMailViewModel.NewMail;
+                user.NormalizedUserName = user.NormalizedEmail = changeMailViewModel.NewMail.ToUpper();
+                await _userManager.UpdateAsync(user);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            { 
+                throw;
+            } 
+        }
 
         [HttpGet("PinCode/{id}")]
         public async Task<ActionResult<ApplicationUser>> GeneratePinCode(string id)
@@ -212,6 +272,12 @@ namespace Abeer.Server.Controllers
                 return Ok(user);
 
             return BadRequest();
+        }
+
+        private async Task SendEmailTemplate(string newMail, string templatePattern, Dictionary<string, string> parameters)
+        {
+            var message = GenerateHtmlTemplate(_serviceProvider, _env.WebRootPath, templatePattern, parameters);
+            await _emailSender.SendEmailAsync(newMail, "Confirm your email", message);
         }
     }
 }

@@ -88,6 +88,47 @@
     }
 
 
+    @if (ModalChangeMailVisible)
+    {
+        <div class="modal fade show" id="modalChangeMail" style="display:block" aria-modal="true" role="dialog">
+            <div class="modal-dialog modal-dialog-centered  modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">@Loc["TitleChangeMail"]</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="() => ModalChangeMailVisible = false">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="info">
+                            <p class="text-danger">
+                                @Loc["TxtDesc1"]<br>
+                                @Loc["TxtDesc2"]<br />
+                            </p>
+                        </div><br />
+                        <div class="form-group">
+                            @Loc["NewMail"]
+                            <input type="text" class="form-control" @bind="NewMail" />
+                        </div>
+                        <div class="form-group">
+                            @Loc["ConfirmMail"]
+                            <input type="text" class="form-control" @bind="ConfirmMail" />
+                        </div>
+
+                        @if (ChangeChangeMailHasError)
+                        {
+                            <div class="alert alert-danger">
+                                @ChangeChangeMaildError
+                            </div>
+                        }
+                        <div class="text-center">
+                            <button type="button" class="btn btn-success" @onclick="ChangeMail">@Loc["BtnChangeMail"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
     @if (ModalSocialNetworkVisible)
     {
         <div class="modal fade show" id="modalSocialNetwork" style="display:block" aria-modal="true" role="dialog">
@@ -237,7 +278,8 @@
                 <div class="form-row">
                     <div class="form-group col-lg-6 col-sm-12">
                         <label>@Loc["Email"]</label>
-                        <input type="text" @bind="@User.Email" Class="form-control" />
+                        <input type="text" @bind="@User.Email" Class="form-control" readonly />
+                        <span class="text-primary cursor-pointer" @onclick="OpenModalChangeMail">@Loc["TitleChangeMail"]</span>
                     </div>
                     <div class="form-group col-lg-6 col-sm-12">
                         <label>@Loc["Phone"]</label>

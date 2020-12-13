@@ -132,6 +132,9 @@
   <data name="AssociateNewCard" xml:space="preserve">
     <value>Associer une nouvelle carte</value>
   </data>
+  <data name="BtnChangeMail" xml:space="preserve">
+    <value>Modifier mon Email</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Annuler</value>
   </data>
@@ -146,6 +149,9 @@
   </data>
   <data name="City" xml:space="preserve">
     <value>Ville</value>
+  </data>
+  <data name="ConfirmMail" xml:space="preserve">
+    <value>Confirmer adresse mail</value>
   </data>
   <data name="ConfirmPassword" xml:space="preserve">
     <value>Confirmer le nouveau mot de passe</value>
@@ -201,6 +207,9 @@
   <data name="Logo" xml:space="preserve">
     <value>Logo</value>
   </data>
+  <data name="MailAlreadyExist" xml:space="preserve">
+    <value>Le mail existe déjà</value>
+  </data>
   <data name="MyAccount" xml:space="preserve">
     <value>Mon compte</value>
   </data>
@@ -210,11 +219,17 @@
   <data name="Name" xml:space="preserve">
     <value>Nom</value>
   </data>
+  <data name="NewMail" xml:space="preserve">
+    <value>Nouvelle adresse mail</value>
+  </data>
   <data name="NewPassword" xml:space="preserve">
     <value>Nouveau mot de passe</value>
   </data>
   <data name="OldPassword" xml:space="preserve">
     <value>Ancien mot de passe</value>
+  </data>
+  <data name="PasswordNotConfirmedError" xml:space="preserve">
+    <value>Les adresse mails ne sont pas identiques</value>
   </data>
   <data name="Phone" xml:space="preserve">
     <value>Téléphone</value>
@@ -242,6 +257,15 @@
   </data>
   <data name="Title" xml:space="preserve">
     <value>Profile utilisateur</value>
+  </data>
+  <data name="TitleChangeMail" xml:space="preserve">
+    <value>Modifier mon adresse email</value>
+  </data>
+  <data name="TxtDesc1" xml:space="preserve">
+    <value>Après avoir changé votre adresse mail vous serez automatiquement déconnecté.</value>
+  </data>
+  <data name="TxtDesc2" xml:space="preserve">
+    <value>Un mail de validation sera envoyé sur la nouvelle adresse mail.</value>
   </data>
   <data name="Update" xml:space="preserve">
     <value>Modifier</value>

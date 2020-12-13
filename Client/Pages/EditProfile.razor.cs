@@ -30,15 +30,19 @@ namespace Abeer.Client.Pages
         public List<SocialNetwork> SocialNetworkConnected { get; set; } = new List<SocialNetwork>();
         public List<CustomLink> CustomLinks { get; set; } = new List<CustomLink>();
 
+        [Inject] private NavigationManager navigationManager { get; set; }
         bool ModalSocialNetworkVisible;
+        bool ModalChangeMailVisible;
         bool ModalCustomLinkVisible;
         bool ModalChangePassword;
         bool ModalDisplayPinCode;
 
         bool ChangePasswordHasError;
         bool ChangePhotoHasError;
+        bool ChangeChangeMailHasError;
         bool ModalChangePhoto;
         string ChangePasswordError = "";
+        string ChangeChangeMaildError = "";
         string ChangePhotoError = "";
         string _PhotoType = "Gravatar";
         string DigitCode;
@@ -57,6 +61,8 @@ namespace Abeer.Client.Pages
         public string OldPassword { get; set; }
         public string NewPassword { get; set; }
         public string ConfirmPassword { get; set; }
+        public string NewMail { get; set; }
+        public string ConfirmMail { get; set; }
 
         private string _PhotoUrl;
         private string Error;
@@ -172,6 +178,10 @@ namespace Abeer.Client.Pages
         {
             ModalSocialNetworkVisible = !ModalSocialNetworkVisible;
         }
+        async Task ToggleModalChangeMail()
+        {
+            ModalChangeMailVisible = !ModalChangeMailVisible;
+        }
 
         async Task ToggleModalCustomLink()
         {
@@ -215,7 +225,39 @@ namespace Abeer.Client.Pages
             NewCustomLink = new CustomLink { OwnerId = User.Id };
             await ToggleModalCustomLink();
         }
+        async Task OpenModalChangeMail()
+        {
+            NewCustomLink = new CustomLink { OwnerId = User.Id };
+            await ToggleModalChangeMail();
+        }
 
+        async Task ChangeMail()
+        {
+            if (string.IsNullOrEmpty(NewMail) || NewMail != ConfirmMail)
+            {
+                ChangeChangeMailHasError = true;
+                ChangeChangeMaildError = Loc["PasswordNotConfirmedError"].Value;
+            }
+            else
+            {
+                ChangeChangeMailHasError = false;
+                var response = await HttpClient.PutAsJsonAsync($"/api/Profile/ChangeEmail", new ChangeMailViewModel
+                {
+                    UserId = User.Id,
+                    OldMail= User.Email,
+                    NewMail = NewMail
+                });
+                if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
+                {
+                    ChangeChangeMailHasError = true;
+                    ChangeChangeMaildError = Loc["MailAlreadyExist"].Value;
+                }
+                else if (response.IsSuccessStatusCode)
+                {
+                    navigationManager.NavigateTo(navigationManager.ToAbsoluteUri("Identity/account/logout?returnUrl=/Profile").ToString(), true);
+                } 
+            } 
+        }
         async Task AddSocialNetwork()
         {
             var response = await HttpClient.PostAsJsonAsync<SocialNetwork>($"/api/SocialNetwork", NewSocialLink);
