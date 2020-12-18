@@ -7,7 +7,6 @@ using Abeer.Data.UnitOfworks;
 
 namespace Abeer.Server.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class SocialNetworkController : ControllerBase
@@ -18,25 +17,14 @@ namespace Abeer.Server.Controllers
             _functionalUnitOfWork = functionalUnitOfWork;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<List<SocialNetwork>>> GetSocialNetworks()
         {
-            var socialNetworks = await Task.Run(() =>
-            {
-                return new List<SocialNetwork>
-                {
-                    new SocialNetwork{BackgroundColor = "bg-primary", Logo = "fab fa-facebook-square", Name="Facebook"},
-                    new SocialNetwork{BackgroundColor = "bg-danger", Logo = "fab fa-youtube-square", Name="Youtube"},
-                    new SocialNetwork{BackgroundColor = "bg-danger", Logo = "fab fa-instagram-square", Name="Instagram"},
-                    new SocialNetwork{BackgroundColor = "bg-primary", Logo = "fab fa-twitter-square", Name="Twitter"},
-                    new SocialNetwork{BackgroundColor = "bg-secondary", Logo = "fab fa-pinterest-square", Name="Pinterest"},
-                    new SocialNetwork{BackgroundColor = "bg-primary", Logo = "fab fa-linkedin", Name="Linkedin"}
-                };
-            });
-
-            return Ok(socialNetworks);
+            return Ok(_functionalUnitOfWork.SocialNetworkRepository.GetNetworks());
         }
 
+        [Authorize]
         [HttpDelete("{UserId}/{networkName}")]
         public async Task<IActionResult> Delete(string UserId, string networkName)
         {
@@ -50,14 +38,18 @@ namespace Abeer.Server.Controllers
             return Ok();
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> PostAsync(SocialNetwork network)
         {
             if (network == null)
                 return BadRequest();
 
-            if (network.OwnerId != User.NameIdentifier())
+            if (!string.IsNullOrEmpty(network.OwnerId) && network.OwnerId != User.NameIdentifier())
                 return BadRequest();
+
+            if (string.IsNullOrEmpty(network.OwnerId))
+                network.OwnerId = "system";
 
             await _functionalUnitOfWork.SocialNetworkRepository.AddSocialNetwork(network);
             return Ok();

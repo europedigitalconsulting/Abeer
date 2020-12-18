@@ -33,6 +33,7 @@ using System.Net;
 using Abeer.Shared.Security;
 using Microsoft.AspNetCore.Authorization;
 using Abeer.Client;
+using System.Collections.Generic;
 
 namespace Abeer.Server
 {
@@ -85,7 +86,7 @@ namespace Abeer.Server
 
             services.AddIdentityServer()
                 .AddApiAuthorization<ApplicationUser, SecurityDbContext>();
-             
+
             services.AddSingleton<IAuthorizationHandler, OnlySubscribersRequirement>();
             services.AddAuthorization(options =>
             {
@@ -97,7 +98,7 @@ namespace Abeer.Server
 
             services.AddCors();
             services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, UserClaimsPrincipalFactory>();
-            services.AddTransient<IProfileService, ProfileService>(); 
+            services.AddTransient<IProfileService, ProfileService>();
 
             services.AddTransient<IEmailSenderService, EmailSenderFactory>();
 
@@ -202,8 +203,10 @@ namespace Abeer.Server
 
             using var scope = app.ApplicationServices.CreateScope();
 
+            SeedNetworkSocials(scope, env);
             SeedUserData(scope, env).Wait();
             SeedCountries(scope, env);
+
 
             app.UseMiddleware<UrlShortnerRewriter>();
 
@@ -255,6 +258,32 @@ namespace Abeer.Server
                 endpoints.MapFallbackToFile("index.html");
                 endpoints.MapHub<SynchroHub>("/synchro");
             });
+        }
+
+        private void SeedNetworkSocials(IServiceScope scope, IWebHostEnvironment env)
+        {
+            var db = scope.ServiceProvider.GetRequiredService<FunctionalUnitOfWork>();
+            db.EnsureCreated();
+            db.SetTimeout(360);
+
+            var socialNetworks = db.SocialNetworkRepository.GetNetworks();
+
+            if (socialNetworks.Count < 1)
+            {
+                var networks = new List<SocialNetwork>
+                {
+                    new SocialNetwork{OwnerId = "system", BackgroundColor = "bg-primary", Logo = "fab fa-facebook-square", Name="Facebook", Url="https://www.facebook.com/{0}"},
+                    new SocialNetwork{OwnerId = "system", BackgroundColor = "bg-danger", Logo = "fab fa-youtube-square", Name="Youtube", Url="https://youtube.com/c/{0}"},
+                    new SocialNetwork{OwnerId = "system", BackgroundColor = "bg-danger", Logo = "fab fa-instagram-square", Name="Instagram", Url="https://www.instagram.com/{0}"},
+                    new SocialNetwork{OwnerId = "system", BackgroundColor = "bg-primary", Logo = "fab fa-twitter-square", Name="Twitter", Url="http://twitter.com/{0}"},
+                    new SocialNetwork{OwnerId = "system", BackgroundColor = "bg-secondary", Logo = "fab fa-pinterest-square", Name="Pinterest", Url="http://www.pinterest.com/{0}"},
+                    new SocialNetwork{OwnerId = "system", BackgroundColor = "bg-primary", Logo = "fab fa-linkedin", Name="Linkedin", Url="https://www.linkedin.com/in/{0}"},
+                    new SocialNetwork{OwnerId = "system", BackgroundColor = "bg-yellow", Logo = "fab fa-snapchat", Name="Snapchat", Url="http://www.snapchat.com/add/{0}"},
+                    new SocialNetwork{OwnerId = "system", BackgroundColor = "bg-success", Logo = "fab fa-tiktok", Name="TikTok", Url="http://vt.tiktok.com/{0}"}
+                };
+
+                db.SocialNetworkRepository.AddSocialNetworks(networks);
+            }
         }
 
         private void SeedCountries(IServiceScope scope, IWebHostEnvironment env)
@@ -358,7 +387,7 @@ namespace Abeer.Server
                         PhoneNumber = "+961",
                         PinDigit = "22345678901234567",
                         PinCode = 22345,
-                        IsAdmin = true, 
+                        IsAdmin = true,
                         IsUnlimited = true
                     };
 

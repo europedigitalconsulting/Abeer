@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 
 namespace Abeer.Data.Repositories
@@ -35,5 +36,13 @@ namespace Abeer.Data.Repositories
         {
             return Task.Run(() => FunctionalDbContext.SocialNetworks.Remove(network.Id));
         }
+
+        public List<SocialNetwork> GetNetworks()
+        {
+            return FunctionalDbContext.SocialNetworks.Where(s => s.OwnerId == "system").ToList();
+        }
+
+        public IEnumerable<SocialNetwork> AddSocialNetworks(List<SocialNetwork> networks)
+            => FunctionalDbContext.SocialNetworks.AddRange(networks);
     }
 }

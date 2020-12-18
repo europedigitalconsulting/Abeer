@@ -1,0 +1,206 @@
+﻿@page "/SocialNetwork"
+
+@inject NavigationManager Navigation
+@inject Microsoft.Extensions.Localization.IStringLocalizer<ManageSocialNetwork> Loc
+@inject HttpClient HttpClient
+
+@code
+{
+    bool ModalFormAdVisible;
+    bool FormHasError;
+
+    string TitleForm = "EditForm";
+    string Mode = "Insert";
+
+    SocialNetwork Current = new SocialNetwork();
+
+    public string Term { get; set; }
+
+    List<SocialNetwork> All = new List<SocialNetwork>();
+    List<SocialNetwork> Items = new List<SocialNetwork>();
+
+    [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    [Inject] private NavigationManager navigationManager { get; set; }
+
+    void countTerm(KeyboardEventArgs e)
+    {
+        if (Term.Length > 5)
+            Search();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authenticateSate = await authenticationStateTask;
+
+        Console.WriteLine("User claims");
+
+        if (!authenticateSate.User.Identity.IsAuthenticated || !authenticateSate.User.HasClaim(ClaimTypes.Role, "admin"))
+        {
+            Console.WriteLine("User is not admin, redirect to login");
+            navigationManager.NavigateTo("/authentication/Login", true);
+        }
+
+        var getAll = await HttpClient.GetAsync("/api/SocialNetwork");
+        getAll.EnsureSuccessStatusCode();
+        var json = await getAll.Content.ReadAsStringAsync();
+        All = Newtonsoft.Json.JsonConvert.DeserializeObject<List<SocialNetwork>>(json);
+        Items = All.ToList();
+    }
+
+    void Search()
+    {
+        Items = All.Where(a => a.Name.Contains(Term) || a.DisplayInfo.Contains(Term)).ToList();
+    }
+
+    void OpenEditModal(SocialNetwork SocialNetwork)
+    {
+        Current = SocialNetwork;
+        Mode = "Edit";
+        ModalFormAdVisible = true;
+    }
+
+    void OpenDeleteModal(SocialNetwork SocialNetwork)
+    {
+        Current = SocialNetwork;
+        Mode = "Delete";
+        ModalFormAdVisible = true;
+    }
+
+    void OpenCreateAd()
+    {
+        Current = new SocialNetwork();
+        Mode = "Insert";
+        ModalFormAdVisible = true;
+    }
+
+    async Task Save()
+    {
+        switch (Mode)
+        {
+            case "Insert":
+                {
+                    var postResponse = await HttpClient.PostAsJsonAsync<SocialNetwork>("/api/SocialNetwork", Current);
+                    postResponse.EnsureSuccessStatusCode();
+                    All.Add(Current);
+                    Items.Add(Current);
+                    Current = new SocialNetwork();
+                    ModalFormAdVisible = false;
+                    break;
+                }
+            case "Edit":
+                {
+                    var postResponse = await HttpClient.PutAsJsonAsync<SocialNetwork>("/api/SocialNetwork", Current);
+                    postResponse.EnsureSuccessStatusCode();
+                    Current = new SocialNetwork();
+                    ModalFormAdVisible = false;
+                    break;
+                }
+            case "Delete":
+                {
+                    var postResponse = await HttpClient.DeleteAsync($"/api/SocialNetwork");
+                    postResponse.EnsureSuccessStatusCode();
+                    Current = new SocialNetwork();
+                    ModalFormAdVisible = false;
+                    break;
+                }
+        }
+    }
+    bool IsFormDisabled => Mode == "Delete";
+}
+@if (ModalFormAdVisible)
+{
+    <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">@Loc["EditSocialNetworkTitle"]</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="@(() => ModalFormAdVisible = false)">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <section class="section">
+                        <div class="section-body">
+                            @if (FormHasError)
+                            {
+                                <div class="alert alert-danger">
+                                    @Loc["UpdateFailedError"]
+                                </div>
+                            }
+                            <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                                <label>@Loc["Name"]</label>
+                                <input type="text" Class="form-control" @bind="Current.Name" disabled="@IsFormDisabled" />
+                            </div>
+                            <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                                <label>@Loc["DisplayInfo"]</label>
+                                <textarea type="text" Class="form-control" rows="6" @bind="Current.DisplayInfo" disabled="@IsFormDisabled" />
+                            </div>
+                            <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                                <label>@Loc["Icon"]</label>
+                                <input type="text" Class="form-control" @bind="Current.Logo" disabled="@IsFormDisabled" />
+                            </div>
+                            <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                                <label>@Loc["BackgroundColor"]</label>
+                                <input type="text" min="1" max="10" Class="form-control" @bind="Current.BackgroundColor" disabled="@IsFormDisabled" />
+                            </div>
+                            <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                                <label>@Loc["Url"]</label>
+                                <input type="text" Class="form-control" @bind="Current.Url" disabled="@IsFormDisabled" />
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" title="@Loc["Save"]" @onclick="Save"><i class="fa fa-2x fa-save"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<section class="section">
+    <div class="section-header">
+        <h1>@Loc["Title"]</h1>
+    </div>
+    <div class="section-header">
+
+        <div class="input-group">
+            <input type="search" id="example-input1-group2" name="example-input1-group2" class="form-control" @bind="Term" @onkeyup="countTerm">
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-lg" @onclick="Search"><i class="fa fa-2x  fa-search"></i></button>
+            </span>
+            <div class="search-backdrop"></div>
+        </div>
+    </div>
+    <div class="section-body">
+        <div class="row">
+            <div class="col-12">
+                @foreach (var sn in Items)
+                {
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="@sn.Logo"></i>
+                            <h4>@sn.Name</h4>
+                            <div class="card-header-action">
+                                <button class="btn btn-primary ml-2" @onclick="@(() => OpenEditModal(sn))">
+                                    <i class="fas fa-pen-square"></i>
+                                </button>
+                                <button class="btn btn-primary ml-2" @onclick="@(() => OpenDeleteModal(sn))">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p class="mb-2">
+                                @sn.DisplayInfo
+                            </p>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+<div class="fixed-bottom m-5">
+    <button @onclick="OpenCreateAd" class="btn btn-danger btn-circle btn-xl float-right" title="@Loc["Add"]"><i class="fa fa-2x fa-plus"></i></button>
+</div>
