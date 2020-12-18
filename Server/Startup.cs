@@ -319,11 +319,11 @@ namespace Abeer.Server
                     functionalDb.SaveChanges();
                 }
 
-                var admin = await userManager.FindByNameAsync("admin@abeer.io");
+                var michel = await userManager.FindByNameAsync("admin@abeer.io");
 
-                if (admin == null)
+                if (michel == null)
                 {
-                    admin = new ApplicationUser
+                    michel = new ApplicationUser
                     {
                         UserName = "admin@abeer.io",
                         Country = "France",
@@ -342,18 +342,46 @@ namespace Abeer.Server
                         IsUnlimited = true
                     };
 
-                    var addResult = await userManager.CreateAsync(admin, "Xc9wf8or&");
+                    var addResult = await userManager.CreateAsync(michel, "Xc9wf8or&");
 
                     if (addResult.Succeeded)
                     {
-                        await functionalDb.SocialNetworkRepository.AddSocialNetwork(new SocialNetwork { OwnerId = admin.Id, Name = "Facebook", Logo = "fab fa-facebook-square", DisplayInfo = "michel.bruchet", BackgroundColor = "bg-primary", Url = "https://www.facebook.com/michel.bruchet" });
-                        await functionalDb.SocialNetworkRepository.AddSocialNetwork(new SocialNetwork { OwnerId = admin.Id, Name = "Instagram", Logo = "fab fa-instagram-square", DisplayInfo = "@michel.bruchet", BackgroundColor = "bg-danger", Url = "https://www.instagram.com" });
-                        await functionalDb.SocialNetworkRepository.AddSocialNetwork(new SocialNetwork { OwnerId = admin.Id, Name = "Whatsapp", Logo = "fab fa-whatsapp-square", DisplayInfo = "+33 780811024", BackgroundColor = "bg-success", Url = "whatsapp:33780811024" });
+                        await functionalDb.SocialNetworkRepository.AddSocialNetwork(
+                            new SocialNetwork
+                            {
+                                OwnerId = michel.Id,
+                                Name = "Facebook",
+                                Logo = "fab fa-facebook-square",
+                                DisplayInfo = "michel.bruchet",
+                                BackgroundColor = "bg-primary",
+                                Url = "https://www.facebook.com/michel.bruchet"
+                            });
+
+                        await functionalDb.SocialNetworkRepository.AddSocialNetwork(
+                            new SocialNetwork
+                            {
+                                OwnerId = michel.Id,
+                                Name = "Instagram",
+                                Logo = "fab fa-instagram-square",
+                                DisplayInfo = "@michel.bruchet",
+                                BackgroundColor = "bg-danger",
+                                Url = "https://www.instagram.com"
+                            });
+                        await functionalDb.SocialNetworkRepository.AddSocialNetwork(
+                            new SocialNetwork
+                            {
+                                OwnerId = michel.Id,
+                                Name = "Whatsapp",
+                                Logo = "fab fa-whatsapp-square",
+                                DisplayInfo = "+33 780811024",
+                                BackgroundColor = "bg-success",
+                                Url = "whatsapp:33780811024"
+                            });
                     }
 
                     await functionalDb.CardRepository.Add(new Card
                     {
-                        CardNumber = admin.PinDigit,
+                        CardNumber = michel.PinDigit,
                         CardType = "nfc",
                         GeneratedBy = "System",
                         GeneratedDate = DateTime.UtcNow,
@@ -361,18 +389,18 @@ namespace Abeer.Server
                         IsSold = true,
                         IsUsed = true,
                         IsProcessing = true,
-                        PinCode = admin.PinCode.ToString(),
+                        PinCode = michel.PinCode.ToString(),
                         Quantity = 1,
                         SoldBy = "system",
                         SoldDate = DateTime.UtcNow
-                    }, admin.Id);
+                    }, michel.Id);
                 }
 
-                var admin2 = await userManager.FindByNameAsync("admin2@abeer.io");
+                var abeer = await userManager.FindByNameAsync("admin2@abeer.io");
 
-                if (admin2 == null)
+                if (abeer == null)
                 {
-                    admin2 = new ApplicationUser
+                    abeer = new ApplicationUser
                     {
                         UserName = "admin2@abeer.io",
                         Country = "Lebanon",
@@ -391,18 +419,46 @@ namespace Abeer.Server
                         IsUnlimited = true
                     };
 
-                    var addResult = await userManager.CreateAsync(admin2, "Xc9wf8or&");
+                    var addResult = await userManager.CreateAsync(abeer, "Xc9wf8or&");
 
                     if (addResult.Succeeded)
                     {
-                        await functionalDb.SocialNetworkRepository.AddSocialNetwork(new SocialNetwork { OwnerId = admin.Id, Name = "Facebook", Logo = "fab fa-facebook-square", DisplayInfo = "michel.bruchet", BackgroundColor = "bg-primary", Url = "https://www.facebook.com/abir.hourani" });
-                        await functionalDb.SocialNetworkRepository.AddSocialNetwork(new SocialNetwork { OwnerId = admin.Id, Name = "Instagram", Logo = "fab fa-instagram-square", DisplayInfo = "@michel.bruchet", BackgroundColor = "bg-danger", Url = "https://www.instagram.com/abir.hourani" });
-                        await functionalDb.SocialNetworkRepository.AddSocialNetwork(new SocialNetwork { OwnerId = admin.Id, Name = "Whatsapp", Logo = "fab fa-whatsapp-square", DisplayInfo = "+33 780811024", BackgroundColor = "bg-success", Url = "whatsapp:33780811024" });
+                        await functionalDb.SocialNetworkRepository.AddSocialNetwork(
+                            new SocialNetwork
+                            {
+                                OwnerId = abeer.Id,
+                                Name = "Facebook",
+                                Logo = "fab fa-facebook-square",
+                                DisplayInfo = "michel.bruchet",
+                                BackgroundColor = "bg-primary",
+                                Url = "https://www.facebook.com/abir.hourani"
+                            });
+
+                        await functionalDb.SocialNetworkRepository.AddSocialNetwork(
+                            new SocialNetwork
+                            {
+                                OwnerId = abeer.Id,
+                                Name = "Instagram",
+                                Logo = "fab fa-instagram-square",
+                                DisplayInfo = "@michel.bruchet",
+                                BackgroundColor = "bg-danger",
+                                Url = "https://www.instagram.com/abir.hourani"
+                            });
+                        await functionalDb.SocialNetworkRepository.AddSocialNetwork(
+                            new SocialNetwork
+                            {
+                                OwnerId = abeer.Id,
+                                Name = "Whatsapp",
+                                Logo = "fab fa-whatsapp-square",
+                                DisplayInfo = "+33 780811024",
+                                BackgroundColor = "bg-success",
+                                Url = "whatsapp:33780811024"
+                            });
                     }
 
                     await functionalDb.CardRepository.Add(new Card
                     {
-                        CardNumber = admin2.PinDigit,
+                        CardNumber = abeer.PinDigit,
                         CardType = "nfc",
                         GeneratedBy = "System",
                         GeneratedDate = DateTime.UtcNow,
@@ -410,11 +466,11 @@ namespace Abeer.Server
                         IsSold = true,
                         IsUsed = true,
                         IsProcessing = true,
-                        PinCode = admin2.PinCode.ToString(),
+                        PinCode = abeer.PinCode.ToString(),
                         Quantity = 1,
                         SoldBy = "system",
                         SoldDate = DateTime.UtcNow
-                    }, admin2.Id);
+                    }, abeer.Id);
                 }
 
                 var hasan = await userManager.FindByEmailAsync("manager@abeer.io");
@@ -470,12 +526,12 @@ namespace Abeer.Server
                         });
                     }
                 }
-                var contact1 = await functionalDb.ContactRepository.Where(c => c.OwnerId == admin.Id);
+                var contact1 = await functionalDb.ContactRepository.Where(c => c.OwnerId == michel.Id);
                 if (!contact1.Any())
-                    await functionalDb.ContactRepository.Add(new Contact { OwnerId = admin.Id, UserId = hasan.Id });
+                    await functionalDb.ContactRepository.Add(new Contact { OwnerId = michel.Id, UserId = hasan.Id });
                 var contact2 = await functionalDb.ContactRepository.Where(c => c.OwnerId == hasan.Id);
                 if (!contact2.Any())
-                    await functionalDb.ContactRepository.Add(new Contact { OwnerId = hasan.Id, UserId = admin.Id });
+                    await functionalDb.ContactRepository.Add(new Contact { OwnerId = hasan.Id, UserId = michel.Id });
 
                 var tony = await userManager.FindByEmailAsync("customer@abeer.io");
 
