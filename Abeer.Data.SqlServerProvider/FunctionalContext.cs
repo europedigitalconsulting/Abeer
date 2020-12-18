@@ -14,7 +14,7 @@ namespace Abeer.Data.SqlServerProvider
         public FunctionalContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<FunctionalContext>();
-            optionsBuilder.UseSqlServer("Data Source=blog.db");
+            optionsBuilder.UseSqlServer("Server=tcp:sqledc.database.windows.net,1433;Initial Catalog=dev-abeer;Persist Security Info=False;User ID=adminsql;Password=Xc9wf8or2020&;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
             return new FunctionalContext(optionsBuilder.Options);
         }
     }
@@ -31,6 +31,7 @@ namespace Abeer.Data.SqlServerProvider
             base.OnModelCreating(modelBuilder);
         }
 
+        public DbSet<Batch> Batches { get; set; }
         public DbSet<UrlShortned> UrlShortned { get; set; }
         public DbSet<Contact> Contact { get; set; } 
         public DbSet<CardStatu> CardStatu { get; set; }

@@ -40,7 +40,9 @@ namespace DbProvider.EfCore.SqlServerProvider
                 c.MigrationsAssembly(sqlServerOptions.MigrationAssemblyName);
             });
 
-            _sqlContext = (DbContext)ActivatorUtilities.CreateInstance(sp, Type.GetType(sqlServerOptions.DbContextType), dbContextOptionsBuilder.Options);
+            _sqlContext = (DbContext)ActivatorUtilities
+                .CreateInstance(sp, 
+                    Type.GetType(sqlServerOptions.DbContextType), dbContextOptionsBuilder.Options);
 
             //_sqlContext.Database.EnsureCreated();
             _sqlContext.Database.Migrate();

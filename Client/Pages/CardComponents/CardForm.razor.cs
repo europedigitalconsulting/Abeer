@@ -12,7 +12,7 @@ namespace Abeer.Client
     public partial class CardForm : ComponentBase
     {
         [Parameter]
-        public Card Card { get; set; }
+        public Batch Card { get; set; }
 
         [Parameter]
         public string Mode { get; set; }

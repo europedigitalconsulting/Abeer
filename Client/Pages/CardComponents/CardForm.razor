@@ -3,21 +3,7 @@
 @code
 {
     [Parameter]
-    public string LabelCardNumber { get; set; }
-    [Parameter]
     public string LabelCardType { get; set; }
-    [Parameter]
-    public string LabelPinCode { get; set; }
-    [Parameter]
-    public string LabelValue { get; set; }
-    [Parameter]
-    public string LabelIcon { get; set; }
-    [Parameter]
-    public string LabelWebHookUrl { get; set; }
-    [Parameter]
-    public string LabelWebHookAuthentication { get; set; }
-    [Parameter]
-    public string LabelWebHookProtocolType { get; set; }
     [Parameter]
     public string LabelCardQuantity { get; set; }
 }
@@ -28,24 +14,8 @@
 
         <fieldset>
             <div class="form-group">
-                <label>@LabelCardNumber</label>
-                <input type="number" @bind="@Card.CardNumber" Class="form-control" readonly />
-            </div>
-            <div class="form-group">
-                <label>@LabelPinCode</label>
-                <input type="number" @bind="@Card.PinCode" class="form-control" readonly />
-            </div>
-            <div class="form-group">
                 <label>@LabelCardType</label>
                 <input type="text" @bind="@Card.CardType" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label>@LabelIcon</label>
-                <input type="text" @bind="@Card.Icon" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label>@LabelValue</label>
-                <input type="number" @bind="@Card.Value" class="form-control" />
             </div>
             <div class="form-group">
                 <label>@LabelCardQuantity</label>

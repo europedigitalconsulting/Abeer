@@ -2,9 +2,21 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Abeer.Shared
 {
+    public class Batch
+    {
+        [Key]
+        public Guid Id { get; set; }
+        public string CardType { get; set; }
+        public string CardStartNumber { get; set; }
+        public string CardLastNumber { get; set; }
+        public int Quantity { get; set; }
+        public byte[] CsvFileContent { get; set; }
+    }
+
     public class Card
     {
         [Key]
@@ -15,7 +27,6 @@ namespace Abeer.Shared
         public int Value { get; set; }
         public bool IsGenerated { get; set; }
         public string CreatorId { get; set; }
-        public byte[] CsvFileContent { get; set; }
         public List<CardStatu> CardStatus { get; set; }
         public bool IsUsed { get; set; }
         public bool IsSold { get; set; }
@@ -30,6 +41,9 @@ namespace Abeer.Shared
         public string Icon { get; set; }
         public string SoldBy { get; set; }
         public int Quantity { get; set; }
+        [ForeignKey(nameof(BatchId))]
+        public Batch Batch { get; set; }
+        public Guid BatchId { get; set; }
     }
 
     public enum ErrorTypes

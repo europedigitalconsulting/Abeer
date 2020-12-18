@@ -80,5 +80,12 @@ namespace DbProvider.EfCore.SqlServerProvider
 
             return query.ToList();
         }
+
+        public IEnumerable<T> AddRange(IEnumerable<T> entities)
+        {
+            dbSets.AddRange(entities);
+            sqlContext.SaveChanges();
+            return entities;
+        }
     }
 }

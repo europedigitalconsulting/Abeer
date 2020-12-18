@@ -1,18 +1,22 @@
 ﻿@page "/Cards"
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Cards> Loc 
-<h2>MyCardList:@Loc["MyCardList"]</h2>
+<h2>@Loc["MyCardList"]</h2>
 <CardList LabelAddCard="@Loc["AddCard"]" LabelCancel="@Loc["Cancel"]"
           LabelConfirmDelete="@Loc["ConfirmDelete"]" LabelDelete="@Loc["Delete"]"
           LabelDeleteTitle="@Loc["DeleteTitle"]"
           LabelFailed="@Loc["Failed"]" LabelGeneratedAt="@Loc["GenerateAt"]"
           LabelHome="@Loc["Home"]" LabelInsert="@Loc["Insert"]"
           LabelInsertTitle="@Loc["InsertTitle"]"
-          LabelMyCardList="@Loc["MyCardList"]" LabelMyCardListCatchPhrase="@Loc["MyCardListCatchPhrase"]"
+          LabelMyCardList="@Loc["MyCardList"]" 
+          LabelMyCardListCatchPhrase="@Loc["MyCardListCatchPhrase"]"
           LabelNoCardFound="@Loc["NoCardFound"]" LabelPending="@Loc["Pending"]"
           LabelProcessing="@Loc["Processing"]" LabelSearch="@Loc["Search"]"
           LabelUpdate="@Loc["Update"]" LabelUpdateTitle="@Loc["UpdateTitle"]"
           LabelValue="@Loc["Value"]" LabelNbOfTokenAvailable="@Loc["NbOfTokenAvailable"]"
           LabelNbOfTokens="@Loc["NbOfTokens"]" LabelNbOfTokensUsed="@Loc["NbOfTokensUsed"]"
           LabelCardNumber="@Loc["CardNumber"]" LabelCardType="@Loc["CardType"]"
-          LabelPinCode="@Loc["PinCode"]" LabelIcon="@Loc["Icon"]" LabelWebHookAuthentication="@Loc["LabelWebHookAuthentication"]"
-          LabelWebHookProtocolType="@Loc["LabelWebHookProtocolType"]" LabelWebHookUrl="@Loc["LabelWebHookUrl"]"></CardList>
+          LabelPinCode="@Loc["PinCode"]" LabelIcon="@Loc["Icon"]" 
+          LabelWebHookAuthentication="@Loc["LabelWebHookAuthentication"]"
+          LabelWebHookProtocolType="@Loc["LabelWebHookProtocolType"]" 
+          LabelWebHookUrl="@Loc["LabelWebHookUrl"]"
+          LabelCardQuantity="@Loc["LabelCardQuantity"]" LabelDownload="@Loc["LabelDownload"]"></CardList>

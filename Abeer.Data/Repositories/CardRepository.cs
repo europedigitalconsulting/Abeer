@@ -33,8 +33,40 @@ namespace Abeer.Data.Repositories
 
         static readonly Random rdm = new Random();
 
+        public async Task<IEnumerable<Card>> AddRange(Batch batch, IEnumerable<Card> cards, string userId)
+        {
+            return await Task.Run<IEnumerable<Card>>(() =>
+            {
+                if (cards.Any(c => c.BatchId == Guid.Empty))
+                {
+                    foreach (var card in cards.Where(c => c.BatchId == Guid.Empty))
+                    {
+                        card.Batch = batch;
+                    }
+                }
+
+                FunctionalDbContext.Cards.AddRange(cards);
+                return FunctionalDbContext.Cards.Where(b => b.BatchId == batch.Id).ToList();
+            });
+        }
+
         public async Task<Card> Add(Card card, string userId)
         {
+            if (card.Batch == null && card.BatchId == Guid.Empty)
+            {
+                var batch = new Batch
+                {
+                    Id = Guid.NewGuid(),
+                    Quantity = 1,
+                    CardType = card.CardType,
+                    CardStartNumber = card.CardNumber,
+                    CardLastNumber = card.CardNumber
+                };
+
+                batch = await AddBatch(batch, userId);
+                card.BatchId = batch.Id;
+            }
+
             card = FunctionalDbContext.Cards.Add(card);
 
             CardStatu cardStatu = new CardStatu
@@ -47,7 +79,7 @@ namespace Abeer.Data.Repositories
 
             await AddStatus(cardStatu);
 
-            await  AddStatus(new CardStatu
+            await AddStatus(new CardStatu
             {
                 Card = card,
                 Status = CardStatus.Generated,
@@ -59,9 +91,20 @@ namespace Abeer.Data.Repositories
             card.GeneratedDate = DateTime.UtcNow;
             card.GeneratedBy = userId;
 
-            await  Update(card);
+            await Update(card);
 
             return card;
+        }
+
+        public Task<IList<Batch>> GetBatches() =>
+            Task.Run(() => FunctionalDbContext.Batches.ToList());
+
+        public async Task<Batch> AddBatch(Batch batch, string userId)
+        {
+            if (batch.Id == Guid.Empty)
+                batch.Id = Guid.NewGuid();
+
+            return await Task.Run(() => FunctionalDbContext.Batches.Add(batch));
         }
 
         public Task<string[]> GetCardTypes()
@@ -99,6 +142,11 @@ namespace Abeer.Data.Repositories
         public Task<Card> FirstOrDefault(Expression<Func<Card, bool>> expression)
         {
             return Task.Run(() => FunctionalDbContext.Cards.FirstOrDefault(expression));
+        }
+
+        public async Task UpdateBatch(Batch batch)
+        {
+            await Task.Run(() => FunctionalDbContext.Batches.Update(batch));
         }
     }
 }

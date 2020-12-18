@@ -7,6 +7,11 @@ using Microsoft.AspNetCore.SignalR;
 using Abeer.Data.UnitOfworks;
 using Abeer.Server.Hubs;
 using Abeer.Shared;
+using System.Text;
+using System.Collections.Concurrent;
+using Microsoft.Extensions.Configuration;
+using System.Linq;
+using System.IO;
 
 namespace Abeer.Server.Controllers
 {
@@ -17,19 +22,22 @@ namespace Abeer.Server.Controllers
     {
         private readonly FunctionalUnitOfWork _UnitOfWork;
         public IHubContext<SynchroHub> HubContext { get; }
+        public IConfiguration Configuration { get; }
+
         private static readonly Random rdm = new Random();
 
-        public CardController(FunctionalUnitOfWork onlineWalletUnitOfWork, IHubContext<SynchroHub> hubContext)
+        public CardController(FunctionalUnitOfWork onlineWalletUnitOfWork, IHubContext<SynchroHub> hubContext, IConfiguration configuration)
         {
             _UnitOfWork = onlineWalletUnitOfWork;
             HubContext = hubContext;
+            Configuration = configuration;
         }
 
         // GET: api/Cards
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Card>>> GetCards()
+        public async Task<ActionResult<IEnumerable<Batch>>> GetBatches()
         {
-            return Ok(await _UnitOfWork.CardRepository.GetCards());
+            return Ok(await _UnitOfWork.CardRepository.GetBatches());
         }
 
         // GET: api/Cards/5
@@ -102,24 +110,68 @@ namespace Abeer.Server.Controllers
             }
             else
             {
-                for (int i = 0; i < Card.Quantity; i++)
+                var cardNumberPattern = string.Concat(DateTime.UtcNow.ToString("yyyMMddHHmmss"), rdm.Next(100, 999));
+
+                var batch = await _UnitOfWork.CardRepository.AddBatch(new Batch
                 {
-                    await AddCard(new Card
+                    Id = Guid.NewGuid(),
+                    CardType = Card.CardType,
+                    Quantity = Card.Quantity,
+                    CardStartNumber = string.Concat(cardNumberPattern, (1).ToString().PadRight(3, '0')),
+                    CardLastNumber = string.Concat(cardNumberPattern, (Card.Quantity).ToString().PadRight(3, '0'))
+                }, User.NameIdentifier());
+
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    var sw = new StreamWriter(ms, Encoding.UTF8);
+                    
+                    List<Card> cards = new List<Card>();
+
+                    for (int i = 0; i < Card.Quantity; i++)
                     {
-                        CardType = Card.CardType,
-                        CreatorId = User.NameIdentifier(),
-                        GeneratedBy = User.NameIdentifier(),
-                        GeneratedDate = DateTime.UtcNow,
-                        Icon = Card.Icon,
-                        IsGenerated = true,
-                        CardNumber = string.Concat(DateTime.UtcNow.ToString("yyyMMddHHmmss"), rdm.Next(100, 999)),
-                        PinCode = rdm.Next(10000, 99999).ToString(),
-                        Quantity = 1,
-                        Value = Card.Value
-                    });
+                        if(i > 0 && i % 100 == 0)
+                        {
+                            cards = (await _UnitOfWork.CardRepository
+                                .AddRange(batch, cards, User.NameIdentifier())).ToList();
+                            await HubContext.Clients.All.SendAsync("Card.Insert", cards);
+                            cards = new List<Card>();
+                        }
+
+                        cards.Add(GenerateCard(i, batch, sw, Card.CardType, cardNumberPattern, User.NameIdentifier()));
+                    }
+
+                    sw.Flush();
+                    ms.Seek(0, SeekOrigin.Begin);
+
+                    batch.CsvFileContent = ms.ToArray();
+                    ms.Close();
                 }
+
+                await _UnitOfWork.CardRepository.UpdateBatch(batch);
+
                 return Ok(await _UnitOfWork.CardRepository.GetCards());
             }
+        }
+
+        private Card GenerateCard(int i, Batch batch, StreamWriter sw, string cardType, string cardNumberPattern, string userId)
+        {
+            var cardNumber = string.Concat(cardNumberPattern, (i++).ToString().PadRight(3, '0'));
+            var line = ($"{Configuration["Service:FrontOffice:Url"].TrimEnd('/')}/ViewProfile/{cardNumber}");
+            sw.WriteLine(line);
+
+            return new Card
+            {
+                Id = Guid.NewGuid(),
+                CardType = cardType,
+                CreatorId = userId,
+                GeneratedBy = userId,
+                GeneratedDate = DateTime.UtcNow,
+                IsGenerated = true,
+                CardNumber = cardNumber,
+                PinCode = rdm.Next(10000, 99999).ToString(),
+                Quantity = 1,
+                BatchId = batch.Id
+            };
         }
 
         private async Task<Card> AddCard(Card Card)
@@ -153,7 +205,7 @@ namespace Abeer.Server.Controllers
             if (Card == null)
                 return NotFound();
 
-            return File(Card.CsvFileContent, "text/csv", $"data_{Card.CardNumber}_{DateTime.UtcNow.ToString("yyyMMddHHmmss") + ".csv"}");
+            return File(Card.Batch?.CsvFileContent, "text/csv", $"data_{Card.CardNumber}_{DateTime.UtcNow.ToString("yyyMMddHHmmss") + ".csv"}");
         }
     }
 }

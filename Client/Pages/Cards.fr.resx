@@ -162,6 +162,9 @@
   <data name="LabelCardQuantity" xml:space="preserve">
     <value>Nombre de carte à créer</value>
   </data>
+  <data name="LabelDownload" xml:space="preserve">
+    <value>Télécharger</value>
+  </data>
   <data name="LabelWebHookAuthentication" xml:space="preserve">
     <value>Authentification</value>
   </data>

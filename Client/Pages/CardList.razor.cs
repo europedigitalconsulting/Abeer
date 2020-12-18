@@ -22,9 +22,9 @@ namespace Abeer.Client.Pages
         protected CardForm CardForm { get; set; }
 
         public string TitleDialog { get; set; }
-        public List<Card> Cards { get; set; } = new List<Card>();
+        public List<Batch> Cards { get; set; } = new List<Batch>();
         protected string SearchTerm { get; set; }
-        protected List<Card> Items = new List<Card>();
+        protected List<Batch> Items = new List<Batch>();
 
         [Inject]
         public HttpClient HttpClient { get; set; }
@@ -39,14 +39,14 @@ namespace Abeer.Client.Pages
 
         ClaimsPrincipal User;
 
-        async Task DownloadDocument(Card Card)
+        async Task DownloadDocument(Batch batch)
         {
             await ThisJSRuntime.InvokeVoidAsync(
                 "downloadFromByteArray",
                 new
                 {
-                    ByteArray = Convert.ToBase64String(Card.CsvFileContent),
-                    FileName = $"data_{Card.CardNumber}_{DateTime.UtcNow.ToString("yyyMMddHHmmss") + ".csv"}",
+                    ByteArray = Convert.ToBase64String(batch.CsvFileContent),
+                    FileName = $"data_{batch.Id.ToString()}.csv",
                     ContentType = "text/csv"
                 });
         }
@@ -72,8 +72,8 @@ namespace Abeer.Client.Pages
                 var response = await HttpClient.GetAsync("/api/Card", HttpCompletionOption.ResponseContentRead);
                 response.EnsureSuccessStatusCode();
                 var json = await response.Content.ReadAsStringAsync();
-                Cards = JsonConvert.DeserializeObject<List<Card>>(json);
-                Items = Cards.OrderBy(c=>c.CardNumber).ToList();
+                Cards = JsonConvert.DeserializeObject<List<Batch>>(json);
+                Items = Cards.OrderBy(c=>c.CardType).ToList();
 
                 Console.WriteLine(User?.HasClaim(System.Security.Claims.ClaimTypes.Role, "manager") == true ? "user is manager" : "");
                 Console.WriteLine(User?.HasClaim(System.Security.Claims.ClaimTypes.Role, "admin") == true ? "user is admin" : "");
@@ -84,9 +84,9 @@ namespace Abeer.Client.Pages
         {
             Console.WriteLine($"start search Card {SearchTerm}");
             
-            var found = Cards?.Where(c => c.CardNumber?.Contains(SearchTerm) == true)?.ToList();
+            var found = Cards?.Where(c => c.CardType?.Contains(SearchTerm) == true)?.ToList();
 
-            Items =  found.OrderBy(c=>c.CardNumber).ToList();
+            Items =  found.OrderBy(c=>c.CardType).ToList();
             Console.WriteLine($"{found.Count} Token Batches found");
             StateHasChanged();
         }
@@ -95,72 +95,51 @@ namespace Abeer.Client.Pages
 
         string Mode { get; set; } = "Insert";
 
-        Card current = null;
+        Batch current = null;
 
         static readonly Random rdm = new Random();
 
         void ShowInsertCard()
         {
-            current = new Card
+            current = new Batch
             {
                 Quantity = 1
             };
+
             Mode = "Insert";
             OpenModal();
             StateHasChanged();
         }
-        void ShowEditCard(Card Card)
+        void ShowEditCard(Batch batch)
         {
-            current = Card;
+            current = batch;
             Mode = "Update";
             OpenModal();
             StateHasChanged();
         }
 
-        void ShowDeleteCard(Card Card)
+        void ShowDeleteCard(Batch batch)
         {
-            current = Card;
+            current = batch;
             Mode = "Delete";
             OpenModal();
         }
         async Task Insert()
         {
             Console.WriteLine(current);
-            var response = await HttpClient.PostAsJsonAsync<Card>("api/Card", current);
+            var response = await HttpClient.PostAsJsonAsync<Batch>("api/Card", current);
             response.EnsureSuccessStatusCode();
             var json = await response.Content.ReadAsStringAsync();
-            Console.WriteLine($"insert result : {json}"); 
-            Cards = JsonConvert.DeserializeObject<List<Card>>(json);
-            Items = Cards.OrderBy(c => c.CardNumber).ToList();
+            Cards = JsonConvert.DeserializeObject<List<Batch>>(json);
+            Items = Cards.OrderBy(c => c.CardType).ToList();
             IsModalVisible = false;
             await InvokeAsync(StateHasChanged);
         }
 
         async Task Update()
         {
-            var response = await HttpClient.PutAsJsonAsync<Card>($"api/Card/{current.Id}", current);
+            var response = await HttpClient.PutAsJsonAsync<Batch>($"api/Card/{current.Id}", current);
             response.EnsureSuccessStatusCode();
-            IsModalVisible = false;
-            await InvokeAsync(StateHasChanged);
-        }
-
-        async Task SellCard(Card card)
-        {
-            current = card;
-            current.IsSold = true;
-            current.SoldDate = DateTime.UtcNow;
-            var response = await HttpClient.PutAsJsonAsync<Card>($"api/Card/sell/{current.Id}", current);
-            response.EnsureSuccessStatusCode();
-            IsModalVisible = false;
-            await InvokeAsync(StateHasChanged);
-        }
-
-        async Task Delete()
-        {
-            var response = await HttpClient.DeleteAsync($"api/Card/{current.Id}");
-            response.EnsureSuccessStatusCode();
-            Cards.Remove(current);
-            Items.Remove(current);
             IsModalVisible = false;
             await InvokeAsync(StateHasChanged);
         }

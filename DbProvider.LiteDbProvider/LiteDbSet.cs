@@ -47,6 +47,12 @@ namespace DbProvider.LiteDbProvider
             return entity;
         }
 
+        public IEnumerable<T> AddRange(IEnumerable<T> entities)
+        {
+            ExecuteWriter(col => col.Insert(entities));
+            return entities;
+        }
+
         public bool Any(Expression<Func<T, bool>> p)
         {
             return ExecuteReader<bool>(col => col.Count(p) > 0);

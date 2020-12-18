@@ -7,6 +7,7 @@ namespace Abeer.Shared.Data
     public interface IDbSet<T> where T : class
     {
         T Add(T entity);
+        IEnumerable<T> AddRange(IEnumerable<T> entities);
         T Update(T entity);
         T FirstOrDefault(Expression<Func<T, bool>> p);
         void Remove(object id);
