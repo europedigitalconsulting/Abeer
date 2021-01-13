@@ -79,11 +79,13 @@
         <hr>
         <div class="text-md-right">
             <div class="float-lg-left mb-lg-0 mb-3">
-
-                <CryptocoinPayment BeforeCallPayment="CreatePayment" CryptoConfig="cryptoPaymentViewModel"
-                                   OrderNumber="@OrderNumber" Price="@SubPack.Price" Items=@Cart PagePaymentError="ConfirmPayment/Error"
-                                   CssClass="btn btn-success btn-icon icon-left" LabelBtn="@Localizer["PayWithPaypal"]">
-                </CryptocoinPayment>
+                @if (cryptoPaymentViewModel?.EnableCryptoPayment == true)
+                {
+                    <CryptocoinPayment BeforeCallPayment="CreatePayment" CryptoConfig="cryptoPaymentViewModel"
+                                       OrderNumber="@OrderNumber" Price="@SubPack.Price" Items=@Cart PagePaymentError="ConfirmPayment/Error"
+                                       CssClass="btn btn-success btn-icon icon-left" LabelBtn="@Localizer["PayWithCrypto"]">
+                    </CryptocoinPayment>
+                }
 
                 <button class="btn btn-primary btn-icon icon-left" @onclick="PaypalPayment">@Localizer["PayWithPaypal"]</button>
 

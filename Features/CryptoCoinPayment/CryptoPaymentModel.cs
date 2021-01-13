@@ -16,6 +16,7 @@ namespace Cryptocoin.Payment
          public string DomainApiPayment { get; set; } 
         public decimal Price { get; set; }
         public string OrderNumber { get; set; }
+        public bool EnableCryptoPayment { get; set; }
         public List<Tuple<string, decimal>> Items { get; set; }
     }
 }

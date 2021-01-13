@@ -9,11 +9,19 @@
     public string Step { get; set; } = "Step1";
     private AdModel Ad { get; set; } = new AdModel();
     private AdPrice CurrentPrice { get; set; } = new AdPrice();
-    private List<AdPrice> AdPrices { get; set; } = new List<AdPrice>(); 
+    private List<AdPrice> AdPrices { get; set; } = new List<AdPrice>();
     private bool PublishHasError { get; set; }
+    private bool EnableCrypto { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
+        var httpClient = HttpClientFactory.CreateClient("Abeer.ServerAPI");
+        var getAll = await httpClient.GetAsync("/api/adprice/Init");
+        if (getAll.IsSuccessStatusCode)
+        {
+            var json = await getAll.Content.ReadAsStringAsync();
+            EnableCrypto = JsonConvert.DeserializeObject<bool>(json);
+        }
         await base.OnInitializedAsync();
     }
     async Task Step1()
@@ -309,8 +317,11 @@ else if (Step == "Step3")
                                 <button type="submit" class="btn btn-success btn-lg" @onclick="@(async () => await ValidAd())"><i class="far fa-arrow-right"></i>@Loc["ValidAd"]</button>
                             }
                             else
-                            { 
-                                <button type="submit" class="btn  btn-success btn-lg" @onclick="@(async () => await CreatePayment("1"))"><i class="far fa-credit-card"></i>@Loc["CreateCryptoPayment"]</button>
+                            {
+                                @if (EnableCrypto)
+                                {
+                                    <button type="submit" class="btn  btn-success btn-lg" @onclick="@(async () => await CreatePayment("1"))"><i class="far fa-credit-card"></i>@Loc["CreateCryptoPayment"]</button>
+                                }
                                 <button type="submit" class="btn  btn-primary btn-lg" @onclick="@(async () => await CreatePayment("2"))"><i class="far fa-credit-card"></i>Paiement Paypal</button>
                                 <button type="submit" class="btn  btn-info btn-lg" @onclick="@(async () => await ProcessPayment())"><i class="far fa-credit-card"></i>@Loc["ProcessPayment"]</button>
                             }

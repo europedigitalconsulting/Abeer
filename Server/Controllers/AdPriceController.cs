@@ -5,6 +5,7 @@ using Abeer.Shared.Functional;
 using Abeer.Data.UnitOfworks;
 using System.Collections.Generic;
 using System;
+using Microsoft.Extensions.Configuration;
 
 namespace Abeer.Server.Controllers
 {
@@ -13,10 +14,12 @@ namespace Abeer.Server.Controllers
     public class AdPriceController : ControllerBase
     {
         private readonly FunctionalUnitOfWork _functionalUnitOfWork;
+        private readonly IConfiguration _configuration;
 
-        public AdPriceController(FunctionalUnitOfWork functionalUnitOfWork)
+        public AdPriceController(FunctionalUnitOfWork functionalUnitOfWork, IConfiguration configuration)
         {
             _functionalUnitOfWork = functionalUnitOfWork;
+            _configuration = configuration;
         }
 
         [AllowAnonymous]
@@ -25,6 +28,12 @@ namespace Abeer.Server.Controllers
         {
             var data = await _functionalUnitOfWork.AdPriceRepository.All();
             return Ok(data);
+        }
+        [AllowAnonymous]
+        [HttpGet("Init")]
+        public async Task<ActionResult<bool>> Init()
+        {
+            return Ok(bool.Parse(_configuration["Service:CryptoPayment:Enable"]));
         }
 
         [Authorize]
