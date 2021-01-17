@@ -16,8 +16,8 @@ namespace Abeer.Client.Pages
 {
     public partial class EditProfile : ComponentBase
     {
-        SocialNetwork NewSocialLink = new SocialNetwork();
-        CustomLink NewCustomLink = new CustomLink();
+        private SocialNetwork NewSocialLink = new SocialNetwork();
+        private CustomLink NewCustomLink = new CustomLink();
 
         [Inject] private NavigationManager NavigationManager { get; set; }
         [Inject] private HttpClient HttpClient { get; set; }
@@ -31,24 +31,24 @@ namespace Abeer.Client.Pages
         public List<CustomLink> CustomLinks { get; set; } = new List<CustomLink>();
 
         [Inject] private NavigationManager navigationManager { get; set; }
-        bool ModalSocialNetworkVisible;
-        bool ModalChangeMailVisible;
-        bool ModalCustomLinkVisible;
-        bool ModalChangePassword;
-        bool ModalDisplayPinCode;
+        private bool ModalSocialNetworkVisible;
+        private bool ModalChangeMailVisible;
+        private bool ModalCustomLinkVisible;
+        private bool ModalChangePassword;
+        private bool ModalDisplayPinCode;
 
-        bool ChangePasswordHasError;
-        bool ChangePhotoHasError;
-        bool ChangeChangeMailHasError;
-        bool ModalChangePhoto;
-        string ChangePasswordError = "";
-        string ChangeChangeMaildError = "";
-        string ChangePhotoError = "";
-        string _PhotoType = "Gravatar";
-        string DigitCode;
-        int PinCode;
-        string NewDigitCode;
-        int NewPinCode;
+        private bool ChangePasswordHasError;
+        private bool ChangePhotoHasError;
+        private bool ChangeChangeMailHasError;
+        private bool ModalChangePhoto;
+        private string ChangePasswordError = "";
+        private string ChangeChangeMaildError = "";
+        private string ChangePhotoError = "";
+        private string _PhotoType = "Gravatar";
+        private string DigitCode;
+        private int PinCode;
+        private string NewDigitCode;
+        private int NewPinCode;
 
         public string PhotoType
         {
@@ -111,7 +111,7 @@ namespace Abeer.Client.Pages
             }          
         }
 
-        async Task SaveNewCard()
+        private async Task SaveNewCard()
         {
             ApplicationUser user = new ApplicationUser();
 
@@ -135,14 +135,15 @@ namespace Abeer.Client.Pages
             }
             StateHasChanged();
         }
-        async Task ChangePhoto()
+
+        private async Task ChangePhoto()
         {
             User.PhotoUrl = PhotoUrl;
             await Update();
             await ToggleChangePhoto();
         }
 
-        async Task Update()
+        private async Task Update()
         {
             var response = await HttpClient.PutAsJsonAsync("/api/Profile", User);
             response.EnsureSuccessStatusCode();
@@ -151,7 +152,7 @@ namespace Abeer.Client.Pages
             User = JsonConvert.DeserializeObject<ViewApplicationUser>(json);
         }
 
-        async Task ChangePassword()
+        private async Task ChangePassword()
         {
             if (NewPassword != ConfirmPassword)
             {
@@ -174,31 +175,33 @@ namespace Abeer.Client.Pages
                     await ToggleChangePassword();
             }
         }
-        async Task ToggleModalSocialNetwork()
+
+        private async Task ToggleModalSocialNetwork()
         {
             ModalSocialNetworkVisible = !ModalSocialNetworkVisible;
         }
-        async Task ToggleModalChangeMail()
+
+        private async Task ToggleModalChangeMail()
         {
             ModalChangeMailVisible = !ModalChangeMailVisible;
         }
 
-        async Task ToggleModalCustomLink()
+        private async Task ToggleModalCustomLink()
         {
             ModalCustomLinkVisible = !ModalCustomLinkVisible;
         }
 
-        async Task ToggleChangePassword()
+        private async Task ToggleChangePassword()
         {
             ModalChangePassword = !ModalChangePassword;
         }
 
-        async Task ToggleChangePhoto()
+        private async Task ToggleChangePhoto()
         {
             ModalChangePhoto = !ModalChangePhoto;
         }
 
-        async Task DeleteSocialNetwork(SocialNetwork socialNetwork)
+        private async Task DeleteSocialNetwork(SocialNetwork socialNetwork)
         {
             var response = await HttpClient.DeleteAsync($"/api/SocialNetwork/{User.Id}/{socialNetwork.Name}");
             response.EnsureSuccessStatusCode();
@@ -206,7 +209,7 @@ namespace Abeer.Client.Pages
             await InvokeAsync(StateHasChanged);
         }
 
-        async Task DeleteCustomLink(CustomLink customLink)
+        private async Task DeleteCustomLink(CustomLink customLink)
         {
             var response = await HttpClient.DeleteAsync($"/api/CustomLink/{User.Id}/{customLink.Id}");
             response.EnsureSuccessStatusCode();
@@ -214,24 +217,25 @@ namespace Abeer.Client.Pages
             await InvokeAsync(StateHasChanged);
         }
 
-        async Task OpenModalSocialNetwork()
+        private async Task OpenModalSocialNetwork()
         {
             NewSocialLink = new SocialNetwork { OwnerId = User.Id };
             await ToggleModalSocialNetwork();
         }
 
-        async Task OpenModalCustomLink()
+        private async Task OpenModalCustomLink()
         {
             NewCustomLink = new CustomLink { OwnerId = User.Id };
             await ToggleModalCustomLink();
         }
-        async Task OpenModalChangeMail()
+
+        private async Task OpenModalChangeMail()
         {
             NewCustomLink = new CustomLink { OwnerId = User.Id };
             await ToggleModalChangeMail();
         }
 
-        async Task ChangeMail()
+        private async Task ChangeMail()
         {
             if (string.IsNullOrEmpty(NewMail) || NewMail != ConfirmMail)
             {
@@ -258,7 +262,8 @@ namespace Abeer.Client.Pages
                 } 
             } 
         }
-        async Task AddSocialNetwork()
+
+        private async Task AddSocialNetwork()
         {
             var response = await HttpClient.PostAsJsonAsync<SocialNetwork>($"/api/SocialNetwork", NewSocialLink);
             response.EnsureSuccessStatusCode();
@@ -268,7 +273,7 @@ namespace Abeer.Client.Pages
             await ToggleModalSocialNetwork();
         }
 
-        async Task AddCustomLink()
+        private async Task AddCustomLink()
         {
             var response = await HttpClient.PostAsJsonAsync<CustomLink>($"/api/CustomLink", NewCustomLink);
             response.EnsureSuccessStatusCode();
@@ -278,7 +283,7 @@ namespace Abeer.Client.Pages
             await ToggleModalCustomLink();
         }
 
-        async Task SetSocialNetwork(string name, string background, string logo)
+        private async Task SetSocialNetwork(string name, string background, string logo)
         {
             NewSocialLink.Name = name;
             NewSocialLink.BackgroundColor = background;
@@ -286,7 +291,7 @@ namespace Abeer.Client.Pages
             await InvokeAsync(StateHasChanged);
         }
 
-        async Task OpenModalPinCode()
+        private async Task OpenModalPinCode()
         {
             ModalDisplayPinCode = true;
             await InvokeAsync(StateHasChanged);

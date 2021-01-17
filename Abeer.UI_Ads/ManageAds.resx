@@ -123,52 +123,40 @@
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
-  <data name="DeleteAdTitle" xml:space="preserve">
-    <value>Delete an ad</value>
-  </data>
-  <data name="DeleteFailedError" xml:space="preserve">
-    <value>Delete has failed because an error has occurred please correct your form and retry later</value>
-  </data>
   <data name="Description" xml:space="preserve">
     <value>Description</value>
   </data>
   <data name="EditAdTitle" xml:space="preserve">
-    <value>Edit an ad</value>
+    <value>Edit Ad</value>
   </data>
-  <data name="NotOnlineSince" xml:space="preserve">
-    <value>Ad is not online since</value>
-  </data>
-  <data name="OnlineBetween" xml:space="preserve">
-    <value>Ad is online between </value>
+  <data name="ManageAdPrices" xml:space="preserve">
+    <value>Manage formulas</value>
   </data>
   <data name="Price" xml:space="preserve">
     <value>Price</value>
+  </data>
+  <data name="PublishAnAd" xml:space="preserve">
+    <value>Publish a new offer</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
   </data>
   <data name="Summary" xml:space="preserve">
     <value>Summary</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>My ads</value>
-  </data>
-  <data name="Update" xml:space="preserve">
-    <value>Update</value>
-  </data>
-  <data name="UpdateFailedError" xml:space="preserve">
-    <value>Update has failed because an error has occurred please correct your form and retry later</value>
+    <value>Manage ad and offers</value>
   </data>
   <data name="Url1" xml:space="preserve">
-    <value>Url 1</value>
+    <value>URL 1</value>
   </data>
   <data name="Url2" xml:space="preserve">
-    <value>Url 2</value>
+    <value>URL 2</value>
   </data>
   <data name="Url3" xml:space="preserve">
-    <value>Url 3</value>
+    <value>URL 3</value>
   </data>
   <data name="Url4" xml:space="preserve">
-    <value>Url 4</value>
-  </data>
-  <data name="WillBeOnline" xml:space="preserve">
-    <value>Ad will be online from </value>
+    <value>URL 4</value>
   </data>
 </root>

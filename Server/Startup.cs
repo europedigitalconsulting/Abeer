@@ -204,6 +204,7 @@ namespace Abeer.Server
 
             using var scope = app.ApplicationServices.CreateScope();
 
+            SeedAdPrices(scope, env).Wait();
             SeedNetworkSocials(scope, env);
             SeedUserData(scope, env).Wait();
             SeedCountries(scope, env);
@@ -241,9 +242,10 @@ namespace Abeer.Server
 
             app.UseRouting();
             app.UseCors(builder => builder
-    .AllowAnyOrigin()
-    .AllowAnyHeader()
-    .AllowAnyMethod());
+                .AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+            );
 
             app.UseIdentityServer();
             app.UseAuthentication();
@@ -259,6 +261,50 @@ namespace Abeer.Server
                 endpoints.MapFallbackToFile("index.html");
                 endpoints.MapHub<SynchroHub>("/synchro");
             });
+        }
+
+        private async Task SeedAdPrices(IServiceScope scope, IWebHostEnvironment env)
+        {
+            var db = scope.ServiceProvider.GetRequiredService<FunctionalUnitOfWork>();
+            db.EnsureCreated();
+            db.SetTimeout(360);
+
+            var prices = await db.AdPriceRepository.All();
+            
+            if (prices.FirstOrDefault(p => p.PriceName == "Free") == null)
+            {
+                await db.AdPriceRepository.Add(new AdPrice()
+                {
+                    Value = 0, DisplayDuration = 2, DelayToDisplay = 2, Id = Guid.NewGuid(),
+                    PriceName = "Free", PriceDescription = "Free for 2 days"
+                });
+            }
+
+            if (prices.FirstOrDefault(p => p.PriceName == "5Days") == null)
+            {
+                await db.AdPriceRepository.Add(new AdPrice()
+                {
+                    Value = 125,
+                    DisplayDuration = 5,
+                    DelayToDisplay = 2,
+                    Id = Guid.NewGuid(),
+                    PriceName = "5Days",
+                    PriceDescription = "5Days_Description"
+                });
+            }
+
+            if (prices.FirstOrDefault(p => p.PriceName == "Gold") == null)
+            {
+                await db.AdPriceRepository.Add(new AdPrice()
+                {
+                    Value = 450,
+                    DisplayDuration = 30,
+                    DelayToDisplay = 0,
+                    Id = Guid.NewGuid(),
+                    PriceName = "Gold",
+                    PriceDescription = "Gold_Description"
+                });
+            }
         }
 
         private void SeedNetworkSocials(IServiceScope scope, IWebHostEnvironment env)

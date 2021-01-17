@@ -14,6 +14,11 @@ namespace Abeer.Server
             return claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
         }
 
+        public static string Country(this ClaimsPrincipal claimsPrincipal)
+        {
+            return claimsPrincipal.FindFirstValue(ClaimTypes.Country);
+        }
+
         public static string DisplayName(this ClaimsPrincipal claimsPrincipal)
         {
             return claimsPrincipal.FindFirstValue("displayname");

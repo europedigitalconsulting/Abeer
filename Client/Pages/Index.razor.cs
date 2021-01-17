@@ -13,7 +13,7 @@ namespace Abeer.Client.Pages
 
         public IEnumerable<Article> Articles { get; set; }
 
-        ClaimsPrincipal User;
+        private ClaimsPrincipal User;
 
         protected override async Task OnParametersSetAsync()
         {

@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Components;
-
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
 
-namespace Abeer.Client
+namespace Abeer.Client.UISdk
 {
     public interface IAdPhotoRepository
     {

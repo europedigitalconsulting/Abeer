@@ -29,6 +29,7 @@ namespace Abeer.Server
 
             identity.AddClaim(new Claim("isonline", user.IsOnline.ToString()));
             identity.AddClaim(new Claim("lastlogin", user.LastLogin.ToString("s")));
+            identity.AddClaim(new Claim(ClaimTypes.Country, user.Country ?? "FR"));
 
             if (user.IsAdmin)
                 identity.AddClaim(new Claim(ClaimTypes.Role, "admin"));

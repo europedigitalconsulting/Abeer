@@ -3,22 +3,24 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Abeer.Shared.Functional;
 using System;
+using System.Collections.Concurrent;
 using Abeer.Data.UnitOfworks;
 using System.Collections.Generic;
 using System.Linq;
 using Abeer.Shared.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Abeer.Server.Controllers
 {
     [Route("api/[controller]")]
     [Authorize(Policy = "OnlySubscribers")]
     [ApiController]
-    public class AdssController : ControllerBase
+    public class AdsController : ControllerBase
     {
         private readonly FunctionalUnitOfWork functionalUnitOfWork;
 
         private readonly Random rdm = new Random();
-        public AdssController(FunctionalUnitOfWork functionalUnitOfWork)
+        public AdsController(FunctionalUnitOfWork functionalUnitOfWork)
         {
             this.functionalUnitOfWork = functionalUnitOfWork;
         }
@@ -28,13 +30,44 @@ namespace Abeer.Server.Controllers
         {
             return Ok(await functionalUnitOfWork.AdRepository.GetAllForAUser(User.NameIdentifier()));
         }
-         
+
+        [HttpGet("notvalid")]
+        public async Task<ActionResult<IEnumerable<AdModel>>> NotValid()
+        {
+            return Ok(await functionalUnitOfWork.AdRepository.GetAllForAUser(User.NameIdentifier(), false));
+        }
+
+
         [HttpGet("Visibled")]
         public async Task<ActionResult<IEnumerable<AdModel>>> GetVisibled()
         {
             return Ok(await functionalUnitOfWork.AdRepository.GetVisibled());
         }
-         
+
+        [HttpGet("country")]
+        public async Task<ActionResult<IEnumerable<AdModel>>> GetVisibledCountry()
+        {
+            return Ok(await functionalUnitOfWork.AdRepository.GetVisibledCountry(User.Country()));
+        }
+
+        [HttpGet("freinds")]
+        public async Task<ActionResult<IEnumerable<AdModel>>> GetVisibledFreinds()
+        {
+            var contacts = await functionalUnitOfWork.ContactRepository.Where(c => c.OwnerId == User.NameIdentifier());
+            
+            var ads = new ConcurrentDictionary<string, IList<AdModel>>();
+            
+            Parallel.ForEach(contacts, async contact =>
+            {
+                ads.TryAdd(contact.UserId, await functionalUnitOfWork.AdRepository.GetVisibledUser(contact.UserId));
+            });
+
+            var result = ads.Values.ToList().SelectMany(a => a);
+
+            return Ok(result);
+        }
+
+
         [HttpGet("{id}")]
         public async Task<ActionResult<AdModel>> Get(Guid id)
         {
@@ -62,6 +95,9 @@ namespace Abeer.Server.Controllers
                     ad.AdPriceId = createAdRequestViewModel.Price.Id;
                 }
 
+                ad.OwnerId = User.NameIdentifier();
+                ad.Country = User.Country();
+
                 await functionalUnitOfWork.AdRepository.Add(ad);
                 var entity = await functionalUnitOfWork.AdRepository.FirstOrDefault(a => a.Id == ad.Id);
                 return Ok(entity); 
@@ -80,7 +116,7 @@ namespace Abeer.Server.Controllers
                 current.ValidateDate = DateTime.UtcNow;
                 current.OwnerId = User.NameIdentifier();
 
-                await functionalUnitOfWork.AdRepository.Update(current);
+                functionalUnitOfWork.SaveChanges();
                 return Ok(current);
             }
 
@@ -90,7 +126,22 @@ namespace Abeer.Server.Controllers
         [HttpPut]
         public async Task<IActionResult> Update(AdModel ad)
         {
-            await functionalUnitOfWork.AdRepository.Update(ad);
+            var model = await functionalUnitOfWork.AdRepository.FirstOrDefault(m => m.Id == ad.Id);
+            
+            model.Description = ad.Description;
+            model.ImageUrl1 = ad.ImageUrl1;
+            model.ImageUrl2 = ad.ImageUrl2;
+            model.ImageUrl3 = ad.ImageUrl3;
+            model.ImageUrl4 = ad.ImageUrl4;
+            model.Title = ad.Title;
+            model.Price = ad.Price;
+            model.Currency = ad.Currency ?? "USD";
+            model.Url1 = ad.Url1;
+            model.Url2 = ad.Url2;
+            model.Url3 = ad.Url3;
+            model.Url4 = ad.Url4;
+
+            functionalUnitOfWork.SaveChanges();
             return Ok();
         }
          

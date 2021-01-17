@@ -3,7 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Abeer.Data.Repositories
 {
@@ -20,9 +22,9 @@ namespace Abeer.Data.Repositories
             return Task.Run(() => _context.Ads.Add(current));
         }
 
-        public Task<IList<AdModel>> GetAllForAUser(string userId)
+        public Task<IList<AdModel>> GetAllForAUser(string userId, bool valid = true)
         {
-            return Task.Run(() => _context.Ads.Where(o => o.OwnerId == userId));
+            return Task.Run(() => _context.Ads.Where(o => o.OwnerId == userId && (o.IsValid || !valid)));
         }
 
         public Task Update(AdModel ad)
@@ -43,12 +45,25 @@ namespace Abeer.Data.Repositories
 
         public  Task<AdModel> FirstOrDefault(Expression<Func<AdModel, bool>> p)
         {
-            return Task.Run(() => _context.Ads.FirstOrDefault(p));
+            return Task.Run(() => _context.Ads.AsQuery().Include(a=>a.AdPrice).FirstOrDefault(p));
         }
 
         public  Task<List<AdModel>> All()
         {
             return Task.Run(() => (_context.Ads.ToList())?.OrderByDescending(a => a.CreateDate).ToList());
+        }
+
+        public Task<IList<AdModel>> GetVisibledCountry(string country)
+        {
+            return Task.Run(() => _context.Ads.Where(a => 
+                a.StartDisplayTime <= DateTime.UtcNow && a.EndDisplayTime >= DateTime.UtcNow
+                && a.IsValid && a.Country == country));
+        }
+
+        public Task<IList<AdModel>> GetVisibledUser(string userId)
+        {
+            return Task.Run(() => _context.Ads.Where(a => a.StartDisplayTime <= DateTime.UtcNow && a.EndDisplayTime >= DateTime.UtcNow
+                && a.IsValid && a.OwnerId == userId));
         }
     }
 }

@@ -118,43 +118,46 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AdTitle" xml:space="preserve">
-    <value>Titre</value>
+    <value>Title</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Annuler</value>
+    <value>Cancel</value>
   </data>
   <data name="DeleteAdTitle" xml:space="preserve">
-    <value>Supprimer une annonce</value>
+    <value>Delete an ad</value>
   </data>
   <data name="DeleteFailedError" xml:space="preserve">
-    <value>Impossible de supprimer votre annonce veuillez réessayer plus tard</value>
+    <value>Delete has failed because an error has occurred please correct your form and retry later</value>
   </data>
   <data name="Description" xml:space="preserve">
     <value>Description</value>
   </data>
   <data name="EditAdTitle" xml:space="preserve">
-    <value>Modifier l'annonce</value>
+    <value>Edit an ad</value>
+  </data>
+  <data name="ListAds" xml:space="preserve">
+    <value>View all ads</value>
   </data>
   <data name="NotOnlineSince" xml:space="preserve">
-    <value>L'anonce n'est plus en ligne depuis</value>
+    <value>Ad is not online since</value>
   </data>
   <data name="OnlineBetween" xml:space="preserve">
-    <value>L'annonce est en ligne entre</value>
+    <value>Ad is online between </value>
   </data>
   <data name="Price" xml:space="preserve">
-    <value>Prix</value>
+    <value>Price</value>
   </data>
   <data name="Summary" xml:space="preserve">
-    <value>Résumé</value>
+    <value>Summary</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Mes annonces</value>
+    <value>My ads</value>
   </data>
   <data name="Update" xml:space="preserve">
-    <value>Modifier</value>
+    <value>Update</value>
   </data>
   <data name="UpdateFailedError" xml:space="preserve">
-    <value>Impossible d'enregistrer votre modification, une erreur a été rencontrée, veuillez modifier le formulaire et réessayer</value>
+    <value>Update has failed because an error has occurred please correct your form and retry later</value>
   </data>
   <data name="Url1" xml:space="preserve">
     <value>Url 1</value>
@@ -168,7 +171,10 @@
   <data name="Url4" xml:space="preserve">
     <value>Url 4</value>
   </data>
+  <data name="ViewNotValid" xml:space="preserve">
+    <value>View ads not validated</value>
+  </data>
   <data name="WillBeOnline" xml:space="preserve">
-    <value>L'annonce sera visible à partir du</value>
+    <value>Ad will be online from </value>
   </data>
 </root>

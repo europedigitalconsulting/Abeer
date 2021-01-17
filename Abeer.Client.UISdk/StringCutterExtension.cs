@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace Abeer.Client
+namespace Abeer.Client.UISdk
 {
     public static class StringCutterExtension
     {

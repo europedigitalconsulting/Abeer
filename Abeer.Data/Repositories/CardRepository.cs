@@ -31,7 +31,7 @@ namespace Abeer.Data.Repositories
             return Task.Run(() => FunctionalDbContext.Cards.Update(card));
         }
 
-        static readonly Random rdm = new Random();
+        private static readonly Random rdm = new Random();
 
         public async Task<IEnumerable<Card>> AddRange(Batch batch, IEnumerable<Card> cards, string userId)
         {

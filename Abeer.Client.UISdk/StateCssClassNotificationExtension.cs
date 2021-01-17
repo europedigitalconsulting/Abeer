@@ -1,6 +1,6 @@
 ﻿using Abeer.Shared;
 
-namespace Abeer.Client
+namespace Abeer.Client.UISdk
 {
     public static class StateCssClassNotificationExtension
     {

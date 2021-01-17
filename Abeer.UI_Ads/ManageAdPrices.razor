@@ -1,0 +1,104 @@
+﻿@page "/ads/ManageAdPrices"
+@using Abeer.Client.UISdk
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@inject HttpClient HttpClient
+@inject IHttpClientFactory HttpClientFactory
+@inject Microsoft.Extensions.Localization.IStringLocalizer<ManageAdPrices> Loc
+
+@if (ModalFormAdVisible)
+{
+    <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">@Loc["EditAdPriceTitle"]</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="@(() => ModalFormAdVisible = false)">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <section class="section">
+                        <div class="section-body">
+                                @if (FormHasError)
+                                {
+                                    <div class="alert alert-danger">
+                                        @Loc["UpdateFailedError"]
+                                    </div>
+                                }
+                                <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                                    <label>@Loc["Name"]</label>
+                                    <input type="text" Class="form-control" @bind="Current.PriceName" disabled="@IsFormDisabled" />
+                                </div>
+                                <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                                    <label>@Loc["Description"]</label>
+                                    <textarea type="text" Class="form-control" rows="6" @bind="Current.PriceDescription" disabled="@IsFormDisabled" />
+                                </div>
+                                <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                                    <label>@Loc["Value"]</label>
+                                    <input type="number" Class="form-control" @bind="Current.Value" disabled="@IsFormDisabled" />
+                                </div>
+                                <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                                    <label>@Loc["DelayToDisplay"]</label>
+                                    <input type="range" min="1" max="10" Class="form-control" @bind="Current.DelayToDisplay" disabled="@IsFormDisabled" />
+                                </div>
+                                <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                                    <label>@Loc["DisplayDuration"]</label>
+                                    <input type="number" Class="form-control" @bind="Current.DisplayDuration" disabled="@IsFormDisabled" />
+                                </div>
+                                <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                                    <label>@Loc["MaxViewCount"]</label>
+                                    <input type="url" Class="form-control" @bind="Current.MaxViewCount" disabled="@IsFormDisabled" />
+                                </div>
+                        </div>
+                    </section>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" title="@Loc["Save"]" @onclick="Save"><i class="fa fa-2x fa-save"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<section class="section">
+    <div class="section-header">
+        <h1>@Loc["Title"]</h1>
+    </div>
+    <div class="section-header">
+
+        <div class="input-group">
+            <input type="search" id="example-input1-group2" name="example-input1-group2" class="form-control" @bind="Term" @onkeyup="countTerm">
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-lg" @onclick="Search"><i class="fa fa-2x  fa-search"></i></button>
+            </span>
+            <div class="search-backdrop"></div>
+        </div>
+    </div>
+    <div class="section-body">
+        <div class="row">
+            <div class="col-12">
+                <Virtualize Items="Items" Context="ad">
+                    <div class="card">
+                        <div class="card-header">
+
+                            <h4>@ad.PriceName</h4>
+                            <div class="card-header-action">
+                                <i class="btn btn-icon btn-primary" href="#">@ad.Value.FormatCurrency()</i><br />
+                                <button class="btn btn-primary ml-2" @onclick="@(() => OpenEditModal(ad))"><i class="fas fa-pen-square"></i></button>
+                            </div>
+
+                        </div>
+                        <div class="card-body">
+                            <p class="mb-2">
+                                @ad.PriceDescription
+                            </p>
+                        </div>
+
+                    </div>
+                </Virtualize>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="fixed-bottom m-5">
+    <button @onclick="OpenCreateAd" class="btn btn-danger btn-circle btn-xl float-right" title="@Loc["Add"]"><i class="fa fa-2x fa-plus"></i></button>
+</div>

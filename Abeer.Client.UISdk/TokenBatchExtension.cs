@@ -1,7 +1,7 @@
-﻿using Abeer.Shared;
-using System.Linq;
+﻿using System.Linq;
+using Abeer.Shared;
 
-namespace Abeer.Client
+namespace Abeer.Client.UISdk
 {
     public static class TokenBatchExtension
     {

@@ -18,10 +18,10 @@ namespace Abeer.Client.Pages
 {
     public partial class Users : ComponentBase
     {
-        bool showModal = false;
-        ApplicationUser current = new ApplicationUser();
-        string Mode = "Create";
-        bool ModalShareProfileVisible = false;
+        private bool showModal = false;
+        private ApplicationUser current = new ApplicationUser();
+        private string Mode = "Create";
+        private bool ModalShareProfileVisible = false;
 
         public UserForm UserForm { get; set; }
         public string TitleDialog { get; set; }
@@ -74,19 +74,19 @@ namespace Abeer.Client.Pages
             StateHasChanged();
         }
 
-        async Task ToggleModalCreateUser()
+        private async Task ToggleModalCreateUser()
         {
             showModal = !showModal;
         }
 
-        async Task ToggleModalShareProfile()
+        private async Task ToggleModalShareProfile()
         {
             ModalShareProfileVisible = !ModalShareProfileVisible;
         }
 
-        static Random rdm = new Random();
+        private static Random rdm = new Random();
 
-        async Task ShowInsertUser()
+        private async Task ShowInsertUser()
         {
             current = new ApplicationUser();
             current.PinCode = rdm.Next(10000, 99999);
@@ -95,7 +95,7 @@ namespace Abeer.Client.Pages
             await InvokeAsync(StateHasChanged);
         }
 
-        async Task ShowEditUser(ApplicationUser User)
+        private async Task ShowEditUser(ApplicationUser User)
         {
             current = User;
             Mode = "Update";
@@ -103,7 +103,7 @@ namespace Abeer.Client.Pages
             await InvokeAsync(StateHasChanged);
         }
 
-        async Task ShowDeleteUser(ApplicationUser User)
+        private async Task ShowDeleteUser(ApplicationUser User)
         {
             current = User;
             Mode = "Delete";
@@ -111,7 +111,7 @@ namespace Abeer.Client.Pages
             await InvokeAsync(StateHasChanged);
         }
 
-        async Task Insert()
+        private async Task Insert()
         {
             var response = await HttpClient.PostAsJsonAsync<ApplicationUser>("api/Users", current);
             response.EnsureSuccessStatusCode();
@@ -123,7 +123,7 @@ namespace Abeer.Client.Pages
             await InvokeAsync(StateHasChanged);
         }
 
-        async Task Update()
+        private async Task Update()
         {
             var response = await HttpClient.PutAsJsonAsync<ApplicationUser>($"api/Users/{current.Id}", current);
             response.EnsureSuccessStatusCode();
@@ -131,28 +131,28 @@ namespace Abeer.Client.Pages
             await InvokeAsync(StateHasChanged);
         }
 
-        async Task ValidateUser(ApplicationUser user)
+        private async Task ValidateUser(ApplicationUser user)
         {
             var response = await HttpClient.PutAsJsonAsync<ApplicationUser>($"api/Users/Validate/{user.Id}", user);
             response.EnsureSuccessStatusCode();
             await InvokeAsync(StateHasChanged);
         }
 
-        async Task LockUser(ApplicationUser user)
+        private async Task LockUser(ApplicationUser user)
         {
             var response = await HttpClient.PutAsJsonAsync<ApplicationUser>($"api/Users/Lock/{user.Id}", user);
             response.EnsureSuccessStatusCode();
             await InvokeAsync(StateHasChanged);
         }
 
-        async Task UnLockUser(ApplicationUser user)
+        private async Task UnLockUser(ApplicationUser user)
         {
             var response = await HttpClient.PutAsJsonAsync<ApplicationUser>($"api/Users/UnLock/{user.Id}", user);
             response.EnsureSuccessStatusCode();
             await InvokeAsync(StateHasChanged);
         }
 
-        async Task Delete()
+        private async Task Delete()
         {
             var response = await HttpClient.DeleteAsync($"api/Users/{current.Id}");
             response.EnsureSuccessStatusCode();
@@ -164,13 +164,13 @@ namespace Abeer.Client.Pages
 
         public string ProfileUrl { get; private set; }
 
-        Task ShareProfile(ApplicationUser user)
+        private Task ShareProfile(ApplicationUser user)
         {
             ProfileUrl = navigationManager.ToAbsoluteUri($"/viewProfile/{user.PinCode}").ToString();
             return ToggleModalShareProfile();
         }
 
-        Task SaveForm()
+        private Task SaveForm()
         {
             return Mode switch
             {

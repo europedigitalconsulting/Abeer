@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 
-namespace Abeer.Client.Shared
+namespace Abeer.Client.UISdk.Shared
 {
     public interface ICollapsePannelItem
     {

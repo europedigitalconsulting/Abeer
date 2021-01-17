@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
-
-using System;
+﻿using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 
-namespace Abeer.Client.Shared
+namespace Abeer.Client.UISdk.Shared
 {
     public partial class AuthorizationSwitcher : ComponentBase
     {

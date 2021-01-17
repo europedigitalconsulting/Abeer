@@ -30,10 +30,19 @@ namespace Abeer.Server.Controllers
             return Ok(data);
         }
         [AllowAnonymous]
-        [HttpGet("Init")]
-        public async Task<ActionResult<bool>> Init()
+        [HttpGet("GetFeature")]
+        public async Task<ActionResult<AdPaymentOption>> GetFeature()
         {
-            return Ok(bool.Parse(_configuration["Service:CryptoPayment:Enable"]));
+            return await Task.Run(() =>
+            {
+                var adPaymentOption = new AdPaymentOption
+                {
+                    EnableCrypto = !string.IsNullOrEmpty(_configuration["Service:CryptoPayment:Enable"]) && bool.Parse(_configuration["Service:CryptoPayment:Enable"]),
+                    EnableBankCard = !string.IsNullOrEmpty(_configuration["Service:CryptoPayment:Enable"]) && bool.Parse(_configuration["Service:CryptoPayment:Enable"])
+                };
+
+                return Ok(adPaymentOption);
+            });
         }
 
         [Authorize]

@@ -12,7 +12,7 @@ namespace DbProvider.LiteDbProvider
 {
     public class LiteDbProvider : IDbProvider
     {
-        LiteDatabase liteDatabase;
+        private LiteDatabase liteDatabase;
         private int batchSize;
         private TimeSpan timeout;
 

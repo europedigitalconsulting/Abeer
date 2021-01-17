@@ -1,35 +1,35 @@
-﻿using Microsoft.AspNetCore.Components;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Net.Http.Json;
 using System.Security.Claims;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
-using System.Net.Http.Json;
 
-namespace Abeer.Client.Pages
+namespace Abeer.UI_Ads
 {
     public partial class ManageAds : ComponentBase
     {
-        bool ModalFormAdVisible;
-        bool FormHasError;
+        private bool ModalFormAdVisible;
+        private bool FormHasError;
 
-        string TitleForm = "EditForm";
-        string Mode = "Insert";
+        private string TitleForm = "EditForm";
+        private string Mode = "Insert";
 
-        Abeer.Shared.Functional.AdModel Current = new Abeer.Shared.Functional.AdModel();
+        private Abeer.Shared.Functional.AdModel Current = new Abeer.Shared.Functional.AdModel();
 
         public string Term { get; set; }
 
-        List<Abeer.Shared.Functional.AdModel> All = new List<Abeer.Shared.Functional.AdModel>();
-        List<Abeer.Shared.Functional.AdModel> Items = new List<Abeer.Shared.Functional.AdModel>();
+        private List<Abeer.Shared.Functional.AdModel> All = new List<Abeer.Shared.Functional.AdModel>();
+        private List<Abeer.Shared.Functional.AdModel> Items = new List<Abeer.Shared.Functional.AdModel>();
 
         [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
 
         [Inject] private NavigationManager navigationManager { get; set; }
 
-        void countTerm(KeyboardEventArgs e)
+        private void countTerm(KeyboardEventArgs e)
         {
             if (Term?.Length > 5)
                 Search();
@@ -47,7 +47,7 @@ namespace Abeer.Client.Pages
                 navigationManager.NavigateTo("/authentication/Login", true);
             }
 
-            var getAll = await HttpClient.GetAsync("/api/adss/admin");
+            var getAll = await HttpClient.GetAsync("/api/Ads/admin");
             if (getAll.IsSuccessStatusCode)
             { 
                 var json = await getAll.Content.ReadAsStringAsync();
@@ -59,27 +59,27 @@ namespace Abeer.Client.Pages
             } 
         }
 
-        void Search()
+        private void Search()
         { 
             if (All != null && All.Count > 0)
                 Items = All.Where(a => (a.Title != null && a.Title.Contains(Term)) || (a.Description != null && a.Description.Contains(Term))).ToList();
         }
 
-        void OpenEditModal(Abeer.Shared.Functional.AdModel adModel)
+        private void OpenEditModal(Abeer.Shared.Functional.AdModel adModel)
         {
             Current = adModel;
             Mode = "Edit";
             ModalFormAdVisible = true;
         }
 
-        void OpenDeleteModal(Abeer.Shared.Functional.AdModel adModel)
+        private void OpenDeleteModal(Abeer.Shared.Functional.AdModel adModel)
         {
             Current = adModel;
             Mode = "Delete";
             ModalFormAdVisible = true;
         }
 
-        void OpenCreateAd()
+        private void OpenCreateAd()
         {
             Current = new Abeer.Shared.Functional.AdModel();
             Current.StartDisplayTime = DateTime.UtcNow;
@@ -87,9 +87,9 @@ namespace Abeer.Client.Pages
             ModalFormAdVisible = true;
         }
 
-        string FormError = "";
+        private string FormError = "";
 
-        async Task Save()
+        private async Task Save()
         {
             FormHasError = false;
             FormError = "";
@@ -98,7 +98,7 @@ namespace Abeer.Client.Pages
             {
                 case "Insert":
                     {
-                        var postResponse = await HttpClient.PostAsJsonAsync<Abeer.Shared.Functional.AdModel>("/api/adss/admin", Current);
+                        var postResponse = await HttpClient.PostAsJsonAsync<Abeer.Shared.Functional.AdModel>("/api/Ads/admin", Current);
                         FormHasError = !postResponse.IsSuccessStatusCode;
 
                         if (FormHasError)
@@ -115,7 +115,7 @@ namespace Abeer.Client.Pages
                     }
                 case "Edit":
                     {
-                        var putResponse = await HttpClient.PutAsJsonAsync<Abeer.Shared.Functional.AdModel>("/api/adss/admin", Current);
+                        var putResponse = await HttpClient.PutAsJsonAsync<Abeer.Shared.Functional.AdModel>("/api/Ads/admin", Current);
                         FormHasError = !putResponse.IsSuccessStatusCode;
 
                         if (FormHasError)
@@ -131,7 +131,7 @@ namespace Abeer.Client.Pages
                     }
                 case "Delete":
                     {
-                        var deleteResponse = await HttpClient.DeleteAsync($"/api/adss/{Current.Id}");
+                        var deleteResponse = await HttpClient.DeleteAsync($"/api/Ads/{Current.Id}");
                         FormHasError = !deleteResponse.IsSuccessStatusCode;
 
                         if (FormHasError)
@@ -150,6 +150,7 @@ namespace Abeer.Client.Pages
 
             await InvokeAsync(StateHasChanged);
         }
-        bool IsFormDisabled => Mode == "Delete";
+
+        private bool IsFormDisabled => Mode == "Delete";
     }
 }

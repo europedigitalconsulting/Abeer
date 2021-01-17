@@ -282,7 +282,7 @@ namespace Abeer.Server.Controllers
             return BadRequest();
         }
 
-        static readonly Random rnd = new Random();
+        private static readonly Random rnd = new Random();
 
         private string GeneratePassword()
         {

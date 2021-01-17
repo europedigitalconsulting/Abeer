@@ -109,7 +109,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
             public string Country { get; set; }
         }
 
-        static Random rdm = new Random();
+        private static Random rdm = new Random();
 
         public async Task OnGetAsync(string returnUrl = null)
         {

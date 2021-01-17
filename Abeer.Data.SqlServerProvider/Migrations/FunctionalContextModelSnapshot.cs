@@ -273,8 +273,14 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                     b.Property<Guid>("AdPriceId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Country")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Currency")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -345,6 +351,9 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Currency")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("DelayToDisplay")
                         .HasColumnType("int");

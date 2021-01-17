@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System;
+using Microsoft.AspNetCore.Components;
 
-using System;
-
-namespace Abeer.Client.Shared
+namespace Abeer.Client.UISdk.Shared
 {
     public partial class CollapsePannelItem : ComponentBase, ICollapsePannelItem, IDisposable
     {

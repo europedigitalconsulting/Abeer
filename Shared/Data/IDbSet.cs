@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace Abeer.Shared.Data
@@ -16,5 +17,6 @@ namespace Abeer.Shared.Data
         IList<T> Where(Expression<Func<T, bool>> p, int skip = 0, int limit = int.MaxValue);
         int Count();
         int Count(Expression<Func<T, bool>> p);
+        IQueryable<T> AsQuery();
     }
 }

@@ -18,6 +18,7 @@ namespace Abeer.Shared.Functional
         public string Title { get; set; }
         public string Description { get; set; }
         public decimal Price { get; set; }
+        public string Currency { get; set; }
         public string Url1 { get; set; }
         public string Url2 { get; set; }
         public string Url3 { get; set; }
@@ -37,22 +38,6 @@ namespace Abeer.Shared.Functional
         public Guid AdPriceId { get; set; }
         [ForeignKey(nameof(AdPriceId))]
         public AdPrice AdPrice { get; set; }
-    }
-
-    public class AdPrice
-    {
-        public AdPrice()
-        {
-            Id = Guid.NewGuid();
-        }
-
-        [Key]
-        public Guid Id { get; set; }
-        public string PriceName { get; set; }
-        public string PriceDescription { get; set; }
-        public decimal Value { get; set; }
-        public int DelayToDisplay { get; set; }
-        public int? DisplayDuration { get; set; }
-        public int MaxViewCount { get; set; }
+        public  string Country { get; set; }
     }
 }

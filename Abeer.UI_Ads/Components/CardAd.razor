@@ -1,23 +1,10 @@
-﻿@code
-{
-    [Parameter]
-    public Microsoft.Extensions.Localization.IStringLocalizer Loc { get; set; }
-    [Parameter]
-    public Abeer.Shared.Functional.AdModel Ad { get; set; }
-    [Parameter]
-    public Boolean Editable { get; set; }
-    [Parameter]
-    public EventCallback<MouseEventArgs> OnEditClicked { get; set; }
-    [Parameter]
-    public EventCallback<MouseEventArgs> OnDeleteClicked { get; set; }
-}
-    <div class="card">
+﻿<div class="card">
         <div class="card-header">
             <h4>
                 @Ad.Title
             </h4>
             <div class="card-header-action">
-                <span class="btn btn-icon btn-primary" href="#">@Ad.Price €</span>
+                <span class="btn btn-icon btn-primary" href="#">@Ad.Price @Ad.Currency</span>
             </div>
         </div>
         <div class="card-body">
@@ -66,6 +53,10 @@
             {
                 <button class="btn btn-primary btn-circle btn-xl float-right ml-2" @onclick="@OnEditClicked"><i class="fas fa-pen-square"></i></button>
                 <button class="btn btn-danger btn-circle btn-xl float-right ml-2" @onclick="@OnDeleteClicked"><i class="fas fa-trash-alt"></i></button>
+            }
+            else if (!Ad.IsValid)
+            {
+                <a href="/ads/ValidAd/@Ad.Id" class="btn btn-primary"><i class="fas fa-check-square"></i>@Loc["ValidAd"]</a>
             }
         </div>
         <div class="card-footer">

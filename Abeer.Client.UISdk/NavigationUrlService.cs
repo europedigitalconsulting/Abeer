@@ -9,7 +9,7 @@ namespace Abeer.Client.UISdk
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        bool _ShowMyAds;
+        private bool _ShowMyAds;
         public bool ShowMyAds
         {
             get => _ShowMyAds;
@@ -20,7 +20,7 @@ namespace Abeer.Client.UISdk
             }
         }
 
-        bool _ShowContacts;
+        private bool _ShowContacts;
 
         public bool ShowContacts 
         { 
@@ -32,7 +32,7 @@ namespace Abeer.Client.UISdk
             }
         }
 
-        bool _ShowEditProfile;
+        private bool _ShowEditProfile;
         public bool ShowEditProfile { 
             get => _ShowEditProfile;
             set
@@ -42,7 +42,7 @@ namespace Abeer.Client.UISdk
             }
         }
 
-        bool _ShowImport;
+        private bool _ShowImport;
         
         public bool ShowImport 
         {
@@ -133,7 +133,7 @@ namespace Abeer.Client.UISdk
             }
         }
 
-        string _MyAdsUrl;
+        private string _MyAdsUrl;
         public string MyAdsUrl
         {
             get => _MyAdsUrl;
@@ -144,7 +144,7 @@ namespace Abeer.Client.UISdk
             }
         }
 
-        string _ProfileEdit;
+        private string _ProfileEdit;
 
         public string ProfileEdit
         {

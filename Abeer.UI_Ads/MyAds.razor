@@ -1,0 +1,89 @@
+﻿@page "/ads/MyAds"
+@using Abeer.UI_Ads.Components
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@inject HttpClient HttpClient
+@inject Microsoft.Extensions.Localization.IStringLocalizer<MyAds> Loc
+@inject NavigationManager NavigationManager 
+
+@if (ModalEditAdVisible)
+{
+    <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">@Loc["EditAdTitle"]</h4>
+                </div>
+                <div class="modal-body">
+                    <FormAd Ad="Current" Disabled="false" FormHasError="UpdateHasError" FormError="@Loc["UpdateFailedError"]" Loc="Loc"></FormAd>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" @onclick="@(() => ModalEditAdVisible = false)">@Loc["Cancel"]</button>
+                    <button type="button" class="btn btn-success" @onclick="Update">@Loc["Update"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@if (ModalDeleteAdVisible)
+{
+    <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">@Loc["DeleteAdTitle"]</h4>
+                </div>
+                <div class="modal-body">
+                    <section class="section">
+                        <div class="section-header">
+                            <h1>@Loc["Title"]</h1>
+                            <h2>@Current.Title</h2>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <FormAd Ad="Current" Disabled="true" FormHasError="@DeleteHasError" FormError="@Loc["DeleteFailedError"]" Loc="Loc"></FormAd>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" @onclick="@(() => ModalDeleteAdVisible = false)">@Loc["Cancel"]</button>
+                    <button type="button" class="btn btn-success" @onclick="Delete">@Loc["Delete"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<section class="section">
+    <div class="section-header">
+        <h1>@Loc["Title"]</h1>
+    </div>
+    <div class="section-body">
+        <button class="btn btn-primary" @onclick="ViewNotValid">@Loc["ViewNotValid"]</button>
+        <button class="btn btn-warning" @onclick="GotoAll">@Loc["ListAds"]</button>
+        @if (Ads.Any())
+        {
+            <Virtualize Items="@Ads" Context="ad">
+                <Placeholder>@Loc["Loading"]</Placeholder>
+                <ItemContent>
+                    <CardAd Loc="Loc" Ad="ad" OnEditClicked="@(() => OpenEditModal(ad))" OnDeleteClicked="@(() => OpenDeleteModal(ad))" Editable="@(ad.StartDisplayTime > DateTime.UtcNow)"></CardAd>
+                </ItemContent>
+            </Virtualize>
+        }
+        else
+        {
+            <div class="alert alert-info">
+                @Loc["NoAdsFound"]
+            </div>
+        }
+    </div>
+</section>
+
+<div class="fixed-bottom m-5">
+    <a class="btn btn-danger btn-circle btn-xl float-right ml-2" href="ads/Create" title="@Loc["PublishAnAd"]"><i class="fa fa-2x fa-plus"></i></a>
+</div>

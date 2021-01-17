@@ -17,7 +17,7 @@ namespace Abeer.Client.Pages
 {
     public partial class CardList : ComponentBase
     {
-        bool IsModalVisible = false;
+        private bool IsModalVisible = false;
 
         protected CardForm CardForm { get; set; }
 
@@ -34,12 +34,11 @@ namespace Abeer.Client.Pages
         [CascadingParameter]
         private Task<AuthenticationState> authenticationStateTask { get; set; }
 
-        [Inject]
-        IJSRuntime ThisJSRuntime { get; set; }
+        [Inject] private IJSRuntime ThisJSRuntime { get; set; }
 
-        ClaimsPrincipal User;
+        private ClaimsPrincipal User;
 
-        async Task DownloadDocument(Batch batch)
+        private async Task DownloadDocument(Batch batch)
         {
             await ThisJSRuntime.InvokeVoidAsync(
                 "downloadFromByteArray",
@@ -90,16 +89,17 @@ namespace Abeer.Client.Pages
             Console.WriteLine($"{found.Count} Token Batches found");
             StateHasChanged();
         }
-        void CloseModal() => IsModalVisible = false;
-        void OpenModal() => IsModalVisible = true;
 
-        string Mode { get; set; } = "Insert";
+        private void CloseModal() => IsModalVisible = false;
+        private void OpenModal() => IsModalVisible = true;
 
-        Batch current = null;
+        private string Mode { get; set; } = "Insert";
 
-        static readonly Random rdm = new Random();
+        private Batch current = null;
 
-        void ShowInsertCard()
+        private static readonly Random rdm = new Random();
+
+        private void ShowInsertCard()
         {
             current = new Batch
             {
@@ -110,7 +110,8 @@ namespace Abeer.Client.Pages
             OpenModal();
             StateHasChanged();
         }
-        void ShowEditCard(Batch batch)
+
+        private void ShowEditCard(Batch batch)
         {
             current = batch;
             Mode = "Update";
@@ -118,13 +119,14 @@ namespace Abeer.Client.Pages
             StateHasChanged();
         }
 
-        void ShowDeleteCard(Batch batch)
+        private void ShowDeleteCard(Batch batch)
         {
             current = batch;
             Mode = "Delete";
             OpenModal();
         }
-        async Task Insert()
+
+        private async Task Insert()
         {
             Console.WriteLine(current);
             var response = await HttpClient.PostAsJsonAsync<Batch>("api/Card", current);
@@ -136,7 +138,7 @@ namespace Abeer.Client.Pages
             await InvokeAsync(StateHasChanged);
         }
 
-        async Task Update()
+        private async Task Update()
         {
             var response = await HttpClient.PutAsJsonAsync<Batch>($"api/Card/{current.Id}", current);
             response.EnsureSuccessStatusCode();

@@ -87,5 +87,7 @@ namespace DbProvider.EfCore.SqlServerProvider
             sqlContext.SaveChanges();
             return entities;
         }
+
+        public IQueryable<T> AsQuery() => dbSets.AsQueryable();
     }
 }

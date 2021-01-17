@@ -97,5 +97,10 @@ namespace DbProvider.LiteDbProvider
         {
             return ExecuteReader<IList<T>>(col => col.Find(p, skip, limit)?.ToList());
         }
+
+        public IQueryable<T> AsQuery()
+        {
+            return ExecuteReader<IQueryable<T>>(col => col.FindAll().AsQueryable());
+        }
     }
 }

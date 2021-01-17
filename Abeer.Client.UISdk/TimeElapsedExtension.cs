@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Abeer.Client
+namespace Abeer.Client.UISdk
 {
     public static class TimeElapsedExtension
     {
