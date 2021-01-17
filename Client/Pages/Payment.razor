@@ -87,7 +87,7 @@
                     {
                         <CryptocoinPayment BeforeCallPayment="CreatePayment" CryptoConfig="cryptoPaymentViewModel"
                                            OrderNumber="@Ad.OrderNumber" Price="@Ad.AdPrice.Value" Items=@Cart PagePaymentError="/ConfirmPayment/Error"
-                                           CssClass="btn btn-success btn-icon icon-left" LabelBtn="@Localizer["PayWithPaypal"]">
+                                           CssClass="btn btn-success btn-icon icon-left" LabelBtn="@Localizer["PayWithCrypto"]">
                         </CryptocoinPayment>
                     }
                     else if (MethodPayment == "2")

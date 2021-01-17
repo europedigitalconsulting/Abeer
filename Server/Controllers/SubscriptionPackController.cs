@@ -56,6 +56,7 @@ namespace Abeer.Server.Controllers
             cryptoPaymentViewModel.RedirectErrorServer = _configuration["Service:CryptoPayment:RedirectErrorServer"];
             cryptoPaymentViewModel.RedirectSuccess = _configuration["Service:CryptoPayment:RedirectSuccess"];
             cryptoPaymentViewModel.RedirectError = _configuration["Service:CryptoPayment:RedirectError"];
+            cryptoPaymentViewModel.EnableCryptoPayment = bool.Parse(_configuration["Service:CryptoPayment:Enable"]);
             return await Task.Run(() => Ok(cryptoPaymentViewModel));
         }
         [HttpPost("Select")]
