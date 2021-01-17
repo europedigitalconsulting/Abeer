@@ -13,8 +13,8 @@ namespace Abeer.Shared.Functional
             SocialNetworks = new List<SocialNetwork>();
         }
 
-        public IList<SocialNetwork> SocialNetworks { get; set; }
-        public IList<CustomLink> CustomLinks { get; set; }
+        public virtual List<SocialNetwork> SocialNetworks { get; set; }
+        public virtual List<CustomLink> CustomLinks { get; set; }
 
         public string Id { get; set; }
         public string AgencyName { get; set; }

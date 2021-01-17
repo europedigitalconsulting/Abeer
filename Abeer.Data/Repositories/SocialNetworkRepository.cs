@@ -19,8 +19,8 @@ namespace Abeer.Data.Repositories
         }
         public FunctionalDbContext FunctionalDbContext { get; }
 
-        public  Task<IList<SocialNetwork>> GetSocialNetworkLinks(string ownerId) =>
-            Task.Run(() => FunctionalDbContext.SocialNetworks.Where(u => u.OwnerId == ownerId));
+        public  Task<List<SocialNetwork>> GetSocialNetworkLinks(string ownerId) =>
+            Task.Run(() => FunctionalDbContext.SocialNetworks.Where(u => u.OwnerId == ownerId)?.ToList());
 
         public  Task<SocialNetwork> AddSocialNetwork(SocialNetwork socialNetwork)
         {

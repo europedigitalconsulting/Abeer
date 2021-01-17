@@ -35,8 +35,8 @@ namespace Abeer.Shared
             PhotoUrl = string.IsNullOrWhiteSpace(user.PhotoUrl) ? user.GravatarUrl() : user.PhotoUrl;
         }
 
-        public IList<SocialNetwork> SocialNetworks { get; set; }
-        public IList<CustomLink> CustomLinks { get; set; }
+        public virtual List<SocialNetwork> SocialNetworks { get; set; }
+        public virtual List<CustomLink> CustomLinks { get; set; }
 
         public string Id { get; set; }
         public string UserId { get; set; }

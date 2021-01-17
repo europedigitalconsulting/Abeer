@@ -15,16 +15,16 @@ namespace Abeer.Data.SqlServerProvider.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.9")
+                .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "5.0.2");
 
             modelBuilder.Entity("Abeer.Data.Models.UrlShortned", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<DateTime?>("ClickedDate")
                         .HasColumnType("datetime2");
@@ -204,7 +204,7 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Culture")
                         .HasColumnType("nvarchar(max)");
@@ -498,6 +498,8 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                         .HasForeignKey("BatchId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Batch");
                 });
 
             modelBuilder.Entity("Abeer.Shared.CardStatu", b =>
@@ -507,6 +509,8 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                         .HasForeignKey("CardId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Card");
                 });
 
             modelBuilder.Entity("Abeer.Shared.Functional.AdModel", b =>
@@ -516,6 +520,13 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                         .HasForeignKey("AdPriceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("AdPrice");
+                });
+
+            modelBuilder.Entity("Abeer.Shared.Card", b =>
+                {
+                    b.Navigation("CardStatus");
                 });
 #pragma warning restore 612, 618
         }

@@ -10,23 +10,23 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Abeer.Data.SqlServerProvider.Migrations
 {
     [DbContext(typeof(FunctionalContext))]
-    [Migration("20201127233750_SubscriptionHistory")]
-    partial class SubscriptionHistory
+    [Migration("20210117113518_InitNet5")]
+    partial class InitNet5
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.9")
+                .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "5.0.2");
 
             modelBuilder.Entity("Abeer.Data.Models.UrlShortned", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<DateTime?>("ClickedDate")
                         .HasColumnType("datetime2");
@@ -57,10 +57,39 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                     b.ToTable("UrlShortned");
                 });
 
+            modelBuilder.Entity("Abeer.Shared.Batch", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CardLastNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CardStartNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CardType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("CsvFileContent")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Batches");
+                });
+
             modelBuilder.Entity("Abeer.Shared.Card", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BatchId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CardNumber")
@@ -71,9 +100,6 @@ namespace Abeer.Data.SqlServerProvider.Migrations
 
                     b.Property<string>("CreatorId")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("CsvFileContent")
-                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("ErrorMessage")
                         .HasColumnType("nvarchar(max)");
@@ -124,6 +150,8 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BatchId");
 
                     b.ToTable("Card");
                 });
@@ -178,7 +206,7 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Culture")
                         .HasColumnType("nvarchar(max)");
@@ -349,11 +377,14 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("AdId")
+                    b.Property<Guid?>("AdId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsValidated")
                         .HasColumnType("bit");
+
+                    b.Property<string>("OrderNumber")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PayerID")
                         .HasColumnType("nvarchar(max)");
@@ -363,6 +394,9 @@ namespace Abeer.Data.SqlServerProvider.Migrations
 
                     b.Property<string>("PaymentReference")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("SubscriptionId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("TokenId")
                         .HasColumnType("nvarchar(max)");
@@ -413,17 +447,17 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Enable")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Label")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -459,6 +493,17 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                     b.ToTable("SocialNetwork");
                 });
 
+            modelBuilder.Entity("Abeer.Shared.Card", b =>
+                {
+                    b.HasOne("Abeer.Shared.Batch", "Batch")
+                        .WithMany()
+                        .HasForeignKey("BatchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Batch");
+                });
+
             modelBuilder.Entity("Abeer.Shared.CardStatu", b =>
                 {
                     b.HasOne("Abeer.Shared.Card", "Card")
@@ -466,6 +511,8 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                         .HasForeignKey("CardId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Card");
                 });
 
             modelBuilder.Entity("Abeer.Shared.Functional.AdModel", b =>
@@ -475,6 +522,13 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                         .HasForeignKey("AdPriceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("AdPrice");
+                });
+
+            modelBuilder.Entity("Abeer.Shared.Card", b =>
+                {
+                    b.Navigation("CardStatus");
                 });
 #pragma warning restore 612, 618
         }

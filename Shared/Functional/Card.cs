@@ -27,7 +27,7 @@ namespace Abeer.Shared
         public int Value { get; set; }
         public bool IsGenerated { get; set; }
         public string CreatorId { get; set; }
-        public List<CardStatu> CardStatus { get; set; }
+        public virtual List<CardStatu> CardStatus { get; set; }
         public bool IsUsed { get; set; }
         public bool IsSold { get; set; }
         public DateTime? SoldDate { get; set; }
