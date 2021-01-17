@@ -117,25 +117,31 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ad_description" xml:space="preserve">
+    <value>Petites annonces - Publier vos offres et consulter les demandes des milliers d'autres utilisateurs</value>
+  </data>
   <data name="Agencies_description" xml:space="preserve">
-    <value>Vous voulez trouver un de nos magasins physiques où acheter une carte à puce clik</value>
+    <value>Nous trouver : Acheter votre carte NFC Smart-Clik ou commander l'un nos services et produits directement dans l'une de nos agences</value>
   </data>
   <data name="Business" xml:space="preserve">
-    <value>Affaires</value>
+    <value>A votre service</value>
   </data>
   <data name="Business_description" xml:space="preserve">
-    <value>Vous pouvez partager et gérer vos contacts d’affaires</value>
+    <value>Modifier votre profil : Consulter ou modifier vos informations personnelles, ajouter et gérer vos comptes sociaux ainsi que vos liens personnalisés</value>
   </data>
   <data name="Cards_description" xml:space="preserve">
-    <value>Vous pouvez gérer les cartes, en créer une nouvelle, faire le suivi en utilisant</value>
+    <value>Gérer les cartes : Gérer vos cartes NFC, affecter les à vos utilisateurs et suivre leur utilisateur</value>
   </data>
-  <data name="Profile_description" xml:space="preserve">
-    <value>Vous pouvez créer et afficher des annonces pour vendre ou acheter des choses</value>
+  <data name="Register" xml:space="preserve">
+    <value>S'inscrire : Obtenir un compte Smart-Clik, Echanger en QR Code votre profil avec des milliers d'utilisateur. Bénéficier de 5 jours de tests gratuits.</value>
+  </data>
+  <data name="Subscribe" xml:space="preserve">
+    <value>Souscrire à un abonnement - Etendre la durée de votre abonnement en souscrivant à un nouvel abonnement et continuer à faire partie de nos milliers d'utilisateurs</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Services</value>
+    <value>Bienvenue sur Smart-Clik. Nous sommes là pour vous aider</value>
   </data>
   <data name="Users_description" xml:space="preserve">
-    <value>Vous pouvez ajouter, modifier ou supprimer des utilisateurs</value>
+    <value>Gérer les Utilisateurs : Gérer vos utilisateurs et membres de votre réseau</value>
   </data>
 </root>

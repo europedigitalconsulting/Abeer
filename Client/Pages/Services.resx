@@ -117,25 +117,31 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ad_description" xml:space="preserve">
+    <value>Classifieds - Post offers and view requests from thousands of other users</value>
+  </data>
   <data name="Agencies_description" xml:space="preserve">
-    <value>You want to find one of our physical shop where to buy a smart-clik card</value>
+    <value>Find us: Buy your NFC Smart-Clik card or order one of our services and products directly from one of our branches</value>
   </data>
   <data name="Business" xml:space="preserve">
-    <value>Business</value>
+    <value>At your services</value>
   </data>
   <data name="Business_description" xml:space="preserve">
-    <value>You can share and manage your business contacts</value>
+    <value>Edit your profile: View or edit your personal information, add and manage your social accounts and personalized links</value>
   </data>
   <data name="Cards_description" xml:space="preserve">
-    <value>You can manage cards, create new one, tracking using</value>
+    <value>Cards: Manage NFC cards, create news, affect them to users and get report of using them</value>
   </data>
-  <data name="Profile_description" xml:space="preserve">
-    <value>You can create and view ads to sell or buy stuff</value>
+  <data name="Register" xml:space="preserve">
+    <value>Register: Get a Smart-Clik account, Exchange in QR Code your profile with thousands of users. Enjoy 5 days of free tests.</value>
+  </data>
+  <data name="Subscribe" xml:space="preserve">
+    <value>Renew your subscription - Extend the duration of your subscription by renewing your subscription and continue to be one of our thousands of users</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Services</value>
+    <value>Welcome to Smart-Clik. We’re here to help</value>
   </data>
   <data name="Users_description" xml:space="preserve">
-    <value>You can add, edit or delete users</value>
+    <value>Manage Users : You can add, edit or remove users</value>
   </data>
 </root>

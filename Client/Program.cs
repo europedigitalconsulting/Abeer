@@ -45,9 +45,6 @@ namespace Abeer.Client
                 opt.AddDefaultPolicy(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyMethod());
                 });
 
-            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(CultureInfo.CurrentCulture.Name); 
-            CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo(CultureInfo.CurrentCulture.Name); 
-             
             await builder.Build().RunAsync();
         }
     }

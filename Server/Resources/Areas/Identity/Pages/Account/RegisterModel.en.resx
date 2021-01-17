@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CatchPhrase" xml:space="preserve">
-    <value>To connect on Smart-Clik you should be registered, please following this form and click on submit</value>
+    <value>Welcome to the Smart-Clik app. Technology has paved the way for new developments, new discoveries, and new ways to share them. With a simple touch, you can now share your business cards, while doubling your efficiency. Ready-to-use, smart-clik offers all its technology for your convenience. Test our application is adopt it. Do not wait any longer, thank you to register, you have 5 days free to test us!</value>
   </data>
   <data name="ConfirmationCatchPhrase" xml:space="preserve">
     <value>An email has sent to you mail box {0} please confirm by clicking on the link</value>
