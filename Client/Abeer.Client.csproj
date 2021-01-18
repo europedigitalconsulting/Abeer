@@ -10,11 +10,13 @@
 
   <ItemGroup>
     <BlazorWebAssemblyLazyLoad Include="Abeer.UI_Ads.dll"></BlazorWebAssemblyLazyLoad>
+    <BlazorWebAssemblyLazyLoad Include="Abeer.UI_Cards.dll"></BlazorWebAssemblyLazyLoad>
   </ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\Abeer.Client.UISdk\Abeer.Client.UISdk.csproj" />
 		<ProjectReference Include="..\Abeer.UI_Ads\Abeer.UI_Ads.csproj" />
+		<ProjectReference Include="..\Abeer.UI_Cards\Abeer.UI_Cards.csproj" />
 		<ProjectReference Include="..\Features\CryptoCoinPayment\Cryptocoin.Payment.csproj" />
 		<ProjectReference Include="..\Shared\Abeer.Shared.csproj" />
 	</ItemGroup>

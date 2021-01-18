@@ -44,6 +44,7 @@ namespace Abeer.Shared
         [ForeignKey(nameof(BatchId))]
         public Batch Batch { get; set; }
         public Guid BatchId { get; set; }
+        public byte[] CsvFileContent { get; set; }
     }
 
     public enum ErrorTypes

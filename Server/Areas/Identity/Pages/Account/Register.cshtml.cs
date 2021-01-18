@@ -167,7 +167,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
 
                     else if (card.IsUsed)
                     {
-                        ModelState.AddModelError("", "Card is used");
+                        ModelState.AddModelError("", "Current is used");
                         return Page();
                     }
 

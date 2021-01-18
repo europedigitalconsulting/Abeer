@@ -241,7 +241,7 @@
     <value>Pin Code</value>
   </data>
   <data name="PinDigit" xml:space="preserve">
-    <value>Card number</value>
+    <value>Current number</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>Save</value>

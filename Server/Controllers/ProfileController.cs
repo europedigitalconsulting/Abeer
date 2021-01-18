@@ -134,7 +134,7 @@ namespace Abeer.Server.Controllers
 
             else if (card.IsUsed)
             {
-                return NotFound("Card is used");
+                return NotFound("Current is used");
             }
 
             else if (card.PinCode != userForm.PinCode.ToString())

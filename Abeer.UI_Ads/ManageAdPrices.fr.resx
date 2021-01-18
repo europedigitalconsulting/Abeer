@@ -118,36 +118,36 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Add" xml:space="preserve">
-    <value>Add a new price</value>
+    <value>Ajouter une nouvelle formule</value>
   </data>
   <data name="DelayToDisplay" xml:space="preserve">
-    <value>Delay to display</value>
+    <value>Délais d'affichage</value>
   </data>
   <data name="Description" xml:space="preserve">
     <value>Description</value>
   </data>
   <data name="DisplayDuration" xml:space="preserve">
-    <value>Display during</value>
+    <value>Durée d'affichage</value>
   </data>
   <data name="EditAdPriceTitle" xml:space="preserve">
-    <value>Edit display formula</value>
+    <value>Modifier une formule</value>
   </data>
   <data name="MaxViewCount" xml:space="preserve">
-    <value>Max view count</value>
+    <value>Nombre de vue maximale</value>
   </data>
   <data name="Name" xml:space="preserve">
-    <value>Name</value>
+    <value>Nom</value>
   </data>
   <data name="Save" xml:space="preserve">
-    <value>Save</value>
+    <value>Enregister</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Manage prices</value>
+    <value>Gérer les formules d'affichage</value>
   </data>
   <data name="UpdateFailedError" xml:space="preserve">
-    <value>Can not update a display formula, please try later</value>
+    <value>Impossible d'enregistrer la formule</value>
   </data>
   <data name="Value" xml:space="preserve">
-    <value>Value</value>
+    <value>Valeur</value>
   </data>
 </root>

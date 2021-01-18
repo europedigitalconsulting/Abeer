@@ -117,37 +117,103 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Add" xml:space="preserve">
-    <value>Add a new price</value>
+  <data name="AddCard" xml:space="preserve">
+    <value>Ajouter une nouvelle carte</value>
   </data>
-  <data name="DelayToDisplay" xml:space="preserve">
-    <value>Delay to display</value>
+  <data name="Cancel" xml:space="preserve">
+    <value>Annuler</value>
   </data>
-  <data name="Description" xml:space="preserve">
-    <value>Description</value>
+  <data name="CardList" xml:space="preserve">
+    <value>Liste des cartes</value>
   </data>
-  <data name="DisplayDuration" xml:space="preserve">
-    <value>Display during</value>
+  <data name="CardNumber" xml:space="preserve">
+    <value>Numéro</value>
   </data>
-  <data name="EditAdPriceTitle" xml:space="preserve">
-    <value>Edit display formula</value>
+  <data name="CardType" xml:space="preserve">
+    <value>Type de carte</value>
   </data>
-  <data name="MaxViewCount" xml:space="preserve">
-    <value>Max view count</value>
+  <data name="ConfirmDelete" xml:space="preserve">
+    <value>Etes-vous sur de vouloir supprimer cette carte ?</value>
   </data>
-  <data name="Name" xml:space="preserve">
-    <value>Name</value>
+  <data name="Delete" xml:space="preserve">
+    <value>Supprimer</value>
   </data>
-  <data name="Save" xml:space="preserve">
-    <value>Save</value>
+  <data name="DeleteTitle" xml:space="preserve">
+    <value>Supprimer une carte</value>
   </data>
-  <data name="Title" xml:space="preserve">
-    <value>Manage prices</value>
+  <data name="Failed" xml:space="preserve">
+    <value>La génération a échouée</value>
   </data>
-  <data name="UpdateFailedError" xml:space="preserve">
-    <value>Can not update a display formula, please try later</value>
+  <data name="GenerateAt" xml:space="preserve">
+    <value>Généré le</value>
+  </data>
+  <data name="GeneratedAt" xml:space="preserve">
+    <value>La génération s'est terminée à</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Accueil</value>
+  </data>
+  <data name="Icon" xml:space="preserve">
+    <value>Icône</value>
+  </data>
+  <data name="Insert" xml:space="preserve">
+    <value>Ajouter une carte</value>
+  </data>
+  <data name="InsertTitle" xml:space="preserve">
+    <value>Ajouter une carte</value>
+  </data>
+  <data name="LabelWebHookAuthentication" xml:space="preserve">
+    <value>Authentification</value>
+  </data>
+  <data name="LabelWebHookProtocolType" xml:space="preserve">
+    <value>Protocole</value>
+  </data>
+  <data name="LabelWebHookUrl" xml:space="preserve">
+    <value>Url du Webhook</value>
+  </data>
+  <data name="MyCardList" xml:space="preserve">
+    <value>Liste des cartes</value>
+  </data>
+  <data name="MyCardListCatchPhrase" xml:space="preserve">
+    <value>Cette page vous aide à créer, modifier et supprimer des cartes utilisables par les clients</value>
+  </data>
+  <data name="NbOfTokenAvailable" xml:space="preserve">
+    <value>Jetons disponibles</value>
+  </data>
+  <data name="NbOfTokens" xml:space="preserve">
+    <value>Nombre de jetons</value>
+  </data>
+  <data name="NbOfTokensUsed" xml:space="preserve">
+    <value>Jetons utilisés</value>
+  </data>
+  <data name="NoCardFound" xml:space="preserve">
+    <value>Aucune carte n'existe ou n'a été trouvée, vous pouvez en créer une nouvelle</value>
+  </data>
+  <data name="Pending" xml:space="preserve">
+    <value>La génération va démarrer</value>
+  </data>
+  <data name="PinCode" xml:space="preserve">
+    <value>Code PIN</value>
+  </data>
+  <data name="Processing" xml:space="preserve">
+    <value>La génération est en cours</value>
+  </data>
+  <data name="Refill" xml:space="preserve">
+    <value>Recharger</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Rechercher</value>
+  </data>
+  <data name="Service" xml:space="preserve">
+    <value>Services</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="UpdateTitle" xml:space="preserve">
+    <value>Modifier une carte</value>
   </data>
   <data name="Value" xml:space="preserve">
-    <value>Value</value>
+    <value>points</value>
   </data>
 </root>

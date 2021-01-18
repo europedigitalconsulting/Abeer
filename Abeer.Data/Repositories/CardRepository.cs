@@ -20,7 +20,7 @@ namespace Abeer.Data.Repositories
         public FunctionalDbContext FunctionalDbContext { get; }
 
         public Task<IList<Card>> GetCards() =>
-            Task.Run(() => FunctionalDbContext.Cards.ToList());
+            Task.Run<IList<Card>>(() => FunctionalDbContext.Cards.AsQuery().Include(c=>c.CardStatus).ToList());
 
         public Task<Card> GetCard(Guid id) =>
             Task.Run(() => FunctionalDbContext.Cards.FirstOrDefault(b => b.Id == id));
@@ -147,6 +147,11 @@ namespace Abeer.Data.Repositories
         public async Task UpdateBatch(Batch batch)
         {
             await Task.Run(() => FunctionalDbContext.Batches.Update(batch));
+        }
+
+        public Task<Batch> FindBatch(Guid id)
+        {
+            return Task.Run(() => FunctionalDbContext.Batches.FirstOrDefault(b=>b.Id == id));
         }
     }
 }

@@ -1,0 +1,257 @@
+﻿@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@namespace Abeer.UI_Cards
+@using Abeer.Client.UISdk.Shared
+
+@if (IsModalVisible)
+{
+    <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-backdrop modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        @switch (Mode)
+                        {
+                            case "Insert":
+                                @Localizer["InsertTitle"]
+                                break;
+                            case "Update":
+                                @Localizer["UpdateTitle"]
+                                break;
+                            default:
+                                @Localizer["DeleteTitle"]
+                                break;
+                        }
+                    </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <section class="section">
+                        <div class="card">
+                            <div class="card-body">
+                                <fieldset>
+                                    <div class="form-group">
+                                        <label>@Localizer["CardNumber"]</label>
+                                        <input type="number" @bind="@current.CardNumber" Class="form-control" disabled="@(Mode == "Delete")" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>@Localizer["CardType"]</label>
+                                        <select @bind="current.CardType" class="form-control" disabled="@(Mode == "Delete")">
+                                            <option>Select</option>
+                                            <option value="Refill">@Localizer["Access"]</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>@Localizer["Icon"]</label>
+                                        <input type="text" @bind="@current.Icon" class="form-control" disabled="@(Mode == "Delete")" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>@Localizer["PinCode"]</label>
+                                        <input type="number" @bind="@current.PinCode" class="form-control" disabled="@(Mode == "Delete")" />
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning " @onclick="@(() => IsModalVisible = false)">@Localizer["Cancel"]</button>
+                    <button type="button" class="btn btn-success" @onclick="Save">@(Mode == "Delete" ? Localizer["Delete"] : Localizer["Save"])</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (IsBatchModalVisible)
+{
+    <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-backdrop modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        @Localizer["AddBatch"]
+                    </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <section class="section">
+                        <div class="card">
+                            <div class="card-body">
+                                <fieldset>
+                                    <div class="form-group">
+                                        <label>@Localizer["CardType"]</label>
+                                        <select @bind="Batch.CardType" class="form-control">
+                                            <option>Select</option>
+                                            <option value="Refill">@Localizer["Access"]</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>@Localizer["CardStartNumber"]</label>
+                                        <input type="number" @bind="@Batch.CardStartNumber" class="form-control" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>@Localizer["Quantity"]</label>
+                                        <input type="number" @bind="@Batch.Quantity" class="form-control" max="100" />
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning " @onclick="@(() => IsBatchModalVisible = false)">@Localizer["Cancel"]</button>
+                    <button type="button" class="btn btn-success" @onclick="Generate">@Localizer["Generate"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Main Content -->
+<div class="main-content">
+    <section class="section">
+        <div class="section-header">
+            <h1>@Localizer["LabelMyCardList"] <span class="badge badge-primary">@Items.Count</span></h1>
+            <div class="section-header-breadcrumb">
+                <div class="breadcrumb-item active"><a href="#">@Localizer["LabelHome"]</a></div>
+                <div class="breadcrumb-item">@Localizer["LabelMyCardList"]</div>
+            </div>
+        </div>
+        <div class="section-body">
+            <h2 class="section-title">@Localizer["LabelMyCardList"]</h2>
+            <p class="section-lead">@Localizer["LabelMyCardListCatchPhrase"].</p>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body p-2">
+                        <div class="container-fluid">
+                            @if (IsBatchGenerated)
+                            {
+                                <div class="alert alert-success">@Localizer["SucessGenerateBatch"]</div>
+                                <button class="btn btn-success btn-lg" @onclick="DownloadDocument"><i class="fas fa-cloud-download-alt"></i>@Localizer["Download"]</button>
+                            }
+                            <PagineableRepeater TItem="Card" Items="@Items" EnableSearchFilter="true" PageSize="20">
+                                <SearchForm>
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="panel panel-default">
+                                                <div class="panel-body p-2">
+                                                    <div class="input-group">
+                                                        <input type="text" id="example-input1-group2" name="example-input1-group2" class="form-control" placeholder="@Localizer["LabelSearch"]" @bind-value="SearchTerm">
+                                                        <span class="input-group-btn pl-2">
+                                                            <button type="button" class="btn btn-effect-ripple btn-primary" @onclick="SearchButtonClick"><i class="fa fa-search"></i></button>
+
+                                                            @if (User?.HasClaim(System.Security.Claims.ClaimTypes.Role, "admin") == true)
+                                                            {
+                                                                <button type="button" class="btn btn-effect-ripple btn-primary" @onclick="ShowInsertCard" title="@Localizer["LabelAddCard"]"><i class="fas fa-plus-square"></i></button>
+                                                                <button type="button" class="btn btn-effect-ripple btn-primary" @onclick="ShowInsertBatch" title="@Localizer["LabelAddBatch"]"><i class="fas fa-folder-plus"></i></button>
+                                                            }
+
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </SearchForm>
+                                <ChildContent Context="card">
+                                    @{
+                                        var lastStatus = card.CardStatus?.OrderByDescending(b => b.Status)?.FirstOrDefault();
+                                    }
+
+                                    <div class="col-6 badge-light">
+                                        <div class="panel">
+                                            <div class="panel-body p-t-10">
+                                                <div class="media-main">
+                                                    <a class="pull-left" href="#">
+                                                        <i class="@(string.IsNullOrEmpty(card.Icon) ? "fas fa-archive" : card.Icon) fa-7x"></i>
+                                                    </a>
+                                                    <div class="pull-right btn-group-sm">
+                                                        @if ((User?.HasClaim(System.Security.Claims.ClaimTypes.Role, "manager") == true
+                                                              || User?.HasClaim(System.Security.Claims.ClaimTypes.Role, "admin") == true))
+                                                        {
+                                                            <button type="button" class="btn btn-success tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Edit" @onclick="@(() => ShowEditCard(card))">
+                                                                <i class="fas fa-edit"></i>
+                                                            </button>
+                                                            <button type="button" class="btn btn-danger tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Delete" @onclick="@(() => ShowDeleteCard(card))">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        }
+                                                        @if (!card.IsSold && card.IsGenerated && !card.IsUsed)
+                                                        {
+                                                            <button type="button" class="btn btn-success tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Delete" @onclick="@(() => SellCard(card))">
+                                                                <i class="fas fa-cash-register"></i>
+                                                            </button>
+                                                        }
+                                                    </div>
+                                                    <div class="info">
+                                                        <a href="#" title="@card.PinCode">
+                                                            <p class="text-muted">
+                                                                @card.CardNumber
+                                                                @if (!string.IsNullOrWhiteSpace(card.CardType))
+                                                                {<b>/ @card.CardType</b>}
+                                                                / @card.Value @Localizer["ValueType"]
+                                                            </p>
+                                                        </a>
+                                                    </div>
+                                                    <hr>
+                                                    @if (card.HasError)
+                                                    {
+                                                        <span class="badge badge-danger">@Localizer["CardHasErrorMessage"] @card.ErrorType</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        switch (lastStatus.Status)
+                                                        {
+                                                            case CardStatus.Created:
+                                                            {
+                                                                <span class="badge badge-info">@Localizer["LabelPending"]</span>
+                                                                break;
+                                                            }
+                                                            case CardStatus.Started:
+                                                            {
+                                                                <span class="badge badge-light">@Localizer["LabelProcessing"]</span>
+                                                                break;
+                                                            }
+                                                            case CardStatus.Error:
+                                                            {
+                                                                <span class="badge badge-danger">@Localizer["CardHasErrorMessage"] @lastStatus.StatusMessage</span>
+                                                                break;
+                                                            }
+                                                            case CardStatus.Generated:
+                                                            {
+                                                                <span class="badge badge-success">@Localizer["LabelGeneratedAt"] @lastStatus.StatusDate</span>
+                                                                break;
+                                                            }
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ChildContent>
+                                <EmptyTemplate>
+                                    <div class="col-12">
+                                        <div class="alert alert-info">
+                                            @Localizer["LabelNoCardFound"]
+                                            @if (User?.HasClaim(System.Security.Claims.ClaimTypes.Role, "manager") == true || User?.HasClaim(System.Security.Claims.ClaimTypes.Role, "admin") == true)
+                                            {
+                                                <button type="button" class="btn btn-effect-ripple btn-primary" @onclick="ShowInsertCard" title="@Localizer["LabelAddCard"]"><i class="fas fa-plus-square"></i></button>
+                                                <button type="button" class="btn btn-effect-ripple btn-primary" @onclick="ShowInsertBatch" title="@Localizer["LabelAddBatch"]"><i class="fas fa-folder-plus"></i></button>
+                                            }
+                                        </div>
+                                    </div>
+                                </EmptyTemplate>
+                            </PagineableRepeater>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

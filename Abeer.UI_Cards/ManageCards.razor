@@ -1,0 +1,5 @@
+﻿@page "/Cards/manage"
+@inject Microsoft.Extensions.Localization.IStringLocalizer<ManageCards> Loc
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+<h1>@Loc["MyCardList"]</h1>
+<CardList Localizer="Loc"></CardList>

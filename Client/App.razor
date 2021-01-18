@@ -45,16 +45,22 @@
 @code
 {
     private List<Assembly> lazyLoadedAssemblies = new List<Assembly>();
-    
+
     private async Task OnNavigateAsync(NavigationContext args)
     {
-        
+
         Console.WriteLine($"OnNavigateAsync path:{args.Path}");
 
-        if (args.Path.StartsWith("ads/"))
+        if (args.Path.StartsWith("ads/", StringComparison.OrdinalIgnoreCase))
         {
             var assemblies = await assemblyLoader.LoadAssembliesAsync(
                 new List<string>() { "Abeer.UI_Ads.dll" });
+            lazyLoadedAssemblies.AddRange(assemblies);
+        }
+        else if (args.Path.StartsWith("cards/", StringComparison.OrdinalIgnoreCase))
+        {
+            var assemblies = await assemblyLoader.LoadAssembliesAsync(
+                new List<string>() { "Abeer.UI_Cards.dll" });
             lazyLoadedAssemblies.AddRange(assemblies);
         }
     }

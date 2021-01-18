@@ -36,6 +36,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cryptocoin.Payment", "Featu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abeer.UI_Ads", "Abeer.UI_Ads\Abeer.UI_Ads.csproj", "{374EE9D2-5913-4BAD-80B6-15FB80DE7F82}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abeer.UI_Cards", "Abeer.UI_Cards\Abeer.UI_Cards.csproj", "{C9739FB5-CAB6-4AF1-9873-FC2F026D091F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -109,6 +111,12 @@ Global
 		{374EE9D2-5913-4BAD-80B6-15FB80DE7F82}.Ghpages|Any CPU.Build.0 = Debug|Any CPU
 		{374EE9D2-5913-4BAD-80B6-15FB80DE7F82}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{374EE9D2-5913-4BAD-80B6-15FB80DE7F82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9739FB5-CAB6-4AF1-9873-FC2F026D091F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9739FB5-CAB6-4AF1-9873-FC2F026D091F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9739FB5-CAB6-4AF1-9873-FC2F026D091F}.Ghpages|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9739FB5-CAB6-4AF1-9873-FC2F026D091F}.Ghpages|Any CPU.Build.0 = Debug|Any CPU
+		{C9739FB5-CAB6-4AF1-9873-FC2F026D091F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9739FB5-CAB6-4AF1-9873-FC2F026D091F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -126,6 +134,7 @@ Global
 		{95A8BEEB-1809-419B-A564-79ADAF92F10E} = {B88FCDAE-ADA7-4F4F-99D9-4AAC627CAAA6}
 		{E484DFDC-3287-4CA1-A01E-5DE965818D14} = {95A8BEEB-1809-419B-A564-79ADAF92F10E}
 		{374EE9D2-5913-4BAD-80B6-15FB80DE7F82} = {95A8BEEB-1809-419B-A564-79ADAF92F10E}
+		{C9739FB5-CAB6-4AF1-9873-FC2F026D091F} = {95A8BEEB-1809-419B-A564-79ADAF92F10E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {53E6A249-9A9D-4939-B752-5470E5B85C7E}
