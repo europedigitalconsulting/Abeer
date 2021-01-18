@@ -62,10 +62,10 @@ namespace Abeer.Client.UISdk
         public NavigationUrlService(NavigationManager navigationManager)
         {
             _ProfileUrl = navigationManager.ToAbsoluteUri("/profile").ToString();
-            _ImportContactUrl = navigationManager.ToAbsoluteUri("/addContact").ToString();
+            _ImportContactUrl = navigationManager.ToAbsoluteUri("/contact/import").ToString();
             _ServicesUrl = navigationManager.ToAbsoluteUri("/services").ToString();
-            _ContactsUrl = navigationManager.ToAbsoluteUri("/contacts").ToString();
-            _MyAdsUrl = navigationManager.ToAbsoluteUri("/MyAds").ToString();
+            _ContactsUrl = navigationManager.ToAbsoluteUri("/contacts/list").ToString();
+            _MyAdsUrl = navigationManager.ToAbsoluteUri("/ads/myads").ToString();
             _ProfileEdit = navigationManager.ToAbsoluteUri("/Profile/Edit").ToString();
         }
 

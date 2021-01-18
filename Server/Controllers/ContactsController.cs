@@ -144,6 +144,14 @@ namespace Abeer.Server.Controllers
             return contact;
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> RemoveContactAsync(Guid id)
+        {
+            await _UnitOfWork.ContactRepository.Delete(id);
+            _UnitOfWork.SaveChanges();
+            return Ok();
+        }
+
         // PUT: api/Contacts/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
@@ -173,22 +181,6 @@ namespace Abeer.Server.Controllers
 
             await _UnitOfWork.ContactRepository.Add(contact);
             return CreatedAtAction("GetContact", new { id = contact.Id }, contact);
-        }
-
-        // DELETE: api/Contacts/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Contact>> DeleteContact(Guid id)
-        {
-            var contact = await _UnitOfWork.ContactRepository.GetContact(id);
-
-            if (contact == null)
-            {
-                return NotFound();
-            }
-
-            _UnitOfWork.ContactRepository.Remove(contact);
-
-            return contact;
         }
     }
 }

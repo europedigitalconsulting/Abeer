@@ -33,7 +33,7 @@ namespace Abeer.Client.Pages
                     UserProfile = JsonConvert.DeserializeObject<ViewApplicationUser>(json);
 
                     NavigationUrlService.SetUrls($"https://www.google.com/maps/search/?api=1&query={UserProfile.Address},{UserProfile.City}%20{UserProfile.Country}&query_place_id={UserProfile.DisplayName}",
-                        NavigationManager.ToAbsoluteUri($"/ImportContact/{UserProfile.Id}").ToString());
+                        NavigationManager.ToAbsoluteUri($"/contact/import/{UserProfile.Id}").ToString());
 
                     NavigationUrlService.ShowContacts = true;
                     NavigationUrlService.ShowMyAds = true;

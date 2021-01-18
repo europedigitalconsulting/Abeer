@@ -1,5 +1,8 @@
-﻿@page "/ImportContact/{ProfileId}"
+﻿@page "/contact/import/{ProfileId}"
+@using System.Net.Http
 @using Abeer.Client
+@using Abeer.Shared
+@using Abeer.Shared.ViewModels
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
 @inject Microsoft.Extensions.Localization.IStringLocalizer<ImportContact> Loc
 @inject HttpClient HttpClient

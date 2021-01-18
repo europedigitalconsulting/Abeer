@@ -55,5 +55,10 @@ namespace Abeer.Data.Repositories
         }
 
         public Task<bool> Any(Expression<Func<Contact, bool>> p) => Task.Run(() => _context.Contacts.Any(p));
+
+        public Task Delete(Guid id)
+        {
+            return Task.Run(()=>_context.Contacts.Remove(id));
+        }
     }
 }

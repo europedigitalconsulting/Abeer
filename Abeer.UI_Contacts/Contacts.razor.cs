@@ -1,19 +1,13 @@
-﻿
-using Abeer.Shared;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.JSInterop;
-using Newtonsoft.Json;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Security.Claims;
+using System.Net;
 using System.Threading.Tasks;
+using Abeer.Shared;
+using Microsoft.AspNetCore.Components;
+using Newtonsoft.Json;
 
-namespace Abeer.Client.Pages
+namespace Abeer.UI_Contacts
 {
     public partial class Contacts : ComponentBase
     {
@@ -86,10 +80,18 @@ namespace Abeer.Client.Pages
                 await GetSuggestions();
         }
 
-        private void Import(string id)
+        private async Task Import(string id)
         {
-            var getMyContacts = HttpClient.GetAsync($"/api/Contacts/import/{id}").GetAwaiter().GetResult();
+            var getMyContacts = await HttpClient.GetAsync($"/api/Contacts/import/{id}");
             getMyContacts.EnsureSuccessStatusCode();
+        }
+
+        async Task Remove(ViewContact contact)
+        {
+            var deleteResult =await HttpClient.DeleteAsync($"/api/contacts/{contact.Id}");
+            deleteResult.EnsureSuccessStatusCode();
+            Items.Remove(contact);
+            await InvokeAsync(StateHasChanged);
         }
 
     }

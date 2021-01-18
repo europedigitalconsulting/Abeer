@@ -117,34 +117,31 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ad_description" xml:space="preserve">
-    <value>Petites annonces - Publier vos offres et consulter les demandes des milliers d'autres utilisateurs</value>
+  <data name="CatchPhrase" xml:space="preserve">
+    <value>Cette page vous aide à importer un contact</value>
   </data>
-  <data name="Agencies_description" xml:space="preserve">
-    <value>Nous trouver : Acheter votre carte NFC Smart-Clik ou commander l'un nos services et produits directement dans l'une de nos agences</value>
+  <data name="Contacts" xml:space="preserve">
+    <value>Contacts</value>
   </data>
-  <data name="Business" xml:space="preserve">
-    <value>A votre service</value>
+  <data name="Duplicate" xml:space="preserve">
+    <value>La fiche contact a déjà ajoutée à votre liste, vous ne pouvez pas ajouter deux fois la même fiche</value>
   </data>
-  <data name="Business_description" xml:space="preserve">
-    <value>Modifier votre profil : Consulter ou modifier vos informations personnelles, ajouter et gérer vos comptes sociaux ainsi que vos liens personnalisés</value>
+  <data name="Home" xml:space="preserve">
+    <value>Accueil</value>
   </data>
-  <data name="Cards_description" xml:space="preserve">
-    <value>Gérer les cartes : Gérer vos cartes NFC, affecter les à vos utilisateurs et suivre leur utilisateur</value>
+  <data name="ImportContact" xml:space="preserve">
+    <value>Importer un contact</value>
   </data>
-  <data name="Contact_description" xml:space="preserve">
-    <value>Annuaire de contact : Gérer et retrouver vos cartes partagés ici</value>
+  <data name="MessageSuccess" xml:space="preserve">
+    <value>La fiche contact a été ajoutée correctement</value>
   </data>
-  <data name="Register" xml:space="preserve">
-    <value>S'inscrire : Obtenir un compte Smart-Clik, Echanger en QR Code votre profil avec des milliers d'utilisateur. Bénéficier de 5 jours de tests gratuits.</value>
+  <data name="ReturnToHomePage" xml:space="preserve">
+    <value>Revenir à la page d'accueil</value>
   </data>
-  <data name="Subscribe" xml:space="preserve">
-    <value>Souscrire à un abonnement - Etendre la durée de votre abonnement en souscrivant à un nouvel abonnement et continuer à faire partie de nos milliers d'utilisateurs</value>
+  <data name="SelfReference" xml:space="preserve">
+    <value>Il semblerait que la fiche contact soit votre propre profil, vous ne pouvez pas ajouter votre fiche en tant que contact</value>
   </data>
-  <data name="Title" xml:space="preserve">
-    <value>Bienvenue sur Smart-Clik. Nous sommes là pour vous aider</value>
-  </data>
-  <data name="Users_description" xml:space="preserve">
-    <value>Gérer les Utilisateurs : Gérer vos utilisateurs et membres de votre réseau</value>
+  <data name="ViewContact" xml:space="preserve">
+    <value>Voir le profile contact</value>
   </data>
 </root>

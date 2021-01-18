@@ -63,5 +63,11 @@
                 new List<string>() { "Abeer.UI_Cards.dll" });
             lazyLoadedAssemblies.AddRange(assemblies);
         }
+        else if (args.Path.StartsWith("contact/", StringComparison.OrdinalIgnoreCase))
+        {
+            var assemblies = await assemblyLoader.LoadAssembliesAsync(
+                new List<string>() { "Abeer.UI_Contacts.dll" });
+            lazyLoadedAssemblies.AddRange(assemblies);
+        }
     }
 }
