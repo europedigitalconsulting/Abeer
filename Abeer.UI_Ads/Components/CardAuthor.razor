@@ -1,0 +1,56 @@
+﻿@using Microsoft.Extensions.Localization
+@code
+{
+    [Parameter]
+    public ViewApplicationUser Author { get; set; }
+    [Parameter]
+    public IStringLocalizer Loc { get; set; }
+}
+<table>
+    <tr>
+        <td><img class="gallery-item" src="@Author.PhotoUrl" /></td>
+        <td>
+            <h5>@Author.DisplayName</h5>
+            <cite>@Author.AdsCount @Loc["Ads"]</cite>
+            <h6>@Author.Title</h6>
+            <p>
+                @foreach (var socialLink in Author.SocialNetworkConnected)
+                {
+                    <a href="@socialLink.Url" class="btn btn-outline-info">
+                        @if (string.IsNullOrEmpty(socialLink.Logo))
+                        {
+                            <i class="fas fa-paperclip rounded-circle" style="font-size: 16px; width: 16px; text-align: center"></i>
+                        }
+                        else if (socialLink.Logo.StartsWith("fa"))
+                        {
+                            <i class="@socialLink.Logo rounded-circle" style="font-size: 16px; width: 16px; text-align: center"></i>
+                        }
+                        else
+                        {
+                            <img alt="image" src="@(socialLink.Logo.ToLower())" class="rounded-circle img-thumbnail">
+                        }
+                        @socialLink.DisplayInfo
+                    </a>
+                }
+            </p><hr /><p>
+                @foreach (var customLink in Author.CustomLinks)
+                {
+                    <a href="@customLink.Url" class="btn btn-outline-info">
+                        @if (string.IsNullOrEmpty(customLink.Logo))
+                        {
+                            <i class="fas fa-paperclip rounded-circle" style="font-size:16px; width:16px;text-align:center"></i>
+                        }
+                        else if (customLink.Logo.StartsWith("fa"))
+                        {
+                            <i class="@customLink.Logo rounded-circle" style="font-size:16px; width:16px;text-align:center"></i>
+                        }
+                        else
+                        {
+                            <img alt="image" src="@(customLink.Logo.ToLower())" class="rounded-circle img-thumbnail">
+                        }@customLink.DisplayInfo
+                    </a>
+                }
+            </p>
+        </td>
+    </tr>
+</table>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -16,5 +17,11 @@ namespace Abeer.UI_Ads.Components
         public EventCallback<MouseEventArgs> OnEditClicked { get; set; }
         [Parameter]
         public EventCallback<MouseEventArgs> OnDeleteClicked { get; set; }
+
+        public async  Task DisplayDetail()
+        {
+            NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri($"/ads/details/{Ad.Id}").ToString(), true);
+            await InvokeAsync(StateHasChanged);
+        }
     }
 }

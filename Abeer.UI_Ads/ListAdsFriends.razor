@@ -1,10 +1,10 @@
-﻿@page "/ads/list"
+﻿@page "/ads/friends"
 @using System.Security.Claims
 @using Abeer.UI_Ads.Components
 @attribute [Authorize(Policy = "OnlySubscribers")]
 @inject IHttpClientFactory HttpClientFactory
 @inject Microsoft.Extensions.Localization.IStringLocalizer<ListAds> Loc
 @inject NavigationManager NavigationManager
-<ListAdsControl Items="@Items" Loc="@Loc" 
-                CountTerm="@countTerm" IsAdmin="@IsAdmin" 
-                Search="@Search" Term="@Term" FilterZone="All"></ListAdsControl>
+<ListAdsControl Items="@Items" CountTerm="@countTerm"
+                IsAdmin="@IsAdmin" Loc="@Loc"
+                Search="@Search" Term="@Term" FilterZone="Friends"></ListAdsControl>

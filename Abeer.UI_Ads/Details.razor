@@ -1,0 +1,99 @@
+﻿@page "/ads/details/{id}"
+@using Abeer.Shared.Functional
+@using Abeer.Client.UISdk.Shared
+@using Microsoft.AspNetCore.Components.Web
+@using Abeer.UI_Ads.Components 
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Details> Loc
+@inject IHttpClientFactory HttpClientFactory
+@inject NavigationManager NavigationManager
+@inject IJSRuntime jsRuntime
+
+@{
+    var list = new List<string>();
+    @if (Ad != null)
+    {
+        if (!string.IsNullOrEmpty(Ad.ImageUrl1))
+            list.Add(Ad.ImageUrl1);
+
+        if (!string.IsNullOrEmpty(Ad.ImageUrl2))
+            list.Add(Ad.ImageUrl2);
+
+        if (!string.IsNullOrEmpty(Ad.ImageUrl3))
+            list.Add(Ad.ImageUrl3);
+
+        if (!string.IsNullOrEmpty(Ad.ImageUrl4))
+            list.Add(Ad.ImageUrl4);
+    }
+}
+
+@if (Ad != null)
+{
+    <section class="section">
+        <div class="section-header">
+            <h1>@Ad.Title</h1>
+            <button class="btn btn-outline-success" @onclick="@(()=>NavigationManager.NavigateTo("/ads/list", true))">@Loc["ReturnList"]</button>
+        </div>
+        <div class="section-header">
+            @if (Ad.OtherAds != null)
+            {
+                <div class="input-group">
+                    @foreach (var ad in Ad.OtherAds)
+                    {
+                        <div class="col-3">
+                        <a href="@($"/ads/details/{ad.Id}")" target="_blank">
+                            <div class="card">
+                                <div class="card-header"><h5>@ad.Title</h5></div>
+                                <div class="card-body">
+                                    <img class="card-img" src="@ad.ImageUrl1"/>
+                                </div>
+                            </div>
+                            </a>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+        <div class="section-body">
+            <div class="container">
+                <div class="card">
+                    <div class="container-fliud">
+                        <div class="wrapper row">
+                            <div class="preview col-md-6">
+                                @if (list.Any())
+                                {
+                                    <div class="preview-pic tab-content">
+                                        @for (var i = 0; i < list.Count; i++)
+                                        {
+                                            <div class="tab-pane @(CurrentImageIndex == i ? "active" : "")" id="pic-@(i + 1)"><img src="@list[i]" style="max-width: 350px; max-height: 180px" /></div>
+                                        }
+                                    </div>
+                                    <ul class="preview-thumbnail nav nav-tabs">
+                                        @for (var i = 0; i < list.Count; i++)
+                                        {
+                                            <li class="@(CurrentImageIndex == i ? "active" : "")">
+                                                <a data-target="#pic-@(i + 1)" data-toggle="tab" @onclick="@(()=>CurrentImageIndex = i)">
+                                                    <img src="@list[i]" style="max-width: 90px; max-height:90px" />
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
+                                }
+
+                            </div>
+                            <div class="details col-md-6">
+                                <h3 class="product-title">@Ad.Title</h3>
+                                <div class="rating">
+                                    <span class="review-no">@Ad.ViewCount @Loc["reviews"]</span>
+                                </div>
+                                <p class="product-description">@Ad.Description.</p>
+                                <h4 class="price">@Loc["currentprice"]: <span>@Ad.Price @Ad.Currency</span></h4>
+                                <hr />
+                                <CardAuthor Author="@Ad.Owner" Loc="@Loc"></CardAuthor>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>}

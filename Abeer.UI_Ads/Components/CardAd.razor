@@ -1,84 +1,86 @@
-﻿<div class="card">
-        <div class="card-header">
-            <h4>
-                @Ad.Title
-            </h4>
-            <div class="card-header-action">
-                <span class="btn btn-icon btn-primary" href="#">@Ad.Price @Ad.Currency</span>
+﻿@inject NavigationManager NavigationManager
+<div class="card">
+    <div class="card-header">
+        <h4>
+            @Ad.Title
+        </h4>
+        <div class="card-header-action">
+            <span class="btn btn-icon btn-primary" href="#">@Ad.Price @Ad.Currency</span>
+        </div>
+    </div>
+    <div class="card-body">
+        <p class="mb-2">
+            @Ad.Description
+        </p>
+        <div class="row col-12 mb-2">
+            <div class="gallery gallery-md">
+                @if (!string.IsNullOrEmpty(Ad.ImageUrl1))
+                {
+                    <img class="gallery-item" src="@Ad.ImageUrl1" />
+                }
+                @if (!string.IsNullOrEmpty(Ad.ImageUrl2))
+                {
+                    <img class="gallery-item" src="@Ad.ImageUrl2" />
+                }
+                @if (!string.IsNullOrEmpty(Ad.ImageUrl3))
+                {
+                    <img class="gallery-item" src="@Ad.ImageUrl3" />
+                }
+                @if (!string.IsNullOrEmpty(Ad.ImageUrl4))
+                {
+                    <img class="gallery-item" src="@Ad.ImageUrl4" />
+                }
             </div>
         </div>
-        <div class="card-body">
-            <p class="mb-2">
-                @Ad.Description
-            </p>
-            <div class="row col-12 mb-2">
-                <div class="gallery gallery-md">
-                    @if (!string.IsNullOrEmpty(Ad.ImageUrl1))
-                    {
-                        <img class="gallery-item" src="@Ad.ImageUrl1" />
-                    }
-                    @if (!string.IsNullOrEmpty(Ad.ImageUrl2))
-                    {
-                        <img class="gallery-item" src="@Ad.ImageUrl2" />
-                    }
-                    @if (!string.IsNullOrEmpty(Ad.ImageUrl3))
-                    {
-                        <img class="gallery-item" src="@Ad.ImageUrl3" />
-                    }
-                    @if (!string.IsNullOrEmpty(Ad.ImageUrl4))
-                    {
-                        <img class="gallery-item" src="@Ad.ImageUrl4" />
-                    }
-                </div>
-            </div>
-            <div class="row col-12">
-                @if (!string.IsNullOrEmpty(Ad.Url1))
-                {
-                    <a href="@Ad.Url1" class="mr-2">@Ad.Url1</a>
-                }
-                @if (!string.IsNullOrEmpty(Ad.Url2))
-                {
-                    <a href="@Ad.Url2" class="mr-2">@Ad.Url2</a>
-                }
-                @if (!string.IsNullOrEmpty(Ad.Url3))
-                {
-                    <a href="@Ad.Url3" class="mr-2">@Ad.Url3</a>
-                }
-                @if (!string.IsNullOrEmpty(Ad.Url4))
-                {
-                    <a href="@Ad.Url4" class="mr-2">@Ad.Url4</a>
-                }
-            </div>
-            @if (Editable)
+        <div class="row col-12">
+            @if (!string.IsNullOrEmpty(Ad.Url1))
             {
-                <button class="btn btn-primary btn-circle btn-xl float-right ml-2" @onclick="@OnEditClicked"><i class="fas fa-pen-square"></i></button>
-                <button class="btn btn-danger btn-circle btn-xl float-right ml-2" @onclick="@OnDeleteClicked"><i class="fas fa-trash-alt"></i></button>
+                <a href="@Ad.Url1" class="mr-2">@Ad.Url1</a>
             }
-            else if (!Ad.IsValid)
+            @if (!string.IsNullOrEmpty(Ad.Url2))
             {
-                <a href="/ads/ValidAd/@Ad.Id" class="btn btn-primary"><i class="fas fa-check-square"></i>@Loc["ValidAd"]</a>
+                <a href="@Ad.Url2" class="mr-2">@Ad.Url2</a>
+            }
+            @if (!string.IsNullOrEmpty(Ad.Url3))
+            {
+                <a href="@Ad.Url3" class="mr-2">@Ad.Url3</a>
+            }
+            @if (!string.IsNullOrEmpty(Ad.Url4))
+            {
+                <a href="@Ad.Url4" class="mr-2">@Ad.Url4</a>
             }
         </div>
-        <div class="card-footer">
-            <p>
-                @Loc["ViewCount"] <span class="badge badge-primary">@Ad.ViewCount</span>
-            </p>
-            <p>
-                @if (Ad.StartDisplayTime <= DateTime.UtcNow)
+        @if (Editable)
+        {
+            <button class="btn btn-primary btn-circle btn-xl float-right ml-2" @onclick="@OnEditClicked"><i class="fas fa-pen-square"></i></button>
+            <button class="btn btn-danger btn-circle btn-xl float-right ml-2" @onclick="@OnDeleteClicked"><i class="fas fa-trash-alt"></i></button>
+        }
+        else if (!Ad.IsValid)
+        {
+            <a href="/ads/ValidAd/@Ad.Id" class="btn btn-primary"><i class="fas fa-check-square"></i>@Loc["ValidAd"]</a>
+        }
+        <button class="btn btn-pinterest btn-circle btn-xl float-right ml-2" @onclick="DisplayDetail"><i class="fas fa-eye"></i></button>
+    </div>
+    <div class="card-footer">
+        <p>
+            @Loc["ViewCount"] <span class="badge badge-primary">@Ad.ViewCount</span>
+        </p>
+        <p>
+            @if (Ad.StartDisplayTime <= DateTime.UtcNow)
+            {
+                if (Ad.EndDisplayTime >= DateTime.UtcNow)
                 {
-                    if (Ad.EndDisplayTime >= DateTime.UtcNow)
-                    {
-                        <i >@Loc["OnlineBetween"] @Ad.StartDisplayTime / @Ad.EndDisplayTime</i>
-                    }
-                    else
-                    {
-                        <i >@Loc["NotOnlineSince"] @Ad.EndDisplayTime</i>
-                    }
+                    <i>@Loc["OnlineBetween"] @Ad.StartDisplayTime / @Ad.EndDisplayTime</i>
                 }
                 else
                 {
-                    <i >@Loc["WillBeOnline"] @Ad.StartDisplayTime</i>
+                    <i>@Loc["NotOnlineSince"] @Ad.EndDisplayTime</i>
                 }
-            </p>
-        </div>
+            }
+            else
+            {
+                <i>@Loc["WillBeOnline"] @Ad.StartDisplayTime</i>
+            }
+        </p>
     </div>
+</div>

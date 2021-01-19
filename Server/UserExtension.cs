@@ -16,7 +16,7 @@ namespace Abeer.Server
 
         public static string Country(this ClaimsPrincipal claimsPrincipal)
         {
-            return claimsPrincipal.FindFirstValue(ClaimTypes.Country);
+            return claimsPrincipal.FindFirstValue(ClaimTypes.Country) ?? "FR";
         }
 
         public static string DisplayName(this ClaimsPrincipal claimsPrincipal)

@@ -31,7 +31,34 @@ namespace Abeer.Shared
         public string PhotoUrl { get; set; }
         public string DigitCode { get; set; }
         public int PinCode { get; set; }
+        public int AdsCount { get; set; }
         public IList<SocialNetwork> SocialNetworkConnected { get; set; }
         public IList<CustomLink> CustomLinks { get; set; }
+
+        public static implicit operator ViewApplicationUser(ApplicationUser user)
+        {
+            return new ViewApplicationUser()
+            {
+                Title = user.Title,
+                Address = user.Address,
+                City = user.City,
+                Country = user.Country, CustomLinks = new List<CustomLink>(),
+                Description = user.Description,
+                DigitCode = user.PinDigit,
+                DisplayName = user.DisplayName,
+                Email = user.NormalizedEmail, FirstName = user.FirstName,
+                Id = user.Id,
+                PhoneNumber = user.PhoneNumber,
+                IsAdmin = user.IsAdmin,
+                IsManager = user.IsManager,
+                IsOnline = user.IsOnline,
+                IsOperator = user.IsOperator,
+                LastLogin = user.LastLogin,
+                LastName = user.LastName,
+                NubmerOfView = user.NubmerOfView,
+                PhotoUrl = user.PhotoUrl,
+                PinCode = user.PinCode
+            };
+        }
     }
 }

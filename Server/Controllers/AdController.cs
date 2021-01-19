@@ -7,7 +7,9 @@ using System.Collections.Concurrent;
 using Abeer.Data.UnitOfworks;
 using System.Collections.Generic;
 using System.Linq;
+using Abeer.Shared;
 using Abeer.Shared.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Abeer.Server.Controllers
@@ -18,11 +20,14 @@ namespace Abeer.Server.Controllers
     public class AdsController : ControllerBase
     {
         private readonly FunctionalUnitOfWork functionalUnitOfWork;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         private readonly Random rdm = new Random();
-        public AdsController(FunctionalUnitOfWork functionalUnitOfWork)
+
+        public AdsController(FunctionalUnitOfWork functionalUnitOfWork, UserManager<ApplicationUser> userManager)
         {
             this.functionalUnitOfWork = functionalUnitOfWork;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -69,9 +74,25 @@ namespace Abeer.Server.Controllers
 
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<AdModel>> Get(Guid id)
+        public async Task<ActionResult<AdViewModel>> Get(Guid id)
         {
-            var ad = await functionalUnitOfWork.AdRepository.FirstOrDefault(a => a.Id == id);
+            var ad = (AdViewModel)(await functionalUnitOfWork.AdRepository.FirstOrDefault(a => a.Id == id));
+           
+            ad.Owner = await _userManager.FindByIdAsync(ad.OwnerId);
+            ad.Owner.PhotoUrl ??= new GravatarUrlExtension.Gravatar().GetImageSource(ad.Owner.Email);
+
+            var authorAds = await functionalUnitOfWork.AdRepository.GetVisibledUser(ad.OwnerId);
+
+            ad.Owner.AdsCount = authorAds.Count;
+
+            ad.OtherAds = authorAds.Select(a=>new ListAdViewModel{Id = a.Id, ImageUrl1 =  a.ImageUrl1, Title = a.Title, OrderNumber = a.OrderNumber})
+                .OrderBy(a=>a.OrderNumber).ToList();
+
+            ad.Owner.SocialNetworkConnected =
+                await functionalUnitOfWork.SocialNetworkRepository.GetSocialNetworkLinks(ad.OwnerId);
+            
+            ad.Owner.CustomLinks = await functionalUnitOfWork.CustomLinkRepository.GetCustomLinkLinks(ad.OwnerId);
+
             return Ok(ad);
         }
 

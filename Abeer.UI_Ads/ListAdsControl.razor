@@ -1,0 +1,61 @@
+﻿@using Microsoft.Extensions.Localization
+@using System.Security.Claims
+@using Abeer.UI_Ads.Components
+@code
+{
+    [Parameter]
+    public IStringLocalizer Loc { get; set; }
+    [Parameter]
+    public EventCallback<KeyboardEventArgs> CountTerm { get; set; }
+    [Parameter]
+    public string Term { get; set; }
+    [Parameter]
+    public EventCallback<MouseEventArgs> Search { get; set; }
+    [Parameter]
+    public List<AdModel> Items { get; set; }
+    [Parameter]
+    public bool IsAdmin { get; set; }
+    [Parameter]
+    public string FilterZone { get; set; }
+}
+<section class="section">
+    <div class="section-header">
+        <h1>@Loc["Title"]</h1>
+    </div>
+    <div class="section-header">
+        <div class="input-group">
+            <FilterAd FilterZone="@FilterZone" Loc="@Loc"></FilterAd>
+            <input type="search" id="example-input1-group2" name="example-input1-group2" class="form-control" @bind="Term" @onkeyup="CountTerm">
+            <span class="input-group-btn">
+                <button type="button" class="btn" @onclick="Search"><i class="fa fa-2x  fa-search"></i></button>
+            </span>
+            <div class="search-backdrop"></div>
+        </div>
+    </div>
+    <div class="section-body">
+        <div class="row">
+            <div class="col-12">
+                @if (Items.Any())
+                {
+                    <Virtualize Items="Items" Context="ad">
+                        <CardAd Loc="Loc" Ad="ad" Editable="false"></CardAd>
+                    </Virtualize>
+                }
+                else
+                {
+                    <div class="card bg-info p-5">
+                        <div class="text-center">@Loc["NoAds"]</div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="fixed-bottom m-5">
+    @if (IsAdmin)
+    {
+        <a href="/ads/manage" class="btn btn-danger btn-circle btn-xl float-right ml-2"><i class="fa fa-2x fa-database"></i></a>
+    }
+    <a href="/ads/create" class="btn btn-danger btn-circle btn-xl float-right"><i class="fa fa-2x fa-plus"></i></a>
+</div>

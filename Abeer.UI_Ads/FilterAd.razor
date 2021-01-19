@@ -1,0 +1,39 @@
+﻿@using Microsoft.Extensions.Localization
+@inject NavigationManager NavigationManager
+
+@code
+{
+    [Parameter]
+    public string FilterZone { get; set; }
+    [Parameter]
+    public IStringLocalizer Loc { get; set; }
+
+    private async Task GotoMyAds()
+    {
+        NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri("ads/myads").ToString(), true);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task GotoFriends()
+    {
+        NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri("ads/friends").ToString(), true);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task GotoCountry()
+    {
+        NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri("ads/country").ToString(), true);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task GotoAll()
+    {
+        NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri("ads/list").ToString(), true);
+        await InvokeAsync(StateHasChanged);
+    }
+
+}
+<button class="btn btn-primary" @onclick="GotoMyAds">@Loc["MyAds"]</button>
+<button class="btn @(FilterZone == "All" ? "btn-success" : "btn-primary")" @onclick="GotoAll"><i class="fas fa-globe"></i>@Loc["All"]</button>
+<button class="btn @(FilterZone == "Country" ? "btn-success" : "btn-primary")" @onclick="GotoCountry"><i class="fas fa-globe-europe"></i>@Loc["MyCountry"]</button>
+<button class="btn @(FilterZone == "Friends" ? "btn-success" : "btn-primary")" @onclick="GotoFriends"><i class="fas fa-user-friends"></i>@Loc["MyFreinds"]</button>
