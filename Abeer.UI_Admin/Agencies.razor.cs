@@ -1,20 +1,11 @@
-﻿
-using Abeer.Shared;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.JSInterop;
-using Newtonsoft.Json;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Abeer.Shared.Functional;
+using Microsoft.AspNetCore.Components;
 
-namespace Abeer.Client.Pages
+namespace Abeer.UI_Admin
 {
     public partial class Agencies : ComponentBase
     {

@@ -69,5 +69,17 @@
                 new List<string>() { "Abeer.UI_Contacts.dll" });
             lazyLoadedAssemblies.AddRange(assemblies);
         }
+        else if (args.Path.Equals("agencies", StringComparison.OrdinalIgnoreCase))
+        {
+            var assemblies = await assemblyLoader.LoadAssembliesAsync(
+                new List<string>() { "Abeer.UI_Admin.dll" });
+            lazyLoadedAssemblies.AddRange(assemblies);
+        }
+        else if (args.Path.StartsWith("admin/", StringComparison.OrdinalIgnoreCase))
+        {
+            var assemblies = await assemblyLoader.LoadAssembliesAsync(
+                new List<string>() { "Abeer.UI_Admin.dll" });
+            lazyLoadedAssemblies.AddRange(assemblies);
+        }
     }
 }

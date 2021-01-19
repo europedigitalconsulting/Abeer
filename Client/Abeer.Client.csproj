@@ -9,6 +9,7 @@
 	</PropertyGroup>
 
   <ItemGroup>
+    <BlazorWebAssemblyLazyLoad Include="Abeer.UI_Admin.dll"></BlazorWebAssemblyLazyLoad>
     <BlazorWebAssemblyLazyLoad Include="Abeer.UI_Ads.dll"></BlazorWebAssemblyLazyLoad>
     <BlazorWebAssemblyLazyLoad Include="Abeer.UI_Cards.dll"></BlazorWebAssemblyLazyLoad>
     <BlazorWebAssemblyLazyLoad Include="Abeer.UI_Contacts.dll"></BlazorWebAssemblyLazyLoad>
@@ -16,6 +17,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Abeer.Client.UISdk\Abeer.Client.UISdk.csproj" />
+		<ProjectReference Include="..\Abeer.UI_Admin\Abeer.UI_Admin.csproj" />
 		<ProjectReference Include="..\Abeer.UI_Ads\Abeer.UI_Ads.csproj" />
 		<ProjectReference Include="..\Abeer.UI_Cards\Abeer.UI_Cards.csproj" />
 		<ProjectReference Include="..\Abeer.UI_Contacts\Abeer.UI_Contacts.csproj" />
