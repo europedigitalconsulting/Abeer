@@ -26,13 +26,15 @@
     public string Email { get; set; }
 
     [Parameter]
-    public string PhotoUrl { get; set; } 
+    public string PhotoUrl { get; set; }
     [Parameter]
     public string PhoneNumber { get; set; }
     [Parameter]
     public IEnumerable<SocialNetwork> SocialNetworkConnected { get; set; }
     [Parameter]
     public IEnumerable<CustomLink> CustomLinks { get; set; }
+
+    [Inject] public NavigationManager NavigationManager { get; set; }
 
     protected override async Task OnParametersSetAsync()
     {
@@ -44,6 +46,19 @@
 
         await InvokeAsync(StateHasChanged);
     }
+
+    async Task GotoEditProfile()
+    {
+        NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri("/profile/edit").ToString(), true);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    async Task GotoContact()
+    {
+        NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri("/contact/list").ToString(), true);
+        await InvokeAsync(StateHasChanged);
+    }
+
 }
 
 <section class="section">
@@ -58,9 +73,9 @@
                     @if (!ReadOnly)
                     {
                         <div class="clearfix"></div>
-                        <a href="/Profile/Edit" class="btn btn-primary mt-3 follow-btn">@Loc["EditProfile"]</a>
+                        <button @onclick="GotoEditProfile" class="btn btn-primary mt-3 follow-btn">@Loc["EditProfile"]</button>
                         <div class="clearfix"></div>
-                        <a href="/Contacts" class="btn btn-primary mt-3 follow-btn">Contacts</a>
+                        <button @onclick="@GotoContact" class="btn btn-primary mt-3 follow-btn">Contacts</button>
                     }
 
                 </div>
