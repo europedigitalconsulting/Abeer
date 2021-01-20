@@ -4,6 +4,7 @@ using Abeer.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Abeer.Data.UnitOfworks;
 using System;
+using Abeer.Services;
 
 namespace Abeer.Server.Controllers
 {

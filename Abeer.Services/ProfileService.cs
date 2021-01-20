@@ -1,18 +1,13 @@
-﻿using Abeer.Shared;
-
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Abeer.Shared;
 using IdentityModel;
-
 using IdentityServer4.Models;
 using IdentityServer4.Services;
-
 using Microsoft.AspNetCore.Identity;
 
-using System;
-using System.Linq;
-
-using System.Threading.Tasks;
-
-namespace Abeer.Server
+namespace Abeer.Services
 {
     public class ProfileService : IProfileService
     {

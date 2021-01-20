@@ -1,11 +1,10 @@
-﻿using Abeer.Server.Data;
-using Abeer.Shared;
-
-using System;
+﻿using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Abeer.Services.Data;
+using Abeer.Shared;
 
-namespace Abeer.Server
+namespace Abeer.Services
 {
     public static class UserExtension
     {

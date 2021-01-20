@@ -13,6 +13,7 @@ using BraintreeHttp;
 using System.Linq;
 using Newtonsoft.Json;
 using Abeer.Data.UnitOfworks;
+using Abeer.Services;
 using Abeer.Shared.Functional;
 using Microsoft.AspNetCore.Authorization;
 

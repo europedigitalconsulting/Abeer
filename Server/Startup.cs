@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Abeer.Server.Data;
 using System;
 using Abeer.Shared;
 using System.Globalization;
@@ -21,7 +20,6 @@ using IdentityModel.Client;
 using Microsoft.Extensions.Logging;
 using System.Net.Http;
 using Abeer.Data;
-using Abeer.Server.Hubs;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
 using Microsoft.AspNetCore.Http;
@@ -35,6 +33,8 @@ using Microsoft.AspNetCore.Authorization;
 using Abeer.Client;
 using System.Collections.Generic;
 using System.Linq;
+using Abeer.Services.Data;
+using Abeer.Server.APIFeatures.Hubs;
 
 namespace Abeer.Server
 {

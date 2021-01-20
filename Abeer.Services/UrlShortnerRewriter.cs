@@ -1,11 +1,8 @@
-﻿using Abeer.Services;
-
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 
-using System.Threading.Tasks;
-
-namespace Abeer.Server
+namespace Abeer.Services
 {
     public class UrlShortnerRewriter
     {

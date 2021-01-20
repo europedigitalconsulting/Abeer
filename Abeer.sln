@@ -40,7 +40,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abeer.UI_Cards", "Abeer.UI_
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abeer.UI_Contacts", "Abeer.UI_Contacts\Abeer.UI_Contacts.csproj", "{F631CAA6-96DA-4DE4-9DFE-9118A996F7A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abeer.UI_Admin", "Abeer.UI_Admin\Abeer.UI_Admin.csproj", "{549BF203-D0C9-4777-94AE-78FCA6ABF1BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abeer.UI_Admin", "Abeer.UI_Admin\Abeer.UI_Admin.csproj", "{549BF203-D0C9-4777-94AE-78FCA6ABF1BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abeer.Server.APIFeatures", "Abeer.Server.APIFeatures\Abeer.Server.APIFeatures.csproj", "{9CFAAEAD-2E05-4EE7-9DF9-C609E8C95115}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -133,6 +135,12 @@ Global
 		{549BF203-D0C9-4777-94AE-78FCA6ABF1BF}.Ghpages|Any CPU.Build.0 = Debug|Any CPU
 		{549BF203-D0C9-4777-94AE-78FCA6ABF1BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{549BF203-D0C9-4777-94AE-78FCA6ABF1BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CFAAEAD-2E05-4EE7-9DF9-C609E8C95115}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CFAAEAD-2E05-4EE7-9DF9-C609E8C95115}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CFAAEAD-2E05-4EE7-9DF9-C609E8C95115}.Ghpages|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CFAAEAD-2E05-4EE7-9DF9-C609E8C95115}.Ghpages|Any CPU.Build.0 = Debug|Any CPU
+		{9CFAAEAD-2E05-4EE7-9DF9-C609E8C95115}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CFAAEAD-2E05-4EE7-9DF9-C609E8C95115}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -153,6 +161,7 @@ Global
 		{C9739FB5-CAB6-4AF1-9873-FC2F026D091F} = {95A8BEEB-1809-419B-A564-79ADAF92F10E}
 		{F631CAA6-96DA-4DE4-9DFE-9118A996F7A1} = {95A8BEEB-1809-419B-A564-79ADAF92F10E}
 		{549BF203-D0C9-4777-94AE-78FCA6ABF1BF} = {95A8BEEB-1809-419B-A564-79ADAF92F10E}
+		{9CFAAEAD-2E05-4EE7-9DF9-C609E8C95115} = {7C8BB74E-88E3-41A5-A5FF-02BFA3B4594C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {53E6A249-9A9D-4939-B752-5470E5B85C7E}

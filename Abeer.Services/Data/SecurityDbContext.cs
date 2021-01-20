@@ -1,15 +1,11 @@
-﻿using Abeer.Shared;
-
+﻿using System.Threading.Tasks;
+using Abeer.Shared;
 using IdentityServer4.EntityFramework.Options;
-
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace Abeer.Server.Data
+namespace Abeer.Services.Data
 {
     public class SecurityDbContext : ApiAuthorizationDbContext<ApplicationUser>
     {

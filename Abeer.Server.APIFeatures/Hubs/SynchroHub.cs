@@ -1,9 +1,7 @@
-﻿
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 
-using System.Threading.Tasks;
-
-namespace Abeer.Server.Hubs
+namespace Abeer.Server.APIFeatures.Hubs
 {
     public class SynchroHub :Hub
     {

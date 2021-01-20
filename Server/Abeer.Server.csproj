@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Abeer.Data.SqlServerProvider\Abeer.Data.SqlServerProvider.csproj" />
+    <ProjectReference Include="..\Abeer.Server.APIFeatures\Abeer.Server.APIFeatures.csproj" />
     <ProjectReference Include="..\Client\Abeer.Client.csproj" />
     <ProjectReference Include="..\Abeer.Data\Abeer.Data.csproj" />
     <ProjectReference Include="..\Abeer.Services\Abeer.Services.csproj" />

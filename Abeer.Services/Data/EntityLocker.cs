@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
-namespace Abeer.Server.Data
+namespace Abeer.Services.Data
 {
     public class EntityLocker
     {

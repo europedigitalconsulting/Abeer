@@ -1,12 +1,10 @@
-﻿using Abeer.Shared;
-
+﻿using System.Security.Claims;
+using System.Threading.Tasks;
+using Abeer.Shared;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
-using System.Security.Claims;
-using System.Threading.Tasks;
-
-namespace Abeer.Server
+namespace Abeer.Services
 {
     public class UserClaimsPrincipalFactory : UserClaimsPrincipalFactory<ApplicationUser>
     {

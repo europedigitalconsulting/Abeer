@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Abeer.Shared.Technical;
 using System.Net.Http;
 using System.Net.Http.Json;
+using Abeer.Services;
 using Microsoft.Extensions.Configuration;
 using Abeer.Shared.Functional;
 using Microsoft.Extensions.DependencyInjection;

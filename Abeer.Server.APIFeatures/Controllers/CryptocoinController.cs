@@ -1,21 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Abeer.Shared;
-using Abeer.Data.UnitOfworks;
-using Abeer.Shared.Technical;
 using System.Net.Http;
 using System.Net.Http.Json;
-using Microsoft.Extensions.Configuration;
+using System.Threading.Tasks;
+using Abeer.Data.UnitOfworks;
+using Abeer.Shared;
 using Abeer.Shared.Functional;
+using Abeer.Shared.Technical;
 using Microsoft.AspNetCore.Identity;
-using Abeer.Client;
-using Cryptocoin.Payment;
-using Newtonsoft.Json;
-using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
-namespace Abeer.Server.Controllers
+namespace Abeer.Server.APIFeatures.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
