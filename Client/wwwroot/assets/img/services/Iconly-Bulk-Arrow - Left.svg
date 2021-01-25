@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="38.833" height="37.064" viewBox="0 0 38.833 37.064">
+  <defs>
+    <filter id="Fill_1" x="0" y="0" width="38.833" height="37.064" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="Iconly_Bulk_Arrow_-_Right_2" data-name="Iconly/Bulk/Arrow - Right 2" transform="translate(9 0.064)">
+    <g id="Arrow_-_Right_2" data-name="Arrow - Right 2" transform="translate(0 25) rotate(-90)">
+      <g transform="matrix(0, 1, -1, 0, 25.06, -9)" filter="url(#Fill_1)">
+        <path id="Fill_1-2" data-name="Fill 1" d="M10.14,20.387,18.93,6.12a.906.906,0,0,0-.054-1.028,27.2,27.2,0,0,0-2.992-3.374,11.186,11.186,0,0,0-1.165-1A3.589,3.589,0,0,0,12.513,0a3.864,3.864,0,0,0-2.375.767c-.119.116-.642.558-1.069.975A45.369,45.369,0,0,0,.688,13.872,9.353,9.353,0,0,0,0,16.331a4.037,4.037,0,0,0,.452,1.879,3.888,3.888,0,0,0,1.875,1.646,19.316,19.316,0,0,0,2.231.533,36.816,36.816,0,0,0,4.727.444.964.964,0,0,0,.854-.446" transform="translate(9 25.06) rotate(-90)" fill="#1dbf8a"/>
+      </g>
+      <path id="Fill_4" data-name="Fill 4" d="M.136,9.83a.922.922,0,0,0,.856,1.39c1.754-.075,3.3-.206,4.45-.364a15.473,15.473,0,0,0,2.754-.72,3.7,3.7,0,0,0,2.065-3.293V6.729a9.377,9.377,0,0,0-.854-2.762A28.767,28.767,0,0,0,7.545.456.956.956,0,0,0,5.924.442Z" transform="translate(14.739 9.603)" fill="#f5cb2e"/>
+    </g>
+  </g>
+</svg>

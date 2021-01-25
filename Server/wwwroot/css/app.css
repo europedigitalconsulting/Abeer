@@ -1739,8 +1739,8 @@ h6 .badge {
 
 .btn-success, .btn-success.disabled {
     box-shadow: 0 2px 6px #81d694;
-    background-color: #47c363;
-    border-color: #47c363;
+    background-color: #02BF8A;
+    border-color: #02BF8A;
     color: #fff;
 }
 
@@ -1808,9 +1808,9 @@ h6 .badge {
     }
 
 .btn-warning, .btn-warning.disabled {
-    box-shadow: 0 2px 6px #ffc473;
-    background-color: #ffa426;
-    border-color: #ffa426;
+    /*box-shadow: 0 2px 6px #ffc473;*/
+    background-color: #F4A930;
+    border-color: #F4A930;
     color: #fff;
 }
 
@@ -1842,8 +1842,8 @@ h6 .badge {
 
 .btn-primary, .btn-primary.disabled {
     box-shadow: 0 2px 6px #acb5f6;
-    background-color: #2f71ff;
-    border-color: #2f71ff;
+    background-color: #333DBE;
+    border-color: #333DBE;
 }
 
     .btn-primary:focus, .btn-primary.disabled:focus {
@@ -2141,7 +2141,7 @@ h6 .badge {
     top: 0;
     left: 0;
     right: 0;
-    background-color: #2f71ff;
+    background-color: #02BF8A;
 }
 
 .navbar {
@@ -2733,11 +2733,11 @@ body, html {
 }
 
 body {
-    background-color: #f4f6f9;
+    background-color: white;
    /* background-color: #121621;*/
     font-size: 14px;
     font-weight: 400;
-    font-family: "Nunito", "Segoe UI", arial;
+    font-family: "Poppins", "Segoe UI", arial;
     color: #6c757d;
 }
 
@@ -3742,8 +3742,8 @@ body.sidebar-mini .main-content, body.sidebar-mini .main-footer {
             }
 
 .main-content {
-    padding-bottom: 60px;
-    padding-top: 80px;
+    padding-bottom: 0px;
+    padding-top: 59px;
     width: 100%;
     position: relative;
 }

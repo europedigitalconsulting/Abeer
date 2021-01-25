@@ -10,7 +10,7 @@
                  LabelMyAccount="@Loc["MyAccount"]"
                  LabelUserList="@Loc["UserList"]"></NavMenu>
 
-        <div class="main-content" style="min-height: 839px;">
+        <div class="main-content " style="min-height: calc(100vh - 60 px);">
             @if (authenticationState?.User?.Identity.IsAuthenticated == true)
             {
                 @if (IsUnlimited || IsAdmin)

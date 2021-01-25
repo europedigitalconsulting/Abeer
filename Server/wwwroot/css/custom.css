@@ -70,3 +70,17 @@
 .cursor-pointer {
     cursor: pointer;
 }
+
+.circle {
+    width: 10px;
+    border: 1px solid #02BF8A;
+    height: 10px;
+    border-radius: 15px;
+}
+.disc {
+    width: 10px;
+    border: 1px solid #6CD4B6;
+    height: 10px;
+    border-radius: 15px;
+    background: #02BF8A;
+}

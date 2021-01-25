@@ -48,11 +48,26 @@
         Navigation.NavigateTo(Navigation.ToAbsoluteUri("Identity/account/logout?returnUrl=/Profile").ToString(), true);
     }
 }
-<nav class="nav navbar navbar-bg navbar-expand-lg">
+<nav class="p-0 m-0 nav navbar navbar-bg navbar-expand-lg">
     <div class="nav navbar-header">
-        <a class="navbar-brand" href="/"><img src="assets/img/icon.png" style="max-height: 33px" title="@Loc["Business"]" />Smart Clik</a>
+        <a class="navbar-brand" href="/"><img src="assets/logo.svg" width="50" title="Smart-Click" /></a>
     </div>
-    <ul class="nav navbar-nav mr-auto">
+    <ul class="nav navbar-nav float-right">
+        <li>
+            <a href="profile" class="dropdown-item has-icon text-light text-center">
+                <i class="fa fa-search"></i><br /><span>@Loc["Recherche"]</span>
+            </a>
+        </li>
+        <li>
+            <a href="profile" class="dropdown-item has-icon text-light">
+                <i class="fas fa-bullhorn"></i><br /><span>@Loc["Annonces"]</span>
+            </a>
+        </li>
+        <li>
+            <a href="profile" class="dropdown-item has-icon text-light">
+                <i class="fa fa-user"></i> <br /><span>@Loc["Profil"]</span>
+            </a>
+        </li>
     </ul>
     <ul class="nav navbar-nav  navbar-right">
         <li class="dropdown">

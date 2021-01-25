@@ -1,0 +1,167 @@
+﻿@page "/services"
+@inject IJSRuntime jsRuntime
+@using System.Security.Claims
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Services> Loc
+
+@code
+{
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    private AuthenticationState authenticateState { get; set; }
+    private List<CardServiceViewModel> ListService { get; set; } = new List<CardServiceViewModel>();
+    private CardServiceViewModel CurrentCard { get; set; } = new CardServiceViewModel();
+    public bool IsAdmin { get; set; }
+    private bool isDevice { get; set; }
+    private bool isMobile { get; set; }
+
+    (TouchPoint ReferencePoint, DateTime StartTime) startPoint;
+    string message = "Click Begin";
+
+    protected override async Task OnInitializedAsync()
+    {
+        isMobile = await jsRuntime.InvokeAsync<bool>("isDevice");
+
+        authenticateState = await authenticationStateTask;
+
+        if (authenticateState.User?.Identity.IsAuthenticated == true)
+        {
+            IsAdmin = (authenticateState.User.Identity.IsAuthenticated && authenticateState.User.HasClaim(ClaimTypes.Role, "admin"));
+        }
+        ListService = new List<CardServiceViewModel>
+{
+            new CardServiceViewModel{ PageName = "profil", ImageUrl = "Profil.svg", Title = "Profil", Description = "Consulter ou modifier vos informations personnelles"},
+            new CardServiceViewModel{  PageName = "list", ImageUrl = "Contact.svg", Title = "Contact Manager", Description = "Vous pouvez partager et gérer vos contacts d'affaires"},
+            new CardServiceViewModel{  PageName = "myads", ImageUrl = "Annonces.svg", Title = "Annonces", Description = "Vous pouvez créer et afficher des annonces pour vendre ou acheter des choses"},
+            new CardServiceViewModel{  PageName = "agencies", ImageUrl = "Magasins.svg", Title = "Nos magasins", Description = "Vous voulez trouver un de nos magasins physiques où acheter une carte à puce Smart-Click"},
+            new CardServiceViewModel{  PageName = "subscription-pack", ImageUrl = "Abonnements.svg", Title = "Abonnement", Description = "Découvrez notre offre et souscrire à un abonnement"},
+        };
+        CurrentCard = ListService?.First();
+    }
+    private void PreviousCard()
+    {
+        var tmp = ListService.FindIndex(i => i.Equals(CurrentCard));
+        if (tmp - 1 > -1)
+            CurrentCard = ListService[tmp - 1];
+        else
+            CurrentCard = ListService[ListService.Count - 1];
+
+        StateHasChanged();
+    }
+    private void NextCard()
+    {
+        var tmp = ListService.IndexOf(CurrentCard);
+        if (tmp + 1 < ListService.Count)
+            CurrentCard = ListService[tmp + 1];
+        else
+            CurrentCard = ListService[0];
+
+        StateHasChanged();
+    }
+    private void ChangeCard(CardServiceViewModel card)
+    {
+        CurrentCard = card;
+        StateHasChanged();
+    }
+    private void HandleTouchStart(TouchEventArgs args)
+    {
+        startPoint.ReferencePoint = args.TargetTouches[0];
+        startPoint.StartTime = DateTime.Now;
+    }
+    private void HandleTouchEnd(TouchEventArgs args)
+    {
+        var endReference = args.ChangedTouches[0];
+        var endTime = DateTime.Now;
+
+        var diffX = startPoint.ReferencePoint.ClientX - endReference.ClientX;
+        var diffTime = DateTime.Now - startPoint.StartTime;
+        var velocityX = Math.Abs(diffX /diffTime.Milliseconds);
+
+        var swipeThreshold = 0.8;
+
+        if (velocityX < swipeThreshold) return;
+
+        if (velocityX >= swipeThreshold)
+        {
+            if (diffX < 0)
+                PreviousCard();
+            else
+                NextCard();
+        }
+    }
+}
+<section class="section">
+    <div class="section-body ">
+        <div class="card-body m-0 pt-0 pb-4">
+            <div class="row justify-content-center">
+                @if (!isMobile)
+                {
+                    @foreach (var item in ListService)
+                    {
+                        @if (!item.AuthenticationRequired || (item.AuthenticationRequired && authenticateState?.User?.Identity.IsAuthenticated == false))
+                        {
+                            <div class="col-lg-3 col-md-4 col-sm-4 ">
+                                <a class="text-decoration-none" href="@CurrentCard.PageName">
+                                    <div class="card profile-widget">
+                                        <div class="profile-widget-header">
+                                            <img class="w-100" src="/assets/@item.ImageUrl" />
+                                        </div>
+                                        <div class="text-center profile-widget-description pb-0t">
+                                            <h4 class="text-dark">@item.Title</h4>
+                                            <p class="text-muted">@item.Description</p>
+                                            @*<div class="profile-widget-name">@Loc["Business_description"]</div>*@
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        }
+                    }
+                }
+                else
+                {
+                    <div class="col-lg-3 col-md-4 col-sm-4 position-relative">
+                        <div class="card profile-widget ">
+                            <div class="position-absolute" style="top:30%" @onclick="PreviousCard">
+                                <img src="/assets/img/services/Iconly-Bulk-Arrow - Left.svg" />
+                            </div>
+                            <div class="position-absolute" style="top:30%;right:0" @onclick="NextCard">
+                                <img src="/assets/img/services/Iconly-Bulk-Arrow - Right.svg" />
+                            </div>
+                            <div class="row justify-content-center"  @ontouchmove:preventDefault="true" @ontouchstart="HandleTouchStart" @ontouchend="HandleTouchEnd">
+                                <img style="width:calc(90vw);" class="m-0 p-0" src="/assets/img/services/@CurrentCard.ImageUrl" />
+                            </div>
+                            <div class="text-center mt-3">
+                                <h4 class="text-dark" style="font-size: 28px;font-weight:600;">@CurrentCard.Title</h4>
+                            </div>
+                            <div class="text-center mb-0" style="height: 60px">
+                                <p class="offset-2 col-8 text-muted" style="font-size: 12px; line-height: 17px;">@CurrentCard.Description</p>
+                            </div>
+
+                            <div class="row justify-content-center mb-4">
+                                <div class="m-0 p-0">
+                                    @foreach (var item in ListService)
+                                    {
+                                        <span class="mr-1 @(item == CurrentCard ? "disc" : "circle")" style="display: inline-block;" @onclick="() => ChangeCard(item)"></span>
+                                    }
+                                </div>
+                            </div>
+                            <div class="justify-content-lg-center pb-4">
+                                <a href="@CurrentCard.PageName" class="mt-2 pt-2 pb-2 btn btn-success text-decoration-none col-12">
+                                    DÉCOUVRIR
+                                </a><br /><br />
+                                <a href="/Identity/Account/register" class="pt-2 pb-2 btn btn-warning text-decoration-none col-12">
+                                    SE CONNECTER
+                                </a>
+                                <a href="/Identity/Account/register" class="pl-0 pt-2 pb-2 text-decoration-none col-3">
+                                    <img class="pt-2 pb-2" src="/assets/macarte_sm.svg" style=" box-shadow: 0px 5px 35px 0px lightgrey;
+        padding-left: 10px;
+        border-radius: 0px 0px 19px 19px;
+        background: #F5F8FA;" />
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
