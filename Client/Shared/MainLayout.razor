@@ -2,18 +2,19 @@
 @inherits LayoutComponentBase
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Resources> Loc
 @inject Abeer.Client.UISdk.NavigationUrlService NavigationUrlService
-<div id="app">
-    <div class="container-fluid">
-        <NavMenu LabelContacts="@Loc["ContactList"]"
-                 LabelDashboard="@Loc["Dashboard"]"
-                 LabelLogout="@Loc["Logout"]"
-                 LabelMyAccount="@Loc["MyAccount"]"
-                 LabelUserList="@Loc["UserList"]"></NavMenu>
+    <MediaQueryList>
+        <div id="app">
+            <div class="container-fluid">
+                <NavMenu LabelContacts="@Loc["ContactList"]"
+                         LabelDashboard="@Loc["Dashboard"]"
+                         LabelLogout="@Loc["Logout"]"
+                         LabelMyAccount="@Loc["MyAccount"]"
+                         LabelUserList="@Loc["UserList"]"></NavMenu>
 
-        <div class="main-content " style="min-height: calc(100vh - 60 px);">
-            @if (authenticationState?.User?.Identity.IsAuthenticated == true)
+                <div class="main-content " style="min-height: calc(100vh - 60 px);">
+                    @if (authenticationState?.User?.Identity.IsAuthenticated == true)
             {
-                @if (IsUnlimited || IsAdmin)
+                    @if (IsUnlimited || IsAdmin)
                 {
                     <div class="text-danger pb-3">
                         <strong>@Loc["UnlimitedAccount"]</strong>
@@ -32,8 +33,9 @@
                     </div>
                 }
             }
-            @Body
-        </div>
-    </div>
+                    @Body
+                </div>
+            </div>
 
-</div>
+        </div>
+    </MediaQueryList>

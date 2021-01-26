@@ -11,15 +11,14 @@
     private List<CardServiceViewModel> ListService { get; set; } = new List<CardServiceViewModel>();
     private CardServiceViewModel CurrentCard { get; set; } = new CardServiceViewModel();
     public bool IsAdmin { get; set; }
-    private bool isDevice { get; set; }
-    private bool isMobile { get; set; }
+    public bool IsLarge { get; set; } = false;
+    public bool IsMedium { get; set; } = false;
+    public bool IsSmall { get; set; } = false;
 
     (TouchPoint ReferencePoint, DateTime StartTime) startPoint;
-    string message = "Click Begin";
 
     protected override async Task OnInitializedAsync()
     {
-        isMobile = await jsRuntime.InvokeAsync<bool>("isDevice");
 
         authenticateState = await authenticationStateTask;
 
@@ -29,12 +28,12 @@
         }
         ListService = new List<CardServiceViewModel>
 {
-            new CardServiceViewModel{ PageName = "profil", ImageUrl = "Profil.svg", Title = "Profil", Description = "Consulter ou modifier vos informations personnelles"},
-            new CardServiceViewModel{  PageName = "list", ImageUrl = "Contact.svg", Title = "Contact Manager", Description = "Vous pouvez partager et gérer vos contacts d'affaires"},
-            new CardServiceViewModel{  PageName = "myads", ImageUrl = "Annonces.svg", Title = "Annonces", Description = "Vous pouvez créer et afficher des annonces pour vendre ou acheter des choses"},
-            new CardServiceViewModel{  PageName = "agencies", ImageUrl = "Magasins.svg", Title = "Nos magasins", Description = "Vous voulez trouver un de nos magasins physiques où acheter une carte à puce Smart-Click"},
-            new CardServiceViewModel{  PageName = "subscription-pack", ImageUrl = "Abonnements.svg", Title = "Abonnement", Description = "Découvrez notre offre et souscrire à un abonnement"},
-        };
+            new CardServiceViewModel{ PageName = "profil", ImageUrl = "Profil.svg", Title = Loc["Title_profil"], Description = IsSmall ? "Consulter ou modifier vos informations personnelles" : Loc["Business_description"] },
+            new CardServiceViewModel{  PageName = "list", ImageUrl = "Contact.svg", Title = Loc["Title_contact"], Description = Loc["Cards_description"]},
+            new CardServiceViewModel{  PageName = "myads", ImageUrl = "Annonces.svg", Title = Loc["Title_ads"], Description = Loc["ad_description"]},
+            new CardServiceViewModel{  PageName = "agencies", ImageUrl = "Magasins.svg", Title = Loc["Title_agencies"], Description = Loc["Agencies_description"]},
+            new CardServiceViewModel{  PageName = "subscription-pack", ImageUrl = "Abonnements.svg", Title = Loc["Title_subscribe"], Description = Loc["Subscribe"] },
+        }; 
         CurrentCard = ListService?.First();
     }
     private void PreviousCard()
@@ -74,7 +73,7 @@
 
         var diffX = startPoint.ReferencePoint.ClientX - endReference.ClientX;
         var diffTime = DateTime.Now - startPoint.StartTime;
-        var velocityX = Math.Abs(diffX /diffTime.Milliseconds);
+        var velocityX = Math.Abs(diffX / diffTime.Milliseconds);
 
         var swipeThreshold = 0.8;
 
@@ -88,80 +87,93 @@
                 NextCard();
         }
     }
+
 }
 <section class="section">
     <div class="section-body ">
-        <div class="card-body m-0 pt-0 pb-4">
-            <div class="row justify-content-center">
-                @if (!isMobile)
-                {
-                    @foreach (var item in ListService)
-                    {
-                        @if (!item.AuthenticationRequired || (item.AuthenticationRequired && authenticateState?.User?.Identity.IsAuthenticated == false))
-                        {
-                            <div class="col-lg-3 col-md-4 col-sm-4 ">
-                                <a class="text-decoration-none" href="@CurrentCard.PageName">
-                                    <div class="card profile-widget">
-                                        <div class="profile-widget-header">
-                                            <img class="w-100" src="/assets/@item.ImageUrl" />
-                                        </div>
-                                        <div class="text-center profile-widget-description pb-0t">
-                                            <h4 class="text-dark">@item.Title</h4>
-                                            <p class="text-muted">@item.Description</p>
-                                            @*<div class="profile-widget-name">@Loc["Business_description"]</div>*@
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                        }
-                    }
-                }
-                else
-                {
-                    <div class="col-lg-3 col-md-4 col-sm-4 position-relative">
-                        <div class="card profile-widget ">
-                            <div class="position-absolute" style="top:30%" @onclick="PreviousCard">
-                                <img src="/assets/img/services/Iconly-Bulk-Arrow - Left.svg" />
-                            </div>
-                            <div class="position-absolute" style="top:30%;right:0" @onclick="NextCard">
-                                <img src="/assets/img/services/Iconly-Bulk-Arrow - Right.svg" />
-                            </div>
-                            <div class="row justify-content-center"  @ontouchmove:preventDefault="true" @ontouchstart="HandleTouchStart" @ontouchend="HandleTouchEnd">
-                                <img style="width:calc(90vw);" class="m-0 p-0" src="/assets/img/services/@CurrentCard.ImageUrl" />
-                            </div>
-                            <div class="text-center mt-3">
-                                <h4 class="text-dark" style="font-size: 28px;font-weight:600;">@CurrentCard.Title</h4>
-                            </div>
-                            <div class="text-center mb-0" style="height: 60px">
-                                <p class="offset-2 col-8 text-muted" style="font-size: 12px; line-height: 17px;">@CurrentCard.Description</p>
-                            </div>
+        <div class="row justify-content-center">
 
-                            <div class="row justify-content-center mb-4">
-                                <div class="m-0 p-0">
-                                    @foreach (var item in ListService)
-                                    {
-                                        <span class="mr-1 @(item == CurrentCard ? "disc" : "circle")" style="display: inline-block;" @onclick="() => ChangeCard(item)"></span>
-                                    }
+            <MediaQuery Media="@Breakpoints.LargeUp" @bind-Matches="IsLarge" />
+            <MediaQuery Media="@Breakpoints.MediumUp" @bind-Matches="IsMedium" />
+            <MediaQuery Media="@Breakpoints.SmallDown" @bind-Matches="IsSmall" />
+            @if (IsLarge || IsMedium)
+            {
+                @foreach (var item in ListService)
+                {
+                    @if (!item.AuthenticationRequired || (item.AuthenticationRequired && authenticateState?.User?.Identity.IsAuthenticated == false))
+                    {
+                        <div class="col-lg-2 col-md-4 col-sm-6 mt-4 d-flex">
+                            <div class="profile-widget">
+                                <div class=" profile-widget-header" style="border-radius: 30px; box-shadow: 0px 3px 4px 1px lightgrey; padding: 22px;">
+                                    <img class="w-100" src="/assets/img/services/@item.ImageUrl" />
+                                </div>
+                                <div class="text-center profile-widget-description">
+                                    <h4 class="text-dark">@item.Title</h4>
+                                    <p style="min-height:170px" class="text-muted">@item.Description</p>
+                                </div>
+                                <div class="text-center pb-3">
+                                    <a class="pl-5 pr-5 btn text-decoration-none" style="box-shadow: 0px 6px 25px -5px lightgrey; background-color: #F1F8FF" href="@CurrentCard.PageName">
+                                        @Loc["Discover"]
+                                    </a>
                                 </div>
                             </div>
-                            <div class="justify-content-lg-center pb-4">
-                                <a href="@CurrentCard.PageName" class="mt-2 pt-2 pb-2 btn btn-success text-decoration-none col-12">
-                                    DÉCOUVRIR
-                                </a><br /><br />
-                                <a href="/Identity/Account/register" class="pt-2 pb-2 btn btn-warning text-decoration-none col-12">
-                                    SE CONNECTER
-                                </a>
-                                <a href="/Identity/Account/register" class="pl-0 pt-2 pb-2 text-decoration-none col-3">
-                                    <img class="pt-2 pb-2" src="/assets/macarte_sm.svg" style=" box-shadow: 0px 5px 35px 0px lightgrey;
+                        </div>
+                    }
+                }
+            }
+            else
+            {
+                <div class="col-md-4 col-sm-4 position-relative">
+                    <div class="card profile-widget ">
+                        <div class="position-absolute" style="top:30%" @onclick="PreviousCard">
+                            <img src="/assets/img/services/Iconly-Bulk-Arrow - Left.svg" />
+                        </div>
+                        <div class="position-absolute" style="top:30%;right:0" @onclick="NextCard">
+                            <img src="/assets/img/services/Iconly-Bulk-Arrow - Right.svg" />
+                        </div>
+                        <div class="row justify-content-center" @ontouchmove:preventDefault="true" @ontouchstart="HandleTouchStart" @ontouchend="HandleTouchEnd">
+                            <img style="width:calc(90vw);" class="m-0 p-0" src="/assets/img/services/@CurrentCard.ImageUrl" />
+                        </div>
+                        <div class="text-center mt-3">
+                            <h4 class="text-dark" style="font-size: 28px;font-weight:600;">@CurrentCard.Title</h4>
+                        </div>
+                        <div class="text-center mb-0" style="height: 70px">
+                            <p class="offset-1 col-10 text-muted" style="font-size: 12px; line-height: 17px;">@CurrentCard.Description</p>
+                        </div>
+
+                        <div class="row justify-content-center mb-4">
+                            <div class="m-0 p-0">
+                                @foreach (var item in ListService)
+                                {
+                                    <span class="mr-1 @(item == CurrentCard ? "disc" : "circle")" style="display: inline-block;" @onclick="() => ChangeCard(item)"></span>
+                                }
+                            </div>
+                        </div>
+                        <div class="justify-content-lg-center pb-4">
+       
+         
+         
+         
+         
+         
+         
+         
+                              <a href="@CurrentCard.PageName" class="mt-2 pt-2 pb-2 btn btn-success text-decoration-none col-12">
+                                @Loc["Discover"]
+                            </a><br /><br />
+                                      <a href="/Identity/Account/register" class="pt-2 pb-2 btn btn-warning text-decoration-none col-12" style="border-radius:15px;">
+                                          @Loc["Login"]
+                                      </a>
+                            <a href="/Identity/Account/register" class="pl-0 pt-2 pb-2 text-decoration-none col-3">
+                                <img class="pt-2 pb-2" src="/assets/img/services/macarte_sm.svg" style=" box-shadow: 0px 5px 35px 0px lightgrey;
         padding-left: 10px;
         border-radius: 0px 0px 19px 19px;
         background: #F5F8FA;" />
-                                </a>
-                            </div>
+                            </a>
                         </div>
                     </div>
-                }
-            </div>
+                </div>
+            }
         </div>
     </div>
 </section>

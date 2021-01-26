@@ -36,6 +36,7 @@
 	<ItemGroup>
 	  <PackageReference Include="BlazorAnimate" Version="3.0.0" />
 	  <PackageReference Include="BlazorInputFile" Version="0.2.0" />
+	  <PackageReference Include="BlazorPro.BlazorSize" Version="3.1.0" />
 	  <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.2" />
 	  <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="5.0.2" />
 	  <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.2" />

@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Ads" xml:space="preserve">
+    <value>Annonces</value>
+  </data>
   <data name="Cards" xml:space="preserve">
     <value>Cartes NFC</value>
   </data>
@@ -131,6 +134,9 @@
   </data>
   <data name="Profile" xml:space="preserve">
     <value>Profile</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Recherche</value>
   </data>
   <data name="Services" xml:space="preserve">
     <value>Services</value>

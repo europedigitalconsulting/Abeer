@@ -27,6 +27,10 @@
   max-width: none;
   margin: 0;
  }
+
+ .hidden-sm{
+     display:none !important;
+ }
 }
 
 .modal-dialog {
