@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Connect" xml:space="preserve">
+    <value>Se connecter</value>
+  </data>
   <data name="ConnectMyCard" xml:space="preserve">
     <value>Se connecter avec ma carte</value>
   </data>
@@ -147,8 +150,14 @@
   <data name="LoginWihPinCodeTitle" xml:space="preserve">
     <value>Si vous disposez d'une carte d'authentification, vous pouvez l'utiliser pour vous authentifier</value>
   </data>
-  <data name="Muted" xml:space="preserve">
-    <value>Smart-Clik vous permet d'échanger et partager avec des milliers de personne vos cartes de visite virtuel en ligne. Une carte de visite peut contenir vos coordonnées, vos comptes réseaux sociaux ainsi que des liens personnalisés. Pour accéder à l'espace sécurisé il vous est demandé de vous identifier merci d'entrer votre login et votre mot de passe. Si vous ne disposez pas de compte encore, vous pouvez vous inscrire et rejoindre notre communauté. Pour vous permettre de nous tester, vous disposez de 5j gratuits</value>
+  <data name="Muted-p1" xml:space="preserve">
+    <value> vous permet d’échanger et partager avec des milliers de personne vos cartes de visite virtuel en ligne.</value>
+  </data>
+  <data name="Muted-p2" xml:space="preserve">
+    <value>Une carte de visite peut contenir vos coordonnées, vos comptes réseaux sociaux ainsi que des liens personnalisés. Pour accéder à l’espace sécurisé il vous est demandé de vous identifier merci d’entrer votre login et votre mot de passe. Si vous ne disposez pas de compte encore, vous pouvez vous inscrire et rejoindre notre communauté. </value>
+  </data>
+  <data name="Muted-p3" xml:space="preserve">
+    <value>Pour vous permettre de nous tester, vous disposez de 5 jours gratuits.</value>
   </data>
   <data name="Password" xml:space="preserve">
     <value>Mot de passe</value>
@@ -168,8 +177,8 @@
   <data name="RememberMe" xml:space="preserve">
     <value>Se souvenir de mon identifiant</value>
   </data>
-  <data name="SubmitText" xml:space="preserve">
-    <value>S'authentifier</value>
+  <data name="SmartClik" xml:space="preserve">
+    <value>Smart-Clik</value>
   </data>
   <data name="TermOfServiceText" xml:space="preserve">
     <value>Quelles sont nos conditions d'utilisation ?</value>

@@ -2789,8 +2789,6 @@ a.bb {
     }
 
 .login-brand {
-    margin: 20px 0;
-    margin-bottom: 40px;
     font-size: 24px;
     text-transform: uppercase;
     letter-spacing: 4px;
@@ -3909,4 +3907,8 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
         flex: 0 0 33.333333%;
         max-width: 33.333333%;
     }
+}
+
+.text-green {
+    color: #4ACBA1 !important;
 }
