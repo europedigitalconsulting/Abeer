@@ -116,9 +116,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
             ReturnUrl = returnUrl;
 
             if (Input == null)
-                Input = new InputModel();
-
-            Input.DigitCode = rdm.Next(10000, 99999).ToString();
+                Input = new InputModel();            
 
             if (Request?.Query?.ContainsKey("PinCode") == true)
                 Input.PinCode = int.Parse(Request.Query["PinCode"]);

@@ -147,6 +147,9 @@
   <data name="LastName" xml:space="preserve">
     <value>Nom de famille</value>
   </data>
+  <data name="Next" xml:space="preserve">
+    <value>Continuer</value>
+  </data>
   <data name="Password" xml:space="preserve">
     <value>Mot de passe</value>
   </data>

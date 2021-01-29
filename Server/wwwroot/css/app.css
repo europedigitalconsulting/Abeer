@@ -1265,6 +1265,10 @@ select.form-control:not([size]):not([multiple]) {
             /*width: 100%;*/
             margin-top: 10px;
         }
+    nav.ul li {
+        font-size: 10px;
+        padding-right: 5px;
+    }
 }
 
 @media (min-width: 768px) and (max-width: 991.98px) {
@@ -3912,9 +3916,9 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
 .text-green {
     color: #4ACBA1 !important;
 }
-.input-group-text, select.form-control:not([size]):not([multiple]), .form-control:not(.form-control-sm):not(.form-control-lg) {
-    font-size: 14px;
-    padding: 10px 15px;
+.input-group-text, .form-control:not(.form-control-sm):not(.form-control-lg) {
+    font-size: 15px;
+    padding: 25px 15px 25px 15px;
     height: 42px;
     background: #F5F8FA;
     text-align: center;
