@@ -135,13 +135,14 @@
             {
                 <div class="col-md-4 col-sm-4 position-relative">
                     <div class="card profile-widget ">
+                        <div @ontouchmove:preventDefault="true" @ontouchstart="HandleTouchStart" @ontouchend="HandleTouchEnd">
                         <div class="position-absolute" style="top: 30%" @onclick="PreviousCard">
                             <img src="/assets/img/services/Iconly-Bulk-Arrow - Left.svg"/>
                         </div>
                         <div class="position-absolute" style="top: 30%; right: 0" @onclick="NextCard">
                             <img src="/assets/img/services/Iconly-Bulk-Arrow - Right.svg"/>
                         </div>
-                        <div class="row justify-content-center" @ontouchmove:preventDefault="true" @ontouchstart="HandleTouchStart" @ontouchend="HandleTouchEnd">
+                        <div class="row justify-content-center" >
                             <img style="width: calc(90vw);" class="m-0 p-0" src="/assets/img/services/@CurrentCard.ImageUrl"/>
                         </div>
                         <div class="text-center mt-3">
@@ -158,6 +159,7 @@
                                     <span class="mr-1 @(item == CurrentCard ? "disc" : "circle")" style="display: inline-block;" @onclick="() => ChangeCard(item)"></span>
                                 }
                             </div>
+                        </div>
                         </div>
                         <div class="justify-content-lg-center pb-4">
                             <a href="@CurrentCard.PageName" class="mt-2 pt-2 pb-2 btn btn-success text-decoration-none col-12">
