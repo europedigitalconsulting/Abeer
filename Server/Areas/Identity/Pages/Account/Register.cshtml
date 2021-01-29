@@ -13,6 +13,8 @@
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
     <title>@ViewData["Title"]</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="/css/bootstrap/bootstrap.min.css" rel="stylesheet" />
     <link href="/css/fontawesome/css/all.css" rel="stylesheet" />
     <link href="/vendors/jquery-ui-dist/jquery-ui.min.css" rel="stylesheet" />
@@ -29,83 +31,84 @@
 <body>
     <div id="app">
         <section class="section">
-            <div class="container mt-5">
-                <div class="row">
-                    <div class="col-12 col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-8 offset-lg-2 col-xl-8 offset-xl-2">
-                        <div class="login-brand">
-                            <img src="/assets/img/logo_full.png" alt="Smart-Clik" class="shadow-light rounded-circle mb-5 mt-2" style="max-height:150px">
-                        </div>
-                        <div class="card card-primary">
-                            <div class="card-header"><h4>@localizer["CatchPhrase"].</h4></div>
-                            <div class="card-body">
-                                <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
-                                    <div asp-validation-summary="All" class="text-danger"></div>
-                                    <div class="form-group">
-                                        <label asp-for="Input.FirstName">@localizer["FirstName"]</label>
-                                        <input asp-for="Input.FirstName" class="form-control" />
-                                        <span asp-validation-for="Input.FirstName" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="Input.LastName">@localizer["LastName"]</label>
-                                        <input asp-for="Input.LastName" class="form-control" />
-                                        <span asp-validation-for="Input.LastName" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="Input.DisplayName">@localizer["DisplayName"]</label>
-                                        <input asp-for="Input.DisplayName" class="form-control" />
-                                        <span asp-validation-for="Input.DisplayName" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="Input.Email">@localizer["Email"]</label>
-                                        <input asp-for="Input.Email" class="form-control" />
-                                        <span asp-validation-for="Input.Email" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="Input.City">@localizer["City"]</label>
-                                        <input asp-for="Input.City" class="form-control" />
-                                        <span asp-validation-for="Input.City" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="Input.Country">@localizer["Country"]</label>
-                                        <select asp-for="Input.Country" class="form-control">
-                                            @foreach (var country in Model.Countries)
-                                            {
-                                                <option value="@country.Value">@country.Text</option>
-                                            }
-                                        </select>
-                                        <span asp-validation-for="Input.Country" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="Input.Password">@localizer["Password"]</label>
-                                        <input asp-for="Input.Password" class="form-control" />
-                                        <span asp-validation-for="Input.Password" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="Input.ConfirmPassword">@localizer["ConfirmPassword"]</label>
-                                        <input asp-for="Input.ConfirmPassword" class="form-control" />
-                                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <input id="no-card" onclick="DisplayFormCode()"  type="checkbox" asp-for="Input.NoCard" />
-                                        <label asp-for="Input.NoCard">@localizer["NotCard"]</label>
-                                    </div>
-                                    <div class="form-group digit-code">
-                                        <label asp-for="Input.DigitCode">@localizer["DigitCode"]</label>
-                                        <input asp-for="Input.DigitCode" class="form-control" />
-                                        <span asp-validation-for="Input.DigitCode" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group pin-code">
-                                        <label asp-for="Input.PinCode">@localizer["PinCode"]</label>
-                                        <input asp-for="Input.PinCode" class="form-control" />
-                                        <span asp-validation-for="Input.PinCode" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group group-disclaimer">
-                                        <input id="disclaimer" onclick="CheckDisclaimer()" type="checkbox" readonly="readonly" />@localizer["RequestCertificate"]
-                                    </div>
-                                    <button type="button" onclick="Submit()" class="btn btn-primary">@localizer["Register"]</button>
-                                </form>
+            <div class="login-brand pt-3">
+                <img class="w-100 d-lg-none d-md-none" src="/assets/img/connexion/bg_intro.svg" />
+                <img src="/assets/img/connexion/smartclik_logo.png" />
+            </div>
+            <div class="d-flex flex-wrap align-items-stretch text-justify pb-3" style="color: #97AABD; font-size:17px;font-weight:400">
+                <div class="col-lg-4 col-md-6 col-sm-12 order-lg-1 min-vh-100 order-2 bg-white">
+                    <div class="p-1 mt-5">
+                        <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                            @*<div asp-validation-summary="All" class="text-danger"></div>*@
+                            <div id="first">
+                                <div class="form-group">
+                                    <input asp-for="Input.FirstName" class="form-control" placeholder="@localizer["FirstName"]" />
+                                    <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <input asp-for="Input.LastName" class="form-control" placeholder="@localizer["LastName"]" />
+                                    <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <input asp-for="Input.DisplayName" class="form-control" placeholder="@localizer["DisplayName"]" />
+                                    <span asp-validation-for="Input.DisplayName" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <input asp-for="Input.Email" class="form-control" placeholder="@localizer["Email"]" />
+                                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                                </div>
+                                <div class="form-group group-info-country">
+                                    <label for="info-country" style="font-size:13px;font-weight:400;">
+                                        <input id="info-country" onclick="CheckInfoCountry()" type="checkbox" readonly="readonly" />@localizer["RequestCountry"]
+                                    </label>
+                                </div>
+                                <button id="btn-next" type="button" onclick="Next()" class="col-12 btn btn-success">@localizer["Next"]</button>
                             </div>
-                        </div>
+                            <div id="second">
+                                <div class="form-group">
+                                    <input asp-for="Input.City" class="form-control" placeholder="@localizer["City"]" />
+                                    <span asp-validation-for="Input.City" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <select asp-for="Input.Country" class="form-control">
+                                        <option selected="selected" disabled="disabled">@localizer["Country"]</option>
+                                        @foreach (var country in Model.Countries)
+                                        {
+                                            <option value="@country.Value">@country.Text</option>
+                                        }
+                                    </select>
+                                    <span asp-validation-for="Input.Country" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <input asp-for="Input.Password" class="form-control" placeholder="@localizer["Password"]" />
+                                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <input asp-for="Input.ConfirmPassword" class="form-control" placeholder="@localizer["ConfirmPassword"]" />
+                                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="has-card" style="font-size:13px;font-weight:400;">
+                                        <input id="has-card" onclick="DisplayFormCode()" style="font-size:13px;font-weight:400;" type="checkbox" />
+                                        @localizer["HasCard"]
+                                    </label>
+                                </div>
+                                <div class="form-group digit-code">
+                                    <input asp-for="Input.DigitCode" class="form-control" placeholder="@localizer["DigitCode"]" />
+                                    <span asp-validation-for="Input.DigitCode" class="text-danger"></span>
+                                </div>
+                                <div class="form-group pin-code">
+                                    <input asp-for="Input.PinCode" class="form-control" placeholder="@localizer["PinCode"]" />
+                                    <span asp-validation-for="Input.PinCode" class="text-danger"></span>
+                                </div>
+                                <div class="form-group group-disclaimer">
+                                    <label for="disclaimer" style="font-size:13px;font-weight:400;">
+                                        <input id="disclaimer" onclick="CheckDisclaimer()" type="checkbox" readonly="readonly" />@localizer["RequestCertificate"]
+                                    </label>
+                                </div>
+                                <button id="btn-register" type="button" onclick="Submit()" class="col-12 btn btn-success">@localizer["Register"]</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -139,32 +142,51 @@
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
         DisplayFormCode();
+        $("#second").hide();
+        $("#btn-next").prop('disabled', true);
+        $("#btn-register").prop('disabled', true);
+
+        function Next() {
+            $("#first").hide();
+            $("#second").show();
+        }
         function CheckDisclaimer() {
-            if ($('#disclaimer').is(':checked')) { 
-                $("group-disclaimer").removeClass("text-danger"); 
+            if ($('#disclaimer').is(':checked')) {
+                $("#btn-register").prop('disabled', false);
+                $("group-disclaimer").removeClass("text-danger");
             } else {
-                $("group-disclaimer").addClass("text-danger"); 
+                $("#btn-register").prop('disabled', true);
+                $("group-disclaimer").addClass("text-danger");
+            }
+        }
+        function CheckInfoCountry() {
+            if ($('#info-country').is(':checked')) { 
+                $("#btn-next").prop('disabled', false);
+                $("group-info-country").removeClass("text-danger");
+            } else {
+                $("#btn-next").prop('disabled', true);
+                $("group-info-country").addClass("text-danger");
             }
         }
         function DisplayFormCode() {
-            if ($('#no-card').is(':checked')) {
-                $('.digit-code').hide();
-                $('.pin-code').hide(); 
-            } else {
+            if ($('#has-card').is(':checked')) {
                 $('.digit-code').show();
                 $('.pin-code').show();
+            } else {
+                $('.digit-code').hide();
+                $('.pin-code').hide();
             }
         }
         function Submit() {
             if ($('#disclaimer').is(':checked')) {
-                $("group-disclaimer").removeClass("text-danger"); 
+                $("group-disclaimer").removeClass("text-danger");
                 $("form").submit();
                 return;
             }
             else {
-                $(".group-disclaimer").addClass("text-danger"); 
+                $(".group-disclaimer").addClass("text-danger");
             }
-        } 
+        }
 
 
     </script>

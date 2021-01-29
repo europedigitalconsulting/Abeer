@@ -98,7 +98,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
 
-            public bool NoCard { get; set; }
+            public bool HasCard { get; set; }
             public int PinCode { get; set; }
             public string DigitCode { get; set; }
 
@@ -132,7 +132,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
 
                 ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
-                if (!Input.NoCard && (Input?.PinCode.ToString().Length != 5 || string.IsNullOrEmpty(Input.DigitCode)))
+                if (Input.HasCard && (Input?.PinCode.ToString().Length != 5 || string.IsNullOrEmpty(Input.DigitCode)))
                 {
                     ModelState.AddModelError("", "DigitCode/PinCode required");
                     return Page();
@@ -145,8 +145,8 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
                     FirstName = Input.FirstName,
                     LastName = Input.LastName,
                     DisplayName = GetDisplayName(),
-                    PinDigit = Input.NoCard ? string.Empty : Input.DigitCode,
-                    PinCode = Input.NoCard ? -1 : Input.PinCode,
+                    PinDigit = Input.HasCard ? Input.DigitCode : string.Empty,
+                    PinCode = Input.HasCard ? Input.PinCode : -1,
                     City = Input.City,
                     Country = Input.Country,
                     SubscriptionStartDate = DateTime.Now,
@@ -157,7 +157,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
 
                 var card = await _functionalUnitOfWork.CardRepository.FirstOrDefault(c => c.CardNumber == Input.DigitCode);
 
-                if (!Input.NoCard)
+                if (Input.HasCard)
                 {
                     if (card == null)
                     {
@@ -211,7 +211,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
 
                     _logger.LogInformation("set card is used");
 
-                    if (!Input.NoCard)
+                    if (Input.HasCard)
                     {
                         card.IsUsed = true;
                         await _functionalUnitOfWork.CardRepository.Update(card);

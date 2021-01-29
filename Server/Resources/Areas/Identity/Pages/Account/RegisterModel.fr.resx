@@ -141,11 +141,11 @@
   <data name="FirstName" xml:space="preserve">
     <value>Prénom</value>
   </data>
+  <data name="HasCard" xml:space="preserve">
+    <value>Je possède une carte</value>
+  </data>
   <data name="LastName" xml:space="preserve">
     <value>Nom de famille</value>
-  </data>
-  <data name="NotCard" xml:space="preserve">
-    <value>Je ne possède pas encore de carte</value>
   </data>
   <data name="Password" xml:space="preserve">
     <value>Mot de passe</value>
@@ -157,7 +157,10 @@
     <value>Confirmation de l'inscription &amp;mdash; Smart-Clik</value>
   </data>
   <data name="RequestCertificate" xml:space="preserve">
-    <value>En fonction de votre pays une carte nationale d'identité vous sera demandée ainsi qu’une photo d’identité conforme. Vous reconnaissez avoir bien compris cette règle avant de continuer votre inscription.</value>
+    <value>Vous reconnaissez avoir bien compris cette règle avant de continuer votre inscription.</value>
+  </data>
+  <data name="RequestCountry" xml:space="preserve">
+    <value>En fonction de votre pays une carte nationale d’identité vous sera demandée ainsi qu’une photo d’identité conforme.</value>
   </data>
   <data name="Title" xml:space="preserve">
     <value>S'inscrire sur Smart-Clik</value>
