@@ -118,22 +118,25 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ad_description" xml:space="preserve">
-    <value>Petites annonces - Publier vos offres et consulter les demandes des milliers d'autres utilisateurs</value>
+    <value>Publier et consulter les opportunités d’affaires</value>
   </data>
   <data name="Agencies_description" xml:space="preserve">
-    <value>Nous trouver : Acheter votre carte NFC Smart-Clik ou commander l'un nos services et produits directement dans l'une de nos agences</value>
+    <value>Trouver un point de vente physique</value>
+  </data>
+  <data name="AtYourService" xml:space="preserve">
+    <value>A votre service pour</value>
   </data>
   <data name="Business" xml:space="preserve">
     <value>A votre service</value>
   </data>
   <data name="Business_description" xml:space="preserve">
-    <value>Modifier votre profil : Consulter ou modifier vos informations personnelles, ajouter et gérer vos comptes sociaux ainsi que vos liens personnalisés</value>
+    <value>Modifier et Partager votre profile personnel</value>
   </data>
   <data name="Cards_description" xml:space="preserve">
     <value>Gérer les cartes : Gérer vos cartes NFC, affecter les à vos utilisateurs et suivre leur utilisateur</value>
   </data>
   <data name="Contact_description" xml:space="preserve">
-    <value>Annuaire de contact : Gérer et retrouver vos cartes partagés ici</value>
+    <value>Retrouver tous vos contacts en un clin d'œil</value>
   </data>
   <data name="Discover" xml:space="preserve">
     <value>Découvrir</value>
@@ -145,7 +148,7 @@
     <value>S'inscrire : Obtenir un compte Smart-Clik, Echanger en QR Code votre profil avec des milliers d'utilisateur. Bénéficier de 5 jours de tests gratuits.</value>
   </data>
   <data name="Subscribe" xml:space="preserve">
-    <value>Souscrire à un abonnement - Etendre la durée de votre abonnement en souscrivant à un nouvel abonnement et continuer à faire partie de nos milliers d'utilisateurs</value>
+    <value>Modifier ou souscrire un nouvel abonnement en ligne</value>
   </data>
   <data name="Title" xml:space="preserve">
     <value>Bienvenue sur Smart-Clik. Nous sommes là pour vous aider</value>
@@ -154,18 +157,24 @@
     <value>Annonces</value>
   </data>
   <data name="Title_agencies" xml:space="preserve">
-    <value>Nos agences</value>
+    <value>Agences</value>
   </data>
   <data name="Title_contact" xml:space="preserve">
     <value>Contacts</value>
   </data>
   <data name="Title_profil" xml:space="preserve">
-    <value>Profil</value>
+    <value>Profile</value>
   </data>
   <data name="Title_subscribe" xml:space="preserve">
     <value>Abonnement</value>
   </data>
   <data name="Users_description" xml:space="preserve">
     <value>Gérer les Utilisateurs : Gérer vos utilisateurs et membres de votre réseau</value>
+  </data>
+  <data name="Welcome" xml:space="preserve">
+    <value>Bienvenue sur Smart-Clik!</value>
+  </data>
+  <data name="WhatIsIt" xml:space="preserve">
+    <value>Avec Smart-Click, Gérez vos comptes sociaux, vos coordonnées et vos informations personnelles</value>
   </data>
 </root>
