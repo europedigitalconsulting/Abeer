@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Abeer.Shared.Functional;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web; 
 using Newtonsoft.Json;
@@ -21,6 +22,7 @@ namespace Abeer.Client.Shared
         protected DateTime? SubscriptionEnd;
         protected bool IsUnlimited;
         protected bool IsAdmin;
+        public ScreenSize ScreenSize { get; set; } = new ScreenSize();
 
         [CascadingParameter]
         private Task<AuthenticationState> authenticationStateTask { get; set; }

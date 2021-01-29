@@ -6,14 +6,13 @@
 @code
 {
     [CascadingParameter]
+    public ScreenSize ScreenSize { get; set; }
+    [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
     private AuthenticationState authenticateState { get; set; }
     private List<CardServiceViewModel> ListService { get; set; } = new List<CardServiceViewModel>();
     private CardServiceViewModel CurrentCard { get; set; } = new CardServiceViewModel();
     public bool IsAdmin { get; set; }
-    public bool IsLarge { get; set; } = false;
-    public bool IsMedium { get; set; } = false;
-    public bool IsSmall { get; set; } = false;
 
     (TouchPoint ReferencePoint, DateTime StartTime) startPoint;
 
@@ -28,7 +27,7 @@
         }
         ListService = new List<CardServiceViewModel>
 {
-            new CardServiceViewModel{ PageName = "/Profile", ImageUrl = "Profil.svg", Title = Loc["Title_profil"], Description = IsSmall ? "Consulter ou modifier vos informations personnelles" : Loc["Business_description"] },
+            new CardServiceViewModel{ PageName = "/Profile", ImageUrl = "Profil.svg", Title = Loc["Title_profil"], Description = ScreenSize.IsSmall ? "Consulter ou modifier vos informations personnelles" : Loc["Business_description"] },
             new CardServiceViewModel{  PageName = "/contact/list", ImageUrl = "Contact.svg", Title = Loc["Title_contact"], Description = Loc["Contact_description"]},
             new CardServiceViewModel{  PageName = "/ads/MyAds", ImageUrl = "Annonces.svg", Title = Loc["Title_ads"], Description = Loc["ad_description"]},
            // new CardServiceViewModel{  PageName = "/agencies", ImageUrl = "Magasins.svg", Title = Loc["Title_agencies"], Description = Loc["Agencies_description"]},
@@ -103,10 +102,7 @@
     <div class="section-body ">
         <div class="row justify-content-center">
 
-            <MediaQuery Media="@Breakpoints.LargeUp" @bind-Matches="IsLarge"/>
-            <MediaQuery Media="@Breakpoints.MediumUp" @bind-Matches="IsMedium"/>
-            <MediaQuery Media="@Breakpoints.SmallDown" @bind-Matches="IsSmall"/>
-            @if (IsLarge || IsMedium)
+            @if (ScreenSize.IsLarge || ScreenSize.IsMedium)
             {
                 @foreach (var item in ListService)
                 {
