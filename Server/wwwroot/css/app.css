@@ -3925,3 +3925,8 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
     border-radius: 0;
     border: white;
 }
+@media (min-width : 1024px){
+    .mt-lg {
+        margin-top: 8rem!important;
+    }
+}
