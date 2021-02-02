@@ -36,7 +36,7 @@
                 <img class="w-100 d-lg-none d-md-none" src="/assets/img/connexion/bg_intro.svg" />
                 <img src="/assets/img/connexion/smartclik_logo.png" />
             </div>
-            <div class="row pb-3 mt-5 mt-lg justify-content-lg-center" style="color: #97AABD;font-size:14px;font-weight:400; ">
+            <div class="row pb-3 mt-5 mt-lg-5 justify-content-lg-center" style="color: #97AABD;font-size:14px;font-weight:400; ">
                 <div class="col-lg-4 col-sm-12 bg-white">
                     <span><span class="text-green font-weight-bold">@htmlLocalizer["SmartClik"]</span>@localizer["Muted-p1"]</span>
                     <br /><br />
@@ -79,17 +79,22 @@
 
                         @localizer["Connect"]
                     </button>
-                    <a href="/Identity/Account/register" class="pl-0 pt-2 pb-2 text-decoration-none col-3">
+                    <a href="/Identity/Account/register" class="pl-0 pt-2 pb-2 text-decoration-none col-3 hidden-mobile">
                         <img class="pt-2 pb-2" src="/assets/img/services/macarte_sm.svg" style="box-shadow: 0px 5px 35px 0px lightgrey; padding-left: 10px; border-radius: 0px 0px 19px 19px; background: #F5F8FA;" />
                     </a>
-                    <a href="LoginWithPinCode" class="float-right mt-3 text-decoration-none" style="font-size: 14px; color: #97AABD">
+                    <a href="LoginWithPinCode" class="float-right mt-3 text-decoration-none hidden-mobile" style="font-size: 14px; color: #97AABD">
                         Se connecter avec ma carte
                     </a>
                 </div>
             </div>
         </section>
     </div>
-
+    <footer class="footer hidden-mobile" style=" bottom: 0px; position: absolute;">
+        <div class="container">
+            <img width="120" src="/assets/img/connexion/smartclik_logo.png" /><br />
+            <span style="font-size:12px;">Copyright © smart-clik 2021 - All rights reserved</span>
+        </div>
+    </footer>
     <!-- General JS Scripts -->
     <script src="/vendors/jquery/dist/jquery.min.js"></script>
     <script src="/vendors/jquery-ui-dist/jquery-ui.min.js"></script>
@@ -112,7 +117,7 @@
                 $(this).attr('data-toggle', 'false');
                 $("#account").submit();
             }
-            else { 
+            else {
                 $(this).attr('data-action', '1');
                 $("#text-desc-p2").hide();
             }

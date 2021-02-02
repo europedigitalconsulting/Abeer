@@ -14,32 +14,33 @@
             <div class="main-content " style="min-height: calc(100vh - 60 px);">
                 @if (authenticationState?.User?.Identity.IsAuthenticated == true)
                 {
-                    @if (IsUnlimited || IsAdmin)
+                @if (IsUnlimited || IsAdmin)
                     {
-                        <div class="text-danger pb-3">
-                            <strong>@Loc["UnlimitedAccount"]</strong>
-                        </div>
+                <div class="text-danger pb-3">
+                    <strong>@Loc["UnlimitedAccount"]</strong>
+                </div>
                     }
                     else if (SubscriptionEnd.HasValue && DateTime.Now.AddDays(5) >= SubscriptionEnd.Value.Date)
                     {
-                        <div class="text-danger pb-3">
-                            <strong>@Loc["SubscriptionWillEnd"] @SubscriptionEnd.Value.Date.ToShortDateString()</strong>
-                        </div>
+                <div class="text-danger pb-3">
+                    <strong>@Loc["SubscriptionWillEnd"] @SubscriptionEnd.Value.Date.ToShortDateString()</strong>
+                </div>
                     }
                     else if (!SubscriptionEnd.HasValue || SubscriptionEnd.Value.Date < DateTime.Now.Date)
                     {
-                        <div class="text-danger pb-3">
-                            <strong>@Loc["NotSubscription"]</strong>
-                        </div>
+                <div class="text-danger pb-3">
+                    <strong>@Loc["NotSubscription"]</strong>
+                </div>
                     }
                 }
-            <CascadingValue Value="ScreenSize"> 
-                @Body
-            </CascadingValue>
+                <CascadingValue Value="ScreenSize">
+                    @Body
+                </CascadingValue>
             </div>
         </div>
 
     </div>
+
     <MediaQuery Media="@Breakpoints.LargeUp" @bind-Matches="ScreenSize.IsLarge" />
     <MediaQuery Media="@Breakpoints.MediumUp" @bind-Matches="ScreenSize.IsMedium" />
     <MediaQuery Media="@Breakpoints.SmallDown" @bind-Matches="ScreenSize.IsSmall" />

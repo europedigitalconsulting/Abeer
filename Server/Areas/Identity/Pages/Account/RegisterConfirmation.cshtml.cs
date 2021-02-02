@@ -28,18 +28,18 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnGetAsync(string email, string returnUrl = null)
         {
-            if (email == null)
-            {
-                return RedirectToPage("/Index");
-            }
+            //if (email == null)
+            //{
+            //    return RedirectToPage("/Index");
+            //}
 
-            var user = await _userManager.FindByEmailAsync(email);
-            if (user == null)
-            {
-                return NotFound($"Unable to load user with email '{email}'.");
-            }
+            //var user = await _userManager.FindByEmailAsync(email);
+            //if (user == null)
+            //{
+            //    return NotFound($"Unable to load user with email '{email}'.");
+            //}
 
-            Email = email;
+            Email = email ;
 
             return Page();
         }

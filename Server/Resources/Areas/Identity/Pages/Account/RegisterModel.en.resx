@@ -159,10 +159,16 @@
   <data name="RequestCountry" xml:space="preserve">
     <value>Depending on your country, a national identity card will be required as well as a passport photo.</value>
   </data>
+  <data name="SendEmail" xml:space="preserve">
+    <value>Un email vous a été envoyé sur</value>
+  </data>
   <data name="Title" xml:space="preserve">
     <value>Register on Smart-Clik</value>
   </data>
   <data name="UseExternal" xml:space="preserve">
     <value>You have a social account you can use it to connect on Smart-Clik</value>
+  </data>
+  <data name="Validate" xml:space="preserve">
+    <value>Validate</value>
   </data>
 </root>

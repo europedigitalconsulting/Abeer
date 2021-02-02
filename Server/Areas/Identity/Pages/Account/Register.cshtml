@@ -34,91 +34,99 @@
             <div class="login-brand pt-3">
                 <img class="w-100 d-lg-none d-md-none" src="/assets/img/connexion/bg_intro.svg" />
                 <img src="/assets/img/connexion/smartclik_logo.png" />
-            </div> 
-
-                <form asp-route-returnUrl="@Model.ReturnUrl" method="post"  class="row pb-3 mt-5 mt-lg justify-content-lg-center" style="color: #97AABD;font-size:14px;font-weight:400; ">
-                    <div class="col-lg-5 col-sm-12 bg-white"> 
-                        <div id="first">
-                            <div asp-validation-summary="All" class="text-danger"></div>
-                            <div class="form-group">
-                                <input asp-for="Input.FirstName" class="form-control" placeholder="@localizer["FirstName"]" />
-                                <span asp-validation-for="Input.FirstName" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <input asp-for="Input.LastName" class="form-control" placeholder="@localizer["LastName"]" />
-                                <span asp-validation-for="Input.LastName" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <input asp-for="Input.DisplayName" class="form-control" placeholder="@localizer["DisplayName"]" />
-                                <span asp-validation-for="Input.DisplayName" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <input asp-for="Input.Email" class="form-control" placeholder="@localizer["Email"]" />
-                                <span asp-validation-for="Input.Email" class="text-danger"></span>
-                            </div>
-                            <div class="form-group group-info-country">
-                                <div class="checkbox">
-                                    <label for="info-country">
-                                        <input id="info-country" onclick="CheckInfoCountry()" type="checkbox" /><span class="text-danger">*</span> @localizer["RequestCountry"]
-                                    </label>
-                                </div>
-                            </div>
-                            <button id="btn-next" type="button" onclick="Next()" class="d-lg-none col-12 btn btn-success text-uppercase">@localizer["Next"]</button>
+            </div>
+            <form asp-route-returnUrl="@Model.ReturnUrl" method="post" class="card-register row pb-3 mt-3 mt-lg-5 justify-content-lg-center" style="color: #97AABD;font-size:14px;font-weight:400; position:relative;">
+                <div class="hidden-mobile d-md-none visible-ipad-pro " id="close" style="cursor:pointer; padding: 5px; width: 30px; border-radius: 60px; background: #02BF8A; position: absolute; top: -15px; right: 50px; text-align: center">
+                    <i class="fa fa-times" aria-hidden="true" style="color:white;"></i>
+                </div>
+                <div class="col-lg-5 col-sm-12 bg-white">
+                    <div id="first">
+                        <div asp-validation-summary="All" class="text-danger"></div>
+                        <div class="form-group">
+                            <input asp-for="Input.FirstName" class="form-control" placeholder="@localizer["FirstName"]" />
+                            <span asp-validation-for="Input.FirstName" class="text-danger"></span>
                         </div>
-                    </div>
-                    <div class="offset-lg-1 col-lg-5 col-sm-12  "> 
-                        <div id="second">
-                            <div class="form-group">
-                                <input asp-for="Input.City" class="form-control" placeholder="@localizer["City"]" />
-                                <span asp-validation-for="Input.City" class="text-danger"></span>
+                        <div class="form-group">
+                            <input asp-for="Input.LastName" class="form-control" placeholder="@localizer["LastName"]" />
+                            <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input asp-for="Input.DisplayName" class="form-control" placeholder="@localizer["DisplayName"]" />
+                            <span asp-validation-for="Input.DisplayName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input asp-for="Input.Email" class="form-control" placeholder="@localizer["Email"]" />
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+                        <div class="form-group group-info-country">
+                            <div class="checkbox">
+                                <label for="info-country">
+                                    <input id="info-country" onclick="CheckInfoCountry()" type="checkbox" /><span class="text-danger">*</span> @localizer["RequestCountry"]
+                                </label>
                             </div>
-                            <div class="form-group">
-                                <select asp-for="Input.Country" class="form-control">
-                                    <option selected="selected" disabled="disabled">@localizer["Country"]</option>
-                                    @foreach (var country in Model.Countries)
+                        </div>
+                        <button id="btn-next" type="button" onclick="Next()" class="d-lg-none col-12 btn btn-success text-uppercase">@localizer["Next"]</button>
+                    </div>
+                </div>
+                <div class="offset-lg-1 col-lg-5 col-sm-12  ">
+                    <div id="second">
+                        <div class="form-group">
+                            <input asp-for="Input.City" class="form-control" placeholder="@localizer["City"]" />
+                            <span asp-validation-for="Input.City" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <select asp-for="Input.Country" class="form-control">
+                                <option selected="selected" disabled="disabled">@localizer["Country"]</option>
+                                @foreach (var country in Model.Countries)
                                         {
-                                    <option value="@country.Value">@country.Text</option>
+                                <option value="@country.Value">@country.Text</option>
                                         }
-                                </select>
-                                <span asp-validation-for="Input.Country" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <input asp-for="Input.Password" class="form-control" placeholder="@localizer["Password"]" />
-                                <span asp-validation-for="Input.Password" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <input asp-for="Input.ConfirmPassword" class="form-control" placeholder="@localizer["ConfirmPassword"]" />
-                                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <div class="checkbox">
-                                    <label for="has-card">
-                                        <input id="has-card" onclick="DisplayFormCode()" type="checkbox" />
-                                        @localizer["HasCard"]
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="form-group digit-code">
-                                <input asp-for="Input.DigitCode" class="form-control" placeholder="@localizer["DigitCode"]" />
-                                <span asp-validation-for="Input.DigitCode" class="text-danger"></span>
-                            </div>
-                            <div class="form-group pin-code">
-                                <input asp-for="Input.PinCode" class="form-control" placeholder="@localizer["PinCode"]" />
-                                <span asp-validation-for="Input.PinCode" class="text-danger"></span>
-                            </div>
-                            <div class="form-group group-disclaimer">
-                                <div class="checkbox">
-                                    <label for="disclaimer">
-                                        <input id="disclaimer" onclick="CheckDisclaimer()" type="checkbox" /><span class="text-danger">*</span> @localizer["RequestCertificate"]
-                                    </label>
-                                </div>
-                            </div>
-                            <button id="btn-register" type="button" onclick="Submit()" class="col-12 btn btn-success">@localizer["Register"]</button>
+                            </select>
+                            <span asp-validation-for="Input.Country" class="text-danger"></span>
                         </div>
+                        <div class="form-group">
+                            <input asp-for="Input.Password" class="form-control" placeholder="@localizer["Password"]" />
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input asp-for="Input.ConfirmPassword" class="form-control" placeholder="@localizer["ConfirmPassword"]" />
+                            <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="has-card">
+                                    <input id="has-card" onclick="DisplayFormCode()" type="checkbox" />
+                                    @localizer["HasCard"]
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group digit-code">
+                            <input asp-for="Input.DigitCode" class="form-control" placeholder="@localizer["DigitCode"]" />
+                            <span asp-validation-for="Input.DigitCode" class="text-danger"></span>
+                        </div>
+                        <div class="form-group pin-code">
+                            <input asp-for="Input.PinCode" class="form-control" placeholder="@localizer["PinCode"]" />
+                            <span asp-validation-for="Input.PinCode" class="text-danger"></span>
+                        </div>
+                        <div class="form-group group-disclaimer">
+                            <div class="checkbox">
+                                <label for="disclaimer">
+                                    <input id="disclaimer" onclick="CheckDisclaimer()" type="checkbox" /><span class="text-danger">*</span> @localizer["RequestCertificate"]
+                                </label>
+                            </div>
+                        </div>
+                        <button id="btn-register" type="button" onclick="Submit()" class="col-12 btn btn-success">@localizer["Register"]</button>
                     </div>
-                </form> 
+                </div>
+            </form>
         </section>
     </div>
+    <footer class="footer hidden-mobile" style=" bottom: 0px; position: absolute;">
+        <div class="container">
+            <img width="120" src="/assets/img/connexion/smartclik_logo.png" /><br />
+            <span style="font-size:12px;">Copyright © smart-clik 2021 - All rights reserved</span>
+        </div>
+    </footer>
 
     <!-- General JS Scripts -->
     <script src="/vendors/jquery/dist/jquery.min.js"></script>
@@ -146,11 +154,15 @@
     <!-- General JS Scripts -->
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
-        DisplayFormCode(); 
+        DisplayFormCode();
 
-        if (window.innerWidth < 1024) { 
-            $("#second").hide(); 
+        if (window.innerWidth < 1024) {
+            $("#second").hide();
         }
+
+        $("#close").click(function () {
+            window.location = "/";
+        })
 
         function Next() {
             if ($('#info-country').prop('checked') == true) {
@@ -158,20 +170,20 @@
                 $("#second").show();
             }
             else {
-                CheckInfoCountry(); 
+                CheckInfoCountry();
             }
         }
         function CheckDisclaimer() {
-            if ($('#disclaimer').prop('checked') == true) { 
+            if ($('#disclaimer').prop('checked') == true) {
                 $(".group-disclaimer").removeClass("text-danger");
-            } else { 
+            } else {
                 $(".group-disclaimer").addClass("text-danger");
             }
         }
         function CheckInfoCountry() {
-            if ($('#info-country').prop('checked') == true) { 
+            if ($('#info-country').prop('checked') == true) {
                 $(".group-info-country").removeClass("text-danger");
-            } else { 
+            } else {
                 $(".group-info-country").addClass("text-danger");
             }
         }
@@ -186,7 +198,7 @@
         }
         function Submit() {
             CheckDisclaimer();
-            CheckInfoCountry(); 
+            CheckInfoCountry();
             if ($('#info-country').prop('checked') == true && $('#disclaimer').prop('checked') == true) {
                 $("form").submit();
                 return;
