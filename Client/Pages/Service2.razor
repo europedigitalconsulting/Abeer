@@ -27,7 +27,7 @@
         }
         ListService = new List<CardServiceViewModel>
 {
-            new CardServiceViewModel{ PageName = "/Profile", ImageUrl = "Profil.svg", Title = Loc["Title_profil"], Description = ScreenSize.IsSmall ? "Consulter ou modifier vos informations personnelles" : Loc["Business_description"] },
+            //new CardServiceViewModel{ PageName = "/Profile", ImageUrl = "Profil.svg", Title = Loc["Title_profil"], Description = ScreenSize.IsSmall ? "Consulter ou modifier vos informations personnelles" : Loc["Business_description"] },
             new CardServiceViewModel{  PageName = "/contact/list", ImageUrl = "Contact.svg", Title = Loc["Title_contact"], Description = Loc["Contact_description"]},
             new CardServiceViewModel{  PageName = "/ads/MyAds", ImageUrl = "Annonces.svg", Title = Loc["Title_ads"], Description = Loc["ad_description"]},
            // new CardServiceViewModel{  PageName = "/agencies", ImageUrl = "Magasins.svg", Title = Loc["Title_agencies"], Description = Loc["Agencies_description"]},
@@ -96,7 +96,7 @@
                     <h1 class="h2" style="color:#97AABD;">Bienvenue sur  <strong style="color: #02BF8A">Smart-Clik</strong></h1>
                     <div style="margin-left: -20px; border: 2px solid #02BF8A; width: 25px;"></div>
                     <br /> 
-                    <p class="col-lg-4 col-md-9 col-ipad-pro-7 mb-0" style="color: #97AABD; font-size: 22px; font-weight: 400"><strong style="color: #02BF8A">Smart-Clik</strong> vous permet d’échanger et partager avec des milliers de personne vos cartes de visite virtuel en ligne.</p>
+                    <p class="col-xl-6 col-lg-6 col-md-9 col-ipad-pro-7 mb-0" style="color: #97AABD; font-size: 22px; font-weight: 400"><strong style="color: #02BF8A">Smart-Clik</strong> vous permet d’échanger et partager avec des milliers de personne vos cartes de visite virtuel en ligne.</p>
                 </header>
             </div>
         </div>
@@ -109,7 +109,7 @@
                 <Virtualize Items="@ListService" Context="item">
                     @if (!item.AuthenticationRequired || (item.AuthenticationRequired && authenticateState?.User?.Identity.IsAuthenticated == false))
                     {
-                        <div class="col-lg-2 col-md-4 col-sm-6 mt-4 d-flex">
+                        <div class="col-lg-3 col-md-4 col-sm-6 mt-4">
                             <div class="profile-widget">
                                 <div class=" profile-widget-header" style="border-radius: 30px; box-shadow: 0px 3px 4px 1px lightgrey; padding: 22px;">
                                     <img class="w-100" src="/assets/img/services/@item.ImageUrl" />

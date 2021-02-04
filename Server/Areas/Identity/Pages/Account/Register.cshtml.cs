@@ -32,7 +32,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
         private readonly IServiceProvider _serviceProvider;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
-        private readonly IEmailSender _emailSender;
+        private readonly IEmailSenderService _emailSender;
         private readonly UrlShortner _urlShortner;
         private readonly CountriesService countriesService;
         private readonly FunctionalUnitOfWork _functionalUnitOfWork;
@@ -45,7 +45,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
             IWebHostEnvironment env,
-            IEmailSender emailSender,
+            IEmailSenderService emailSender,
             IConfiguration configuration,
             UrlShortner urlShortner, CountriesService countriesService, FunctionalUnitOfWork functionalUnitOfWork)
         {

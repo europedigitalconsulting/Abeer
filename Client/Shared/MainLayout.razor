@@ -14,23 +14,23 @@
             <div class="main-content " style="min-height: calc(100vh - 60 px);">
                 @if (authenticationState?.User?.Identity.IsAuthenticated == true)
                 {
-                @if (IsUnlimited || IsAdmin)
+                    @if (IsUnlimited || IsAdmin)
                     {
-                <div class="text-danger pb-3">
-                    <strong>@Loc["UnlimitedAccount"]</strong>
-                </div>
+                        <div class="text-danger pb-3">
+                            <strong>@Loc["UnlimitedAccount"]</strong>
+                        </div>
                     }
                     else if (SubscriptionEnd.HasValue && DateTime.Now.AddDays(5) >= SubscriptionEnd.Value.Date)
                     {
-                <div class="text-danger pb-3">
-                    <strong>@Loc["SubscriptionWillEnd"] @SubscriptionEnd.Value.Date.ToShortDateString()</strong>
-                </div>
+                        <div class="text-danger pb-3">
+                            <strong>@Loc["SubscriptionWillEnd"] @SubscriptionEnd.Value.Date.ToShortDateString()</strong>
+                        </div>
                     }
                     else if (!SubscriptionEnd.HasValue || SubscriptionEnd.Value.Date < DateTime.Now.Date)
                     {
-                <div class="text-danger pb-3">
-                    <strong>@Loc["NotSubscription"]</strong>
-                </div>
+                        <div class="text-danger pb-3">
+                            <strong>@Loc["NotSubscription"]</strong>
+                        </div>
                     }
                 }
                 <CascadingValue Value="ScreenSize">
@@ -39,6 +39,12 @@
             </div>
         </div>
 
+        <footer class="footer row col-12 pl-5 pt-5 hidden-mobile">
+            <div class="">
+                <img width="120" src="/assets/img/connexion/smartclik_logo.png"><br>
+                <span style="font-size:12px;">Copyright © smart-clik 2021 - All rights reserved</span>
+            </div>
+        </footer>
     </div>
 
     <MediaQuery Media="@Breakpoints.LargeUp" @bind-Matches="ScreenSize.IsLarge" />
