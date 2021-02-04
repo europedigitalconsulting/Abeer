@@ -3912,17 +3912,21 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
         flex: 0 0 33.333333%;
         max-width: 33.333333%;
     }
+
     .offset-lg-ipad-pro {
-        margin-left: 8.333333%!important;
+        margin-left: 8.333333% !important;
     }
+
     .visible-ipad-pro {
         display: block !important;
     }
+
     .col-ipad-pro-7 {
         -ms-flex: 0 0 75% !important;
         flex: 0 0 75% !important;
         max-width: 75% !important;
     }
+
     .mt-ipad-pro-5 {
         margin-top: 5rem !important;
     }
@@ -3931,9 +3935,11 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
 .text-green {
     color: #4ACBA1 !important;
 }
+
 .modal-backdrop {
     background-color: white;
 }
+
 .input-group-text, .form-control:not(.form-control-sm):not(.form-control-lg) {
     font-size: 15px;
     padding: 25px 15px 25px 15px;
@@ -3961,6 +3967,7 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
     .hidden-mobile {
         display: none !important;
     }
+
     .visible-mobile {
         display: block !important;
     }
@@ -3971,4 +3978,8 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
         flex: 0 0 75%;
         max-width: 75%;
     }
+}
+
+.full-height {
+    min-height: calc(100vh - 102px) !important;
 }
