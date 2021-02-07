@@ -56,13 +56,19 @@
                                 <input asp-for="Input.Password" class="form-control" placeholder="@localizer["Password"]" />
                                 <span asp-validation-for="Input.Password" class="text-danger"></span>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mb-1">
                                 <div class="checkbox">
                                     <label asp-for="Input.RememberMe">
                                         <input asp-for="Input.RememberMe" />
                                         @localizer["RememberMe"]
                                     </label>
                                 </div>
+                            </div>
+
+                            <div class="row justify-content-center mb-2">
+                                <a href="ForgotPassword" class="  text-decoration-none" style="font-size: 14px; color: #97AABD">
+                                    @localizer["ForgotPasswordText"]
+                                </a>
                             </div>
                         </form>
                     </div>
@@ -73,17 +79,12 @@
 
                         @localizer["Connect"]
                     </button>
-                    <a href="/Identity/Account/register" class="pl-0 pt-2 pb-2 text-decoration-none col-3 d-lg-none d-md-none">
+                    <a href="/Identity/Account/register" class="pl-0 pt-2 pb-2 text-decoration-none col-3 ">
                         <img class="pt-2 pb-2" src="/assets/img/services/macarte_sm.svg" style="box-shadow: 0px 5px 35px 0px lightgrey; padding-left: 10px; border-radius: 0px 0px 19px 19px; background: #F5F8FA;" />
                     </a>
-                    <a href="LoginWithPinCode" class="float-right mt-3 text-decoration-none d-lg-none d-md-none" style="font-size: 14px; color: #97AABD">
+                    <a href="LoginWithPinCode" class="float-right mt-3 text-decoration-none " style="font-size: 14px; color: #97AABD">
                         Se connecter avec ma carte
                     </a>
-                    <div class="row justify-content-center mt-2">
-                        <a href="ForgotPassword" class="mt- text-decoration-none" style="font-size: 14px; color: #97AABD">
-                            @localizer["ForgotPasswordText"]
-                        </a>
-                    </div>
                 </div>
             </div>
         </section>

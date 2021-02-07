@@ -3,7 +3,7 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Resources> Loc
 @inject Abeer.Client.UISdk.NavigationUrlService NavigationUrlService
 <MediaQueryList>
-    <div id="app">
+    <div id="app" class="full-height">
         <div class="container-fluid">
             <NavMenu LabelContacts="@Loc["ContactList"]"
                      LabelDashboard="@Loc["Dashboard"]"
@@ -41,6 +41,12 @@
 
     </div>
 
+    <footer class="footer col-12 pl-2 pt-2">
+        <div class="">
+            <img width="120" src="/assets/img/connexion/smartclik_logo.png"><br>
+            <span style="font-size:12px;">Copyright © smart-clik 2021 - All rights reserved</span>
+        </div>
+    </footer>
     <MediaQuery Media="@Breakpoints.LargeUp" @bind-Matches="ScreenSize.IsLarge" />
     <MediaQuery Media="@Breakpoints.MediumUp" @bind-Matches="ScreenSize.IsMedium" />
     <MediaQuery Media="@Breakpoints.SmallDown" @bind-Matches="ScreenSize.IsSmall" />
