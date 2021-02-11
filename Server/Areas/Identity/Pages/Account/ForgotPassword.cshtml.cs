@@ -94,7 +94,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
         private async Task SendEmailTemplate(string templatePattern, Dictionary<string, string> parameters)
         {
             var message = GenerateHtmlTemplate(_serviceProvider, _env.WebRootPath, templatePattern, parameters);
-            await _emailSender.SendEmailAsync(Input.Email, "Confirm your email", message);
+            await _emailSender.SendEmailAsync(Input.Email, "Reset Password", message);
         }
 
     }
