@@ -15,9 +15,9 @@
         @if (Model.Success)
         {
             <span>@localizer["SuccessMessage"]</span> 
-            <form method="post">
+            <form method="post" class="pt-3">
                 <input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
-                <button class="btn btn-primary" type="submit">@localizer["Login"]</button>
+                <button class="btn btn-success" type="submit">@localizer["Login"]</button>
             </form>
         }
     </div>

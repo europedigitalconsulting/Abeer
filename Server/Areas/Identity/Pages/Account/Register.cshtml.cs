@@ -116,7 +116,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
             ReturnUrl = returnUrl;
 
             if (Input == null)
-                Input = new InputModel();            
+                Input = new InputModel();
 
             if (Request?.Query?.ContainsKey("PinCode") == true)
                 Input.PinCode = int.Parse(Request.Query["PinCode"]);
@@ -126,108 +126,110 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-                returnUrl ??= Url.Content("~/");
+            returnUrl ??= Url.Content("~/");
 
-                ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
-                if (Input.HasCard && (Input?.PinCode.ToString().Length != 5 || string.IsNullOrEmpty(Input.DigitCode)))
+            if (Input.HasCard && (Input?.PinCode.ToString().Length != 5 || string.IsNullOrEmpty(Input.DigitCode)))
+            {
+                ModelState.AddModelError("", "DigitCode/PinCode required");
+                return Page();
+            }
+
+            var user = new ApplicationUser
+            {
+                UserName = Input.Email,
+                Email = Input.Email,
+                FirstName = Input.FirstName,
+                LastName = Input.LastName,
+                DisplayName = GetDisplayName(),
+                PinDigit = Input.HasCard ? Input.DigitCode : string.Empty,
+                PinCode = Input.HasCard ? Input.PinCode : -1,
+                City = Input.City,
+                Country = Input.Country,
+                SubscriptionStartDate = DateTime.Now,
+                SubscriptionEndDate = DateTime.Now.AddDays(5)
+            };
+
+            _logger.LogInformation($"start get card {Input.PinCode}");
+
+            var card = await _functionalUnitOfWork.CardRepository.FirstOrDefault(c => c.CardNumber == Input.DigitCode);
+
+            if (Input.HasCard)
+            {
+                if (card == null)
                 {
-                    ModelState.AddModelError("", "DigitCode/PinCode required");
+                    ModelState.AddModelError("", "card not existed");
                     return Page();
                 }
 
-                var user = new ApplicationUser
+                else if (card.IsUsed)
                 {
-                    UserName = Input.Email,
-                    Email = Input.Email,
-                    FirstName = Input.FirstName,
-                    LastName = Input.LastName,
-                    DisplayName = GetDisplayName(),
-                    PinDigit = Input.HasCard ? Input.DigitCode : string.Empty,
-                    PinCode = Input.HasCard ? Input.PinCode : -1,
-                    City = Input.City,
-                    Country = Input.Country,
-                    SubscriptionStartDate = DateTime.Now,
-                    SubscriptionEndDate = DateTime.Now.AddDays(5)
-                };
-
-                _logger.LogInformation($"start get card {Input.PinCode}");
-
-                var card = await _functionalUnitOfWork.CardRepository.FirstOrDefault(c => c.CardNumber == Input.DigitCode);
-
-                if (Input.HasCard)
-                {
-                    if (card == null)
-                    {
-                        ModelState.AddModelError("", "card not existed");
-                        return Page();
-                    }
-
-                    else if (card.IsUsed)
-                    {
-                        ModelState.AddModelError("", "Current is used");
-                        return Page();
-                    }
-
-                    else if (card.PinCode != Input.PinCode.ToString())
-                    {
-                        ModelState.AddModelError("PinCode", "Pincode is not valid");
-                        return Page();
-                    }
+                    ModelState.AddModelError("", "Current is used");
+                    return Page();
                 }
 
-                var result = await _userManager.CreateAsync(user, Input.Password);
-
-                if (result.Succeeded)
+                else if (card.PinCode != Input.PinCode.ToString())
                 {
-                    _logger.LogInformation("User created a new account with password.");
+                    ModelState.AddModelError("PinCode", "Pincode is not valid");
+                    return Page();
+                }
+            }
 
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+            var result = await _userManager.CreateAsync(user, Input.Password);
 
-                    var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
-                        protocol: Request.Scheme);
+            if (result.Succeeded)
+            {
+                _logger.LogInformation("User created a new account with password.");
 
-                    var frontWebSite = UriHelper.BuildAbsolute(Request.Scheme, Request.Host);
-                    var logoUrl = UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/assets/img/logo_full.png");
-                    var unSubscribeUrl = await _urlShortner.CreateUrl(Request.Scheme, Request.Host, UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/Account/UnSubscribe"));
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 
-                    callbackUrl = await _urlShortner.CreateUrl(Request.Scheme, Request.Host, callbackUrl);
+                var callbackUrl = Url.Page(
+                    "/Account/ConfirmEmail",
+                    pageHandler: null,
+                    values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
+                    protocol: Request.Scheme);
 
-                    _logger.LogInformation($"Send Email confirmation to {Input.Email}.");
+                var frontWebSite = UriHelper.BuildAbsolute(Request.Scheme, Request.Host);
+                var logoUrl = UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/assets/img/logo_full.png");
+                var unSubscribeUrl = await _urlShortner.CreateUrl(Request.Scheme, Request.Host, UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/Account/UnSubscribe"));
+                var login = $"{Input.Email}";
 
-                    await SendEmailTemplate("email-confirmation", new Dictionary<string, string>()
+                callbackUrl = await _urlShortner.CreateUrl(Request.Scheme, Request.Host, callbackUrl);
+
+                _logger.LogInformation($"Send Email confirmation to {Input.Email}.");
+
+                await SendEmailTemplate("email-confirmation", new Dictionary<string, string>()
                         {
+                            {"login", login },
                             {"frontWebSite", frontWebSite },
                             {"logoUrl", logoUrl },
                             {"unSubscribeUrl", unSubscribeUrl },
                             {"callbackUrl", callbackUrl }
                         });
 
-                    _logger.LogInformation("set card is used");
+                _logger.LogInformation("set card is used");
 
-                    if (Input.HasCard)
-                    {
-                        card.IsUsed = true;
-                        await _functionalUnitOfWork.CardRepository.Update(card);
-                    }
-
-                    _logger.LogInformation("Redirect to register confirmation page");
-
-                    return RedirectToPage("RegisterConfirmation",
-                        new { email = Input.Email, returnUrl = returnUrl });
-                }
-                else
+                if (Input.HasCard)
                 {
-                    foreach (var error in result.Errors)
-                    {
-                        _logger.LogError(error.Description);
-                        ModelState.AddModelError(string.Empty, error.Description);
-                    }
+                    card.IsUsed = true;
+                    await _functionalUnitOfWork.CardRepository.Update(card);
                 }
+
+                _logger.LogInformation("Redirect to register confirmation page");
+
+                return RedirectToPage("RegisterConfirmation",
+                    new { email = Input.Email, returnUrl = returnUrl });
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    _logger.LogError(error.Description);
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
             // If we got this far, something failed, redisplay form
             return Page();
         }
