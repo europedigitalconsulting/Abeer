@@ -2,7 +2,7 @@
 @code
 {
     public bool ModalQrCodeVisible { get; set; }
-
+    public bool ToggleMenu { get; set; }
     public void ToggleModal()
     {
         ModalQrCodeVisible = !ModalQrCodeVisible;
@@ -36,6 +36,7 @@
 
     [Inject] public NavigationManager NavigationManager { get; set; }
 
+    [Inject] private HttpClient HttpClient { get; set; }
     protected override async Task OnParametersSetAsync()
     {
         await base.OnParametersSetAsync();
@@ -46,6 +47,8 @@
 
         await InvokeAsync(StateHasChanged);
     }
+
+    public ViewApplicationUser User { get; set; } = new ViewApplicationUser();
 
     async Task GotoEditProfile()
     {
@@ -59,70 +62,224 @@
         await InvokeAsync(StateHasChanged);
     }
 
+    void OpenMenu()
+    {
+        ToggleMenu = !ToggleMenu;
+    }
+
+    private bool ModalChangeMail;
+    private bool ModalChangePassword;
+    private bool ModalChangePinCode;
+    private string DigitCode;
+    private int PinCode;
+    private string NewDigitCode;
+    private int NewPinCode;
+
+    private string ChangePhotoError = "";
+    private string _PhotoType = "Gravatar";
+    private bool ModalChangePhoto;
+
+    private bool ChangePhotoHasError;
+    private bool ChangePasswordHasError;
+    private bool ChangeChangeMailHasError;
+    private string ChangeChangeMaildError = "";
+    private string ChangePasswordError = "";
+    public string OldPassword { get; set; }
+    public string NewPassword { get; set; }
+    public string ConfirmPassword { get; set; }
+    public string NewMail { get; set; }
+    public string ConfirmMail { get; set; }
+    private string Error;
+    public string PhotoType
+    {
+        get => _PhotoType;
+        set
+        {
+            _PhotoType = value;
+        }
+    }
+
+    private async Task ChangePassword()
+    {
+        if (NewPassword != ConfirmPassword)
+        {
+            ChangePasswordHasError = true;
+            ChangePasswordError = Loc["PasswordNotConfirmedError"].Value;
+        }
+        else
+        {
+            ChangePasswordHasError = false;
+            var response = await HttpClient.PutAsJsonAsync($"/api/Profile/ChangePassword", new ChangePasswordViewModel
+            {
+                UserId = User.Id,
+                OldPassword = OldPassword,
+                NewPassword = NewPassword
+            });
+            ChangePasswordHasError = !response.IsSuccessStatusCode;
+            ChangePasswordError = Loc["ChangePasswordFailedError"];
+
+            if (!ChangePasswordHasError)
+                ModalChangePassword = false;
+        }
+    }
+    private async Task SaveNewCard()
+    {
+        ApplicationUser user = new ApplicationUser();
+
+        user.PinDigit = NewDigitCode;
+        user.PinCode = NewPinCode;
+
+        var response = await HttpClient.PostAsJsonAsync($"api/Profile/SaveNewCard", user);
+        if (response.IsSuccessStatusCode)
+        {
+            var json = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<ApplicationUser>(json);
+
+            PinCode = result.PinCode;
+            DigitCode = result.PinDigit.ToString();
+            NewDigitCode = "";
+            NewPinCode = 0;
+        }
+        else
+        {
+            Error = await response.Content.ReadAsStringAsync();
+        }
+        StateHasChanged();
+    }
+    private async Task ChangePhoto()
+    {
+        User.PhotoUrl = PhotoUrl;
+        var response = await HttpClient.PutAsJsonAsync("/api/Profile", User);
+        response.EnsureSuccessStatusCode();
+
+        var json = await response.Content.ReadAsStringAsync();
+        User = JsonConvert.DeserializeObject<ViewApplicationUser>(json);
+        ModalChangePhoto = false;
+    }
+    private async Task ChangeMail()
+    {
+        if (string.IsNullOrEmpty(NewMail) || NewMail != ConfirmMail)
+        {
+            ChangeChangeMailHasError = true;
+            ChangeChangeMaildError = Loc["PasswordNotConfirmedError"].Value;
+        }
+        else
+        {
+            ChangeChangeMailHasError = false;
+            var response = await HttpClient.PutAsJsonAsync($"/api/Profile/ChangeEmail", new ChangeMailViewModel
+            {
+                UserId = User.Id,
+                OldMail = User.Email,
+                NewMail = NewMail
+            });
+            if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
+            {
+                ChangeChangeMailHasError = true;
+                ChangeChangeMaildError = Loc["MailAlreadyExist"].Value;
+            }
+            else if (response.IsSuccessStatusCode)
+            {
+                NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri("Identity/account/logout?returnUrl=/Profile").ToString(), true);
+            }
+        }
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await HttpClient.GetAsync($"api/Profile");
+        if (response.IsSuccessStatusCode)
+        {
+            var json = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"user :{json}");
+            User = JsonConvert.DeserializeObject<ViewApplicationUser>(json);
+        }
+    }
 }
 
 <section class="section">
-    <div class="section-header">
-        <h1>@Loc["Title"]</h1>
-    </div>
-    <div class="section-body">
-        <div class="card author-box card-primary">
-            <div class="card-body">
-                <div class="author-box-left">
-                    <img alt="image" src="@PhotoUrl" class="rounded-circle author-box-picture">
-                    @if (!ReadOnly)
+    <div class="section-body mb-3">
+        <div class="author-box mt-3" style="color: #979797 !important;">
+            <div class="card-body pb-0">
+                <div class="author-box-left" style="position:relative">
+                    <i style="font-size: 20px; position: absolute; right: -20px; top: 0px; z-index: 9999999999;" class="p-3 fas fa-ellipsis-v p-3" aria-hidden="true" @onclick="() => ToggleMenu = !ToggleMenu"></i>
+                    @if (ToggleMenu)
                     {
-                        <div class="clearfix"></div>
-                        <button @onclick="GotoEditProfile" class="btn btn-primary mt-3 follow-btn">@Loc["EditProfile"]</button>
-                        <div class="clearfix"></div>
-                        <button @onclick="@GotoContact" class="btn btn-primary mt-3 follow-btn">Contacts</button>
+                        <div class="p-2" style="background:white; border:1px solid green; position:absolute; right:20px; width:auto;z-index:9999999999;">
+                            <ul style="list-style: none; " class="p-0 m-0">
+                                <li class="pt-2" @onclick="() => ModalChangePassword = true">
+                                    @Loc["ChangePassword"]
+                                </li>
+                                <li class="" @onclick="() => ModalChangePinCode = true">
+                                    @Loc["DisplayPinCode"]
+                                </li>
+                                <li class="" @onclick="() => ModalChangeMail = true">
+                                    @Loc["TitleChangeMail"]
+                                </li>
+                                <li class="" @onclick="() => ModalChangePhoto = true">
+                                    @Loc["ChangePicture"]
+                                </li>
+                            </ul>
+                        </div>
                     }
+                    <div style="position:relative; width:100%;">
+                        <img src="/assets/img/profilphoto.png" />
+                        <img style="border:2px solid black; position: absolute; left: 51%; top: 52%; transform: translate(-50%, -50%); " width="160" height="160" alt="image" src="@PhotoUrl" class="rounded-circle author-box-picture">
+                    </div>
 
                 </div>
-                <div class="author-box-details">
-                    <img alt="qrcode" src="/api/QrCodeGenerator?link=@ProfileUrl" style="width: 100px" @onclick="ToggleModal" />
+                <div class="author-box-details mt-4" @ontouchstart="() => ToggleMenu = false">
+                    @*<img alt="qrcode" src="/api/QrCodeGenerator?link=@ProfileUrl" style="width: 100px" @onclick="ToggleModal" />*@
                     <div class="author-box-name">
-                        <a href="#" class="mr-3">@DisplayName</a>
-
+                        <div style="display:inline-block">
+                            <a href="#" class="mr-3 text-dark pb-2">@DisplayName</a><br />
+                            <span class="author-box-job">@Title</span>
+                        </div>
+                        <div style="display:inline-block; float:right">
+                            <div @onclick="GotoEditProfile" class="pr-2 text-center text-light">
+                                <div>
+                                    <i style="font-size: 16px;color: black;" class="fas fa-pencil-alt"></i>
+                                </div>
+                                <span style="color:black; font-weight:400;font-size:12px;">@Loc["Modifier"]</span>
+                            </div>
+                        </div>
                     </div>
-                    @if (!string.IsNullOrEmpty(Title))
-                    {
-                        <div class="author-box-job">@Title</div>
-                    }
                     @if (!string.IsNullOrEmpty(Description))
                     {
-                        <div class="author-box-description">
+                        <div class="author-box-description" style="text-align:left;">
                             <p>
                                 @Description
                             </p>
                         </div>
                     }
-                    <div class="mb-2 mt-3">
-                        <div class="text-small font-weight-bold">Location</div>
-                    </div>
-                    <div class="mb-2 mt-3">
-                        <span>@City, @Country</span><br />
-                        <ul class="list-inline">
+                    <div class="mt-4">
+                        <ul style="list-style: none;font-weight: 500;" class="pl-0">
+                            @if (!string.IsNullOrWhiteSpace(City))
+                            {
+                                <li class="pb-2">
+                                    <span class="p-2 w-100">
+                                        <i class="fa fa-map-marker text-dark pr-2" aria-hidden="true"></i>
+                                        @City, @Country
+                                    </span>
+                                </li>
+                            }
                             @if (!string.IsNullOrWhiteSpace(Email))
                             {
-                                <li class="list-inline-item list-unstyled-noborder">
+                                <li class="pb-2">
                                     <a href="mailto:@Email" class="p-2 w-100">
-                                        <img alt="image" src="assets/img/social/mail.png" style="max-width:30px" class="rounded-circle img-thumbnail">
-                                        <strong>@Email</strong>
+                                        <i class="fa fa-envelope text-dark pr-2" aria-hidden="true"></i>
+                                        @Email
                                     </a>
                                 </li>
                             }
                             @if (!string.IsNullOrWhiteSpace(PhoneNumber))
                             {
-                                <li class="list-inline-item list-unstyled-noborder">
-                                    <a href="tel:@PhoneNumber" class="p-2 w-100">
-                                        <img alt="image" src="assets/img/social/phone.png" style="max-width:30px" class="rounded-circle img-thumbnail">
-                                        <strong>@PhoneNumber</strong>
-                                    </a>
+                                <li class="pb-2">
+                                    <span class="p-2 w-100">
+                                        <i class="fa fa-phone text-dark pr-2" aria-hidden="true"></i>
+                                        @PhoneNumber
+                                    </span>
                                 </li>
                             }
                         </ul>
-                       
                     </div>
                     @if (SocialNetworkConnected != null)
                     {
@@ -131,21 +288,21 @@
                             {
                                 <div class="card text-white mb-3 mr-1">
 
-                                        <a href="@socialNetwork.Url" target="_blank">
-                                            @if (string.IsNullOrWhiteSpace(socialNetwork.Logo))
-                                            {
-                                                <i class="fas fa-share-alt" style="font-size:50px;width: 50px; text-align: center"></i>
-                                            }
-                                            else if (socialNetwork.Logo.StartsWith("fa"))
-                                            {
-                                                <i class="@socialNetwork.Logo" style="font-size:50px; width:50px;text-align:center"></i>
-                                            }
-                                            else
-                                            {
-                                                <img alt="image" src="assets/img/social/@(socialNetwork.Logo.ToLower()).png" style="font-size:50px; width:50px;text-align:center">
-                                            }
-                                        </a>
-                                    </div>
+                                    <a href="@socialNetwork.Url" target="_blank">
+                                        @if (string.IsNullOrWhiteSpace(socialNetwork.Logo))
+                                        {
+                                            <i class="fas fa-share-alt" style="font-size:50px;width: 50px; text-align: center"></i>
+                                        }
+                                        else if (socialNetwork.Logo.StartsWith("fa"))
+                                        {
+                                            <i class="@socialNetwork.Logo" style="font-size:50px; width:50px;text-align:center"></i>
+                                        }
+                                        else
+                                        {
+                                            <img alt="image" src="assets/img/social/@(socialNetwork.Logo.ToLower()).png" style="font-size:50px; width:50px;text-align:center">
+                                        }
+                                    </a>
+                                </div>
                             }
                         </div>
                     }
@@ -158,7 +315,7 @@
                                     <div class="card-header">@customLink.Name</div>
                                     <div class="card-body">
                                         <a href="@customLink.Url" target="_blank">
-                                            @if(string.IsNullOrEmpty(customLink.Logo))
+                                            @if (string.IsNullOrEmpty(customLink.Logo))
                                             {
                                                 <i class="fas fa-paperclip rounded-circle img-thumbnail" style="font-size:105px; width:155px;text-align:center"></i>
                                             }
@@ -180,9 +337,184 @@
                 </div>
             </div>
         </div>
+        <div class="section-footer" style="height:50px;position:relative; background-color:#F5F8FA;border-radius: 0px 0px 15px 15px;">
+            <div>
+                <a href="/Identity/Account/register" class="pl-0 pt-2 pb-2 text-decoration-none col-3 ">
+                    <img class="pt-2 pb-2" src="/assets/img/services/macarte_sm.svg" style="box-shadow: 0px 5px 35px 0px lightgrey; padding-left: 10px; border-radius: 0px 0px 19px 19px; background: #F5F8FA;" />
+                </a>
+            </div>
+            <div style="position:absolute;right:10px;top:5px;">
+                <div class="pr-2 text-center text-light">
+                    <div>
+                        <i style="font-size: 16px; color: black;" class="fa fa-users" aria-hidden="true"></i>
+                    </div>
+                    <span style="font-size: 12px; color: black; font-weight: 400;">Mes contacts</span>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
+
+@if (ModalChangePhoto)
+{
+    <div class="modal fade show" id="modalChangePhoto" style="display:block" aria-modal="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered  modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">@Loc["ChangePhoto"]</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="() => ModalChangePhoto = false">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @if (ChangePhotoHasError)
+                    {
+                        <div class="alert alert-danger">
+                            @ChangePhotoError
+                        </div>}
+                    <div class="form-group">
+
+                        @Loc["PhotoType"]
+                        <select @bind="PhotoType" class="form-control">
+                            <option value="Gravatar">@Loc["UseGravatarPhoto"]</option>
+                            <option value="Custom">@Loc["UseCustomPhoto"]</option>
+                        </select>
+                    </div>
+                    @if (PhotoType == "Custom")
+                    {
+                        <div class="form-group">
+                            @Loc["UseCustomPhoto"]
+                            <MediaUploader ImgUrl="@PhotoUrl" OnChange="@((fileUrl)=>PhotoUrl = fileUrl)"></MediaUploader>
+                        </div>}
+                    <div class="text-center">
+                        <button type="button" class="btn btn-success" @onclick="ChangePhoto">@Loc["ChangePhoto"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@if (ModalChangeMail)
+{
+    <div class="modal fade show" id="modalChangeMail" style="display:block" aria-modal="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered  modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">@Loc["TitleChangeMail"]</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="() => ModalChangeMail = false">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="info">
+                        <p class="text-danger">
+                            @Loc["TxtDesc1"]<br>
+                            @Loc["TxtDesc2"]<br />
+                        </p>
+                    </div><br />
+                    <div class="form-group">
+                        @Loc["NewMail"]
+                        <input type="text" class="form-control" @bind="NewMail" />
+                    </div>
+                    <div class="form-group">
+                        @Loc["ConfirmMail"]
+                        <input type="text" class="form-control" @bind="ConfirmMail" />
+                    </div>
+
+                    @if (ChangeChangeMailHasError)
+                    {
+                        <div class="alert alert-danger">
+                            @ChangeChangeMaildError
+                        </div>
+                    }
+                    <div class="text-center">
+                        <button type="button" class="btn btn-success" @onclick="ChangeMail">@Loc["BtnChangeMail"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@if (ModalChangePinCode)
+{
+    <div class="modal fade show" id="modalDisplayPinCode" style="display:block" aria-modal="true" role="dialog">
+        <div class="modal-dialog  modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">@Loc["DisplayPinCode"]</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="@(() => ModalChangePinCode = false)">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Loc["DigitCode"]
+                        <input type="text" class="form-control" @bind="DigitCode" readonly="readonly" />
+                    </div>
+                    <div class="form-group">
+                        @Loc["PinCode"]
+                        <input type="text" class="form-control" @bind="PinCode" readonly="readonly" />
+                    </div>
+                    <div class="text-center">
+                        <button type="button" class="btn btn-success" @onclick="@(() => ModalChangePinCode = false)">@Loc["Close"]</button>
+                    </div>
+                    <h4 class="modal-title mt-2 mb-2">@Loc["AssociateNewCard"]</h4>
+
+                    <div class="form-group">
+                        @Loc["DigitCode"]
+                        <input type="text" class="form-control" @bind="NewDigitCode" />
+                    </div>
+                    <div class="form-group">
+                        @Loc["PinCode"]
+                        <input type="text" class="form-control" @bind="NewPinCode" />
+                        <span class="text-danger">@Error</span>
+                    </div>
+                    <div class="text-center">
+                        <button type="button" class="btn btn-success" @onclick="@(() => SaveNewCard())">@Loc["AddCard"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@if (ModalChangePassword)
+{
+    <div class="modal fade show" id="modalChangePassword" style="display:block" aria-modal="true" role="dialog">
+        <div class="modal-dialog  modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">@Loc["ChangePassword"]</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="@(() => ModalChangePassword = false)">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @if (ChangePasswordHasError)
+                    {
+                        <div class="alert alert-danger">
+                            @ChangePasswordError
+                        </div>}
+                    <div class="form-group">
+                        @Loc["OldPassword"]
+                        <input type="password" class="form-control" @bind="OldPassword" />
+                    </div>
+                    <div class="form-group">
+                        @Loc["NewPassword"]
+                        <input type="password" class="form-control" @bind="NewPassword" />
+                    </div>
+                    <div class="form-group">
+                        @Loc["ConfirmPassword"]
+                        <input type="password" class="form-control" @bind="ConfirmPassword" />
+                    </div>
+                    <div class="text-center">
+                        <button type="button" class="btn btn-success" @onclick="ChangePassword">@Loc["ChangePassword"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 @if (ModalQrCodeVisible)
 {
     <div class="modal fade show" id="modalQrCode" style="display:block" aria-modal="true" role="dialog">

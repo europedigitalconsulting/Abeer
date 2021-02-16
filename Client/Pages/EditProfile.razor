@@ -2,9 +2,18 @@
 @attribute [Authorize(Policy = "OnlySubscribers")]
 @inject Microsoft.Extensions.Localization.IStringLocalizer<EditProfile> Loc
 
-<section class="section">
-    <div class="section-header">
-        <h1>@Loc["Title"]</h1>
+<section class="section"> 
+    <div class="section-body">
+        <div class="author-box mt-3" style="color: #979797 !important;">
+            <div class="card-body">
+                <div class="author-box-left" style="position:relative">
+                    <div style="position:relative; width:100%;">
+                        <img src="/assets/img/profilphoto.png" />
+                        <img style="border:2px solid black; position: absolute; left: 51%; top: 52%; transform: translate(-50%, -50%); " width="160" height="160" alt="image" src="@PhotoUrl" class="rounded-circle author-box-picture">
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     @if (ModalChangePassword)
     {
@@ -255,55 +264,39 @@
         <ValidationSummary />
         <div class="card">
             <div class="card-body">
-                <div class="form-row">
-                    <div class="form-group col-lg-6  col-sm-12">
-                        <div class="text-center">
-                            <button type="button" class="border-0" style="background: transparent" @onclick="ToggleChangePhoto" data-toggle="tooltip" data-html="true" title="@Loc["ChangePhoto"]">
-                                <img src="@PhotoUrl" style="max-width: 90px; max-height: 90px" class="rounded-circle mr-1" />
-                            </button>
-                            <h5>@Loc["ChangePicture"]</h5>
-                        </div>
-                    </div>
-                    <div class="form-group col-lg-6 col-sm-12">
-                        <label>@Loc["DisplayName"]</label>
-                        <input type="text" @bind="@User.DisplayName" Class="form-control" />
+                <div class="form-group">
+                    <div class="col-lg-6 col-sm-12">
+                        <input class="form-control" @bind="@User.DisplayName" placeholder="@Loc["DisplayName"]" />
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-sm-12">
                         <label>@Loc["Description"]</label>
-                        <textarea @bind="@User.Description" Class="form-control h-100" rows="6" cols="6"/>
+                        <textarea @bind="@User.Description" Class="form-control h-100" rows="6" cols="6" />
                     </div>
-                </div>
+                </div>              
                 <div class="form-row">
-                    <div class="form-group col-lg-6 col-sm-12">
-                        <label>@Loc["Email"]</label>
+                    <div class="form-group col-lg-6  col-sm-12"> 
                         <input type="text" @bind="@User.Email" Class="form-control" readonly />
-                        <span class="text-primary cursor-pointer" @onclick="OpenModalChangeMail">@Loc["TitleChangeMail"]</span>
                     </div>
-                    <div class="form-group col-lg-6 col-sm-12">
-                        <label>@Loc["Phone"]</label>
-                        <input type="text" Class="form-control" @bind="@User.PhoneNumber" />
+                    <div class="form-group col-lg-6 col-sm-12"> 
+                        <input type="text" Class="form-control" @bind="@User.PhoneNumber" placeholder="@Loc["Phone"]" />
                     </div>
                 </div>
                 <div class="form-row">
-                    <div class="form-group col-lg-6  col-sm-12">
-                        <label>@Loc["FirstName"]</label>
-                        <input type="text" @bind="@User.FirstName" Class="form-control" />
+                    <div class="form-group col-lg-6  col-sm-12"> 
+                        <input type="text" @bind="@User.FirstName" Class="form-control" placeholder="@Loc["FirstName"]" />
                     </div>
-                    <div class="form-group col-lg-6 col-sm-12">
-                        <label>@Loc["LastName"]</label>
-                        <input type="text" @bind="@User.LastName" Class="form-control" />
+                    <div class="form-group col-lg-6 col-sm-12"> 
+                        <input type="text" @bind="@User.LastName" Class="form-control" placeholder="@Loc["LastName"]" />
                     </div>
                 </div>
                 <div class="form-row">
-                    <div class="form-group col-lg-6 col-sm-12">
-                        <label>@Loc["City"]</label>
-                        <input type="text" @bind="@User.City" Class="form-control" />
+                    <div class="form-group col-lg-6 col-sm-12"> 
+                        <input type="text" @bind="@User.City" Class="form-control" placeholder="@Loc["City"]" />
                     </div>
-                    <div class="form-group col-lg-6 col-sm-12">
-                        <label>@Loc["Country"]</label>
-                        <input type="text" @bind="@User.Country" Class="form-control" />
+                    <div class="form-group col-lg-6 col-sm-12"> 
+                        <input type="text" @bind="@User.Country" Class="form-control" placeholder="@Loc["Country"]" />
                     </div>
                 </div>
                 <div class="form-row">
@@ -353,13 +346,13 @@
 
             </div>
 
-            <div class="fixed-bottom m-4">
-                <button class="btn btn-success btn-circle btn-xl float-right ml-2" @onclick="Update" data-toggle="tooltip" data-html="true" title="@Loc["Save"]"><i class="fa fa-2x fa-save"></i></button>
-                <button type="button" class="btn btn-primary btn-circle btn-xl float-right ml-2" @onclick="OpenModalCustomLink" data-toggle="tooltip" data-html="true" title="@Loc["AddCustomLinks"]"><i class="fa fa-2x fa-link"></i></button>
-                <button type="button" class="btn btn-primary btn-circle btn-xl float-right ml-2" @onclick="OpenModalSocialNetwork" data-toggle="tooltip" data-html="true" title="@Loc["AddASocialNetwork"]"><i class="fa fa-2x fa-hashtag"></i></button>
-                <button type="button" class="btn btn-primary btn-circle btn-xl float-right ml-2" @onclick="OpenModalPinCode" data-toggle="tooltip" data-html="true" title="@Loc["DisplayPinCode"]"><i class="fas fa-address-card"></i></button>
-                <button type="button" class="btn btn-danger btn-circle btn-xl float-right ml-2" @onclick="ToggleChangePassword" data-toggle="tooltip" data-html="true" title="@Loc["ChangePassword"]"><i class="fa fa-2x fa-key"></i></button>
-            </div>
+            @*<div class="fixed-bottom m-4">
+                    <button class="btn btn-success btn-circle btn-xl float-right ml-2" @onclick="Update" data-toggle="tooltip" data-html="true" title="@Loc["Save"]"><i class="fa fa-2x fa-save"></i></button>
+                    <button type="button" class="btn btn-primary btn-circle btn-xl float-right ml-2" @onclick="OpenModalCustomLink" data-toggle="tooltip" data-html="true" title="@Loc["AddCustomLinks"]"><i class="fa fa-2x fa-link"></i></button>
+                    <button type="button" class="btn btn-primary btn-circle btn-xl float-right ml-2" @onclick="OpenModalSocialNetwork" data-toggle="tooltip" data-html="true" title="@Loc["AddASocialNetwork"]"><i class="fa fa-2x fa-hashtag"></i></button>
+                    <button type="button" class="btn btn-primary btn-circle btn-xl float-right ml-2" @onclick="OpenModalPinCode" data-toggle="tooltip" data-html="true" title="@Loc["DisplayPinCode"]"><i class="fas fa-address-card"></i></button>
+                    <button type="button" class="btn btn-danger btn-circle btn-xl float-right ml-2" @onclick="ToggleChangePassword" data-toggle="tooltip" data-html="true" title="@Loc["ChangePassword"]"><i class="fa fa-2x fa-key"></i></button>
+                </div>*@
 
         </div>
     </EditForm>

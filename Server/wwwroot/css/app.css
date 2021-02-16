@@ -53,7 +53,7 @@
 }
 
 a {
-    color: #2f71ff;
+    color: #979797;
     font-weight: 500;
     transition: all .5s;
     -webkit-transition: all .5s;
@@ -3973,10 +3973,10 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
     }
 }
 
-@media (max-width : 1400px) {
+@media (min-width : 1024px) and  (max-width : 1400px) {
     .col-lg-6 {
-        flex: 0 0 75%;
-        max-width: 75%;
+        flex: 0 0 50%;
+        max-width: 50%;
     }
 }
 

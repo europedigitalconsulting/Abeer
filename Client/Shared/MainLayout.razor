@@ -12,7 +12,7 @@
                      LabelUserList="@Loc["UserList"]"></NavMenu>
 
             <div class="main-content " style="min-height: calc(100vh - 60 px);">
-                @if (authenticationState?.User?.Identity.IsAuthenticated == true)
+                @*@if (authenticationState?.User?.Identity.IsAuthenticated == true)
                 {
                     @if (IsUnlimited || IsAdmin)
                     {
@@ -32,7 +32,7 @@
                             <strong>@Loc["NotSubscription"]</strong>
                         </div>
                     }
-                }
+                }*@
                 <CascadingValue Value="ScreenSize">
                     @Body
                 </CascadingValue>
@@ -41,12 +41,12 @@
 
     </div>
 
-    <footer class="footer col-12 pl-2 pt-2">
+    @*<footer class="footer col-12 pl-2 pt-2">
         <div class="">
             <img width="120" src="/assets/img/connexion/smartclik_logo.png"><br>
             <span style="font-size:12px;">Copyright © smart-clik 2021 - All rights reserved</span>
         </div>
-    </footer>
+    </footer>*@
     <MediaQuery Media="@Breakpoints.LargeUp" @bind-Matches="ScreenSize.IsLarge" />
     <MediaQuery Media="@Breakpoints.MediumUp" @bind-Matches="ScreenSize.IsMedium" />
     <MediaQuery Media="@Breakpoints.SmallDown" @bind-Matches="ScreenSize.IsSmall" />
