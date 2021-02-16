@@ -1,228 +1,42 @@
 ﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<EditProfile> Loc
-@code
-{
-    public bool ModalQrCodeVisible { get; set; }
-    public bool ToggleMenu { get; set; }
-    public void ToggleModal()
-    {
-        ModalQrCodeVisible = !ModalQrCodeVisible;
-    }
-
-    [Parameter]
-    public bool ReadOnly { get; set; }
-    [Parameter]
-    public string ProfileUrl { get; set; }
-    [Parameter]
-    public string DisplayName { get; set; }
-    [Parameter]
-    public string Title { get; set; }
-    [Parameter]
-    public string Description { get; set; }
-    [Parameter]
-    public string City { get; set; }
-    [Parameter]
-    public string Country { get; set; }
-    [Parameter]
-    public string Email { get; set; }
-
-    [Parameter]
-    public string PhotoUrl { get; set; }
-    [Parameter]
-    public string PhoneNumber { get; set; }
-    [Parameter]
-    public IEnumerable<SocialNetwork> SocialNetworkConnected { get; set; }
-    [Parameter]
-    public IEnumerable<CustomLink> CustomLinks { get; set; }
-
-    [Inject] public NavigationManager NavigationManager { get; set; }
-
-    [Inject] private HttpClient HttpClient { get; set; }
-    protected override async Task OnParametersSetAsync()
-    {
-        await base.OnParametersSetAsync();
-        if (string.IsNullOrEmpty(PhotoUrl))
-        {
-            PhotoUrl = "https://www.gravatar.com/avatar.php?gravatar_id=e511eeb916b3fa2202f38abfa29532b0&amp;rating=PG&amp;size=80";
-        }
-
-        await InvokeAsync(StateHasChanged);
-    }
-
-    public ViewApplicationUser User { get; set; } = new ViewApplicationUser();
-
-    async Task GotoEditProfile()
-    {
-        NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri("/profile/edit").ToString(), true);
-        await InvokeAsync(StateHasChanged);
-    }
-
-    async Task GotoContact()
-    {
-        NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri("/contact/list").ToString(), true);
-        await InvokeAsync(StateHasChanged);
-    }
-
-    void OpenMenu()
-    {
-        ToggleMenu = !ToggleMenu;
-    }
-
-    private bool ModalChangeMail;
-    private bool ModalChangePassword;
-    private bool ModalChangePinCode;
-    private string DigitCode;
-    private int PinCode;
-    private string NewDigitCode;
-    private int NewPinCode;
-
-    private string ChangePhotoError = "";
-    private string _PhotoType = "Gravatar";
-    private bool ModalChangePhoto;
-
-    private bool ChangePhotoHasError;
-    private bool ChangePasswordHasError;
-    private bool ChangeChangeMailHasError;
-    private string ChangeChangeMaildError = "";
-    private string ChangePasswordError = "";
-    public string OldPassword { get; set; }
-    public string NewPassword { get; set; }
-    public string ConfirmPassword { get; set; }
-    public string NewMail { get; set; }
-    public string ConfirmMail { get; set; }
-    private string Error;
-    public string PhotoType
-    {
-        get => _PhotoType;
-        set
-        {
-            _PhotoType = value;
-        }
-    }
-
-    private async Task ChangePassword()
-    {
-        if (NewPassword != ConfirmPassword)
-        {
-            ChangePasswordHasError = true;
-            ChangePasswordError = Loc["PasswordNotConfirmedError"].Value;
-        }
-        else
-        {
-            ChangePasswordHasError = false;
-            var response = await HttpClient.PutAsJsonAsync($"/api/Profile/ChangePassword", new ChangePasswordViewModel
-            {
-                UserId = User.Id,
-                OldPassword = OldPassword,
-                NewPassword = NewPassword
-            });
-            ChangePasswordHasError = !response.IsSuccessStatusCode;
-            ChangePasswordError = Loc["ChangePasswordFailedError"];
-
-            if (!ChangePasswordHasError)
-                ModalChangePassword = false;
-        }
-    }
-    private async Task SaveNewCard()
-    {
-        ApplicationUser user = new ApplicationUser();
-
-        user.PinDigit = NewDigitCode;
-        user.PinCode = NewPinCode;
-
-        var response = await HttpClient.PostAsJsonAsync($"api/Profile/SaveNewCard", user);
-        if (response.IsSuccessStatusCode)
-        {
-            var json = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<ApplicationUser>(json);
-
-            PinCode = result.PinCode;
-            DigitCode = result.PinDigit.ToString();
-            NewDigitCode = "";
-            NewPinCode = 0;
-        }
-        else
-        {
-            Error = await response.Content.ReadAsStringAsync();
-        }
-        StateHasChanged();
-    }
-    private async Task ChangePhoto()
-    {
-        User.PhotoUrl = PhotoUrl;
-        var response = await HttpClient.PutAsJsonAsync("/api/Profile", User);
-        response.EnsureSuccessStatusCode();
-
-        var json = await response.Content.ReadAsStringAsync();
-        User = JsonConvert.DeserializeObject<ViewApplicationUser>(json);
-        ModalChangePhoto = false;
-    }
-    private async Task ChangeMail()
-    {
-        if (string.IsNullOrEmpty(NewMail) || NewMail != ConfirmMail)
-        {
-            ChangeChangeMailHasError = true;
-            ChangeChangeMaildError = Loc["PasswordNotConfirmedError"].Value;
-        }
-        else
-        {
-            ChangeChangeMailHasError = false;
-            var response = await HttpClient.PutAsJsonAsync($"/api/Profile/ChangeEmail", new ChangeMailViewModel
-            {
-                UserId = User.Id,
-                OldMail = User.Email,
-                NewMail = NewMail
-            });
-            if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
-            {
-                ChangeChangeMailHasError = true;
-                ChangeChangeMaildError = Loc["MailAlreadyExist"].Value;
-            }
-            else if (response.IsSuccessStatusCode)
-            {
-                NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri("Identity/account/logout?returnUrl=/Profile").ToString(), true);
-            }
-        }
-    }
-    protected override async Task OnInitializedAsync()
-    {
-        var response = await HttpClient.GetAsync($"api/Profile");
-        if (response.IsSuccessStatusCode)
-        {
-            var json = await response.Content.ReadAsStringAsync();
-            Console.WriteLine($"user :{json}");
-            User = JsonConvert.DeserializeObject<ViewApplicationUser>(json);
-        }
-    }
-}
 
 <section class="section">
     <div class="section-body mb-3">
         <div class="author-box mt-3" style="color: #979797 !important;">
             <div class="card-body pb-0">
                 <div class="author-box-left" style="position:relative">
-                    <i style="font-size: 20px; position: absolute; right: -20px; top: 0px; z-index: 9999999999;" class="p-3 fas fa-ellipsis-v p-3" aria-hidden="true" @onclick="() => ToggleMenu = !ToggleMenu"></i>
-                    @if (ToggleMenu)
+                    @if (!ReadOnly)
                     {
-                        <div class="p-2" style="background:white; border:1px solid green; position:absolute; right:20px; width:auto;z-index:9999999999;">
-                            <ul style="list-style: none; " class="p-0 m-0">
-                                <li class="pt-2" @onclick="() => ModalChangePassword = true">
-                                    @Loc["ChangePassword"]
-                                </li>
-                                <li class="" @onclick="() => ModalChangePinCode = true">
-                                    @Loc["DisplayPinCode"]
-                                </li>
-                                <li class="" @onclick="() => ModalChangeMail = true">
-                                    @Loc["TitleChangeMail"]
-                                </li>
-                                <li class="" @onclick="() => ModalChangePhoto = true">
-                                    @Loc["ChangePicture"]
-                                </li>
-                            </ul>
-                        </div>
+                        <i style="font-size: 20px; position: absolute; right: -20px; top: 0px; z-index: 9999999999;" class="p-3 fas fa-ellipsis-v p-3" aria-hidden="true" @onclick="() => ToggleMenu = !ToggleMenu"></i>
+                        @if (ToggleMenu)
+                        {
+                            <div class="p-2" style="background:white; border:1px solid green; position:absolute; right:20px; width:auto;z-index:9999999999;">
+                                <ul style="list-style: none; " class="p-0 m-0">
+                                    <li class="pt-2" @onclick="() => ModalChangePassword = true">
+                                        @Loc["ChangePassword"]
+                                    </li>
+                                    <li class="" @onclick="() => ModalChangePinCode = true">
+                                        @Loc["DisplayPinCode"]
+                                    </li>
+                                    <li class="" @onclick="() => ModalChangeMail = true">
+                                        @Loc["TitleChangeMail"]
+                                    </li>
+                                    <li class="" @onclick="() => ModalChangePhoto = true">
+                                        @Loc["ChangePicture"]
+                                    </li>
+                                    <li class="" @onclick="OpenModalCustomLink">
+                                        @Loc["AddCustomLinks"]
+                                    </li>
+                                    <li class="" @onclick="OpenModalSocialNetwork">
+                                        @Loc["AddASocialNetwork"]
+                                    </li>
+                                </ul>
+                            </div>
+                        }
                     }
                     <div style="position:relative; width:100%;">
                         <img src="/assets/img/profilphoto.png" />
-                        <img style="border:2px solid black; position: absolute; left: 51%; top: 52%; transform: translate(-50%, -50%); " width="160" height="160" alt="image" src="@PhotoUrl" class="rounded-circle author-box-picture">
+                        <img style="border:2px solid black; position: absolute; left: 51%; top: 52%; transform: translate(-50%, -50%); " width="160" height="160" alt="image" src="@User.PhotoUrl" class="rounded-circle author-box-picture">
                     </div>
 
                 </div>
@@ -230,61 +44,64 @@
                     @*<img alt="qrcode" src="/api/QrCodeGenerator?link=@ProfileUrl" style="width: 100px" @onclick="ToggleModal" />*@
                     <div class="author-box-name">
                         <div style="display:inline-block">
-                            <a href="#" class="mr-3 text-dark pb-2">@DisplayName</a><br />
-                            <span class="author-box-job">@Title</span>
+                            <a href="#" class="mr-3 text-dark pb-2">@User.DisplayName</a><br />
+                            <span class="author-box-job">@User.Title</span>
                         </div>
-                        <div style="display:inline-block; float:right">
-                            <div @onclick="GotoEditProfile" class="pr-2 text-center text-light">
-                                <div>
-                                    <i style="font-size: 16px;color: black;" class="fas fa-pencil-alt"></i>
+                        @if (!ReadOnly)
+                        {
+                            <div style="display:inline-block; float:right">
+                                <div @onclick="GotoEditProfile" class="pr-2 text-center text-light">
+                                    <div>
+                                        <i style="font-size: 16px;color: black;" class="fas fa-pencil-alt"></i>
+                                    </div>
+                                    <span style="color:black; font-weight:400;font-size:12px;">@Loc["Update"]</span>
                                 </div>
-                                <span style="color:black; font-weight:400;font-size:12px;">@Loc["Modifier"]</span>
                             </div>
-                        </div>
+                        }
                     </div>
-                    @if (!string.IsNullOrEmpty(Description))
+                    @if (!string.IsNullOrEmpty(User.Description))
                     {
                         <div class="author-box-description" style="text-align:left;">
                             <p>
-                                @Description
+                                @User.Description
                             </p>
                         </div>
                     }
                     <div class="mt-4">
                         <ul style="list-style: none;font-weight: 500;" class="pl-0">
-                            @if (!string.IsNullOrWhiteSpace(City))
+                            @if (!string.IsNullOrWhiteSpace(User.City))
                             {
                                 <li class="pb-2">
                                     <span class="p-2 w-100">
                                         <i class="fa fa-map-marker text-dark pr-2" aria-hidden="true"></i>
-                                        @City, @Country
+                                        @User.City, @User.Country
                                     </span>
                                 </li>
                             }
-                            @if (!string.IsNullOrWhiteSpace(Email))
+                            @if (!string.IsNullOrWhiteSpace(User.Email))
                             {
                                 <li class="pb-2">
-                                    <a href="mailto:@Email" class="p-2 w-100">
+                                    <a href="mailto:@User.Email" class="p-2 w-100">
                                         <i class="fa fa-envelope text-dark pr-2" aria-hidden="true"></i>
-                                        @Email
+                                        @User.Email
                                     </a>
                                 </li>
                             }
-                            @if (!string.IsNullOrWhiteSpace(PhoneNumber))
+                            @if (!string.IsNullOrWhiteSpace(User.PhoneNumber))
                             {
                                 <li class="pb-2">
                                     <span class="p-2 w-100">
                                         <i class="fa fa-phone text-dark pr-2" aria-hidden="true"></i>
-                                        @PhoneNumber
+                                        @User.PhoneNumber
                                     </span>
                                 </li>
                             }
                         </ul>
                     </div>
-                    @if (SocialNetworkConnected != null)
+                    @if (User.SocialNetworkConnected != null)
                     {
                         <div class="row col-12">
-                            @foreach (var socialNetwork in SocialNetworkConnected)
+                            @foreach (var socialNetwork in User.SocialNetworkConnected)
                             {
                                 <div class="card text-white mb-3 mr-1">
 
@@ -306,10 +123,10 @@
                             }
                         </div>
                     }
-                    @if (CustomLinks != null)
+                    @if (User.CustomLinks != null)
                     {
                         <div class="row col-12">
-                            @foreach (var customLink in CustomLinks)
+                            @foreach (var customLink in User.CustomLinks)
                             {
                                 <div class="card text-white bg-secondary mb-3" style="max-width: 18rem;margin:5px">
                                     <div class="card-header">@customLink.Name</div>
@@ -339,18 +156,21 @@
         </div>
         <div class="section-footer" style="height:50px;position:relative; background-color:#F5F8FA;border-radius: 0px 0px 15px 15px;">
             <div>
-                <a href="/Identity/Account/register" class="pl-0 pt-2 pb-2 text-decoration-none col-3 ">
+                <a href="#" class="pl-0 pt-2 pb-2 text-decoration-none col-3 ">
                     <img class="pt-2 pb-2" src="/assets/img/services/macarte_sm.svg" style="box-shadow: 0px 5px 35px 0px lightgrey; padding-left: 10px; border-radius: 0px 0px 19px 19px; background: #F5F8FA;" />
                 </a>
             </div>
-            <div style="position:absolute;right:10px;top:5px;">
-                <div class="pr-2 text-center text-light">
-                    <div>
-                        <i style="font-size: 16px; color: black;" class="fa fa-users" aria-hidden="true"></i>
+            @if (!ReadOnly)
+            {
+                <div @onclick="GotoContact" style="position:absolute;right:10px;top:5px;">
+                    <div class="pr-2 text-center text-light">
+                        <div>
+                            <i style="font-size: 16px; color: black;" class="fa fa-users" aria-hidden="true"></i>
+                        </div>
+                        <span style="font-size: 12px; color: black; font-weight: 400;">@Loc["Contacts"]</span>
                     </div>
-                    <span style="font-size: 12px; color: black; font-weight: 400;">Mes contacts</span>
                 </div>
-            </div>
+            }
         </div>
     </div>
 </section>
@@ -385,7 +205,7 @@
                     {
                         <div class="form-group">
                             @Loc["UseCustomPhoto"]
-                            <MediaUploader ImgUrl="@PhotoUrl" OnChange="@((fileUrl)=>PhotoUrl = fileUrl)"></MediaUploader>
+                            <MediaUploader ImgUrl="@User.PhotoUrl" OnChange="@((fileUrl)=>User.PhotoUrl = fileUrl)"></MediaUploader>
                         </div>}
                     <div class="text-center">
                         <button type="button" class="btn btn-success" @onclick="ChangePhoto">@Loc["ChangePhoto"]</button>
@@ -533,4 +353,91 @@
         </div>
     </div>
 }
+@if (ModalSocialNetwork)
+{
+    <div class="modal fade show" id="modalSocialNetwork" style="display:block" aria-modal="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered  modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">@Loc["AddASocialNetwork"]</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="() => ModalSocialNetwork = false">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card m-2">
+                        <div class="form-group">
+                            @Loc["SocialType"]
+                            <span>
+                                @if (!string.IsNullOrEmpty(NewSocialLink.Name))
+                                {
+                                    <i class="@NewSocialLink.Logo"></i><span>@NewSocialLink.Name</span>
+                                }
+                            </span>
+                            <ul class="list-inline">
+                                <li class="list-inline-item">
+                                    <ul class="list-inline">
+                                        @foreach (var item in AvailableSocialNetworks)
+                                        {
+                                            <li class="list-inline-item">
+                                                <a href="javascript:void(0)" @onclick="@(()=>SetSocialNetwork(item.Name, item.BackgroundColor, item.Logo))">
+                                                    <i class="@item.Logo" style="font-size:55px"></i>
+                                                    <br />
+                                                    <span>@item.Name</span>
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="form-group">
+                            @Loc["SocialUrl"]
+                            <input type="url" @bind="NewSocialLink.Url" class="form-control" />
+                        </div>
+                        <div class="text-center">
+                            <button class="btn btn-success" @onclick="AddSocialNetwork">@Loc["AddASocialNetwork"]</button>
+                        </div>
 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@if (ModalCustomLink)
+{
+    <div class="modal fade show" id="modalCustomLink" style="display:block" aria-modal="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered  modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">@Loc["AddCustomLink"]</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="() => ModalCustomLink = false">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card m-1">
+                        <div class="form-group">
+                            @Loc["Name"]
+                            <input @bind="NewCustomLink.Name" class="form-control" />
+                        </div>
+                        @*<div class="form-group">
+                                @Loc["BackgroundColor"]
+                                <input @bind="NewCustomLink.BackgroundColor" class="form-control" />
+                            </div>*@
+                        <div class="form-group">
+                            @Loc["Logo"]
+                            <MediaUploader ImgUrl="@NewCustomLink.Logo" OnChange="@((fileUrl)=>NewCustomLink.Logo = fileUrl)"></MediaUploader>
+                        </div>
+                        <div class="form-group">
+                            @Loc["Url"]
+                            <input type="url" @bind="NewCustomLink.Url" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="text-center"><button class="btn btn-success" @onclick="AddCustomLink">@Loc["AddCustomLink"]</button></div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

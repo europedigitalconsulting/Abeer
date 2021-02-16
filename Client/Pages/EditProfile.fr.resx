@@ -133,7 +133,7 @@
     <value>Associer une nouvelle carte</value>
   </data>
   <data name="BtnChangeMail" xml:space="preserve">
-    <value>Modifier mon Email</value>
+    <value>Modifier Email</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Annuler</value>
@@ -141,11 +141,14 @@
   <data name="CatchPhrase" xml:space="preserve">
     <value>Cette page vous aide à modifier votre propre profil, vous pouvez modifier, régénérer le code pin ou un jeton pour crypter vos données</value>
   </data>
+  <data name="ChangePassword" xml:space="preserve">
+    <value>Modifier mot de passe</value>
+  </data>
   <data name="ChangePhoto" xml:space="preserve">
     <value>Modifier ma photo</value>
   </data>
   <data name="ChangePicture" xml:space="preserve">
-    <value>Modifier la photo</value>
+    <value>Modifier photo</value>
   </data>
   <data name="City" xml:space="preserve">
     <value>Ville</value>
@@ -155,6 +158,9 @@
   </data>
   <data name="ConfirmPassword" xml:space="preserve">
     <value>Confirmer le nouveau mot de passe</value>
+  </data>
+  <data name="Contacts" xml:space="preserve">
+    <value>Mes contacts</value>
   </data>
   <data name="Country" xml:space="preserve">
     <value>Pays</value>
@@ -166,10 +172,10 @@
     <value>Nom à afficher</value>
   </data>
   <data name="DisplayPinCode" xml:space="preserve">
-    <value>Afficher mon code pin</value>
+    <value>Afficher code pin</value>
   </data>
   <data name="EditProfile" xml:space="preserve">
-    <value>Modifier mon profile</value>
+    <value>Modifier profile</value>
   </data>
   <data name="Email" xml:space="preserve">
     <value>Email</value>
@@ -259,7 +265,7 @@
     <value>Profile utilisateur</value>
   </data>
   <data name="TitleChangeMail" xml:space="preserve">
-    <value>Modifier mon adresse email</value>
+    <value>Modifier adresse email</value>
   </data>
   <data name="TxtDesc1" xml:space="preserve">
     <value>Après avoir changé votre adresse mail vous serez automatiquement déconnecté.</value>

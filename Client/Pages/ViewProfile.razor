@@ -5,7 +5,6 @@
 @inject Abeer.Client.UISdk.NavigationUrlService NavigationUrlService
 @using System.Security.Claims;
 
-@layout ViewLayout
 @code
 {
     public ClaimsPrincipal User { get; set; }
@@ -59,7 +58,7 @@
 
         NavigationUrlService.ShowImport = true;
 
-        if(User.Identity.IsAuthenticated)
+        if (User.Identity.IsAuthenticated)
         {
             NavigationUrlService.ShowContacts = true;
             NavigationUrlService.ShowMyAds = true;
@@ -77,11 +76,9 @@
 
 @if (UserProfile != null)
 {
-    <UserProfileControl ReadOnly="true" DisplayName="@UserProfile.DisplayName" PhotoUrl="@UserProfile.PhotoUrl" Title="@UserProfile.Title" City="@UserProfile.City"
-                        Country="@UserProfile.Country" Description="@UserProfile.Description"
-                        Email="@UserProfile.Email" PhoneNumber="@UserProfile.PhoneNumber"
-                        ProfileUrl="@Navigation.ToAbsoluteUri($"/ViewProfile/{UserProfile.Id}").ToString()"
-                        SocialNetworkConnected="UserProfile.SocialNetworkConnected" CustomLinks="UserProfile.CustomLinks"></UserProfileControl>
+    <UserProfileControl User="UserProfile" ReadOnly="true"
+                        ProfileUrl="@Navigation.ToAbsoluteUri($"/ViewProfile/{UserProfile.Id}").ToString()">
+    </UserProfileControl>
 }
 else
 {
