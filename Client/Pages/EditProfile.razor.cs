@@ -74,6 +74,14 @@ namespace Abeer.Client.Pages
             response.EnsureSuccessStatusCode();
             CustomLinks.Remove(customLink);
             await InvokeAsync(StateHasChanged);
-        } 
+        }
+        async Task Update()
+        {
+            var response = await HttpClient.PutAsJsonAsync("/api/Profile", User);
+            response.EnsureSuccessStatusCode();
+
+            var json = await response.Content.ReadAsStringAsync();
+            User = JsonConvert.DeserializeObject<ViewApplicationUser>(json);
+        }
     }
 }

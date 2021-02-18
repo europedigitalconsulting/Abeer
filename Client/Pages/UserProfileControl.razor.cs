@@ -29,7 +29,7 @@ namespace Abeer.Client.Pages
         [Inject] private HttpClient HttpClient { get; set; }
 
         public List<SocialNetwork> AvailableSocialNetworksToAdd { get; set; } = new List<SocialNetwork>();
-        public bool ModalQrCodeVisible { get; set; }
+        public bool ModalQrCode { get; set; }
         public bool ToggleMenu { get; set; }
         private bool ModalChangeMail;
         private bool ModalChangePassword;
@@ -63,11 +63,7 @@ namespace Abeer.Client.Pages
             {
                 _PhotoType = value;
             }
-        }
-        public void ToggleModal()
-        {
-            ModalQrCodeVisible = !ModalQrCodeVisible;
-        }
+        } 
 
         protected override async Task OnInitializedAsync()
         {
@@ -101,11 +97,7 @@ namespace Abeer.Client.Pages
         {
             NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri("/contact/list").ToString(), true);
             await InvokeAsync(StateHasChanged);
-        }
-        void OpenMenu()
-        {
-            ToggleMenu = !ToggleMenu;
-        }
+        }         
 
         private SocialNetwork NewSocialLink = new SocialNetwork();
         private CustomLink NewCustomLink = new CustomLink();
@@ -193,6 +185,10 @@ namespace Abeer.Client.Pages
                     NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri("Identity/account/logout?returnUrl=/Profile").ToString(), true);
                 }
             }
+        }
+        private void OpenModalQrCode()
+        {
+            ModalQrCode = !ModalQrCode;
         }
         private void OpenModalSocialNetwork()
         {

@@ -10,9 +10,9 @@
                         <i style="font-size: 20px; position: absolute; right: -20px; top: 0px; z-index: 9999999999;" class="p-3 fas fa-ellipsis-v p-3" aria-hidden="true" @onclick="() => ToggleMenu = !ToggleMenu"></i>
                         @if (ToggleMenu)
                         {
-                            <div class="p-2" style="background:white; border:1px solid green; position:absolute; right:20px; width:auto;z-index:9999999999;">
+                            <div class="p-2" style="background:white; border:1px solid green; position:absolute; right:20px; width:auto;z-index:99999999;">
                                 <ul style="list-style: none; " class="p-0 m-0">
-                                    <li class="pt-2" @onclick="() => ModalChangePassword = true">
+                                    <li class="" @onclick="() => ModalChangePassword = true">
                                         @Loc["ChangePassword"]
                                     </li>
                                     <li class="" @onclick="() => ModalChangePinCode = true">
@@ -29,6 +29,9 @@
                                     </li>
                                     <li class="" @onclick="OpenModalSocialNetwork">
                                         @Loc["AddASocialNetwork"]
+                                    </li>
+                                    <li class="" @onclick="OpenModalQrCode">
+                                        @Loc["ViewQrCode"]
                                     </li>
                                 </ul>
                             </div>
@@ -335,19 +338,27 @@
         </div>
     </div>
 }
-@if (ModalQrCodeVisible)
+@if (ModalQrCode)
 {
-    <div class="modal fade show" id="modalQrCode" style="display:block" aria-modal="true" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Profile QR Code</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="ToggleModal">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <img alt="qrcode" src="/api/QrCodeGenerator?link=@ProfileUrl" style="width:100%" />
+    <div @onclick="@(() => ModalQrCode = false)" class="modal fade show" id="modal-confirm" data-backdrop="static" data-keyboard="false" tabindex="-1" style="display: block;top:0;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius: 0px !important; height: 120%;border-radius:500px;">
+                <div id="background" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: white; filter: blur(3px); z-index: 99; "></div>
+                <div class="modal-body" style="display: flex;justify-content: center; align-items: center;">
+                    <div class="text-center" style="background-color: #1FBF8A; color: white; width: calc(80vw); height: calc(80vw); margin-left: auto; margin-right: auto; border-radius: 50%;  display: flex;justify-content: center;
+  align-items: center;z-index: 999">
+                        <div>
+                            <div class="pb-3">
+                                <img alt="qrcode" src="/api/QrCodeGenerator?link=@ProfileUrl" width="160" />
+                            </div>
+                            <div>
+                                <span class="pb-2" style="font-size:18px">@User.DisplayName</span>
+                                <br />
+                                <span class="author-box-job" style="font-size:11px">@User.Title</span>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
