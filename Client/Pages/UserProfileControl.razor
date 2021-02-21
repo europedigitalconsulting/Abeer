@@ -1,187 +1,255 @@
 ﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<EditProfile> Loc
+ 
+@if (ToggleMenu)
+{
+    <div class="modal fade show effect-open" id="modal-confirm" data-backdrop="static" data-keyboard="false" tabindex="-1" style="display: block;top:0;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content-menu-profile" style="height: 120%;">
+                <div style="position: absolute;top: 0;left: 0;right: 0;bottom: 0;background-color: white;z-index: 99;"></div>
+                <div @onclick="() => ToggleMenu = !ToggleMenu" style="position:fixed;top:60px;right:20px;padding:10px 15px 10px 15px;background:#F5F8FA;border-radius:10px;z-index:999999">
+                    <i style="font-size:22px" class="fas fa-times"></i>
+                </div>
+                <div class="modal-body" style="display: flex;justify-content: center; align-items: center;">
+                    <div class="" style="color: white; width: calc(100vw); height: calc(100vw); margin-left: auto; margin-right: auto; display: flex; justify-content: center; align-items: center; z-index: 999;">
 
+                        <ul style="list-style: none; width:100%; color:#97AABD;" class="p-0 m-0">
+                            <li class="menu-profile" @onclick="OpenModalChangePassword">
+                                @Loc["ChangePassword"]
+                            </li>
+                            <li class="menu-profile" @onclick="OpenModalChangePinCode">
+                                @Loc["DisplayPinCode"]
+                            </li>
+                            <li class="menu-profile" @onclick="OpenModalChangeMail">
+                                @Loc["TitleChangeMail"]
+                            </li>
+                            <li class="menu-profile" @onclick="OpenModalChangePhoto">
+                                @Loc["ChangePicture"]
+                            </li>
+                            <li class="menu-profile" @onclick="OpenModalCustomLink">
+                                @Loc["AddCustomLinks"]
+                            </li>
+                            <li class="menu-profile" @onclick="OpenModalSocialNetwork">
+                                @Loc["AddASocialNetwork"]
+                            </li>
+                            <li class="menu-profile" @onclick="GotoEditProfile">
+                                @Loc["Update"]
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 <section class="section">
     <div class="section-body mb-3">
         <div class="author-box mt-3" style="color: #979797 !important;">
             <div class="card-body pb-0">
                 <div class="author-box-left" style="position:relative">
-                    @if (!ReadOnly)
+                    @if (!ReadOnly && ScreenSize.IsSmall)
                     {
                         <i style="font-size: 20px; position: absolute; right: -20px; top: 0px; z-index: 9999999999;" class="p-3 fas fa-ellipsis-v p-3" aria-hidden="true" @onclick="() => ToggleMenu = !ToggleMenu"></i>
-                        @if (ToggleMenu)
-                        {
-                            <div class="p-2" style="background:white; border:1px solid green; position:absolute; right:20px; width:auto;z-index:99999999;">
-                                <ul style="list-style: none; " class="p-0 m-0">
-                                    <li class="" @onclick="() => ModalChangePassword = true">
-                                        @Loc["ChangePassword"]
-                                    </li>
-                                    <li class="" @onclick="() => ModalChangePinCode = true">
-                                        @Loc["DisplayPinCode"]
-                                    </li>
-                                    <li class="" @onclick="() => ModalChangeMail = true">
-                                        @Loc["TitleChangeMail"]
-                                    </li>
-                                    <li class="" @onclick="() => ModalChangePhoto = true">
-                                        @Loc["ChangePicture"]
-                                    </li>
-                                    <li class="" @onclick="OpenModalCustomLink">
-                                        @Loc["AddCustomLinks"]
-                                    </li>
-                                    <li class="" @onclick="OpenModalSocialNetwork">
-                                        @Loc["AddASocialNetwork"]
-                                    </li>
-                                    <li class="" @onclick="OpenModalQrCode">
-                                        @Loc["ViewQrCode"]
-                                    </li>
-                                </ul>
-                            </div>
-                        }
+
                     }
                     <div style="position:relative; width:100%;">
                         <img src="/assets/img/profilphoto.png" />
                         <img style="border:2px solid black; position: absolute; left: 51%; top: 52%; transform: translate(-50%, -50%); " width="160" height="160" alt="image" src="@User.PhotoUrl" class="rounded-circle author-box-picture">
                     </div>
-
                 </div>
-                <div class="author-box-details mt-4" @ontouchstart="() => ToggleMenu = false">
-                    @*<img alt="qrcode" src="/api/QrCodeGenerator?link=@ProfileUrl" style="width: 100px" @onclick="ToggleModal" />*@
+                <div class="mt-4 pt-lg-6" @ontouchstart="() => ToggleMenu = false">
                     <div class="author-box-name">
-                        <div style="display:inline-block">
-                            <a href="#" class="mr-3 text-dark pb-2">@User.DisplayName</a><br />
-                            <span class="author-box-job">@User.Title</span>
-                        </div>
-                        @if (!ReadOnly)
-                        {
-                            <div style="display:inline-block; float:right">
-                                <div @onclick="GotoEditProfile" class="pr-2 text-center text-light">
-                                    <div>
-                                        <i style="font-size: 16px;color: black;" class="fas fa-pencil-alt"></i>
-                                    </div>
-                                    <span style="color:black; font-weight:400;font-size:12px;">@Loc["Update"]</span>
+                        <div class="d-flex justify-content-between mb-3">
+                            <div class="p-2 mr-auto">
+                                <div>
+                                    <a href="#" class="text-dark pb-2">@User.DisplayName</a><!--!--><br>
+                                    <span class="author-box-job">@User.Title</span>
                                 </div>
                             </div>
-                        }
-                    </div>
-                    @if (!string.IsNullOrEmpty(User.Description))
-                    {
-                        <div class="author-box-description" style="text-align:left;">
-                            <p>
-                                @User.Description
-                            </p>
-                        </div>
-                    }
-                    <div class="mt-4">
-                        <ul style="list-style: none;font-weight: 500;" class="pl-0">
-                            @if (!string.IsNullOrWhiteSpace(User.City))
-                            {
-                                <li class="pb-2">
-                                    <span class="p-2 w-100">
-                                        <i class="fa fa-map-marker text-dark pr-2" aria-hidden="true"></i>
-                                        @User.City, @User.Country
-                                    </span>
-                                </li>
-                            }
-                            @if (!string.IsNullOrWhiteSpace(User.Email))
-                            {
-                                <li class="pb-2">
-                                    <a href="mailto:@User.Email" class="p-2 w-100">
-                                        <i class="fa fa-envelope text-dark pr-2" aria-hidden="true"></i>
-                                        @User.Email
-                                    </a>
-                                </li>
-                            }
-                            @if (!string.IsNullOrWhiteSpace(User.PhoneNumber))
-                            {
-                                <li class="pb-2">
-                                    <span class="p-2 w-100">
-                                        <i class="fa fa-phone text-dark pr-2" aria-hidden="true"></i>
-                                        @User.PhoneNumber
-                                    </span>
-                                </li>
-                            }
-                        </ul>
-                    </div>
-                    @if (User.SocialNetworkConnected != null)
-                    {
-                        <div class="row col-12">
-                            @foreach (var socialNetwork in User.SocialNetworkConnected)
-                            {
-                                <div class="card text-white mb-3 mr-1">
-
-                                    <a href="@socialNetwork.Url" target="_blank">
-                                        @if (string.IsNullOrWhiteSpace(socialNetwork.Logo))
-                                        {
-                                            <i class="fas fa-share-alt" style="font-size:50px;width: 50px; text-align: center"></i>
-                                        }
-                                        else if (socialNetwork.Logo.StartsWith("fa"))
-                                        {
-                                            <i class="@socialNetwork.Logo" style="font-size:50px; width:50px;text-align:center"></i>
-                                        }
-                                        else
-                                        {
-                                            <img alt="image" src="assets/img/social/@(socialNetwork.Logo.ToLower()).png" style="font-size:50px; width:50px;text-align:center">
-                                        }
-                                    </a>
-                                </div>
-                            }
-                        </div>
-                    }
-                    @if (User.CustomLinks != null)
-                    {
-                        <div class="row col-12">
-                            @foreach (var customLink in User.CustomLinks)
-                            {
-                                <div class="card text-white bg-secondary mb-3" style="max-width: 18rem;margin:5px">
-                                    <div class="card-header">@customLink.Name</div>
-                                    <div class="card-body">
-                                        <a href="@customLink.Url" target="_blank">
-                                            @if (string.IsNullOrEmpty(customLink.Logo))
-                                            {
-                                                <i class="fas fa-paperclip rounded-circle img-thumbnail" style="font-size:105px; width:155px;text-align:center"></i>
-                                            }
-                                            else if (customLink.Logo.StartsWith("fa"))
-                                            {
-                                                <i class="@customLink.Logo rounded-circle img-thumbnail" style="font-size:105px; width:155px;text-align:center"></i>
-                                            }
-                                            else
-                                            {
-                                                <img alt="image" src="@(customLink.Logo.ToLower())" class="rounded-circle img-thumbnail">
-                                            }
-                                            <cite>@customLink.DisplayInfo</cite>
-                                        </a>
+                            <div class="p-2 cursor-pointer">
+                                <div style="color:black; font-weight:400;font-size:16px;">
+                                    <div class="pr-2 text-center text-light">
+                                        <div><i style="font-size: 20px;color: black;" class="fa fa-map-marker-alt"></i></div>
+                                        <span style="color:black; font-weight:400;font-size:12px;">Map</span>
                                     </div>
                                 </div>
+                            </div> 
+                            @if (!ReadOnly)
+                            {
+                                <div class="p-2 cursor-pointer">
+                                    <div style="color:black; font-weight:400;font-size:16px;">
+                                        <div class="pr-2 text-center text-light">
+                                            <div><i style="font-size: 20px;color: black;" class="far fa-bookmark"></i></div>
+                                            <span style="color:black; font-weight:400;font-size:12px;">Liens</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                @if (!ScreenSize.IsSmall)
+                                {
+                                    <div class="p-2 cursor-pointer" @onclick="GotoContact">
+                                        <div style="color:black; font-weight:400;font-size:16px;">
+                                            <div class="pr-2 text-center text-light">
+                                                <div><i style="font-size: 20px;color: black;" class="fa fa-users"></i></div>
+                                                <span style="color:black; font-weight:400;font-size:12px;">@Loc["Contacts"]</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
                             }
                         </div>
-                    }
+                    </div>
+                    <div class="row mt-lg-5" style=" border-top: 1px solid black; padding-top: 21px;">
+                        <div class="col-md-6 col-sm-12">
+                            @if (!string.IsNullOrEmpty(User.Description))
+                            {
+                                <div class="" style="text-align:left;">
+                                    <p>
+                                        @User.Description
+                                    </p>
+                                </div>
+                            }
+                            <div class="mt-4">
+                                <ul style="list-style: none;font-weight: 500;" class="pl-0">
+                                    @if (!string.IsNullOrWhiteSpace(User.City))
+                                    {
+                                        <li class="pb-2">
+                                            <span class="p-2 w-100">
+                                                <i class="fa fa-map-marker text-dark pr-2" aria-hidden="true"></i>
+                                                @User.City, @User.Country
+                                            </span>
+                                        </li>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(User.Email))
+                                    {
+                                        <li class="pb-2">
+                                            <a href="mailto:@User.Email" class="p-2 w-100">
+                                                <i class="fa fa-envelope text-dark pr-2" aria-hidden="true"></i>
+                                                @User.Email
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(User.PhoneNumber))
+                                    {
+                                        <li class="pb-2">
+                                            <span class="p-2 w-100">
+                                                <i class="fa fa-phone text-dark pr-2" aria-hidden="true"></i>
+                                                @User.PhoneNumber
+                                            </span>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                            @if (User.SocialNetworkConnected != null)
+                            {
+                                <div class="row col-12">
+                                    @foreach (var socialNetwork in User.SocialNetworkConnected)
+                                    {
+                                        <div class="card text-white mb-3 mr-1">
+
+                                            <a href="@socialNetwork.Url" target="_blank">
+                                                @if (string.IsNullOrWhiteSpace(socialNetwork.Logo))
+                                                {
+                                                    <i class="fas fa-share-alt" style="font-size:50px;width: 50px; text-align: center"></i>
+                                                }
+                                                else if (socialNetwork.Logo.StartsWith("fa"))
+                                                {
+                                                    <i class="@socialNetwork.Logo" style="font-size:50px; width:50px;text-align:center"></i>
+                                                }
+                                                else
+                                                {
+                                                    <img alt="image" src="assets/img/social/@(socialNetwork.Logo.ToLower()).png" style="font-size:50px; width:50px;text-align:center">
+                                                }
+                                            </a>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                        <div class="hidden-sm offset-md-2 col-md-4">
+                            <ul style="list-style: none; width:100%; color:#97AABD;" class="p-0 m-0">
+                                <li class="menu-profile" @onclick="GotoEditProfile">
+                                    @Loc["EditProfile"]<span style="float:right;"><i style="font-size: 20px;color: #97AABD" class="fas fa-key"></i></span>
+                                </li>
+                                <li class="menu-profile" @onclick="OpenModalChangeMail">
+                                    @Loc["TitleChangeMail"]<span style="float:right;"><i style="font-size: 20px;color: #97AABD" class="fas fa-at"></i></span>
+                                </li>
+                                <li class="menu-profile" @onclick="OpenModalCustomLink">
+                                    @Loc["AddCustomLinks"]<span style="float:right;"><i style="font-size: 20px;color: #97AABD" class="far fa-plus-square"></i></span>
+                                </li>
+                                <li class="menu-profile" @onclick="OpenModalSocialNetwork">
+                                    @Loc["AddASocialNetwork"]<span style="float:right;"><i style="font-size: 20px;color: #97AABD" class="fas fa-icons"></i></span>
+                                </li>
+                                <li class="menu-profile" @onclick="OpenModalChangePassword">
+                                    @Loc["ChangePassword"]<span style="float:right;"><i style="font-size: 20px;color: #97AABD" class="fas fa-key"></i></span>
+                                </li>
+                                <li class="menu-profile" @onclick="OpenModalChangePinCode">
+                                    @Loc["DisplayPinCode"]<span style="float:right;"><i style="font-size: 20px;color: #97AABD" class="fas fa-user-secret"></i></span>
+                                </li>
+                                <li class="menu-profile" @onclick="OpenModalChangePhoto">
+                                    @Loc["ChangePicture"]<span style="float:right;"><i style="font-size: 20px;color: #97AABD" class="fas fa-camera-retro"></i></span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="section-footer" style="height:50px;position:relative; background-color:#F5F8FA;border-radius: 0px 0px 15px 15px;">
-            <div>
-                <a href="#" class="pl-0 pt-2 pb-2 text-decoration-none col-3 ">
-                    <img class="pt-2 pb-2" src="/assets/img/services/macarte_sm.svg" style="box-shadow: 0px 5px 35px 0px lightgrey; padding-left: 10px; border-radius: 0px 0px 19px 19px; background: #F5F8FA;" />
-                </a>
-            </div>
-            @if (!ReadOnly)
-            {
-                <div @onclick="GotoContact" style="position:absolute;right:10px;top:5px;">
-                    <div class="pr-2 text-center text-light">
-                        <div>
-                            <i style="font-size: 16px; color: black;" class="fa fa-users" aria-hidden="true"></i>
+        @if (ScreenSize.IsSmall)
+        {
+            <div class="section-footer mt-3" style="height:50px;position:relative; background-color:#F5F8FA;border-radius: 0px 0px 15px 15px;">
+                <div class="d-flex justify-content-between mb-3">
+                    <div>
+                        <span @onclick="() => ModalQrCode = !ModalQrCode" class="pl-0 pt-2 pb-2 text-decoration-none col-3 ">
+                            <img class="pt-2 pb-2" src="/assets/img/services/macarte_sm.svg" style="box-shadow: 0px 5px 35px 0px lightgrey; padding-left: 10px; border-radius: 0px 0px 19px 19px; background: #F5F8FA;">
+                        </span>
+                    </div>
+                    <div class="p-2">
+                        <i style="font-size: 25px; color: black;" class="fa fa-map-marker-alt" aria-hidden="true"></i>
+                    </div>
+                    <div class="p-2" @onclick="GotoContact">
+                        <div class="pr-2 text-center text-light">
+                            <div>
+                                <i style="font-size: 16px; color: black;" class="fa fa-users" aria-hidden="true"></i>
+                            </div>
+                            <span style="font-size: 12px; color: black; font-weight: 400;">@Loc["Contacts"]</span>
                         </div>
-                        <span style="font-size: 12px; color: black; font-weight: 400;">@Loc["Contacts"]</span>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+@*@if (User.CustomLinks != null)
+    {
+        <div class="row col-12">
+            @foreach (var customLink in User.CustomLinks)
+            {
+                <div class="card text-white bg-secondary mb-3" style="max-width: 18rem;margin:5px">
+                    <div class="card-header">@customLink.Name</div>
+                    <div class="card-body">
+                        <a href="@customLink.Url" target="_blank">
+                            @if (string.IsNullOrEmpty(customLink.Logo))
+                            {
+                                <i class="fas fa-paperclip rounded-circle img-thumbnail" style="font-size:105px; width:155px;text-align:center"></i>
+                            }
+                            else if (customLink.Logo.StartsWith("fa"))
+                            {
+                                <i class="@customLink.Logo rounded-circle img-thumbnail" style="font-size:105px; width:155px;text-align:center"></i>
+                            }
+                            else
+                            {
+                                <img alt="image" src="@(customLink.Logo.ToLower())" class="rounded-circle img-thumbnail">
+                            }
+                            <cite>@customLink.DisplayInfo</cite>
+                        </a>
                     </div>
                 </div>
             }
         </div>
-    </div>
-</section>
-
-
+    }*@
 @if (ModalChangePhoto)
 {
-    <div class="modal fade show" id="modalChangePhoto" style="display:block" aria-modal="true" role="dialog">
+    <div class="modal fade show effect-open" id="modalChangePhoto" style="display:block" aria-modal="true" role="dialog">
         <div class="modal-dialog modal-dialog-centered  modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
@@ -220,7 +288,7 @@
 }
 @if (ModalChangeMail)
 {
-    <div class="modal fade show" id="modalChangeMail" style="display:block" aria-modal="true" role="dialog">
+    <div class="modal fade show effect-open" id="modalChangeMail" style="display:block" aria-modal="true" role="dialog">
         <div class="modal-dialog modal-dialog-centered  modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
@@ -261,7 +329,7 @@
 }
 @if (ModalChangePinCode)
 {
-    <div class="modal fade show" id="modalDisplayPinCode" style="display:block" aria-modal="true" role="dialog">
+    <div class="modal fade show effect-open" id="modalDisplayPinCode" style="display:block" aria-modal="true" role="dialog">
         <div class="modal-dialog  modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
@@ -303,7 +371,7 @@
 }
 @if (ModalChangePassword)
 {
-    <div class="modal fade show" id="modalChangePassword" style="display:block" aria-modal="true" role="dialog">
+    <div class="modal fade show effect-open" id="modalChangePassword" style="display:block" aria-modal="true" role="dialog">
         <div class="modal-dialog  modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
@@ -340,7 +408,7 @@
 }
 @if (ModalQrCode)
 {
-    <div @onclick="@(() => ModalQrCode = false)" class="modal fade show" id="modal-confirm" data-backdrop="static" data-keyboard="false" tabindex="-1" style="display: block;top:0;">
+    <div @onclick="@(() => ModalQrCode = false)" class="modal fade show effect-open" id="modal-confirm" data-backdrop="static" data-keyboard="false" tabindex="-1" style="display: block;top:0;">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content" style="border-radius: 0px !important; height: 120%;border-radius:500px;">
                 <div id="background" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: white; filter: blur(3px); z-index: 99; "></div>
@@ -366,7 +434,7 @@
 }
 @if (ModalSocialNetwork)
 {
-    <div class="modal fade show" id="modalSocialNetwork" style="display:block" aria-modal="true" role="dialog">
+    <div class="modal fade show effect-open" id="modalSocialNetwork" style="display:block" aria-modal="true" role="dialog">
         <div class="modal-dialog modal-dialog-centered  modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
@@ -418,7 +486,7 @@
 }
 @if (ModalCustomLink)
 {
-    <div class="modal fade show" id="modalCustomLink" style="display:block" aria-modal="true" role="dialog">
+    <div class="modal fade show effect-open" id="modalCustomLink" style="display:block" aria-modal="true" role="dialog">
         <div class="modal-dialog modal-dialog-centered  modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">

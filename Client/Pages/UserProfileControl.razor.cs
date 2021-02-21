@@ -1,4 +1,5 @@
 ﻿using Abeer.Shared;
+using Abeer.Shared.Functional;
 using Abeer.Shared.ViewModels;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -25,6 +26,8 @@ namespace Abeer.Client.Pages
         [Parameter]
         public List<SocialNetwork> AvailableSocialNetworks { get; set; } = new List<SocialNetwork>();
 
+        [CascadingParameter]
+        public ScreenSize ScreenSize { get; set; }
         [Inject] public NavigationManager NavigationManager { get; set; }
         [Inject] private HttpClient HttpClient { get; set; }
 
@@ -185,20 +188,38 @@ namespace Abeer.Client.Pages
                     NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri("Identity/account/logout?returnUrl=/Profile").ToString(), true);
                 }
             }
-        }
-        private void OpenModalQrCode()
+        } 
+        private void OpenModalChangePassword()
         {
-            ModalQrCode = !ModalQrCode;
+            ModalChangePassword = true;
+            ToggleMenu = false;
+        }
+        private void OpenModalChangePinCode()
+        {
+            ModalChangePinCode = true;
+            ToggleMenu = false;
+        }
+        private void OpenModalChangePhoto()
+        {
+            ModalChangePhoto = true;
+            ToggleMenu = false;
+        }
+        private void OpenModalChangeMail()
+        {
+            ModalChangeMail = true;
+            ToggleMenu = false;
         }
         private void OpenModalSocialNetwork()
         {
             NewSocialLink = new SocialNetwork { OwnerId = User.Id };
             ModalSocialNetwork = true;
+            ToggleMenu = false;
         }
         private void OpenModalCustomLink()
         {
             NewCustomLink = new CustomLink { OwnerId = User.Id };
             ModalCustomLink = true;
+            ToggleMenu = false;
         }
         private async Task AddSocialNetwork()
         {

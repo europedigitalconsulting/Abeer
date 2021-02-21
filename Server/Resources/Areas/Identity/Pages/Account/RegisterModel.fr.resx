@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Back" xml:space="preserve">
+    <value>Retour</value>
+  </data>
   <data name="CatchPhrase" xml:space="preserve">
     <value>Bienvenue sur l'application de Smart-Clik. La technologie a ouvert la voie à de nouveaux développements, de nouvelles trouvailles, et de nouvelles manières de les partager. D'un simple toucher, vous pouvez aujourd'hui partager vos cartes de visite, tout en redoublant d'efficacité. Prête à l'emploi, smart-clik met à disposition toute sa technologie pour votre plus grand confort d'utilisation. Testez notre application c'est l'adopter. N'attendez plus, merci de vous inscrire, vous disposez de 5j gratuitement pour nous tester !</value>
   </data>

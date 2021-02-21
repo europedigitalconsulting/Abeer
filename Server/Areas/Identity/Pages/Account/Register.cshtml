@@ -35,10 +35,10 @@
                 <img class="w-100 d-lg-none d-md-none" src="/assets/img/connexion/bg_intro.svg" />
                 <img src="/assets/img/connexion/smartclik_logo.png" />
             </div>
-            <form asp-route-returnUrl="@Model.ReturnUrl" method="post" class="card-register row pb-3 mt-3 mt-lg-5 justify-content-lg-center" style="color: #97AABD;font-size:14px;font-weight:400; position:relative;">
-                <div class="hidden-mobile visible-ipad-pro " id="close" style="cursor:pointer; padding: 5px; width: 30px; border-radius: 60px; background: #02BF8A; position: absolute; top: -15px; right: 50px; text-align: center">
-                    <i class="fa fa-times" aria-hidden="true" style="color:white;"></i>
-                </div>
+            <form asp-route-returnUrl="@Model.ReturnUrl" method="post" class="card-register row pb-3 mt-3 mt-lg-5 justify-content-lg-center" style="color: #97AABD;font-size:14px;font-weight:400;">
+                <div class="close-modal col-12 float-right" >
+                    <i style="color:#02BF8A;font-size:28px;" class="fas fa-times-circle float-right"></i>
+                </div> 
                 <div class="col-lg-5 col-sm-12 bg-white">
                     <div id="first">
                         <div asp-validation-summary="All" class="text-danger"></div>
@@ -68,7 +68,7 @@
                         <button id="btn-next" type="button" onclick="Next()" class="d-lg-none col-12 btn btn-success text-uppercase">@localizer["Next"]</button>
                     </div>
                 </div>
-                <div class="offset-lg-1 col-lg-5 col-sm-12  ">
+                <div class="pt-3 offset-lg-1 col-lg-5 col-sm-12">
                     <div id="second">
                         <div class="form-group">
                             <input asp-for="Input.City" class="form-control" placeholder="@localizer["City"]" />
@@ -78,9 +78,9 @@
                             <select asp-for="Input.Country" class="form-control">
                                 <option selected="selected" disabled="disabled">@localizer["Country"]</option>
                                 @foreach (var country in Model.Countries)
-                                        {
-                                <option value="@country.Value">@country.Text</option>
-                                        }
+                                {
+                                    <option value="@country.Value">@country.Text</option>
+                                }
                             </select>
                             <span asp-validation-for="Input.Country" class="text-danger"></span>
                         </div>
@@ -115,7 +115,10 @@
                                 </label>
                             </div>
                         </div>
-                        <button id="btn-register" type="button" onclick="Submit()" class="col-12 btn btn-success">@localizer["Register"]</button>
+                        <div class="d-flex justify-content-between">
+                            <button id="btn-back" type="button" onclick="Back()" class="hidden-lg col-5 btn text-white" style="background:#0077D9" >@localizer["Back"]</button>
+                            <button id="btn-register" type="button" onclick="Submit()" class="col-5 btn btn-success">@localizer["Register"]</button>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -158,9 +161,9 @@
 
         if (window.innerWidth < 1024) {
             $("#second").hide();
-        }
+        } 
 
-        $("#close").click(function () {
+        $(".close-modal").click(function () {
             window.location = "/";
         })
 
@@ -172,6 +175,10 @@
             else {
                 CheckInfoCountry();
             }
+        }
+        function Back() {
+            $("#first").show();
+            $("#second").hide();
         }
         function CheckDisclaimer() {
             if ($('#disclaimer').prop('checked') == true) {

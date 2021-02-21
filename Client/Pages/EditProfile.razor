@@ -15,16 +15,7 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group col-sm-12">
-                        <label>@Loc["Description"]</label>
-                        <textarea @bind="@User.Description" Class="form-control h-100" rows="6" cols="6" />
-                    </div>
-                </div>     <br />
-                <div class="form-row">
-                    <div class="form-group col-lg-6  col-sm-12">
-                        <input type="text" @bind="@User.Email" Class="form-control" readonly />
-                    </div>
-                    <div class="form-group col-lg-6 col-sm-12">
-                        <input type="text" Class="form-control" @bind="@User.PhoneNumber" placeholder="@Loc["Phone"]" />
+                        <textarea placeholder="@Loc["Description"]" @bind="@User.Description" Class="form-control h-100" rows="6" cols="6" />
                     </div>
                 </div>
                 <div class="form-row">
@@ -41,6 +32,14 @@
                     </div>
                     <div class="form-group col-lg-6 col-sm-12">
                         <input type="text" @bind="@User.Country" Class="form-control" placeholder="@Loc["Country"]" />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-lg-6 col-sm-12">
+                        <input type="text" Class="form-control" @bind="@User.PhoneNumber" placeholder="@Loc["Phone"]" />
+                    </div>
+                    <div class="form-group col-lg-6  col-sm-12">
+                        <input type="text" @bind="@User.Email" Class="form-control" readonly />
                     </div>
                 </div>
                 <div class="form-row">
@@ -87,7 +86,9 @@
                             </ul>
                         </div>}
                 </div>
-                <button type="submit" class="btn btn-success btn-circle btn-xl float-right ml-2" @onclick="Update" data-toggle="tooltip" data-html="true" title="@Loc["Save"]"><i class="fa fa-2x fa-save"></i></button>
+
+                <button type="submit" @onclick="Update" class="col-lg-3 col-sm-6 btn btn-primary mb-2" data-toggle="tooltip"  title="Enregistrer"><!--!-->Enregistrer</button>
+                <a href="/profile" class="col-lg-3 col-sm-6 btn btn-danger " data-toggle="tooltip" title="Enregistrer">Annuler</a>
             </div> 
         </div>
     </EditForm>
