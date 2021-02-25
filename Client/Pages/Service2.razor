@@ -85,10 +85,10 @@
             else
                 NextCard();
         }
+        StateHasChanged();
     }
-
 }
-<section class="section">
+<section class="section slide-in-elliptic-top-fwd">
     <div class="d-none d-md-block d-xl-block">
         <div class="row">
             <div class="col-12 pt-5">
@@ -131,7 +131,7 @@
             else
             {
                 <div class="col-md-4 col-sm-4 position-relative">
-                    <div class="card profile-widget ">
+                    <div class="card profile-widget">
                         <div @ontouchmove:preventDefault="true" @ontouchstart="HandleTouchStart" @ontouchend="HandleTouchEnd">
                             <div class="position-absolute" style="top: 30%" @onclick="PreviousCard">
                                 <img src="/assets/img/services/Iconly-Bulk-Arrow - Left.svg" />

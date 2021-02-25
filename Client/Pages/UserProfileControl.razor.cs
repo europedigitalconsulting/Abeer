@@ -32,8 +32,13 @@ namespace Abeer.Client.Pages
         [Inject] private HttpClient HttpClient { get; set; }
 
         public List<SocialNetwork> AvailableSocialNetworksToAdd { get; set; } = new List<SocialNetwork>();
-        public bool ModalQrCode { get; set; }
-        public bool ToggleMenu { get; set; }
+
+
+        private bool OpenList { get; set; }
+        private bool TabMap { get; set; }
+        private bool ModalQrCode { get; set; }
+        private bool ToggleMenu { get; set; }
+        private bool ModalEditProfil;
         private bool ModalChangeMail;
         private bool ModalChangePassword;
         private bool ModalChangePinCode;
@@ -209,10 +214,16 @@ namespace Abeer.Client.Pages
             ModalChangeMail = true;
             ToggleMenu = false;
         }
+        private void OpenModalEditProfil()
+        {
+            ModalEditProfil = true;
+            ToggleMenu = false;
+        }
         private void OpenModalSocialNetwork()
         {
             NewSocialLink = new SocialNetwork { OwnerId = User.Id };
             ModalSocialNetwork = true;
+            OpenList = false;
             ToggleMenu = false;
         }
         private void OpenModalCustomLink()
@@ -229,8 +240,7 @@ namespace Abeer.Client.Pages
                 response.EnsureSuccessStatusCode();
                 User.SocialNetworkConnected.Add(NewSocialLink);
                 NewSocialLink = new SocialNetwork { OwnerId = User.Id };
-                await InvokeAsync(StateHasChanged);
-                ModalSocialNetwork = false;
+                await InvokeAsync(StateHasChanged); 
             }
         }
         private async Task AddCustomLink()
@@ -247,6 +257,20 @@ namespace Abeer.Client.Pages
             NewSocialLink.Name = name;
             NewSocialLink.BackgroundColor = background;
             NewSocialLink.Logo = logo;
+            await InvokeAsync(StateHasChanged);
+        }
+        private async Task UpdateProfil(ViewApplicationUser user)
+        {
+            User = user;
+            ModalEditProfil = false;
+            StateHasChanged();
+        } 
+        private async Task DeleteSocialNetwork(SocialNetwork socialNetwork)
+        {
+            var response = await HttpClient.DeleteAsync($"/api/SocialNetwork/{User.Id}/{socialNetwork.Name}");
+            response.EnsureSuccessStatusCode();
+            AvailableSocialNetworks.Remove(socialNetwork);
+            User.SocialNetworkConnected.Remove(socialNetwork);
             await InvokeAsync(StateHasChanged);
         }
     }

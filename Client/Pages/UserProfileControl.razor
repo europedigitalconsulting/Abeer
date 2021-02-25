@@ -1,46 +1,5 @@
-﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<EditProfile> Loc
- 
-@if (ToggleMenu)
-{
-    <div class="modal fade show effect-open" id="modal-confirm" data-backdrop="static" data-keyboard="false" tabindex="-1" style="display: block;top:0;">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content-menu-profile" style="height: 120%;">
-                <div style="position: absolute;top: 0;left: 0;right: 0;bottom: 0;background-color: white;z-index: 99;"></div>
-                <div @onclick="() => ToggleMenu = !ToggleMenu" style="position:fixed;top:60px;right:20px;padding:10px 15px 10px 15px;background:#F5F8FA;border-radius:10px;z-index:999999">
-                    <i style="font-size:22px" class="fas fa-times"></i>
-                </div>
-                <div class="modal-body" style="display: flex;justify-content: center; align-items: center;">
-                    <div class="" style="color: white; width: calc(100vw); height: calc(100vw); margin-left: auto; margin-right: auto; display: flex; justify-content: center; align-items: center; z-index: 999;">
+﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<EditProfile> Loc 
 
-                        <ul style="list-style: none; width:100%; color:#97AABD;" class="p-0 m-0">
-                            <li class="menu-profile" @onclick="OpenModalChangePassword">
-                                @Loc["ChangePassword"]
-                            </li>
-                            <li class="menu-profile" @onclick="OpenModalChangePinCode">
-                                @Loc["DisplayPinCode"]
-                            </li>
-                            <li class="menu-profile" @onclick="OpenModalChangeMail">
-                                @Loc["TitleChangeMail"]
-                            </li>
-                            <li class="menu-profile" @onclick="OpenModalChangePhoto">
-                                @Loc["ChangePicture"]
-                            </li>
-                            <li class="menu-profile" @onclick="OpenModalCustomLink">
-                                @Loc["AddCustomLinks"]
-                            </li>
-                            <li class="menu-profile" @onclick="OpenModalSocialNetwork">
-                                @Loc["AddASocialNetwork"]
-                            </li>
-                            <li class="menu-profile" @onclick="GotoEditProfile">
-                                @Loc["Update"]
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-}
 <section class="section">
     <div class="section-body mb-3">
         <div class="author-box mt-3" style="color: #979797 !important;">
@@ -61,36 +20,32 @@
                         <div class="d-flex justify-content-between mb-3">
                             <div class="p-2 mr-auto">
                                 <div>
-                                    <a href="#" class="text-dark pb-2">@User.DisplayName</a><!--!--><br>
+                                    <a href="#" class="text-dark pb-2">@User.DisplayName</a> <br>
                                     <span class="author-box-job">@User.Title</span>
                                 </div>
                             </div>
                             <div class="p-2 cursor-pointer">
-                                <div style="color:black; font-weight:400;font-size:16px;">
-                                    <div class="pr-2 text-center text-light">
-                                        <div><i style="font-size: 20px;color: black;" class="fa fa-map-marker-alt"></i></div>
-                                        <span style="color:black; font-weight:400;font-size:12px;">Map</span>
+                                <a href="https://www.google.fr/maps/place/@User.Country,@User.City" target="_blank" style="color:black; font-weight:400;">
+                                    <div class="pr-2 text-center">
+                                        <div><i style="font-size: 20px;" class="fa fa-map-marker-alt"></i></div>
+                                        <span style="font-size:12px;">@Loc["Map"]</span>
                                     </div>
-                                </div>
-                            </div> 
+                                </a>
+                            </div>
                             @if (!ReadOnly)
                             {
-                                <div class="p-2 cursor-pointer">
-                                    <div style="color:black; font-weight:400;font-size:16px;">
-                                        <div class="pr-2 text-center text-light">
-                                            <div><i style="font-size: 20px;color: black;" class="far fa-bookmark"></i></div>
-                                            <span style="color:black; font-weight:400;font-size:12px;">Liens</span>
-                                        </div>
+                                <div class="p-2 cursor-pointer" @onclick="() => TabMap = true">
+                                    <div class="pr-2 text-center" style="@(TabMap ? "color:#02BF8A;" : "color:black;")">
+                                        <div><i style="font-size: 20px; " class="far fa-bookmark"></i></div>
+                                        <span style="font-size:12px;">@Loc["Bookmarks"]</span>
                                     </div>
                                 </div>
                                 @if (!ScreenSize.IsSmall)
                                 {
                                     <div class="p-2 cursor-pointer" @onclick="GotoContact">
-                                        <div style="color:black; font-weight:400;font-size:16px;">
-                                            <div class="pr-2 text-center text-light">
-                                                <div><i style="font-size: 20px;color: black;" class="fa fa-users"></i></div>
-                                                <span style="color:black; font-weight:400;font-size:12px;">@Loc["Contacts"]</span>
-                                            </div>
+                                        <div class="pr-2 text-center" style="color:black; font-weight:400;">
+                                            <div><i style="font-size: 20px;" class="fa fa-users"></i></div>
+                                            <span style="font-size:12px;">@Loc["Contacts"]</span>
                                         </div>
                                     </div>
                                 }
@@ -98,97 +53,127 @@
                         </div>
                     </div>
                     <div class="row mt-lg-5" style=" border-top: 1px solid black; padding-top: 21px;">
-                        <div class="col-md-6 col-sm-12">
-                            @if (!string.IsNullOrEmpty(User.Description))
-                            {
-                                <div class="" style="text-align:left;">
-                                    <p>
-                                        @User.Description
-                                    </p>
+                        @if (!TabMap)
+                        {
+                            <div class="col-md-6 col-sm-12">
+                                @if (!string.IsNullOrEmpty(User.Description))
+                                {
+                                    <div class="" style="text-align:left;">
+                                        <p>
+                                            @User.Description
+                                        </p>
+                                    </div>
+                                }
+                                <div class="mt-4">
+                                    <ul style="list-style: none;font-weight: 500;" class="pl-0">
+                                        @if (!string.IsNullOrWhiteSpace(User.City))
+                                        {
+                                            <li class="pb-2">
+                                                <span class="p-2 w-100">
+                                                    <i class="fa fa-map-marker text-dark pr-2" aria-hidden="true"></i>
+                                                    @User.City, @User.Country
+                                                </span>
+                                            </li>
+                                        }
+                                        @if (!string.IsNullOrWhiteSpace(User.Email))
+                                        {
+                                            <li class="pb-2">
+                                                <a href="mailto:@User.Email" class="p-2 w-100">
+                                                    <i class="fa fa-envelope text-dark pr-2" aria-hidden="true"></i>
+                                                    @User.Email
+                                                </a>
+                                            </li>
+                                        }
+                                        @if (!string.IsNullOrWhiteSpace(User.PhoneNumber))
+                                        {
+                                            <li class="pb-2">
+                                                <span class="p-2 w-100">
+                                                    <i class="fa fa-phone text-dark pr-2" aria-hidden="true"></i>
+                                                    @User.PhoneNumber
+                                                </span>
+                                            </li>
+                                        }
+                                    </ul>
                                 </div>
-                            }
-                            <div class="mt-4">
-                                <ul style="list-style: none;font-weight: 500;" class="pl-0">
-                                    @if (!string.IsNullOrWhiteSpace(User.City))
-                                    {
-                                        <li class="pb-2">
-                                            <span class="p-2 w-100">
-                                                <i class="fa fa-map-marker text-dark pr-2" aria-hidden="true"></i>
-                                                @User.City, @User.Country
-                                            </span>
-                                        </li>
-                                    }
-                                    @if (!string.IsNullOrWhiteSpace(User.Email))
-                                    {
-                                        <li class="pb-2">
-                                            <a href="mailto:@User.Email" class="p-2 w-100">
-                                                <i class="fa fa-envelope text-dark pr-2" aria-hidden="true"></i>
-                                                @User.Email
-                                            </a>
-                                        </li>
-                                    }
-                                    @if (!string.IsNullOrWhiteSpace(User.PhoneNumber))
-                                    {
-                                        <li class="pb-2">
-                                            <span class="p-2 w-100">
-                                                <i class="fa fa-phone text-dark pr-2" aria-hidden="true"></i>
-                                                @User.PhoneNumber
-                                            </span>
-                                        </li>
-                                    }
+                                @if (User.SocialNetworkConnected != null)
+                                {
+                                    <div class="row col-12">
+                                        <Virtualize Items="@User.SocialNetworkConnected" Context="socialNetwork">
+                                            <div class="card text-white mb-3 mr-1">
+
+                                                <a href="@socialNetwork.Url" target="_blank">
+                                                    @if (string.IsNullOrWhiteSpace(socialNetwork.Logo))
+                                                    {
+                                                        <i class="fas fa-share-alt" style="font-size:50px;width: 50px; text-align: center"></i>
+                                                    }
+                                                    else if (socialNetwork.Logo.StartsWith("fa"))
+                                                    {
+                                                        <i class="@socialNetwork.Logo" style="font-size:50px; width:50px;text-align:center"></i>
+                                                    }
+                                                    else
+                                                    {
+                                                        <img alt="image" src="assets/img/social/@(socialNetwork.Logo.ToLower()).png" style="font-size:50px; width:50px;text-align:center">
+                                                    }
+                                                </a>
+                                            </div>
+                                        </Virtualize>
+                                    </div>
+                                }
+                            </div>
+                            <div class="hidden-sm offset-md-2 col-md-4">
+                                <ul style="list-style: none; width:100%; color:#97AABD;" class="p-0 m-0">
+                                    <li> @Loc["UpdateInfo"]</li>
+                                    <li class="menu-profile" @onclick="OpenModalEditProfil">
+                                        @Loc["EditProfile"]<span style="float:right;"><i style="font-size: 20px;color: #97AABD" class="fas fa-edit"></i></span>
+                                    </li>
+                                    <li class="menu-profile" @onclick="OpenModalCustomLink">
+                                        @Loc["AddCustomLinks"]<span style="float:right;"><i style="font-size: 20px;color: #97AABD" class="far fa-plus-square"></i></span>
+                                    </li>
+                                    <li class="menu-profile" @onclick="OpenModalSocialNetwork">
+                                        @Loc["AddASocialNetwork"]<span style="float:right;"><i style="font-size: 20px;color: #97AABD" class="fas fa-icons"></i></span>
+                                    </li>
+                                    <li class="menu-profile" @onclick="OpenModalChangePhoto">
+                                        @Loc["ChangePhoto"]<span style="float:right;"><i style="font-size: 20px;color: #97AABD" class="fas fa-camera-retro"></i></span>
+                                    </li>
+                                    <li class="menu-profile" @onclick="OpenModalChangePassword">
+                                        @Loc["ChangePassword"]<span style="float:right;"><i style="font-size: 20px;color: #97AABD" class="fas fa-key"></i></span>
+                                    </li>
+                                    <li class="menu-profile" @onclick="OpenModalChangePinCode">
+                                        @Loc["DisplayPinCode"]<span style="float:right;"><i style="font-size: 20px;color: #97AABD" class="fas fa-user-secret"></i></span>
+                                    </li>
+                                    <li class="menu-profile" @onclick="OpenModalChangeMail">
+                                        @Loc["TitleChangeMail"]<span style="float:right;"><i style="font-size: 20px;color: #97AABD" class="fas fa-at"></i></span>
+                                    </li>
                                 </ul>
                             </div>
-                            @if (User.SocialNetworkConnected != null)
-                            {
-                                <div class="row col-12">
-                                    @foreach (var socialNetwork in User.SocialNetworkConnected)
-                                    {
-                                        <div class="card text-white mb-3 mr-1">
-
-                                            <a href="@socialNetwork.Url" target="_blank">
-                                                @if (string.IsNullOrWhiteSpace(socialNetwork.Logo))
-                                                {
-                                                    <i class="fas fa-share-alt" style="font-size:50px;width: 50px; text-align: center"></i>
-                                                }
-                                                else if (socialNetwork.Logo.StartsWith("fa"))
-                                                {
-                                                    <i class="@socialNetwork.Logo" style="font-size:50px; width:50px;text-align:center"></i>
-                                                }
-                                                else
-                                                {
-                                                    <img alt="image" src="assets/img/social/@(socialNetwork.Logo.ToLower()).png" style="font-size:50px; width:50px;text-align:center">
-                                                }
-                                            </a>
+                        }
+                        else
+                        {
+                            <div @onclick="() => TabMap = false" class="row pb-4 cursor-pointer" style="color:black;">
+                                <i class="fas fa-long-arrow-alt-left" style="font-size: 18px">&nbsp;&nbsp; Retour</i>
+                            </div>
+                            <div class="row">
+                                <Virtualize Items="@User.CustomLinks" Context="customLink">
+                                    <div class="card col-md-6 col-lg-3 col-sm-12">
+                                        @if (string.IsNullOrEmpty(customLink.Logo))
+                                        {
+                                            <i class="fas fa-paperclip rounded-circle img-thumbnail" style="font-size: 105px; width: 155px; margin-left: auto; margin-right: auto;"></i>
+                                        }
+                                        else
+                                        {
+                                            <img alt="image" src="@(customLink.Logo.ToLower())" class="card-img-top" height="150">
+                                        }
+                                        <div class="card-body">
+                                            <h4 style="font-size:20px; color:black;" class="card-title">@customLink.Name</h4>
+                                            <p style="font-size:13px; color:black;font-weight:300;" class="card-text">@customLink.DisplayInfo</p>
+                                            <div style="display: flex; justify-content: center; align-items: center; ">
+                                                <a href="@customLink.Url" target="_blank" style="background: #02BF8A;" class="btn btn-success">Découvrir</a>
+                                            </div>
                                         </div>
-                                    }
-                                </div>
-                            }
-                        </div>
-                        <div class="hidden-sm offset-md-2 col-md-4">
-                            <ul style="list-style: none; width:100%; color:#97AABD;" class="p-0 m-0">
-                                <li class="menu-profile" @onclick="GotoEditProfile">
-                                    @Loc["EditProfile"]<span style="float:right;"><i style="font-size: 20px;color: #97AABD" class="fas fa-key"></i></span>
-                                </li>
-                                <li class="menu-profile" @onclick="OpenModalChangeMail">
-                                    @Loc["TitleChangeMail"]<span style="float:right;"><i style="font-size: 20px;color: #97AABD" class="fas fa-at"></i></span>
-                                </li>
-                                <li class="menu-profile" @onclick="OpenModalCustomLink">
-                                    @Loc["AddCustomLinks"]<span style="float:right;"><i style="font-size: 20px;color: #97AABD" class="far fa-plus-square"></i></span>
-                                </li>
-                                <li class="menu-profile" @onclick="OpenModalSocialNetwork">
-                                    @Loc["AddASocialNetwork"]<span style="float:right;"><i style="font-size: 20px;color: #97AABD" class="fas fa-icons"></i></span>
-                                </li>
-                                <li class="menu-profile" @onclick="OpenModalChangePassword">
-                                    @Loc["ChangePassword"]<span style="float:right;"><i style="font-size: 20px;color: #97AABD" class="fas fa-key"></i></span>
-                                </li>
-                                <li class="menu-profile" @onclick="OpenModalChangePinCode">
-                                    @Loc["DisplayPinCode"]<span style="float:right;"><i style="font-size: 20px;color: #97AABD" class="fas fa-user-secret"></i></span>
-                                </li>
-                                <li class="menu-profile" @onclick="OpenModalChangePhoto">
-                                    @Loc["ChangePicture"]<span style="float:right;"><i style="font-size: 20px;color: #97AABD" class="fas fa-camera-retro"></i></span>
-                                </li>
-                            </ul>
-                        </div>
+                                    </div>
+                                </Virtualize>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
@@ -203,7 +188,13 @@
                         </span>
                     </div>
                     <div class="p-2">
-                        <i style="font-size: 25px; color: black;" class="fa fa-map-marker-alt" aria-hidden="true"></i>
+                        <a href="https://www.google.fr/maps/place/@User.Country,@User.City" target="_blank">
+                            <div class="pr-2 text-center text-light">
+                                <div>
+                                    <i style="font-size: 25px; color: black;" class="fa fa-map-marker-alt" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </a>
                     </div>
                     <div class="p-2" @onclick="GotoContact">
                         <div class="pr-2 text-center text-light">
@@ -219,192 +210,162 @@
     </div>
 </section>
 
-@*@if (User.CustomLinks != null)
-    {
-        <div class="row col-12">
-            @foreach (var customLink in User.CustomLinks)
-            {
-                <div class="card text-white bg-secondary mb-3" style="max-width: 18rem;margin:5px">
-                    <div class="card-header">@customLink.Name</div>
-                    <div class="card-body">
-                        <a href="@customLink.Url" target="_blank">
-                            @if (string.IsNullOrEmpty(customLink.Logo))
-                            {
-                                <i class="fas fa-paperclip rounded-circle img-thumbnail" style="font-size:105px; width:155px;text-align:center"></i>
-                            }
-                            else if (customLink.Logo.StartsWith("fa"))
-                            {
-                                <i class="@customLink.Logo rounded-circle img-thumbnail" style="font-size:105px; width:155px;text-align:center"></i>
-                            }
-                            else
-                            {
-                                <img alt="image" src="@(customLink.Logo.ToLower())" class="rounded-circle img-thumbnail">
-                            }
-                            <cite>@customLink.DisplayInfo</cite>
-                        </a>
-                    </div>
-                </div>
-            }
-        </div>
-    }*@
-@if (ModalChangePhoto)
+@if (ToggleMenu)
 {
-    <div class="modal fade show effect-open" id="modalChangePhoto" style="display:block" aria-modal="true" role="dialog">
-        <div class="modal-dialog modal-dialog-centered  modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">@Loc["ChangePhoto"]</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="() => ModalChangePhoto = false">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+    <div class="modal fade show effect-open" id="modal-confirm" data-backdrop="static" data-keyboard="false" tabindex="-1" style="display: block;top:0;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content-menu-profile" style="height: 120%;">
+                <div style="position: absolute;top: 0;left: 0;right: 0;bottom: 0;background-color: white;z-index: 99;"></div>
+                <div @onclick="() => ToggleMenu = !ToggleMenu" style="position:fixed;top:60px;right:20px;padding:10px 15px 10px 15px;background:#F5F8FA;border-radius:10px;z-index:999999">
+                    <i style="font-size:22px" class="fas fa-times"></i>
                 </div>
-                <div class="modal-body">
-                    @if (ChangePhotoHasError)
-                    {
-                        <div class="alert alert-danger">
-                            @ChangePhotoError
-                        </div>}
-                    <div class="form-group">
+                <div class="modal-body" style="display: flex;justify-content: center; align-items: center;">
+                    <div class="" style="color: white; width: calc(100vw); height: calc(100vw); margin-left: auto; margin-right: auto; display: flex; justify-content: center; align-items: center; z-index: 999;">
 
-                        @Loc["PhotoType"]
-                        <select @bind="PhotoType" class="form-control">
-                            <option value="Gravatar">@Loc["UseGravatarPhoto"]</option>
-                            <option value="Custom">@Loc["UseCustomPhoto"]</option>
-                        </select>
-                    </div>
-                    @if (PhotoType == "Custom")
-                    {
-                        <div class="form-group">
-                            @Loc["UseCustomPhoto"]
-                            <MediaUploader ImgUrl="@User.PhotoUrl" OnChange="@((fileUrl)=>User.PhotoUrl = fileUrl)"></MediaUploader>
-                        </div>}
-                    <div class="text-center">
-                        <button type="button" class="btn btn-success" @onclick="ChangePhoto">@Loc["ChangePhoto"]</button>
+                        <ul style="list-style: none; width:100%; color:#97AABD;" class="p-0 m-0">
+                            <li> @Loc["UpdateInfo"]</li>
+                            <li class="menu-profile" @onclick="OpenModalEditProfil">
+                                @Loc["EditProfile"]<span style="float:right;"><i style="font-size: 20px;color: #97AABD" class="fas fa-edit"></i></span>
+                            </li>
+                            <li class="menu-profile" @onclick="OpenModalCustomLink">
+                                @Loc["AddCustomLinks"]<span style="float:right;"><i style="font-size: 20px;color: #97AABD" class="far fa-plus-square"></i></span>
+                            </li>
+                            <li class="menu-profile" @onclick="OpenModalSocialNetwork">
+                                @Loc["AddASocialNetwork"]<span style="float:right;"><i style="font-size: 20px;color: #97AABD" class="fas fa-icons"></i></span>
+                            </li>
+                            <li class="menu-profile" @onclick="OpenModalChangePhoto">
+                                @Loc["ChangePhoto"]<span style="float:right;"><i style="font-size: 20px;color: #97AABD" class="fas fa-camera-retro"></i></span>
+                            </li>
+                            <li class="menu-profile" @onclick="OpenModalChangePassword">
+                                @Loc["ChangePassword"]<span style="float:right;"><i style="font-size: 20px;color: #97AABD" class="fas fa-key"></i></span>
+                            </li>
+                            <li class="menu-profile" @onclick="OpenModalChangePinCode">
+                                @Loc["DisplayPinCode"]<span style="float:right;"><i style="font-size: 20px;color: #97AABD" class="fas fa-user-secret"></i></span>
+                            </li>
+                            <li class="menu-profile" @onclick="OpenModalChangeMail">
+                                @Loc["TitleChangeMail"]<span style="float:right;"><i style="font-size: 20px;color: #97AABD" class="fas fa-at"></i></span>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+}
+@if (ModalEditProfil)
+{
+    <ModalDefault Title="@Loc["Title"]" ModalCancelClicked="() => ModalEditProfil = false" MaxWidthModal="800px">
+        <Body>
+            <EditProfile CloseToggle="UpdateProfil" User="User"></EditProfile>
+        </Body>
+    </ModalDefault>
+}
+@if (ModalChangePhoto)
+{
+    <ModalDefault Title="@Loc["ChangePhoto"]" ModalValidClicked="ChangePhoto" BtnValidLabel="@Loc["ChangePhoto"]" ModalCancelClicked="() => ModalChangePhoto = false">
+        <Body>
+            @if (ChangePhotoHasError)
+            {
+                <div class="alert alert-danger">
+                    @ChangePhotoError
+                </div>}
+            <div class="form-group">
+
+                @Loc["PhotoType"]
+                <select @bind="PhotoType" class="form-control">
+                    <option value="Gravatar">@Loc["UseGravatarPhoto"]</option>
+                    <option value="Custom">@Loc["UseCustomPhoto"]</option>
+                </select>
+            </div>
+            @if (PhotoType == "Custom")
+            {
+                <div class="form-group">
+                    @Loc["UseCustomPhoto"]
+                    <MediaUploader ImgUrl="@User.PhotoUrl" OnChange="@((fileUrl)=>User.PhotoUrl = fileUrl)"></MediaUploader>
+                </div>}
+        </Body>
+    </ModalDefault> 
 }
 @if (ModalChangeMail)
 {
-    <div class="modal fade show effect-open" id="modalChangeMail" style="display:block" aria-modal="true" role="dialog">
-        <div class="modal-dialog modal-dialog-centered  modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">@Loc["TitleChangeMail"]</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="() => ModalChangeMail = false">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="info">
-                        <p class="text-danger">
-                            @Loc["TxtDesc1"]<br>
-                            @Loc["TxtDesc2"]<br />
-                        </p>
-                    </div><br />
-                    <div class="form-group">
-                        @Loc["NewMail"]
-                        <input type="text" class="form-control" @bind="NewMail" />
-                    </div>
-                    <div class="form-group">
-                        @Loc["ConfirmMail"]
-                        <input type="text" class="form-control" @bind="ConfirmMail" />
-                    </div>
-
-                    @if (ChangeChangeMailHasError)
-                    {
-                        <div class="alert alert-danger">
-                            @ChangeChangeMaildError
-                        </div>
-                    }
-                    <div class="text-center">
-                        <button type="button" class="btn btn-success" @onclick="ChangeMail">@Loc["BtnChangeMail"]</button>
-                    </div>
-                </div>
+    <ModalDefault Title="@Loc["TitleChangeMail"]" BtnCancelLabel="@Loc["BtnChangeMail"]" ModalValidClicked="ChangeMail" ModalCancelClicked="() => ModalChangeMail = false">
+        <Body>
+            <div class="info">
+                <p class="text-danger">
+                    @Loc["TxtDesc1"]<br>
+                    @Loc["TxtDesc2"]<br />
+                </p>
+            </div><br />
+            <div class="form-group">
+                @Loc["NewMail"]
+                <input type="text" class="form-control" @bind="NewMail" />
             </div>
-        </div>
-    </div>
+            <div class="form-group">
+                @Loc["ConfirmMail"]
+                <input type="text" class="form-control" @bind="ConfirmMail" />
+            </div>
+
+            @if (ChangeChangeMailHasError)
+            {
+                <div class="alert alert-danger">
+                    @ChangeChangeMaildError
+                </div>
+            }
+        </Body>
+    </ModalDefault>
 }
 @if (ModalChangePinCode)
 {
-    <div class="modal fade show effect-open" id="modalDisplayPinCode" style="display:block" aria-modal="true" role="dialog">
-        <div class="modal-dialog  modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">@Loc["DisplayPinCode"]</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="@(() => ModalChangePinCode = false)">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        @Loc["DigitCode"]
-                        <input type="text" class="form-control" @bind="DigitCode" readonly="readonly" />
-                    </div>
-                    <div class="form-group">
-                        @Loc["PinCode"]
-                        <input type="text" class="form-control" @bind="PinCode" readonly="readonly" />
-                    </div>
-                    <div class="text-center">
-                        <button type="button" class="btn btn-success" @onclick="@(() => ModalChangePinCode = false)">@Loc["Close"]</button>
-                    </div>
-                    <h4 class="modal-title mt-2 mb-2">@Loc["AssociateNewCard"]</h4>
-
-                    <div class="form-group">
-                        @Loc["DigitCode"]
-                        <input type="text" class="form-control" @bind="NewDigitCode" />
-                    </div>
-                    <div class="form-group">
-                        @Loc["PinCode"]
-                        <input type="text" class="form-control" @bind="NewPinCode" />
-                        <span class="text-danger">@Error</span>
-                    </div>
-                    <div class="text-center">
-                        <button type="button" class="btn btn-success" @onclick="@(() => SaveNewCard())">@Loc["AddCard"]</button>
-                    </div>
-                </div>
+    <ModalDefault Title="@Loc["AddCard"]" ModalValidClicked="SaveNewCard" BtnValidLabel="@Loc["Update"]" ModalCancelClicked="() => ModalChangePinCode = false">
+        <Body>
+            <div class="form-group">
+                @Loc["DigitCode"]
+                <input type="text" class="form-control" @bind="DigitCode" readonly="readonly" />
             </div>
-        </div>
-    </div>
+            <div class="form-group">
+                @Loc["PinCode"]
+                <input type="text" class="form-control" @bind="PinCode" readonly="readonly" />
+            </div>
+            <div class="text-center">
+                <button type="button" class="btn btn-success" @onclick="@(() => ModalChangePinCode = false)">@Loc["Close"]</button>
+            </div>
+            <span class="modal-title mt-2 mb-2">@Loc["AssociateNewCard"]</span>
+
+            <div class="form-group">
+                @Loc["DigitCode"]
+                <input type="text" class="form-control" @bind="NewDigitCode" />
+            </div>
+            <div class="form-group">
+                @Loc["PinCode"]
+                <input type="text" class="form-control" @bind="NewPinCode" />
+                <span class="text-danger">@Error</span>
+            </div>
+        </Body>
+    </ModalDefault>
 }
 @if (ModalChangePassword)
 {
-    <div class="modal fade show effect-open" id="modalChangePassword" style="display:block" aria-modal="true" role="dialog">
-        <div class="modal-dialog  modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">@Loc["ChangePassword"]</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="@(() => ModalChangePassword = false)">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    @if (ChangePasswordHasError)
-                    {
-                        <div class="alert alert-danger">
-                            @ChangePasswordError
-                        </div>}
-                    <div class="form-group">
-                        @Loc["OldPassword"]
-                        <input type="password" class="form-control" @bind="OldPassword" />
-                    </div>
-                    <div class="form-group">
-                        @Loc["NewPassword"]
-                        <input type="password" class="form-control" @bind="NewPassword" />
-                    </div>
-                    <div class="form-group">
-                        @Loc["ConfirmPassword"]
-                        <input type="password" class="form-control" @bind="ConfirmPassword" />
-                    </div>
-                    <div class="text-center">
-                        <button type="button" class="btn btn-success" @onclick="ChangePassword">@Loc["ChangePassword"]</button>
-                    </div>
-                </div>
+    <ModalDefault Title="@Loc["ChangePassword"]" ModalValidClicked="ChangePassword" BtnValidLabel="@Loc["Update"]" ModalCancelClicked="() => ModalChangePassword = false">
+        <Body>
+            @if (ChangePasswordHasError)
+            {
+                <div class="alert alert-danger">
+                    @ChangePasswordError
+                </div>}
+            <div class="form-group">
+                @Loc["OldPassword"]
+                <input type="password" class="form-control" @bind="OldPassword" />
             </div>
-        </div>
-    </div>
+            <div class="form-group">
+                @Loc["NewPassword"]
+                <input type="password" class="form-control" @bind="NewPassword" />
+            </div>
+            <div class="form-group">
+                @Loc["ConfirmPassword"]
+                <input type="password" class="form-control" @bind="ConfirmPassword" />
+            </div>
+        </Body>
+    </ModalDefault> 
 }
 @if (ModalQrCode)
 {
@@ -434,89 +395,85 @@
 }
 @if (ModalSocialNetwork)
 {
-    <div class="modal fade show effect-open" id="modalSocialNetwork" style="display:block" aria-modal="true" role="dialog">
-        <div class="modal-dialog modal-dialog-centered  modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">@Loc["AddASocialNetwork"]</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="() => ModalSocialNetwork = false">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="card m-2">
-                        <div class="form-group">
-                            @Loc["SocialType"]
-                            <span>
-                                @if (!string.IsNullOrEmpty(NewSocialLink.Name))
-                                {
-                                    <i class="@NewSocialLink.Logo"></i><span>@NewSocialLink.Name</span>
-                                }
-                            </span>
-                            <ul class="list-inline">
-                                <li class="list-inline-item">
-                                    <ul class="list-inline">
-                                        @foreach (var item in AvailableSocialNetworks)
-                                        {
-                                            <li class="list-inline-item">
-                                                <a href="javascript:void(0)" @onclick="@(()=>SetSocialNetwork(item.Name, item.BackgroundColor, item.Logo))">
-                                                    <i class="@item.Logo" style="font-size:55px"></i>
-                                                    <br />
-                                                    <span>@item.Name</span>
-                                                </a>
-                                            </li>
-                                        }
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="form-group">
-                            @Loc["SocialUrl"]
-                            <input type="url" @bind="NewSocialLink.Url" class="form-control" />
-                        </div>
-                        <div class="text-center">
-                            <button class="btn btn-success" @onclick="AddSocialNetwork">@Loc["AddASocialNetwork"]</button>
-                        </div>
-
+    <ModalDefault Title="@Loc["AddASocialNetwork"]" ModalCancelClicked="() => ModalSocialNetwork = false">
+        <Body>
+            <Virtualize Items="@User.SocialNetworkConnected" Context="socialNetwork">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend" @onclick="() => OpenList = true">
+                        <span class="input-group-text pl-0" style="border-right:1px solid grey;">
+                            <i class="@socialNetwork.Logo" style="font-size:40px"></i>
+                        </span>
+                    </div>
+                    <input readonly type="text" class="form-control" value="@socialNetwork.Url">
+                    <div @onclick="() => DeleteSocialNetwork(socialNetwork)" class="input-group-append">
+                        <span class="input-group-text"><i class="fas fa-trash-alt" style="font-size:20px"></i></span>
                     </div>
                 </div>
+            </Virtualize>
+            <div class="col-sm-12" style="background:#F5F8FA;height:50px;position:relative;">
+                @if (string.IsNullOrEmpty(NewSocialLink.Logo))
+                {
+                    <div class="cursor-pointer " @onclick="() => OpenList = !OpenList">
+                        <i class="far fa-plus-square" style="font-size:25px;padding-top: 12px;"></i>
+                        <span>Ajouter un réseau social</span>
+                    </div>
+                }
+                else
+                {
+                    <div class="input-group mb-3 ">
+                        <div class="input-group-prepend" @onclick="() => OpenList = true">
+                            <span class="input-group-text pl-0" id="basic-addon1" style="border-right:1px solid grey;">
+                                <i class="@NewSocialLink.Logo" style="font-size:40px"></i>
+                            </span>
+                        </div>
+                        <input type="text" class="form-control" @bind="NewSocialLink.Url" placeholder="@Loc["SocialUrl"]">
+                    </div>
+                    <div class="text-center">
+                        <button class="btn btn-success" @onclick="AddSocialNetwork">@Loc["AddASocialNetwork"]</button>
+                    </div>
+                }
+
+                @if (OpenList)
+                {
+                    <ul class="slide-in-blurred-top" style="background: #F5F8FA; position: absolute; left: 0; top: 50px; z-index: 99999999; list-style: none; max-height: 340px; overflow-y: auto; padding-left: 10px; padding-right: 0px;">
+
+                        <Virtualize Items="@AvailableSocialNetworks" Context="item">
+                            <li @onclick="() => OpenList = false">
+                                <a href="javascript:void(0)" @onclick="@(()=>SetSocialNetwork(item.Name, item.BackgroundColor, item.Logo))">
+                                    <i class="@item.Logo" style="font-size:40px"></i>
+                                    <br />
+                                    <span>@item.Name</span>
+                                </a>
+                            </li>
+                        </Virtualize>
+                    </ul>
+                }
             </div>
-        </div>
-    </div>
+        </Body>
+    </ModalDefault>    
 }
 @if (ModalCustomLink)
 {
-    <div class="modal fade show effect-open" id="modalCustomLink" style="display:block" aria-modal="true" role="dialog">
-        <div class="modal-dialog modal-dialog-centered  modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">@Loc["AddCustomLink"]</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="() => ModalCustomLink = false">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+    <ModalDefault Title="@Loc["AddCustomLink"]" ModalValidClicked="AddCustomLink" BtnValidLabel="@Loc["AddCustomLink"]" ModalCancelClicked="() => ModalCustomLink = false">
+        <Body>
+            <div class="card m-1">
+                <div class="form-group">
+                    @Loc["Name"]
+                    <input @bind="NewCustomLink.Name" class="form-control" />
                 </div>
-                <div class="modal-body">
-                    <div class="card m-1">
-                        <div class="form-group">
-                            @Loc["Name"]
-                            <input @bind="NewCustomLink.Name" class="form-control" />
-                        </div>
-                        @*<div class="form-group">
-                                @Loc["BackgroundColor"]
-                                <input @bind="NewCustomLink.BackgroundColor" class="form-control" />
-                            </div>*@
-                        <div class="form-group">
-                            @Loc["Logo"]
-                            <MediaUploader ImgUrl="@NewCustomLink.Logo" OnChange="@((fileUrl)=>NewCustomLink.Logo = fileUrl)"></MediaUploader>
-                        </div>
-                        <div class="form-group">
-                            @Loc["Url"]
-                            <input type="url" @bind="NewCustomLink.Url" class="form-control" />
-                        </div>
-                    </div>
-                    <div class="text-center"><button class="btn btn-success" @onclick="AddCustomLink">@Loc["AddCustomLink"]</button></div>
+                <div class="form-group">
+                    @Loc["Name"]
+                    <textarea @bind="NewCustomLink.DisplayInfo" class="form-control" />
+                </div>
+                <div class="form-group">
+                    @Loc["Logo"]
+                    <MediaUploader ImgUrl="@NewCustomLink.Logo" OnChange="@((fileUrl)=>NewCustomLink.Logo = fileUrl)"></MediaUploader>
+                </div>
+                <div class="form-group">
+                    @Loc["Url"]
+                    <input type="url" @bind="NewCustomLink.Url" class="form-control" />
                 </div>
             </div>
-        </div>
-    </div>
+        </Body>
+    </ModalDefault>
 }

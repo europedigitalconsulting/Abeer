@@ -2,7 +2,7 @@
 @attribute [Authorize(Policy = "OnlySubscribers")]
 @inject Microsoft.Extensions.Localization.IStringLocalizer<EditProfile> Loc
 
-<section class="section">  
+<section class="section">
     <EditForm Model="User">
         <DataAnnotationsValidator />
         <ValidationSummary />
@@ -43,37 +43,12 @@
                     </div>
                 </div>
                 <div class="form-row">
-                    @if (SocialNetworkConnected?.Count > 0)
-                    {
-
-                        <div class="col-lg-6 col-md-12 col-sm-12">
-                            <h5>@Loc["SocialNetworkConnected"]</h5>
-                            <ul class="list-inline">
-                                @foreach (var socialNetwork in SocialNetworkConnected)
-                                {
-                                    <li class="list-inline-item list-unstyled-noborder mr-4">
-                                        <a href="@socialNetwork.Url" target="_blank" class="text-center">
-                                            <i class="@socialNetwork.Logo" style="font-size: 55px;">
-
-                                            </i>
-
-                                        </a>
-                                        <span class="badge position-absolute"><a @onclick="@(() => DeleteSocialNetwork(socialNetwork))"><i class="fa fa-2x fa-times"></i></a></span>
-                                        <br />
-                                        <span>@socialNetwork.Name</span>
-                                    </li>
-                                }
-                            </ul>
-                        </div>
-
-                    }
                     @if (CustomLinks?.Count > 0)
                     {
                         <div class="col-lg-6 col-md-12 col-sm-12">
                             <h5>@Loc["CustomLinks"]</h5>
                             <ul class="list-inline">
-                                @foreach (var customLink in CustomLinks)
-                                {
+                                <Virtualize Items="@CustomLinks" Context="customLink">
                                     <li class="list-inline-item list-unstyled-noborder mr-4">
                                         <a href="@customLink.Url" target="_blank">
                                             <img src="@customLink.Logo" style="max-width: 55px; max-height: 55px" class="mr-1" />
@@ -82,14 +57,14 @@
                                         <br />
                                         <span>@customLink.Name</span>
                                     </li>
-                                }
+                                </Virtualize>
                             </ul>
-                        </div>}
+                        </div>
+                    }
                 </div>
-
-                <button type="submit" @onclick="Update" class="col-lg-3 col-sm-6 btn btn-primary mb-2" data-toggle="tooltip"  title="Enregistrer"><!--!-->Enregistrer</button>
-                <a href="/profile" class="col-lg-3 col-sm-6 btn btn-danger " data-toggle="tooltip" title="Enregistrer">Annuler</a>
-            </div> 
+                <button type="submit" @onclick="Update" class="col-lg-3 col-sm-6 btn btn-success" data-toggle="tooltip" title="@Loc["Update"]">@Loc["Update"]</button>
+                <button @onclick="Close" class="col-lg-3 col-sm-6 btn btn-danger" data-toggle="tooltip" title="@Loc["Cancel"]">@Loc["Cancel"]</button>
+            </div>
         </div>
     </EditForm>
 </section>

@@ -132,6 +132,9 @@
   <data name="AssociateNewCard" xml:space="preserve">
     <value>Associate a new card</value>
   </data>
+  <data name="Bookmarks" xml:space="preserve">
+    <value>Bookmarks</value>
+  </data>
   <data name="BtnChangeMail" xml:space="preserve">
     <value>Modify my Email</value>
   </data>
@@ -275,6 +278,9 @@
   </data>
   <data name="Update" xml:space="preserve">
     <value>Update</value>
+  </data>
+  <data name="UpdateInfo" xml:space="preserve">
+    <value>Update your information</value>
   </data>
   <data name="Url" xml:space="preserve">
     <value>Url</value>

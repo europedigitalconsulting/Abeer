@@ -132,6 +132,9 @@
   <data name="AssociateNewCard" xml:space="preserve">
     <value>Associer une nouvelle carte</value>
   </data>
+  <data name="Bookmarks" xml:space="preserve">
+    <value>Liens Utiles</value>
+  </data>
   <data name="BtnChangeMail" xml:space="preserve">
     <value>Modifier Email</value>
   </data>
@@ -142,10 +145,10 @@
     <value>Cette page vous aide à modifier votre propre profil, vous pouvez modifier, régénérer le code pin ou un jeton pour crypter vos données</value>
   </data>
   <data name="ChangePassword" xml:space="preserve">
-    <value>Modifier mot de passe</value>
+    <value>Mot de passe</value>
   </data>
   <data name="ChangePhoto" xml:space="preserve">
-    <value>Modifier ma photo</value>
+    <value>Ma photo</value>
   </data>
   <data name="ChangePicture" xml:space="preserve">
     <value>Modifier photo</value>
@@ -265,7 +268,7 @@
     <value>Profile utilisateur</value>
   </data>
   <data name="TitleChangeMail" xml:space="preserve">
-    <value>Modifier adresse email</value>
+    <value>Adresse email</value>
   </data>
   <data name="TxtDesc1" xml:space="preserve">
     <value>Après avoir changé votre adresse mail vous serez automatiquement déconnecté.</value>
@@ -275,6 +278,9 @@
   </data>
   <data name="Update" xml:space="preserve">
     <value>Modifier</value>
+  </data>
+  <data name="UpdateInfo" xml:space="preserve">
+    <value>Mettre à jour vos informations</value>
   </data>
   <data name="Url" xml:space="preserve">
     <value>Url</value>

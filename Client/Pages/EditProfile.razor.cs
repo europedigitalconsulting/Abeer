@@ -16,13 +16,14 @@ namespace Abeer.Client.Pages
 {
     public partial class EditProfile : ComponentBase
     {
-        private SocialNetwork NewSocialLink = new SocialNetwork();
+        [Parameter]
+        public EventCallback<ViewApplicationUser> CloseToggle { get; set; } 
         private CustomLink NewCustomLink = new CustomLink();
 
         [Inject] private NavigationManager NavigationManager { get; set; }
         [Inject] private HttpClient HttpClient { get; set; }
-
-        public ViewApplicationUser User { get; set; } = new ViewApplicationUser();
+        [Parameter]
+        public ViewApplicationUser User { get; set; } 
 
         public List<SocialNetwork> AvailableSocialNetworks { get; set; } = new List<SocialNetwork>();
 
@@ -30,43 +31,19 @@ namespace Abeer.Client.Pages
         public List<SocialNetwork> SocialNetworkConnected { get; set; } = new List<SocialNetwork>();
         public List<CustomLink> CustomLinks { get; set; } = new List<CustomLink>();
 
-        [Inject] private NavigationManager navigationManager { get; set; }  
-         
+        [Inject] private NavigationManager navigationManager { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
             var response = await HttpClient.GetAsync($"api/Profile");
             if (response.IsSuccessStatusCode)
-            { 
-                var json = await response.Content.ReadAsStringAsync();
-                Console.WriteLine($"user :{json}");
-                User = JsonConvert.DeserializeObject<ViewApplicationUser>(json); 
-                NewSocialLink = new SocialNetwork { OwnerId = User.Id };
-
-                SocialNetworkConnected = User.SocialNetworkConnected.ToList();
+            {   
                 CustomLinks = User.CustomLinks.ToList();
 
                 var responseSocialNetwork = await HttpClient.GetAsync("api/socialnetwork");
-                response.EnsureSuccessStatusCode();
-
-                var jsonSocialNetwork = await responseSocialNetwork.Content.ReadAsStringAsync();
-                AvailableSocialNetworks = JsonConvert.DeserializeObject<List<SocialNetwork>>(jsonSocialNetwork);
-
-                AvailableSocialNetworks.ForEach(a =>
-                {
-                    if (!User.SocialNetworkConnected.ToList().Exists(c => a.Name.Equals(c.Name, StringComparison.OrdinalIgnoreCase)))
-                    {
-                        AvailableSocialNetworksToAdd.Add(a);
-                    }
-                });
-            }          
+                response.EnsureSuccessStatusCode(); 
+            }
         } 
-        private async Task DeleteSocialNetwork(SocialNetwork socialNetwork)
-        {
-            var response = await HttpClient.DeleteAsync($"/api/SocialNetwork/{User.Id}/{socialNetwork.Name}");
-            response.EnsureSuccessStatusCode();
-            SocialNetworkConnected.Remove(socialNetwork);
-            await InvokeAsync(StateHasChanged);
-        }
 
         private async Task DeleteCustomLink(CustomLink customLink)
         {
@@ -82,6 +59,12 @@ namespace Abeer.Client.Pages
 
             var json = await response.Content.ReadAsStringAsync();
             User = JsonConvert.DeserializeObject<ViewApplicationUser>(json);
+
+            await Close();
+        }
+        async Task Close()
+        {
+            await CloseToggle.InvokeAsync(User);
         }
     }
 }

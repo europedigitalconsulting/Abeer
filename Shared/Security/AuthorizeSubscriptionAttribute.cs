@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,9 +23,10 @@ namespace Abeer.Shared.Security
                 return Task.Run(() => context.Fail());
             }
 
-            var subscribeEnd = Convert.ToDateTime(context.User.FindFirst(c => c.Type == "subscribeEnd").Value);
+            DateTimeFormatInfo usDtfi = new CultureInfo("fr-FR", false).DateTimeFormat;
+            var subscribeEnd = Convert.ToDateTime(context.User.FindFirst(c => c.Type == "subscribeEnd").Value, usDtfi);
 
-            if (DateTime.Today.AddDays(5) > subscribeEnd)
+            if (DateTime.UtcNow > subscribeEnd)
             {
                 return Task.Run(() => context.Fail());
             }
