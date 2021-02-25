@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30">
+  <g id="Groupe_1122" data-name="Groupe 1122" transform="translate(-162.5 -181.737)">
+    <path id="Tracé_4311" data-name="Tracé 4311" d="M177.5,211.737h0a15,15,0,0,1-15-15h0a15,15,0,0,1,15-15h0a15,15,0,0,1,15,15h0A15,15,0,0,1,177.5,211.737Z" fill="#117bb8"/>
+    <g id="Groupe_1118" data-name="Groupe 1118" transform="translate(170.4 188.379)">
+      <g id="Groupe_1117" data-name="Groupe 1117">
+        <rect id="Rectangle_454" data-name="Rectangle 454" width="3.104" height="10.029" transform="translate(0.298 5.014)" fill="#fff"/>
+        <path id="Tracé_4312" data-name="Tracé 4312" d="M183.224,201.318a1.851,1.851,0,1,0-1.836-1.851A1.844,1.844,0,0,0,183.224,201.318Z" transform="translate(-181.388 -197.617)" fill="#fff"/>
+      </g>
+      <path id="Tracé_4313" data-name="Tracé 4313" d="M197.246,213.944c0-1.41.649-2.25,1.892-2.25,1.141,0,1.69.806,1.69,2.25v5.265h3.09v-6.35c0-2.686-1.523-3.985-3.649-3.985a3.5,3.5,0,0,0-3.022,1.657V209.18h-2.978v10.029h2.978Z" transform="translate(-188.881 -204.166)" fill="#fff"/>
+    </g>
+  </g>
+</svg>
