@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -16,10 +18,11 @@ namespace Abeer.Client.Pages
         [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
 
         public ViewApplicationUser UserProfile { get; set; } = new ViewApplicationUser();
+        public List<SocialNetwork> AvailableSocialNetworks { get; set; } = new List<SocialNetwork>();
         public ClaimsPrincipal User { get; set; }
 
         protected override async Task OnParametersSetAsync()
-        { 
+        {
             var authState = await authenticationStateTask;
 
             User = authState.User;
@@ -43,7 +46,13 @@ namespace Abeer.Client.Pages
                         NavigationUrlService.ShowImport = false;
                         NavigationUrlService.ShowEditProfile = true;
                     }
-                } 
+
+                    var responseSocialNetwork = await httpClient.GetAsync("api/socialnetwork");
+                    response.EnsureSuccessStatusCode();
+
+                    var jsonSocialNetwork = await responseSocialNetwork.Content.ReadAsStringAsync();
+                    AvailableSocialNetworks = JsonConvert.DeserializeObject<List<SocialNetwork>>(jsonSocialNetwork);
+                }
             }
         }
     }

@@ -1,0 +1,40 @@
+﻿@namespace Abeer.Client.UISdk.Shared 
+@code { 
+    [Parameter] public string MaxWidthModal { get; set; } = "auto";
+    [Parameter] public string Title{ get; set; }
+    [Parameter] public string BtnValidLabel{ get; set; }
+    [Parameter] public string BtnCancelLabel { get; set; }
+    [Parameter] public EventCallback ModalCancelClicked { get; set; }
+    [Parameter] public EventCallback ModalValidClicked { get; set; }
+    [Parameter] public RenderFragment Body { get; set; }
+
+    public async Task CancelModal()
+    {
+        await ModalCancelClicked.InvokeAsync();
+    }
+    public async Task ValidModal()
+    {
+        await ModalValidClicked.InvokeAsync();
+    }
+}
+<div class="modal fade show effect-open" style="display:block;z-index:9999999;" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-dialog-centered  modal-dialog-scrollable" style="max-width:@MaxWidthModal;">
+        <div class="modal-content">
+            <div class="modal-header p-3" style="background-color: #4192DF;font-size:18px;color:white;">
+                <span class="modal-title">@Title</span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="CancelModal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @Body
+                @if (ModalValidClicked.HasDelegate)
+                {
+                    <div class="text-center">
+                        <button class="btn btn-success" @onclick="ValidModal">@BtnValidLabel</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -3,341 +3,52 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<EditProfile> Loc
 
 <section class="section">
-    <div class="section-header">
-        <h1>@Loc["Title"]</h1>
-    </div>
-    @if (ModalChangePassword)
-    {
-        <div class="modal fade show" id="modalChangePassword" style="display:block" aria-modal="true" role="dialog">
-            <div class="modal-dialog  modal-dialog-centered modal-dialog-scrollable">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">@Loc["ChangePassword"]</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="@(() => ModalChangePassword = false)">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        @if (ChangePasswordHasError)
-                        {
-                            <div class="alert alert-danger">
-                                @ChangePasswordError
-                            </div>}
-                        <div class="form-group">
-                            @Loc["OldPassword"]
-                            <input type="password" class="form-control" @bind="OldPassword" />
-                        </div>
-                        <div class="form-group">
-                            @Loc["NewPassword"]
-                            <input type="password" class="form-control" @bind="NewPassword" />
-                        </div>
-                        <div class="form-group">
-                            @Loc["ConfirmPassword"]
-                            <input type="password" class="form-control" @bind="ConfirmPassword" />
-                        </div>
-                        <div class="text-center">
-                            <button type="button" class="btn btn-success" @onclick="ChangePassword">@Loc["ChangePassword"]</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
-
-    @if (ModalDisplayPinCode)
-    {
-        <div class="modal fade show" id="modalDisplayPinCode" style="display:block" aria-modal="true" role="dialog">
-            <div class="modal-dialog  modal-dialog-centered modal-dialog-scrollable">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">@Loc["DisplayPinCode"]</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="@(() => ModalDisplayPinCode = false)">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            @Loc["DigitCode"]
-                            <input type="text" class="form-control" @bind="DigitCode" readonly="readonly" />
-                        </div>
-                        <div class="form-group">
-                            @Loc["PinCode"]
-                            <input type="text" class="form-control" @bind="PinCode" readonly="readonly" />
-                        </div>
-                        <div class="text-center">
-                            <button type="button" class="btn btn-success" @onclick="@(() => ModalDisplayPinCode = false)">@Loc["Close"]</button>
-                        </div>
-                        <h4 class="modal-title mt-2 mb-2">@Loc["AssociateNewCard"]</h4>
-
-                        <div class="form-group">
-                            @Loc["DigitCode"]
-                            <input type="text" class="form-control" @bind="NewDigitCode" />
-                        </div>
-                        <div class="form-group">
-                            @Loc["PinCode"]
-                            <input type="text" class="form-control" @bind="NewPinCode" />
-                            <span class="text-danger">@Error</span>
-                        </div>
-                        <div class="text-center">
-                            <button type="button" class="btn btn-success" @onclick="@(() => SaveNewCard())">@Loc["AddCard"]</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
-
-
-    @if (ModalChangeMailVisible)
-    {
-        <div class="modal fade show" id="modalChangeMail" style="display:block" aria-modal="true" role="dialog">
-            <div class="modal-dialog modal-dialog-centered  modal-dialog-scrollable">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">@Loc["TitleChangeMail"]</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="() => ModalChangeMailVisible = false">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="info">
-                            <p class="text-danger">
-                                @Loc["TxtDesc1"]<br>
-                                @Loc["TxtDesc2"]<br />
-                            </p>
-                        </div><br />
-                        <div class="form-group">
-                            @Loc["NewMail"]
-                            <input type="text" class="form-control" @bind="NewMail" />
-                        </div>
-                        <div class="form-group">
-                            @Loc["ConfirmMail"]
-                            <input type="text" class="form-control" @bind="ConfirmMail" />
-                        </div>
-
-                        @if (ChangeChangeMailHasError)
-                        {
-                            <div class="alert alert-danger">
-                                @ChangeChangeMaildError
-                            </div>
-                        }
-                        <div class="text-center">
-                            <button type="button" class="btn btn-success" @onclick="ChangeMail">@Loc["BtnChangeMail"]</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
-    @if (ModalSocialNetworkVisible)
-    {
-        <div class="modal fade show" id="modalSocialNetwork" style="display:block" aria-modal="true" role="dialog">
-            <div class="modal-dialog modal-dialog-centered  modal-dialog-scrollable">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">@Loc["AddASocialNetwork"]</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="ToggleModalSocialNetwork">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="card m-2">
-                            <div class="form-group">
-                                @Loc["SocialType"]
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    @if (!string.IsNullOrEmpty(NewSocialLink.Name))
-                                    {
-                                        <i class="@NewSocialLink.Logo"></i><span>@NewSocialLink.Name</span>}
-                                </a>
-                                <ul class="list-inline">
-                                    <li class="list-inline-item">
-                                        <ul class="list-inline">
-                                            @foreach (var item in AvailableSocialNetworksToAdd)
-                                            {
-                                                <li class="list-inline-item"><a href="javascript:void(0)" @onclick="@(()=>SetSocialNetwork(item.Name, item.BackgroundColor, item.Logo))"><i class="@item.Logo" style="font-size:55px"></i><br /><span>@item.Name</span></a></li>
-                                            }
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="form-group">
-                                @Loc["SocialUrl"]
-                                <input type="url" @bind="NewSocialLink.Url" class="form-control" />
-                            </div>
-                            <div class="text-center">
-                                <button class="btn btn-success" @onclick="AddSocialNetwork">@Loc["AddASocialNetwork"]</button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
-    @if (ModalCustomLinkVisible)
-    {
-        <div class="modal fade show" id="modalCustomLink" style="display:block" aria-modal="true" role="dialog">
-            <div class="modal-dialog modal-dialog-centered  modal-dialog-scrollable">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">@Loc["AddCustomLink"]</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="ToggleModalCustomLink">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="card m-1">
-                            <div class="form-group">
-                                @Loc["Name"]
-                                <input @bind="NewCustomLink.Name" class="form-control" />
-                            </div>
-                            @*<div class="form-group">
-                                    @Loc["BackgroundColor"]
-                                    <input @bind="NewCustomLink.BackgroundColor" class="form-control" />
-                                </div>*@
-                            <div class="form-group">
-                                @Loc["Logo"]
-                                <MediaUploader ImgUrl="@NewCustomLink.Logo" OnChange="@((fileUrl)=>NewCustomLink.Logo = fileUrl)"></MediaUploader>
-                            </div>
-                            <div class="form-group">
-                                @Loc["Url"]
-                                <input type="url" @bind="NewCustomLink.Url" class="form-control" />
-                            </div>
-                        </div>
-                        <div class="text-center"><button class="btn btn-success" @onclick="AddCustomLink">@Loc["AddCustomLink"]</button></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
-
-    @if (ModalChangePhoto)
-    {
-        <div class="modal fade show" id="modalChangePhoto" style="display:block" aria-modal="true" role="dialog">
-            <div class="modal-dialog modal-dialog-centered  modal-dialog-scrollable">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">@Loc["ChangePhoto"]</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="ToggleChangePhoto">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        @if (ChangePhotoHasError)
-                        {
-                            <div class="alert alert-danger">
-                                @ChangePhotoError
-                            </div>}
-                        <div class="form-group">
-
-                            @Loc["PhotoType"]
-                            <select @bind="PhotoType" class="form-control">
-                                <option value="Gravatar">@Loc["UseGravatarPhoto"]</option>
-                                <option value="Custom">@Loc["UseCustomPhoto"]</option>
-                            </select>
-                        </div>
-                        @if (PhotoType == "Custom")
-                        {
-                            <div class="form-group">
-                                @Loc["UseCustomPhoto"]
-                                <MediaUploader ImgUrl="@PhotoUrl" OnChange="@((fileUrl)=>PhotoUrl = fileUrl)"></MediaUploader>
-                            </div>}
-                        <div class="text-center">
-                            <button type="button" class="btn btn-success" @onclick="ChangePhoto">@Loc["ChangePhoto"]</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
     <EditForm Model="User">
         <DataAnnotationsValidator />
         <ValidationSummary />
         <div class="card">
             <div class="card-body">
                 <div class="form-row">
-                    <div class="form-group col-lg-6  col-sm-12">
-                        <div class="text-center">
-                            <button type="button" class="border-0" style="background: transparent" @onclick="ToggleChangePhoto" data-toggle="tooltip" data-html="true" title="@Loc["ChangePhoto"]">
-                                <img src="@PhotoUrl" style="max-width: 90px; max-height: 90px" class="rounded-circle mr-1" />
-                            </button>
-                            <h5>@Loc["ChangePicture"]</h5>
-                        </div>
-                    </div>
                     <div class="form-group col-lg-6 col-sm-12">
-                        <label>@Loc["DisplayName"]</label>
-                        <input type="text" @bind="@User.DisplayName" Class="form-control" />
+                        <input class="form-control" @bind="@User.DisplayName" placeholder="@Loc["DisplayName"]" />
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-sm-12">
-                        <label>@Loc["Description"]</label>
-                        <textarea @bind="@User.Description" Class="form-control h-100" rows="6" cols="6"/>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-lg-6 col-sm-12">
-                        <label>@Loc["Email"]</label>
-                        <input type="text" @bind="@User.Email" Class="form-control" readonly />
-                        <span class="text-primary cursor-pointer" @onclick="OpenModalChangeMail">@Loc["TitleChangeMail"]</span>
-                    </div>
-                    <div class="form-group col-lg-6 col-sm-12">
-                        <label>@Loc["Phone"]</label>
-                        <input type="text" Class="form-control" @bind="@User.PhoneNumber" />
+                        <textarea placeholder="@Loc["Description"]" @bind="@User.Description" Class="form-control h-100" rows="6" cols="6" />
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-lg-6  col-sm-12">
-                        <label>@Loc["FirstName"]</label>
-                        <input type="text" @bind="@User.FirstName" Class="form-control" />
+                        <input type="text" @bind="@User.FirstName" Class="form-control" placeholder="@Loc["FirstName"]" />
                     </div>
                     <div class="form-group col-lg-6 col-sm-12">
-                        <label>@Loc["LastName"]</label>
-                        <input type="text" @bind="@User.LastName" Class="form-control" />
+                        <input type="text" @bind="@User.LastName" Class="form-control" placeholder="@Loc["LastName"]" />
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-lg-6 col-sm-12">
-                        <label>@Loc["City"]</label>
-                        <input type="text" @bind="@User.City" Class="form-control" />
+                        <input type="text" @bind="@User.City" Class="form-control" placeholder="@Loc["City"]" />
                     </div>
                     <div class="form-group col-lg-6 col-sm-12">
-                        <label>@Loc["Country"]</label>
-                        <input type="text" @bind="@User.Country" Class="form-control" />
+                        <input type="text" @bind="@User.Country" Class="form-control" placeholder="@Loc["Country"]" />
                     </div>
                 </div>
                 <div class="form-row">
-                    @if (SocialNetworkConnected?.Count > 0)
-                    {
-
-                        <div class="col-lg-6 col-md-12 col-sm-12">
-                            <h5>@Loc["SocialNetworkConnected"]</h5>
-                            <ul class="list-inline">
-                                @foreach (var socialNetwork in SocialNetworkConnected)
-                                {
-                                    <li class="list-inline-item list-unstyled-noborder mr-4">
-                                        <a href="@socialNetwork.Url" target="_blank" class="text-center">
-                                            <i class="@socialNetwork.Logo" style="font-size: 55px;">
-
-                                            </i>
-
-                                        </a>
-                                        <span class="badge position-absolute"><a @onclick="@(() => DeleteSocialNetwork(socialNetwork))"><i class="fa fa-2x fa-times"></i></a></span>
-                                        <br />
-                                        <span>@socialNetwork.Name</span>
-                                    </li>
-                                }
-                            </ul>
-                        </div>
-
-                    }
+                    <div class="form-group col-lg-6 col-sm-12">
+                        <input type="text" Class="form-control" @bind="@User.PhoneNumber" placeholder="@Loc["Phone"]" />
+                    </div>
+                    <div class="form-group col-lg-6  col-sm-12">
+                        <input type="text" @bind="@User.Email" Class="form-control" readonly />
+                    </div>
+                </div>
+                <div class="form-row">
                     @if (CustomLinks?.Count > 0)
                     {
                         <div class="col-lg-6 col-md-12 col-sm-12">
                             <h5>@Loc["CustomLinks"]</h5>
                             <ul class="list-inline">
-                                @foreach (var customLink in CustomLinks)
-                                {
+                                <Virtualize Items="@CustomLinks" Context="customLink">
                                     <li class="list-inline-item list-unstyled-noborder mr-4">
                                         <a href="@customLink.Url" target="_blank">
                                             <img src="@customLink.Logo" style="max-width: 55px; max-height: 55px" class="mr-1" />
@@ -346,21 +57,14 @@
                                         <br />
                                         <span>@customLink.Name</span>
                                     </li>
-                                }
+                                </Virtualize>
                             </ul>
-                        </div>}
+                        </div>
+                    }
                 </div>
-
+                <button type="submit" @onclick="Update" class="col-lg-3 col-sm-6 btn btn-success" data-toggle="tooltip" title="@Loc["Update"]">@Loc["Update"]</button>
+                <button @onclick="Close" class="col-lg-3 col-sm-6 btn btn-danger" data-toggle="tooltip" title="@Loc["Cancel"]">@Loc["Cancel"]</button>
             </div>
-
-            <div class="fixed-bottom m-4">
-                <button class="btn btn-success btn-circle btn-xl float-right ml-2" @onclick="Update" data-toggle="tooltip" data-html="true" title="@Loc["Save"]"><i class="fa fa-2x fa-save"></i></button>
-                <button type="button" class="btn btn-primary btn-circle btn-xl float-right ml-2" @onclick="OpenModalCustomLink" data-toggle="tooltip" data-html="true" title="@Loc["AddCustomLinks"]"><i class="fa fa-2x fa-link"></i></button>
-                <button type="button" class="btn btn-primary btn-circle btn-xl float-right ml-2" @onclick="OpenModalSocialNetwork" data-toggle="tooltip" data-html="true" title="@Loc["AddASocialNetwork"]"><i class="fa fa-2x fa-hashtag"></i></button>
-                <button type="button" class="btn btn-primary btn-circle btn-xl float-right ml-2" @onclick="OpenModalPinCode" data-toggle="tooltip" data-html="true" title="@Loc["DisplayPinCode"]"><i class="fas fa-address-card"></i></button>
-                <button type="button" class="btn btn-danger btn-circle btn-xl float-right ml-2" @onclick="ToggleChangePassword" data-toggle="tooltip" data-html="true" title="@Loc["ChangePassword"]"><i class="fa fa-2x fa-key"></i></button>
-            </div>
-
         </div>
     </EditForm>
 </section>

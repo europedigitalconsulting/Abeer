@@ -21,13 +21,13 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
     public class ForgotPasswordModel : PageModel
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IEmailSender _emailSender;
+        private readonly IEmailSenderService _emailSender;
         private readonly UrlShortner _urlShortner;
         private readonly IServiceProvider _serviceProvider;
         private readonly IWebHostEnvironment _env;
 
         public ForgotPasswordModel(UserManager<ApplicationUser> userManager,
-            IWebHostEnvironment env, IEmailSender emailSender, UrlShortner urlShortner, IServiceProvider serviceProvider)
+            IWebHostEnvironment env, IEmailSenderService emailSender, UrlShortner urlShortner, IServiceProvider serviceProvider)
         {
             _userManager = userManager;
             _emailSender = emailSender;
@@ -94,7 +94,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
         private async Task SendEmailTemplate(string templatePattern, Dictionary<string, string> parameters)
         {
             var message = GenerateHtmlTemplate(_serviceProvider, _env.WebRootPath, templatePattern, parameters);
-            await _emailSender.SendEmailAsync(Input.Email, "Confirm your email", message);
+            await _emailSender.SendEmailAsync(Input.Email, "Reset Password", message);
         }
 
     }

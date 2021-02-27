@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ad_description" xml:space="preserve">
-    <value>Publier et consulter les opportunités d’affaires</value>
+    <value>Vous pouvez créer et afficher des annonces pour vendre ou acheter</value>
   </data>
   <data name="Agencies_description" xml:space="preserve">
     <value>Trouver un point de vente physique</value>
@@ -130,13 +130,13 @@
     <value>A votre service</value>
   </data>
   <data name="Business_description" xml:space="preserve">
-    <value>Modifier et Partager votre profile personnel</value>
+    <value>Consulter ou modifier vos informations personnelles</value>
   </data>
   <data name="Cards_description" xml:space="preserve">
     <value>Gérer les cartes : Gérer vos cartes NFC, affecter les à vos utilisateurs et suivre leur utilisateur</value>
   </data>
   <data name="Contact_description" xml:space="preserve">
-    <value>Retrouver tous vos contacts en un clin d'œil</value>
+    <value>Vous pouvez partager et gérer vos contacts d’affaires</value>
   </data>
   <data name="Discover" xml:space="preserve">
     <value>Découvrir</value>
@@ -146,6 +146,9 @@
   </data>
   <data name="Register" xml:space="preserve">
     <value>S'inscrire : Obtenir un compte Smart-Clik, Echanger en QR Code votre profil avec des milliers d'utilisateur. Bénéficier de 5 jours de tests gratuits.</value>
+  </data>
+  <data name="Smart-Clik" xml:space="preserve">
+    <value>Smart-Clik</value>
   </data>
   <data name="Subscribe" xml:space="preserve">
     <value>Modifier ou souscrire un nouvel abonnement en ligne</value>
@@ -172,9 +175,9 @@
     <value>Gérer les Utilisateurs : Gérer vos utilisateurs et membres de votre réseau</value>
   </data>
   <data name="Welcome" xml:space="preserve">
-    <value>Bienvenue sur Smart-Clik!</value>
+    <value>Bienvenue sur </value>
   </data>
   <data name="WhatIsIt" xml:space="preserve">
-    <value>Avec Smart-Click, Gérez vos comptes sociaux, vos coordonnées et vos informations personnelles</value>
+    <value>vous permet d’échanger et partager avec des milliers de personne vos cartes de visite virtuel en ligne.</value>
   </data>
 </root>

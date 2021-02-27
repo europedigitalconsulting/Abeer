@@ -132,6 +132,9 @@
   <data name="AssociateNewCard" xml:space="preserve">
     <value>Associate a new card</value>
   </data>
+  <data name="Bookmarks" xml:space="preserve">
+    <value>Bookmarks</value>
+  </data>
   <data name="BtnChangeMail" xml:space="preserve">
     <value>Modify my Email</value>
   </data>
@@ -140,6 +143,9 @@
   </data>
   <data name="CatchPhrase" xml:space="preserve">
     <value>This page helps you to edit your own profile, you can edit, regenerate pin code or token to encrypt your blockchain</value>
+  </data>
+  <data name="ChangePassword" xml:space="preserve">
+    <value>Change password</value>
   </data>
   <data name="ChangePhoto" xml:space="preserve">
     <value>Change my photo</value>
@@ -155,6 +161,9 @@
   </data>
   <data name="ConfirmPassword" xml:space="preserve">
     <value>Confirm new password</value>
+  </data>
+  <data name="Contacts" xml:space="preserve">
+    <value>Contacts</value>
   </data>
   <data name="Country" xml:space="preserve">
     <value>Country</value>
@@ -269,6 +278,9 @@
   </data>
   <data name="Update" xml:space="preserve">
     <value>Update</value>
+  </data>
+  <data name="UpdateInfo" xml:space="preserve">
+    <value>Update your information</value>
   </data>
   <data name="Url" xml:space="preserve">
     <value>Url</value>

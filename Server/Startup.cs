@@ -326,7 +326,8 @@ namespace Abeer.Server
                     new SocialNetwork{OwnerId = "system", BackgroundColor = "bg-secondary", Logo = "fab fa-pinterest-square", Name="Pinterest", Url="http://www.pinterest.com/{0}"},
                     new SocialNetwork{OwnerId = "system", BackgroundColor = "bg-primary", Logo = "fab fa-linkedin", Name="Linkedin", Url="https://www.linkedin.com/in/{0}"},
                     new SocialNetwork{OwnerId = "system", BackgroundColor = "bg-yellow", Logo = "fab fa-snapchat", Name="Snapchat", Url="http://www.snapchat.com/add/{0}"},
-                    new SocialNetwork{OwnerId = "system", BackgroundColor = "bg-success", Logo = "fab fa-tiktok", Name="TikTok", Url="http://vt.tiktok.com/{0}"}
+                    new SocialNetwork{OwnerId = "system", BackgroundColor = "bg-success", Logo = "fab fa-tiktok", Name="TikTok", Url="http://vt.tiktok.com/{0}"},
+                    new SocialNetwork{OwnerId = "system", BackgroundColor = "bg-success", Logo = "fab fa-whatsapp", Name="Whatsapp", Url="http://www.Whatsapp/{0}"}
                 };
 
                 db.SocialNetworkRepository.AddSocialNetworks(networks);

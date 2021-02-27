@@ -6,14 +6,13 @@
 @code
 {
     [CascadingParameter]
+    public ScreenSize ScreenSize { get; set; }
+    [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
     private AuthenticationState authenticateState { get; set; }
     private List<CardServiceViewModel> ListService { get; set; } = new List<CardServiceViewModel>();
     private CardServiceViewModel CurrentCard { get; set; } = new CardServiceViewModel();
     public bool IsAdmin { get; set; }
-    public bool IsLarge { get; set; } = false;
-    public bool IsMedium { get; set; } = false;
-    public bool IsSmall { get; set; } = false;
 
     (TouchPoint ReferencePoint, DateTime StartTime) startPoint;
 
@@ -28,7 +27,7 @@
         }
         ListService = new List<CardServiceViewModel>
 {
-            new CardServiceViewModel{ PageName = "/Profile", ImageUrl = "Profil.svg", Title = Loc["Title_profil"], Description = IsSmall ? "Consulter ou modifier vos informations personnelles" : Loc["Business_description"] },
+            //new CardServiceViewModel{ PageName = "/Profile", ImageUrl = "Profil.svg", Title = Loc["Title_profil"], Description = ScreenSize.IsSmall ? "Consulter ou modifier vos informations personnelles" : Loc["Business_description"] },
             new CardServiceViewModel{  PageName = "/contact/list", ImageUrl = "Contact.svg", Title = Loc["Title_contact"], Description = Loc["Contact_description"]},
             new CardServiceViewModel{  PageName = "/ads/MyAds", ImageUrl = "Annonces.svg", Title = Loc["Title_ads"], Description = Loc["ad_description"]},
            // new CardServiceViewModel{  PageName = "/agencies", ImageUrl = "Magasins.svg", Title = Loc["Title_agencies"], Description = Loc["Agencies_description"]},
@@ -86,36 +85,34 @@
             else
                 NextCard();
         }
+        StateHasChanged();
     }
-
 }
-<section class="section">
-    <div class="section-header d-none d-md-block d-xl-block">
+<section class="section slide-in-elliptic-top-fwd">
+    <div class="d-none d-md-block d-xl-block">
         <div class="row">
-            <div class="col-lg-6 mx-auto">
-                <header class="text-center">
-                    <h1 class="h2">@Loc["Welcome"]</h1><hr />
-                    <small>@Loc["WhatIsIt"]</small>
+            <div class="col-12 pt-5">
+                <header class="offset-lg-ipad-pro offset-md-1 offset-lg-3">
+                    <h1 class="h2" style="color:#97AABD;">Bienvenue sur  <strong style="color: #02BF8A">Smart-Clik</strong></h1>
+                    <div style="margin-left: -20px; border: 2px solid #02BF8A; width: 25px;"></div>
+                    <br /> 
+                    <p class="col-xl-6 col-lg-6 col-md-9 col-ipad-pro-7 mb-0" style="color: #97AABD; font-size: 22px; font-weight: 400"><strong style="color: #02BF8A">Smart-Clik</strong> vous permet d’échanger et partager avec des milliers de personne vos cartes de visite virtuel en ligne.</p>
                 </header>
             </div>
         </div>
     </div>
-    <div class="section-body ">
+    <div class="section-body mt-ipad-pro-5 ">
         <div class="row justify-content-center">
 
-            <MediaQuery Media="@Breakpoints.LargeUp" @bind-Matches="IsLarge"/>
-            <MediaQuery Media="@Breakpoints.MediumUp" @bind-Matches="IsMedium"/>
-            <MediaQuery Media="@Breakpoints.SmallDown" @bind-Matches="IsSmall"/>
-            @if (IsLarge || IsMedium)
+            @if (ScreenSize.IsLarge || ScreenSize.IsMedium)
             {
-                @foreach (var item in ListService)
-                {
+                <Virtualize Items="@ListService" Context="item">
                     @if (!item.AuthenticationRequired || (item.AuthenticationRequired && authenticateState?.User?.Identity.IsAuthenticated == false))
                     {
-                        <div class="col-lg-2 col-md-4 col-sm-6 mt-4 d-flex">
+                        <div class="col-lg-3 col-md-4 col-sm-6 mt-4">
                             <div class="profile-widget">
                                 <div class=" profile-widget-header" style="border-radius: 30px; box-shadow: 0px 3px 4px 1px lightgrey; padding: 22px;">
-                                    <img class="w-100" src="/assets/img/services/@item.ImageUrl"/>
+                                    <img class="w-100" src="/assets/img/services/@item.ImageUrl" />
                                 </div>
                                 <div class="text-center profile-widget-description">
                                     <h4 class="text-dark">@item.Title</h4>
@@ -129,45 +126,47 @@
                             </div>
                         </div>
                     }
-                }
+                </Virtualize>
             }
             else
             {
                 <div class="col-md-4 col-sm-4 position-relative">
-                    <div class="card profile-widget ">
-                        <div class="position-absolute" style="top: 30%" @onclick="PreviousCard">
-                            <img src="/assets/img/services/Iconly-Bulk-Arrow - Left.svg"/>
-                        </div>
-                        <div class="position-absolute" style="top: 30%; right: 0" @onclick="NextCard">
-                            <img src="/assets/img/services/Iconly-Bulk-Arrow - Right.svg"/>
-                        </div>
-                        <div class="row justify-content-center" @ontouchmove:preventDefault="true" @ontouchstart="HandleTouchStart" @ontouchend="HandleTouchEnd">
-                            <img style="width: calc(90vw);" class="m-0 p-0" src="/assets/img/services/@CurrentCard.ImageUrl"/>
-                        </div>
-                        <div class="text-center mt-3">
-                            <h4 class="text-dark" style="font-size: 28px; font-weight: 600;">@CurrentCard.Title</h4>
-                        </div>
-                        <div class="text-center mb-0" style="height: 60px">
-                            <p class="offset-1 col-10 text-muted" style="font-size: 12px; line-height: 17px;">@CurrentCard.Description</p>
-                        </div>
+                    <div class="card profile-widget">
+                        <div @ontouchmove:preventDefault="true" @ontouchstart="HandleTouchStart" @ontouchend="HandleTouchEnd">
+                            <div class="position-absolute" style="top: 30%" @onclick="PreviousCard">
+                                <img src="/assets/img/services/Iconly-Bulk-Arrow - Left.svg" />
+                            </div>
+                            <div class="position-absolute" style="top: 30%; right: 0" @onclick="NextCard">
+                                <img src="/assets/img/services/Iconly-Bulk-Arrow - Right.svg" />
+                            </div>
+                            <div class="row justify-content-center">
+                                <img style="width: calc(90vw);" class="m-0 p-0" src="/assets/img/services/@CurrentCard.ImageUrl" />
+                            </div>
+                            <div class="text-center mt-3">
+                                <h4 class="text-dark" style="font-size: 28px; font-weight: 600;">@CurrentCard.Title</h4>
+                            </div>
+                            <div class="text-center mb-0" style="height: 60px">
+                                <p class="offset-1 col-10 text-muted" style="font-size: 12px; line-height: 17px;">@CurrentCard.Description</p>
+                            </div>
 
-                        <div class="row justify-content-center mb-4">
-                            <div class="m-0 p-0">
-                                @foreach (var item in ListService)
-                                {
-                                    <span class="mr-1 @(item == CurrentCard ? "disc" : "circle")" style="display: inline-block;" @onclick="() => ChangeCard(item)"></span>
-                                }
+                            <div class="row justify-content-center mb-4">
+                                <div class="m-0 p-0">
+                                    @foreach (var item in ListService)
+                                    {
+                                        <span class="mr-1 @(item == CurrentCard ? "disc" : "circle")" style="display: inline-block;" @onclick="() => ChangeCard(item)"></span>
+                                    }
+                                </div>
                             </div>
                         </div>
                         <div class="justify-content-lg-center pb-4">
                             <a href="@CurrentCard.PageName" class="mt-2 pt-2 pb-2 btn btn-success text-decoration-none col-12">
                                 @Loc["Discover"]
-                            </a><br/><br/>
+                            </a><br /><br />
                             <a href="/Identity/Account/login" class="pt-2 pb-2 btn btn-warning text-decoration-none col-12" style="border-radius: 15px;">
                                 @Loc["Login"]
                             </a>
                             <a href="/Identity/Account/register" class="pl-0 pt-2 pb-2 text-decoration-none col-3">
-                                <img class="pt-2 pb-2" src="/assets/img/services/macarte_sm.svg" style="box-shadow: 0px 5px 35px 0px lightgrey; padding-left: 10px; border-radius: 0px 0px 19px 19px; background: #F5F8FA;"/>
+                                <img class="pt-2 pb-2" src="/assets/img/services/macarte_sm.svg" style="box-shadow: 0px 5px 35px 0px lightgrey; padding-left: 10px; border-radius: 0px 0px 19px 19px; background: #F5F8FA;" />
                             </a>
                         </div>
                     </div>

@@ -2,40 +2,52 @@
 @inherits LayoutComponentBase
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Resources> Loc
 @inject Abeer.Client.UISdk.NavigationUrlService NavigationUrlService
-    <MediaQueryList>
-        <div id="app">
-            <div class="container-fluid">
-                <NavMenu LabelContacts="@Loc["ContactList"]"
-                         LabelDashboard="@Loc["Dashboard"]"
-                         LabelLogout="@Loc["Logout"]"
-                         LabelMyAccount="@Loc["MyAccount"]"
-                         LabelUserList="@Loc["UserList"]"></NavMenu>
+<MediaQueryList>
+    <div id="app" class="full-height">
+        <NavMenu LabelContacts="@Loc["ContactList"]"
+                 LabelDashboard="@Loc["Dashboard"]"
+                 LabelLogout="@Loc["Logout"]"
+                 LabelMyAccount="@Loc["MyAccount"]"
+                 LabelUserList="@Loc["UserList"]"></NavMenu>
+        <div class="container">
 
-                <div class="main-content " style="min-height: calc(100vh - 60 px);">
-                    @if (authenticationState?.User?.Identity.IsAuthenticated == true)
-            {
+            <div class="main-content " style="min-height: calc(100vh - 60 px);">
+                @*@if (authenticationState?.User?.Identity.IsAuthenticated == true)
+                {
                     @if (IsUnlimited || IsAdmin)
-                {
-                    <div class="text-danger pb-3">
-                        <strong>@Loc["UnlimitedAccount"]</strong>
-                    </div>
-                }
-                else if (SubscriptionEnd.HasValue && DateTime.Now.AddDays(5) >= SubscriptionEnd.Value.Date)
-                {
-                    <div class="text-danger pb-3">
-                        <strong>@Loc["SubscriptionWillEnd"] @SubscriptionEnd.Value.Date.ToShortDateString()</strong>
-                    </div>
-                }
-                else if (!SubscriptionEnd.HasValue || SubscriptionEnd.Value.Date < DateTime.Now.Date)
-                {
-                    <div class="text-danger pb-3">
-                        <strong>@Loc["NotSubscription"]</strong>
-                    </div>
-                }
-            }
+                    {
+                        <div class="text-danger pb-3">
+                            <strong>@Loc["UnlimitedAccount"]</strong>
+                        </div>
+                    }
+                    else if (SubscriptionEnd.HasValue && DateTime.Now.AddDays(5) >= SubscriptionEnd.Value.Date)
+                    {
+                        <div class="text-danger pb-3">
+                            <strong>@Loc["SubscriptionWillEnd"] @SubscriptionEnd.Value.Date.ToShortDateString()</strong>
+                        </div>
+                    }
+                    else if (!SubscriptionEnd.HasValue || SubscriptionEnd.Value.Date < DateTime.Now.Date)
+                    {
+                        <div class="text-danger pb-3">
+                            <strong>@Loc["NotSubscription"]</strong>
+                        </div>
+                    }
+                }*@
+                <CascadingValue Value="ScreenSize">
                     @Body
-                </div>
+                </CascadingValue>
             </div>
-
         </div>
-    </MediaQueryList>
+
+    </div>
+
+    @*<footer class="footer col-12 pl-2 pt-2">
+        <div class="">
+            <img width="120" src="/assets/img/connexion/smartclik_logo.png"><br>
+            <span style="font-size:12px;">Copyright © smart-clik 2021 - All rights reserved</span>
+        </div>
+    </footer>*@
+    <MediaQuery Media="@Breakpoints.LargeUp" @bind-Matches="ScreenSize.IsLarge" />
+    <MediaQuery Media="@Breakpoints.MediumUp" @bind-Matches="ScreenSize.IsMedium" />
+    <MediaQuery Media="@Breakpoints.SmallDown" @bind-Matches="ScreenSize.IsSmall" />
+</MediaQueryList>
