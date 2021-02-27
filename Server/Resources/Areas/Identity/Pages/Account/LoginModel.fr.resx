@@ -124,7 +124,7 @@
     <value>Se connecter avec ma carte</value>
   </data>
   <data name="Copyright" xml:space="preserve">
-    <value>Copyright &amp;copy; Fait avec 💙 par Smart-Clik</value>
+    <value>Copyright &amp;copy; Fait avec 💙 par Meetag</value>
   </data>
   <data name="CreateAccount" xml:space="preserve">
     <value>Créer un compte</value>
@@ -178,13 +178,13 @@
     <value>Se souvenir de mon identifiant</value>
   </data>
   <data name="SmartClik" xml:space="preserve">
-    <value>Smart-Clik</value>
+    <value>Meetag</value>
   </data>
   <data name="TermOfServiceText" xml:space="preserve">
     <value>Quelles sont nos conditions d'utilisation ?</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>S'authentifier sur Smart-Clik</value>
+    <value>S'authentifier sur Meetag</value>
   </data>
   <data name="Welcome" xml:space="preserve">
     <value>Bienvenue sur &lt;span class="font-weight-bold"&gt;Smart Clik&lt;/span&gt;</value>

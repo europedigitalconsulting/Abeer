@@ -145,16 +145,16 @@
     <value>Se connecter</value>
   </data>
   <data name="Register" xml:space="preserve">
-    <value>S'inscrire : Obtenir un compte Smart-Clik, Echanger en QR Code votre profil avec des milliers d'utilisateur. Bénéficier de 5 jours de tests gratuits.</value>
+    <value>S'inscrire : Obtenir un compte Meetag, Echanger en QR Code votre profil avec des milliers d'utilisateur. Bénéficier de 5 jours de tests gratuits.</value>
   </data>
-  <data name="Smart-Clik" xml:space="preserve">
-    <value>Smart-Clik</value>
+  <data name="Meetag" xml:space="preserve">
+    <value>Meetag</value>
   </data>
   <data name="Subscribe" xml:space="preserve">
     <value>Modifier ou souscrire un nouvel abonnement en ligne</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Bienvenue sur Smart-Clik. Nous sommes là pour vous aider</value>
+    <value>Bienvenue sur Meetag. Nous sommes là pour vous aider</value>
   </data>
   <data name="Title_ads" xml:space="preserve">
     <value>Annonces</value>

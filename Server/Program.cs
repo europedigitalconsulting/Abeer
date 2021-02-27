@@ -14,7 +14,7 @@ namespace Abeer.Server
             Console.Title = "SmartClick.ApiServer";
             try
             {
-                Log.Information("Smart-Clik server starting");
+                Log.Information("Meetag server starting");
                 CreateHostBuilder(args).Build().Run();
             }
             catch(Exception ex)

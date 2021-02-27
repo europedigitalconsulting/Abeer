@@ -1,2 +1,2 @@
-$mycert = New-SelfSignedCertificate -Subject "Smart-Clik" -Type CodeSigningCert -CertStoreLocation "Cert:\LocalMachine\my"
+$mycert = New-SelfSignedCertificate -Subject "Meetag" -Type CodeSigningCert -CertStoreLocation "Cert:\LocalMachine\my"
 $mycert

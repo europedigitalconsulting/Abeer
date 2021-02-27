@@ -124,7 +124,7 @@
     <value>Connect with my card</value>
   </data>
   <data name="Copyright" xml:space="preserve">
-    <value>Copyright &amp;copy; Made with 💙 by Smart-Clik</value>
+    <value>Copyright &amp;copy; Made with 💙 by Meetag</value>
   </data>
   <data name="CreateAccount" xml:space="preserve">
     <value>Create an account</value>
@@ -151,7 +151,7 @@
     <value>If you have a pin card you can use it to sigin</value>
   </data>
   <data name="Muted-p1" xml:space="preserve">
-    <value>Smart-Clik allows you to exchange and share your virtual business cards online with thousands of people. A business card may contain your contact information, social media accounts and personalized links. To access the secure area you are asked to log in please enter your login and password. If you don’t have an account yet, you can register and join our community. To allow you to test us, you have 5 days free</value>
+    <value>Meetag allows you to exchange and share your virtual business cards online with thousands of people. A business card may contain your contact information, social media accounts and personalized links. To access the secure area you are asked to log in please enter your login and password. If you don’t have an account yet, you can register and join our community. To allow you to test us, you have 5 days free</value>
   </data>
   <data name="Muted-p2" xml:space="preserve">
     <value>Une carte de visite peut contenir vos coordonnées, vos comptes réseaux sociaux ainsi que des liens personnalisés. Pour accéder à l’espace sécurisé il vous est demandé de vous identifier merci d’entrer votre login et votre mot de passe. Si vous ne disposez pas de compte encore, vous pouvez vous inscrire et rejoindre notre communauté. </value>
@@ -178,13 +178,13 @@
     <value>Remember Me</value>
   </data>
   <data name="SmartClik" xml:space="preserve">
-    <value>Smart-Clik</value>
+    <value>Meetag</value>
   </data>
   <data name="TermOfServiceText" xml:space="preserve">
     <value>Terms of Service</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Login on Smart-Clik</value>
+    <value>Login on Meetag</value>
   </data>
   <data name="Welcome" xml:space="preserve">
     <value>Welcome to &lt;span class="font-weight-bold"&gt;Smart Clik&lt;/span&gt;</value>
