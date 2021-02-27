@@ -13,6 +13,9 @@ using Abeer.Data.UnitOfworks;
 using System;
 using Abeer.Services;
 using Abeer.Shared.ViewModels;
+using Microsoft.AspNetCore.Http.Extensions; 
+using static Abeer.Services.TemplateRenderManager;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Abeer.Server.Controllers
 {
@@ -23,11 +26,23 @@ namespace Abeer.Server.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly FunctionalUnitOfWork _UnitOfWork;
+        private readonly IWebHostEnvironment _env;
+        private readonly IServiceProvider _serviceProvider;
+        private readonly UrlShortner _urlShortner;
+        private readonly IEmailSenderService _emailSender;
 
-        public ContactsController(FunctionalUnitOfWork onlineWalletUnitOfWork, UserManager<ApplicationUser> userManager)
+        public ContactsController(
+            UrlShortner urlShortner,
+            IWebHostEnvironment env,
+            IServiceProvider serviceProvider,
+            IEmailSenderService emailSender, FunctionalUnitOfWork onlineWalletUnitOfWork, UserManager<ApplicationUser> userManager)
         {
+            _serviceProvider = serviceProvider;
             _UnitOfWork = onlineWalletUnitOfWork;
             _userManager = userManager;
+            _emailSender = emailSender;
+            _urlShortner = urlShortner;
+            _env = env;
         }
 
         // GET: api/Contacts
@@ -58,74 +73,82 @@ namespace Abeer.Server.Controllers
 
             return viewContacts;
         }
-        
-        [HttpGet("import/{id}")]
-        public async Task<ActionResult<ImportContactResultViewModel>> Import(string id)
+
+        [HttpGet("add/{id}")]
+        public async Task<ActionResult<ImportContactResultViewModel>> Add(string id)
         {
             if (User.NameIdentifier() == id)
+                return BadRequest();
+
+            var user = await _userManager.FindByIdAsync(id);
+
+            if (user == null)
+                return NotFound();
+
+            var contact = await _UnitOfWork.ContactRepository.FirstOrDefault(c => c.UserId == user.Id && c.OwnerId == User.NameIdentifier());
+
+            if (contact == null)
             {
-                return new ImportContactResultViewModel { Contact = null, IsValid = false, StatusCode = "SelfReference" };
-            }
-            else
-            {
-                var user = await _userManager.FindByIdAsync(id);
-
-                if (user == null)
-                    return NotFound();
-
-                var contact = await _UnitOfWork.ContactRepository.FirstOrDefault(c => c.UserId == user.Id && c.OwnerId == User.NameIdentifier());
-
-                if (contact == null)
+                var result = await _UnitOfWork.ContactRepository.Add(new Contact
                 {
-                    var result = await _UnitOfWork.ContactRepository.Add(new Contact
-                    {
-                        OwnerId = User.NameIdentifier(),
-                        UserId = user.Id
-                    });
+                    OwnerId = User.NameIdentifier(),
+                    UserId = user.Id
 
-                    return new ImportContactResultViewModel { Contact = result, IsValid = true, StatusCode = "OK" };
-                }
-                else
-                {
-                    return new ImportContactResultViewModel { Contact = contact, IsValid = false, StatusCode = "Duplicate" };
-                }
+                });
+              //  await SendEmailTemplate(user);
+                return Ok();
             }
+            return Conflict();
         }
+        private async Task SendEmailTemplate(ApplicationUser user)
+        {
+            var callbackUrl = Url.Action("GetContacts", "Contacts", 
+                values: new {userId = user.Id },
+                protocol: Request.Scheme);
 
+            var frontWebSite = UriHelper.BuildAbsolute(Request.Scheme, Request.Host);
+            var logoUrl = UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/assets/img/logo_full.png");
+            var unSubscribeUrl = await _urlShortner.CreateUrl(Request.Scheme, Request.Host, UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/Account/UnSubscribe"));
+            var login = $"{user.Email}";
+
+            callbackUrl = await _urlShortner.CreateUrl(Request.Scheme, Request.Host, callbackUrl); 
+
+           var parameters = new Dictionary<string, string>()
+                        {
+                            {"login", login },
+                            {"frontWebSite", frontWebSite },
+                            {"logoUrl", logoUrl },
+                            {"unSubscribeUrl", unSubscribeUrl },
+                            {"callbackUrl", callbackUrl }
+                        };
+
+            var message = GenerateHtmlTemplate(_serviceProvider, _env.WebRootPath, "email-confirmation", parameters);
+            await _emailSender.SendEmailAsync(user.Email, "Add Contact", message);
+        }
         [HttpGet("Suggestions")]
         public async Task<ActionResult<IEnumerable<ViewContact>>> GetSuggestion(string term)
         {
             if (string.IsNullOrEmpty(term))
                 return BadRequest();
 
-            var users = await Task.Run(()=>_userManager?.Users.ToList().Where(c=>
-                 c.FirstName.Contains(term, StringComparison.OrdinalIgnoreCase)
-                        || c.LastName.Contains(term, StringComparison.OrdinalIgnoreCase)
-                        || c.Description.Contains(term, StringComparison.OrdinalIgnoreCase) ||
-                        c.DisplayName.Contains(term, StringComparison.OrdinalIgnoreCase) ||
-                        c.Email.Contains(term, StringComparison.OrdinalIgnoreCase) ||
-                        c.Title.Contains(term, StringComparison.OrdinalIgnoreCase)));
+            var users = await Task.Run(() => _userManager?.Users.ToList().Where(c => c.EmailConfirmed &&
+                            c.FirstName != null && c.FirstName.Contains(term, StringComparison.OrdinalIgnoreCase)
+                          || c.LastName != null && c.LastName.Contains(term, StringComparison.OrdinalIgnoreCase)
+                          || c.Description != null && c.Description.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+                         c.DisplayName != null && c.DisplayName.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+                         c.Email != null && c.Email.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+                         c.Title != null && c.Title.Contains(term, StringComparison.OrdinalIgnoreCase)));
 
             if (users == null)
                 return NotFound();
 
-            ConcurrentBag<ViewContact> contacts = new ConcurrentBag<ViewContact>();
-            var allUserContacts = await _UnitOfWork.ContactRepository.GetContacts(User.NameIdentifier());
-            users = users.Where(u => !allUserContacts.Any(c => u.Id == c.UserId || u.Id == User.NameIdentifier()));
+            List<ViewContact> contacts = new List<ViewContact>();
+            var allUserContacts = await _UnitOfWork.ContactRepository.GetContacts();
+            users = users.Where(u => !allUserContacts.Any(c => u.Id == c.UserId || u.Id == User.NameIdentifier())).ToList();
 
-            if (users != null)
+            foreach (var user in users)
             {
-                users.ToList().ForEach(async (user) =>
-                {
-                    var contact = await _UnitOfWork.ContactRepository.FirstOrDefault(u => u.UserId == user.Id);
-                    if (contact != null)
-                    {
-                        var result = users.FirstOrDefault(c => c.Id == contact.UserId);
-                        ViewContact item = new ViewContact(result, contact);
-                        contacts.Add(item);
-                    }
-
-                });
+                contacts.Add(new ViewContact(user, null));
             }
 
             return contacts;

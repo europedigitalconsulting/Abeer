@@ -47,6 +47,11 @@
         z-index: 9999999;
         position: fixed;
         line-height: 60px;
+        left: 10px;
+        top: 7px;
+    }
+    .m-sm-3 {
+        margin: 1rem !important;
     }
 }
 

@@ -19,6 +19,10 @@ namespace Abeer.Data.Repositories
             _context = context;
         }
 
+        public  Task<IList<Contact>> GetContacts()
+        {
+            return Task.Run(() => _context.Contacts.ToList());
+        }
         public  Task<IList<Contact>> GetContacts(string ownerId)
         {
             return Task.Run(() => _context.Contacts.Where(c => c.OwnerId == ownerId));

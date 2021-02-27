@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Abeer.Shared.ReferentielTable;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -17,9 +18,9 @@ namespace Abeer.Shared
 
         public ViewContact(ApplicationUser user, Contact contact):this()
         {
-            Id = contact.Id.ToString();
-            UserId = contact.UserId;
-            OwnerId = contact.OwnerId;
+            Id = contact?.Id.ToString();
+            UserId = user.Id;
+            OwnerId = contact?.OwnerId;
             FirstName = user.FirstName;
             LastName = user.LastName;
             DisplayName = user.DisplayName;
@@ -62,5 +63,7 @@ namespace Abeer.Shared
         public Guid Id { get; set; }
         public string UserId { get; set; }
         public string OwnerId { get; set; }
+        public EnumUserAccepted UserAccepted { get; set; }
+        public DateTime? DateAccepted { get; set; }
     }
 }

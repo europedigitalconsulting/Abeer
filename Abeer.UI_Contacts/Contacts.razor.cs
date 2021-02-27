@@ -30,21 +30,22 @@ namespace Abeer.UI_Contacts
         }
 
         public string Term { get; set; } = "";
+        public string TermMyContacts { get; set; } = "";
         public bool ShowContactAddModal { get; set; }
 
         private async Task SearchAll()
         {
             await Task.Run(() =>
             {
-                if (string.IsNullOrWhiteSpace(Term))
+                if (string.IsNullOrWhiteSpace(TermMyContacts))
                     Items = All.ToList();
                 else
-                    Items = All.Where(c => c.FirstName.Contains(Term, StringComparison.OrdinalIgnoreCase)
-                        || c.LastName.Contains(Term, StringComparison.OrdinalIgnoreCase)
-                        || c.Description.Contains(Term, StringComparison.OrdinalIgnoreCase) ||
-                        c.DisplayName.Contains(Term, StringComparison.OrdinalIgnoreCase) ||
-                        c.Email.Contains(Term, StringComparison.OrdinalIgnoreCase) ||
-                        c.Title.Contains(Term, StringComparison.OrdinalIgnoreCase)).ToList();
+                    Items = All.Where(c => c.FirstName.Contains(TermMyContacts, StringComparison.OrdinalIgnoreCase)
+                        || c.LastName.Contains(TermMyContacts, StringComparison.OrdinalIgnoreCase)
+                        || c.Description.Contains(TermMyContacts, StringComparison.OrdinalIgnoreCase) ||
+                        c.DisplayName.Contains(TermMyContacts, StringComparison.OrdinalIgnoreCase) ||
+                        c.Email.Contains(TermMyContacts, StringComparison.OrdinalIgnoreCase) ||
+                        c.Title.Contains(TermMyContacts, StringComparison.OrdinalIgnoreCase)).ToList();
             });
 
             await InvokeAsync(StateHasChanged);
@@ -80,10 +81,15 @@ namespace Abeer.UI_Contacts
                 await GetSuggestions();
         }
 
-        private async Task Import(string id)
+        private async Task Add(ViewContact contact)
         {
-            var getMyContacts = await HttpClient.GetAsync($"/api/Contacts/import/{id}");
-            getMyContacts.EnsureSuccessStatusCode();
+            var response = await HttpClient.GetAsync($"/api/Contacts/add/{contact.UserId}");
+
+            if (response.IsSuccessStatusCode)
+            { 
+                SuggestionItems.Remove(contact);
+            } 
+            await InvokeAsync(StateHasChanged);
         }
 
         async Task Remove(ViewContact contact)

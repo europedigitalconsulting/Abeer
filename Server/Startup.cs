@@ -35,6 +35,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Abeer.Services.Data;
 using Abeer.Server.APIFeatures.Hubs;
+using Abeer.Shared.ReferentielTable;
 
 namespace Abeer.Server
 {
@@ -270,13 +271,17 @@ namespace Abeer.Server
             db.SetTimeout(360);
 
             var prices = await db.AdPriceRepository.All();
-            
+
             if (prices.FirstOrDefault(p => p.PriceName == "Free") == null)
             {
                 await db.AdPriceRepository.Add(new AdPrice()
                 {
-                    Value = 0, DisplayDuration = 2, DelayToDisplay = 2, Id = Guid.NewGuid(),
-                    PriceName = "Free", PriceDescription = "Free for 2 days"
+                    Value = 0,
+                    DisplayDuration = 2,
+                    DelayToDisplay = 2,
+                    Id = Guid.NewGuid(),
+                    PriceName = "Free",
+                    PriceDescription = "Free for 2 days"
                 });
             }
 
@@ -576,10 +581,10 @@ namespace Abeer.Server
                 }
                 var contact1 = await functionalDb.ContactRepository.Where(c => c.OwnerId == michel.Id);
                 if (!contact1.Any())
-                    await functionalDb.ContactRepository.Add(new Contact { OwnerId = michel.Id, UserId = hasan.Id });
+                    await functionalDb.ContactRepository.Add(new Contact { OwnerId = michel.Id, UserId = hasan.Id, DateAccepted = DateTime.Now, UserAccepted = EnumUserAccepted.ACCEPTED });
                 var contact2 = await functionalDb.ContactRepository.Where(c => c.OwnerId == hasan.Id);
                 if (!contact2.Any())
-                    await functionalDb.ContactRepository.Add(new Contact { OwnerId = hasan.Id, UserId = michel.Id });
+                    await functionalDb.ContactRepository.Add(new Contact { OwnerId = hasan.Id, UserId = michel.Id, DateAccepted = DateTime.Now, UserAccepted = EnumUserAccepted.ACCEPTED });
 
                 var tony = await userManager.FindByEmailAsync("customer@abeer.io");
 
