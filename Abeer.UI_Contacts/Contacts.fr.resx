@@ -165,6 +165,9 @@
   <data name="NoContactFound" xml:space="preserve">
     <value>Aucun contact n'a été trouvé, vous pouvez ajouter un nouveau contact</value>
   </data>
+  <data name="Pending" xml:space="preserve">
+    <value>En attente...</value>
+  </data>
   <data name="PublishedAds" xml:space="preserve">
     <value>Annonces publiées</value>
   </data>

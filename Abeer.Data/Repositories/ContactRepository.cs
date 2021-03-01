@@ -1,5 +1,5 @@
 ﻿using Abeer.Shared;
-
+using Abeer.Shared.ReferentielTable;
 using Microsoft.EntityFrameworkCore;
 
 using System;
@@ -19,18 +19,22 @@ namespace Abeer.Data.Repositories
             _context = context;
         }
 
-        public  Task<IList<Contact>> GetContacts()
+        public Task<IList<Contact>> GetContacts()
         {
             return Task.Run(() => _context.Contacts.ToList());
         }
-        public  Task<IList<Contact>> GetContacts(string ownerId)
+        public Task<IList<Contact>> GetContacts(string ownerId)
         {
-            return Task.Run(() => _context.Contacts.Where(c => c.OwnerId == ownerId));
+            return Task.Run(() => _context.Contacts.Where(c => c.OwnerId == ownerId && (c.UserAccepted == EnumUserAccepted.ACCEPTED || c.UserAccepted == EnumUserAccepted.PENDING)));
         }
 
-        public  Task<Contact> GetContact(Guid id)
+        public Task<Contact> GetContact(Guid id)
         {
-            return Task.Run(() => _context.Contacts.FirstOrDefault(c=>c.Id == id));
+            return Task.Run(() => _context.Contacts.FirstOrDefault(c => c.Id == id));
+        }
+        public Task<Contact> GetContact(string userId, string ownerId)
+        {
+            return Task.Run(() => _context.Contacts.FirstOrDefault(c => c.UserId == userId && c.OwnerId == ownerId));
         }
 
         public Task Update(Contact contact)
@@ -38,17 +42,17 @@ namespace Abeer.Data.Repositories
             return Task.Run(() => _context.Contacts.Update(contact));
         }
 
-        public  Task<Contact> Add(Contact contact)
+        public Task<Contact> Add(Contact contact)
         {
             return Task.Run(() => _context.Contacts.Add(contact));
         }
 
-        public  Task<Contact> FirstOrDefault(Expression<Func<Contact, bool>> p)
+        public Task<Contact> FirstOrDefault(Expression<Func<Contact, bool>> p)
         {
             return Task.Run(() => _context.Contacts.FirstOrDefault(p));
         }
 
-        public  Task<IList<Contact>> Where(Expression<Func<Contact, bool>> p)
+        public Task<IList<Contact>> Where(Expression<Func<Contact, bool>> p)
         {
             return Task.Run(() => _context.Contacts.Where(p));
         }
@@ -62,7 +66,7 @@ namespace Abeer.Data.Repositories
 
         public Task Delete(Guid id)
         {
-            return Task.Run(()=>_context.Contacts.Remove(id));
+            return Task.Run(() => _context.Contacts.Remove(id));
         }
     }
 }

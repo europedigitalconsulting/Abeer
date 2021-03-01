@@ -21,6 +21,7 @@ namespace Abeer.Shared
             Id = contact?.Id.ToString();
             UserId = user.Id;
             OwnerId = contact?.OwnerId;
+            UserAccepted = (int?)contact?.UserAccepted;
             FirstName = user.FirstName;
             LastName = user.LastName;
             DisplayName = user.DisplayName;
@@ -42,6 +43,7 @@ namespace Abeer.Shared
         public string Id { get; set; }
         public string UserId { get; set; }
         public string OwnerId { get; set; }
+        public int? UserAccepted { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string DisplayName { get; set; }

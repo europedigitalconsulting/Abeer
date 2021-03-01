@@ -9,77 +9,67 @@
 
 @if (ShowContactAddModal)
 {
-    <div class="modal fade show" id="ShowContactAddModal" style="display:block" aria-modal="true" role="dialog" aria-hidden="true">
-        <div class="modal-dialog  modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">@Loc["SearchContact"]</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="@(() => ShowContactAddModal = false)">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="section-header">
-                        <div class="input-group">
-                            <input type="search" id="searchContact" name="searchContact" class="form-control" @bind="Term" @oninput="CountSuggestion">
-                            <span class="input-group-btn">
-                                <button type="button" class="btn btn-lg" @onclick="GetSuggestions"><i class="fa fa-2x fa-search"></i></button>
-                            </span>
-                            <div class="search-backdrop"></div>
-                        </div>
-                    </div>
-                    <div class="section-body">
-                        @foreach (var contact in SuggestionItems)
-                        {
-                            <div class="card author-box card-primary">
-                                <div class="card-body">
-                                    <div class="author-box-right">
-                                        <a @onclick="@(async e => await Add(contact))">
-                                            <i class="fa fa-3x fa-plus-square">
-                                                <div class="clearfix"></div>
-                                            </i>
-                                        </a>
-                                    </div>
-                                    <div class="author-box-left">
-                                        <img alt="image" src="@contact.PhotoUrl" class="rounded-circle author-box-picture">
-                                        <div class="clearfix"></div>
-                                    </div>
-                                    <div class="author-box-details">
-                                        <div class="author-box-name">
-                                            <a href="#">@contact.DisplayName</a>
-                                        </div>
-                                        <div class="author-box-job">@contact.Title</div>
-                                        <div class="author-box-description">
-                                            <p>
-                                                @contact.Description
-                                            </p>
-                                        </div>
-                                        <div class="mb-2 mt-3">
-                                            <div class="text-small font-weight-bold">@Loc["SocialLinks"]</div>
-                                        </div>
-                                        @if (contact.SocialNetworks != null)
-                                        {
-                                            foreach (var socialNetwork in contact.SocialNetworks)
-                                            {
-                                                <a href="@socialNetwork.Url" class="btn btn-social-icon mr-1 btn-@(socialNetwork.Name.ToLower())" target="_blank">
-                                                    <i class="@socialNetwork.Logo"></i>
-                                                </a>
-                                            }
-                                        }
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                    </div>
+    <ModalDefault Title="@Loc["SearchContact"]" ModalCancelClicked="() => ShowContactAddModal = false">
+        <Body>
+            <div class="section-header">
+                <div class="input-group">
+                    <input type="search" @onkeyup="@Enter" id="searchContact" name="searchContact" class="form-control" @bind="Term" @oninput="CountSuggestion">
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-lg" @onclick="GetSuggestions"><i class="fa fa-2x fa-search"></i></button>
+                    </span>
+                    <div class="search-backdrop"></div>
                 </div>
             </div>
-        </div>
-    </div>
+            <div class="section-body">
+                @foreach (var contact in SuggestionItems)
+                {
+                    <div class="card author-box card-primary">
+                        <div class="card-body">
+                            <div class="author-box-right">
+                                <a @onclick="@(async e => await Add(contact))">
+                                    <i class="fa fa-3x fa-plus-square text-warning">
+                                        <div class="clearfix"></div>
+                                    </i>
+                                </a>
+                            </div>
+                            <div class="author-box-left pr-4">
+                                <img alt="image" src="@contact.PhotoUrl" class="rounded-circle author-box-picture">
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="author-box-details">
+                                <div class="author-box-name">
+                                    <a href="#">@contact.DisplayName</a>
+                                </div>
+                                <div class="author-box-job">@contact.Title</div>
+                                <div class="author-box-description">
+                                    <p>
+                                        @(contact.Description.Substring(0, 100) + " ...")
+                                    </p>
+                                </div>
+                                @if (contact.SocialNetworks != null && contact.SocialNetworks.Count() > 0)
+                                {
+                                    <div class="mb-2 mt-3">
+                                        <div class="text-small font-weight-bold">@Loc["SocialLinks"]</div>
+                                    </div>
+                                    foreach (var socialNetwork in contact.SocialNetworks)
+                                    {
+                                        <a href="@socialNetwork.Url" class="btn btn-social-icon mr-1 btn-@(socialNetwork.Name.ToLower())" target="_blank">
+                                            <i class="@socialNetwork.Logo"></i>
+                                        </a>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </Body>
+    </ModalDefault>
 }
 <section class="section">
     <div class="mt-3 section-header">
-        <h1>@Loc["Title"]</h1>
         <div class="input-group">
+            <label style="font-size: 30px; font-weight: 600; color: black;">@Loc["Title"]</label>
             <input type="search" placeholder="Recherche" class="form-control" @bind="TermMyContacts" @oninput="CountSearchAll">
             <span class="input-group-btn">
                 <button type="button" class="btn" @onclick="SearchAll"><i class="fa fa-2x  fa-filter"></i></button>
@@ -88,9 +78,9 @@
             <div class="search-backdrop"></div>
         </div>
     </div>
-    <div class="row">
+    <div class="row justify-content-center">
         <Virtualize Items="Items" Context="contact">
-            <div class="card m-sm-3 col-lg-4 col-sm-12 slide-in-elliptic-top-fwd" style="border:1px solid grey;border-radius:15px;">
+            <div class="card m-sm-3 col-lg-3 col-sm-12 slide-in-elliptic-top-fwd" style="border:1px solid grey;border-radius:15px;">
                 <div class="card-body pl-2 pr-2">
                     <div class="row">
                         <div class="col-12">
@@ -112,9 +102,18 @@
                             }
                         </div>
                         <div class="col-12">
-                            <button class="col-12 btn p-2" style="line-height: 30px; background: #1478D9; color: white;">
-                                <span  style="float: left; font-size: 15px; font-weight: 300;">@Loc["PublishedAds"]</span><i style="float: right;  font-size: 30px;" class="fas fa-ad"></i>
-                            </button>
+                            @if (contact.UserAccepted == (int)EnumUserAccepted.ACCEPTED)
+                            {
+                                <button class="col-12 btn p-2" style="line-height: 30px; background: #1478D9; color: white;">
+                                    <span style="float: left; font-size: 15px; font-weight: 300;">@Loc["PublishedAds"]</span><i style="float: right;  font-size: 30px;" class="fas fa-ad"></i>
+                                </button>
+                            }
+                            @if (contact.UserAccepted == (int)EnumUserAccepted.PENDING)
+                            {
+                                <button class="col-12 btn p-2" style="line-height: 30px; background: orange; color: white;">
+                                    <span style="float: left; font-size: 15px; font-weight: 300;">@Loc["Pending"]</span><i style="float: right;  font-size: 30px;" class="fas fa-ad"></i>
+                                </button>
+                            }
                         </div>
                     </div>
                 </div>
@@ -122,3 +121,4 @@
         </Virtualize>
     </div>
 </section>
+

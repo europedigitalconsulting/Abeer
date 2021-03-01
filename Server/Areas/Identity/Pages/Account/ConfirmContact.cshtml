@@ -1,0 +1,17 @@
+﻿@page
+@model ConfirmContactModel
+@inject IStringLocalizer<ConfirmEmailModel> localizer
+@inject IHtmlLocalizer<ConfirmEmailModel> htmlLocalizer
+@{
+    Layout = "~/Areas/Identity/Pages/_LayoutBlur.cshtml"; ;
+    ViewData["Title"] = htmlLocalizer["TitlePage"];
+}
+
+<div class="modal-body"> 
+    <div>
+        <span>Vous avez bien ajouté : @Model.DisplayName</span>
+        <form method="post" class="pt-3"> 
+            <button class="btn btn-success" type="submit">@localizer["Login"]</button>
+        </form>
+    </div>
+</div> 

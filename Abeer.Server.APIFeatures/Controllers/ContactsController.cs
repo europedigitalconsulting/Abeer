@@ -13,9 +13,14 @@ using Abeer.Data.UnitOfworks;
 using System;
 using Abeer.Services;
 using Abeer.Shared.ViewModels;
-using Microsoft.AspNetCore.Http.Extensions; 
+using Microsoft.AspNetCore.Http.Extensions;
 using static Abeer.Services.TemplateRenderManager;
 using Microsoft.AspNetCore.Hosting;
+using Abeer.Shared.ReferentielTable;
+using Abeer.Shared.Technical;
+using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Text;
 
 namespace Abeer.Server.Controllers
 {
@@ -30,10 +35,11 @@ namespace Abeer.Server.Controllers
         private readonly IServiceProvider _serviceProvider;
         private readonly UrlShortner _urlShortner;
         private readonly IEmailSenderService _emailSender;
+        private readonly IConfiguration _configuration;
 
         public ContactsController(
             UrlShortner urlShortner,
-            IWebHostEnvironment env,
+            IWebHostEnvironment env, IConfiguration configuration,
             IServiceProvider serviceProvider,
             IEmailSenderService emailSender, FunctionalUnitOfWork onlineWalletUnitOfWork, UserManager<ApplicationUser> userManager)
         {
@@ -43,6 +49,7 @@ namespace Abeer.Server.Controllers
             _emailSender = emailSender;
             _urlShortner = urlShortner;
             _env = env;
+            _configuration = configuration;
         }
 
         // GET: api/Contacts
@@ -55,27 +62,27 @@ namespace Abeer.Server.Controllers
             if (contacts.Any())
             {
                 contacts.ForEach(async (contact) =>
-                 {
-                     var user = await _userManager.FindByIdAsync(contact.UserId);
-                     ViewContact item = new ViewContact(user, contact);
+               {
+                   var user = await _userManager.FindByIdAsync(contact.UserId);
+                   ViewContact item = new ViewContact(user, contact);
 
-                     user.NubmerOfView += 1;
-                     await _userManager.UpdateAsync(user);
+                   user.NubmerOfView += 1;
+                   await _userManager.UpdateAsync(user);
 
-                     item.NumberOfView = user.NubmerOfView;
-                     item.SocialNetworks = await _UnitOfWork.SocialNetworkRepository.GetSocialNetworkLinks(contact.UserId) ??
-                         new List<SocialNetwork>();
+                   item.NumberOfView = user.NubmerOfView;
+                   item.SocialNetworks = await _UnitOfWork.SocialNetworkRepository.GetSocialNetworkLinks(contact.UserId) ??
+                       new List<SocialNetwork>();
 
-                     item.CustomLinks = new List<CustomLink>();
-                     viewContacts.Add(item);
-                 });
+                   item.CustomLinks = new List<CustomLink>();
+                   viewContacts.Add(item);
+               });
             }
 
-            return viewContacts;
+            return Ok(viewContacts);
         }
 
         [HttpGet("add/{id}")]
-        public async Task<ActionResult<ImportContactResultViewModel>> Add(string id)
+        public async Task<ActionResult<ViewContact>> Add(string id)
         {
             if (User.NameIdentifier() == id)
                 return BadRequest();
@@ -92,28 +99,29 @@ namespace Abeer.Server.Controllers
                 var result = await _UnitOfWork.ContactRepository.Add(new Contact
                 {
                     OwnerId = User.NameIdentifier(),
-                    UserId = user.Id
-
+                    UserId = user.Id,
+                    UserAccepted = EnumUserAccepted.PENDING
                 });
-              //  await SendEmailTemplate(user);
-                return Ok();
+                await SendEmailTemplate(user);
+                return Ok(new ViewContact(user, result));
             }
             return Conflict();
         }
         private async Task SendEmailTemplate(ApplicationUser user)
         {
-            var callbackUrl = Url.Action("GetContacts", "Contacts", 
-                values: new {userId = user.Id },
-                protocol: Request.Scheme);
+            string data1 = CryptHelper.Rijndael.Encrypt($"{user.Id}", _configuration["QrCode:Key"]);
+            string data2 = CryptHelper.Rijndael.Encrypt($"{User.NameIdentifier()}", _configuration["QrCode:Key"]);
+
+            var callbackUrl = $"{Request.Scheme}://{Request.Host}/Identity/Account/ConfirmContact?data1={data1}&data2={data2}";
 
             var frontWebSite = UriHelper.BuildAbsolute(Request.Scheme, Request.Host);
             var logoUrl = UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/assets/img/logo_full.png");
             var unSubscribeUrl = await _urlShortner.CreateUrl(Request.Scheme, Request.Host, UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/Account/UnSubscribe"));
-            var login = $"{user.Email}";
+            var login = $"{user.DisplayName}";
 
-            callbackUrl = await _urlShortner.CreateUrl(Request.Scheme, Request.Host, callbackUrl); 
+            callbackUrl = await _urlShortner.CreateUrl(Request.Scheme, Request.Host, callbackUrl);
 
-           var parameters = new Dictionary<string, string>()
+            var parameters = new Dictionary<string, string>()
                         {
                             {"login", login },
                             {"frontWebSite", frontWebSite },
@@ -122,9 +130,10 @@ namespace Abeer.Server.Controllers
                             {"callbackUrl", callbackUrl }
                         };
 
-            var message = GenerateHtmlTemplate(_serviceProvider, _env.WebRootPath, "email-confirmation", parameters);
+            var message = GenerateHtmlTemplate(_serviceProvider, _env.WebRootPath, "contact-confirmation", parameters);
             await _emailSender.SendEmailAsync(user.Email, "Add Contact", message);
         }
+
         [HttpGet("Suggestions")]
         public async Task<ActionResult<IEnumerable<ViewContact>>> GetSuggestion(string term)
         {
@@ -143,15 +152,15 @@ namespace Abeer.Server.Controllers
                 return NotFound();
 
             List<ViewContact> contacts = new List<ViewContact>();
-            var allUserContacts = await _UnitOfWork.ContactRepository.GetContacts();
-            users = users.Where(u => !allUserContacts.Any(c => u.Id == c.UserId || u.Id == User.NameIdentifier())).ToList();
+            var allUserContacts = await _UnitOfWork.ContactRepository.Where(x => x.UserId == User.NameIdentifier() || x.OwnerId == User.NameIdentifier());
+            users = users.Where(u => !allUserContacts.Any(c => u.Id == c.OwnerId || u.Id == c.UserId || u.Id == User.NameIdentifier())).ToList();
 
             foreach (var user in users)
             {
                 contacts.Add(new ViewContact(user, null));
             }
 
-            return contacts;
+            return Ok(contacts);
         }
 
         // GET: api/Contacts/5

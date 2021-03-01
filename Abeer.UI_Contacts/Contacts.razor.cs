@@ -5,6 +5,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Abeer.Shared;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Newtonsoft.Json;
 
 namespace Abeer.UI_Contacts
@@ -16,17 +17,16 @@ namespace Abeer.UI_Contacts
         public List<ViewContact> Suggestions { get; set; } = new List<ViewContact>();
         public List<ViewContact> SuggestionItems { get; set; } = new List<ViewContact>();
 
-        protected override async Task OnParametersSetAsync()
+        protected override async Task OnInitializedAsync()
         {
             var getMyContacts = await HttpClient.GetAsync("/api/Contacts");
             getMyContacts.EnsureSuccessStatusCode();
 
             var json = await getMyContacts.Content.ReadAsStringAsync();
-            All = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ViewContact>>(json);
-
+            All = JsonConvert.DeserializeObject<List<ViewContact>>(json);
             Items = All.ToList();
 
-            await base.OnParametersSetAsync();
+            await base.OnInitializedAsync();
         }
 
         public string Term { get; set; } = "";
@@ -85,20 +85,32 @@ namespace Abeer.UI_Contacts
         {
             var response = await HttpClient.GetAsync($"/api/Contacts/add/{contact.UserId}");
 
-            if (response.IsSuccessStatusCode)
-            { 
-                SuggestionItems.Remove(contact);
-            } 
+            response.EnsureSuccessStatusCode();
+
+            var json = await response.Content.ReadAsStringAsync();
+            var viewContact = JsonConvert.DeserializeObject<ViewContact>(json);
+
+            SuggestionItems.Remove(contact);
+            All.Add(viewContact);
+            Items = All.ToList();
+
             await InvokeAsync(StateHasChanged);
         }
 
         async Task Remove(ViewContact contact)
         {
-            var deleteResult =await HttpClient.DeleteAsync($"/api/contacts/{contact.Id}");
+            var deleteResult = await HttpClient.DeleteAsync($"/api/contacts/{contact.Id}");
             deleteResult.EnsureSuccessStatusCode();
             Items.Remove(contact);
             await InvokeAsync(StateHasChanged);
         }
-
+        public async Task Enter(KeyboardEventArgs e)
+        {
+            Console.WriteLine(e);
+            if (e.Code == "Enter" || e.Code == "NumpadEnter")
+            {
+                await GetSuggestions();
+            }
+        }
     }
 }
