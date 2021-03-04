@@ -135,18 +135,18 @@ namespace Abeer.Server.Controllers
         }
 
         [HttpGet("Suggestions")]
-        public async Task<ActionResult<IEnumerable<ViewContact>>> GetSuggestion(string term)
+        public async Task<ActionResult<IEnumerable<ViewContact>>> GetSuggestion(string term, string filter)
         {
             if (string.IsNullOrEmpty(term))
                 return BadRequest();
 
-            var users = await Task.Run(() => _userManager?.Users.ToList().Where(c => c.EmailConfirmed &&
-                            c.FirstName != null && c.FirstName.Contains(term, StringComparison.OrdinalIgnoreCase)
+            var users = await Task.Run(() => _userManager?.Users.ToList().Where(c => c.EmailConfirmed && (filter == null || c.Country == filter)
+                          && (c.FirstName != null && c.FirstName.Contains(term, StringComparison.OrdinalIgnoreCase)
                           || c.LastName != null && c.LastName.Contains(term, StringComparison.OrdinalIgnoreCase)
                           || c.Description != null && c.Description.Contains(term, StringComparison.OrdinalIgnoreCase) ||
                          c.DisplayName != null && c.DisplayName.Contains(term, StringComparison.OrdinalIgnoreCase) ||
                          c.Email != null && c.Email.Contains(term, StringComparison.OrdinalIgnoreCase) ||
-                         c.Title != null && c.Title.Contains(term, StringComparison.OrdinalIgnoreCase)));
+                         c.Title != null && c.Title.Contains(term, StringComparison.OrdinalIgnoreCase))));
 
             if (users == null)
                 return NotFound();

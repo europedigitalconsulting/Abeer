@@ -16,38 +16,49 @@ namespace Abeer.UI_Contacts
         public List<ViewContact> Items { get; set; } = new List<ViewContact>();
         public List<ViewContact> Suggestions { get; set; } = new List<ViewContact>();
         public List<ViewContact> SuggestionItems { get; set; } = new List<ViewContact>();
+        public List<Country> Countries { get; set; } = new List<Country>();
 
         protected override async Task OnInitializedAsync()
         {
             var getMyContacts = await HttpClient.GetAsync("/api/Contacts");
+            var getCountries = await HttpClient.GetAsync("/api/Countries");
+
             getMyContacts.EnsureSuccessStatusCode();
+            getCountries.EnsureSuccessStatusCode();
 
             var json = await getMyContacts.Content.ReadAsStringAsync();
+            var jsonCountry = await getCountries.Content.ReadAsStringAsync();
+
             All = JsonConvert.DeserializeObject<List<ViewContact>>(json);
+            Countries = JsonConvert.DeserializeObject<List<Country>>(jsonCountry);
             Items = All.ToList();
 
             await base.OnInitializedAsync();
         }
 
+        public Country FilterSelected { get; set; }
         public string Term { get; set; } = "";
         public string TermMyContacts { get; set; } = "";
         public bool ShowContactAddModal { get; set; }
+        public bool Showfilter { get; set; }
+        public bool ShowfilterExt { get; set; }
 
         private async Task SearchAll()
-        {
+        { 
             await Task.Run(() =>
             {
                 if (string.IsNullOrWhiteSpace(TermMyContacts))
                     Items = All.ToList();
                 else
-                    Items = All.Where(c => c.FirstName.Contains(TermMyContacts, StringComparison.OrdinalIgnoreCase)
+                    Items = All.Where(c => (FilterSelected == null || c.Country == FilterSelected.Name)
+                        && (c.FirstName.Contains(TermMyContacts, StringComparison.OrdinalIgnoreCase)
                         || c.LastName.Contains(TermMyContacts, StringComparison.OrdinalIgnoreCase)
                         || c.Description.Contains(TermMyContacts, StringComparison.OrdinalIgnoreCase) ||
                         c.DisplayName.Contains(TermMyContacts, StringComparison.OrdinalIgnoreCase) ||
                         c.Email.Contains(TermMyContacts, StringComparison.OrdinalIgnoreCase) ||
-                        c.Title.Contains(TermMyContacts, StringComparison.OrdinalIgnoreCase)).ToList();
+                        c.Title.Contains(TermMyContacts, StringComparison.OrdinalIgnoreCase))).ToList();
             });
-
+            Showfilter = false;
             await InvokeAsync(StateHasChanged);
         }
 
@@ -55,10 +66,11 @@ namespace Abeer.UI_Contacts
         {
             if (!string.IsNullOrWhiteSpace(Term))
             {
-                var getSuggestion = await HttpClient.GetAsync($"api/Contacts/suggestions?Term={Term}");
+                var getSuggestion = await HttpClient.GetAsync($"api/Contacts/suggestions?Term={Term}&Filter={FilterSelected?.Name ?? ""}");
                 getSuggestion.EnsureSuccessStatusCode();
                 var json = await getSuggestion.Content.ReadAsStringAsync();
                 SuggestionItems = JsonConvert.DeserializeObject<List<ViewContact>>(json);
+                ShowfilterExt = false;
             }
 
             await InvokeAsync(StateHasChanged);
@@ -67,6 +79,7 @@ namespace Abeer.UI_Contacts
         private void ToggleAddContact()
         {
             ShowContactAddModal = !ShowContactAddModal;
+            Showfilter = false;
         }
 
         private async Task CountSearchAll()
@@ -106,11 +119,17 @@ namespace Abeer.UI_Contacts
         }
         public async Task Enter(KeyboardEventArgs e)
         {
-            Console.WriteLine(e);
             if (e.Code == "Enter" || e.Code == "NumpadEnter")
             {
                 await GetSuggestions();
+                Showfilter = false;
             }
+        }
+        public async Task SelectFilter(Country item)
+        {
+            FilterSelected = item;
+            ShowfilterExt = Showfilter = false;
+            await InvokeAsync(StateHasChanged);
         }
     }
 }

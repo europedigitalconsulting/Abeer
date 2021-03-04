@@ -120,6 +120,9 @@
   <data name="AddContact" xml:space="preserve">
     <value>Add a new contact</value>
   </data>
+  <data name="ByFilter" xml:space="preserve">
+    <value>by filter</value>
+  </data>
   <data name="ById" xml:space="preserve">
     <value>You know the user id, you can enter direct his id</value>
   </data>

@@ -1,7 +1,4 @@
 ﻿using Abeer.Shared;
-
-using Microsoft.EntityFrameworkCore;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,9 +16,9 @@ namespace Abeer.Data.Repositories
             _context = context;
         }
 
-        public Task<IList<Country>> GetCountries(string culture)
+        public Task<List<Country>> GetCountries(string culture)
         {
-            return Task.Run(() => _context.Countries.Where(c=>c.Culture == culture));
+            return Task.Run(() => _context.Countries.Where(c=>c.Culture == culture).ToList());
         }
 
         public Task<bool> AnyAsync(Expression<Func<Country, bool>> filter)

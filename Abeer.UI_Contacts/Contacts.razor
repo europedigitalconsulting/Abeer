@@ -7,75 +7,31 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Contacts> Loc
 @inject HttpClient HttpClient
 
-@if (ShowContactAddModal)
-{
-    <ModalDefault Title="@Loc["SearchContact"]" ModalCancelClicked="() => ShowContactAddModal = false">
-        <Body>
-            <div class="section-header">
-                <div class="input-group">
-                    <input type="search" @onkeyup="@Enter" id="searchContact" name="searchContact" class="form-control" @bind="Term" @oninput="CountSuggestion">
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-lg" @onclick="GetSuggestions"><i class="fa fa-2x fa-search"></i></button>
-                    </span>
-                    <div class="search-backdrop"></div>
-                </div>
-            </div>
-            <div class="section-body">
-                @foreach (var contact in SuggestionItems)
+
+<section class="section">
+    <div class="mt-4">
+        <label style="font-size: 30px; font-weight: 600; color: black;" class="">@Loc["Title"]</label>
+
+        <button type="button" class="btn" @onclick="ToggleAddContact" style="float:right"><i class="fas fa-user-plus" style="font-size: 30px"></i></button>
+    </div>
+    <div class="section-header p-0">
+        <div class="input-group">
+            <input type="search" placeholder="@Loc["Search"]" class="col-8 form-control" @bind="TermMyContacts" @oninput="CountSearchAll">
+            <span class="input-group-btn" style="position:relative;background: #F5F8FA; line-height: 50px;">
+                <button type="button" class="btn" @onclick="() => Showfilter = !Showfilter" style="border-radius: 0; border-left: 1px solid grey;border-right:1px solid grey;font-size: 15px; font-weight: 400">@(FilterSelected == null ? Loc["ByFilter"] : "par " + FilterSelected.Name)<i class="pl-1 fas fa-caret-down"></i></button>
+                <button type="button" class="btn" @onclick="SearchAll"><i class="fa fa-2x fa-search"></i></button>
+                @if (Showfilter)
                 {
-                    <div class="card author-box card-primary">
-                        <div class="card-body">
-                            <div class="author-box-right">
-                                <a @onclick="@(async e => await Add(contact))">
-                                    <i class="fa fa-3x fa-plus-square text-warning">
-                                        <div class="clearfix"></div>
-                                    </i>
-                                </a>
-                            </div>
-                            <div class="author-box-left pr-4">
-                                <img alt="image" src="@contact.PhotoUrl" class="rounded-circle author-box-picture">
-                                <div class="clearfix"></div>
-                            </div>
-                            <div class="author-box-details">
-                                <div class="author-box-name">
-                                    <a href="#">@contact.DisplayName</a>
-                                </div>
-                                <div class="author-box-job">@contact.Title</div>
-                                <div class="author-box-description">
-                                    <p>
-                                        @(contact.Description.Substring(0, 100) + " ...")
-                                    </p>
-                                </div>
-                                @if (contact.SocialNetworks != null && contact.SocialNetworks.Count() > 0)
-                                {
-                                    <div class="mb-2 mt-3">
-                                        <div class="text-small font-weight-bold">@Loc["SocialLinks"]</div>
-                                    </div>
-                                    foreach (var socialNetwork in contact.SocialNetworks)
-                                    {
-                                        <a href="@socialNetwork.Url" class="btn btn-social-icon mr-1 btn-@(socialNetwork.Name.ToLower())" target="_blank">
-                                            <i class="@socialNetwork.Logo"></i>
-                                        </a>
-                                    }
-                                }
-                            </div>
-                        </div>
+                    <div style="z-index: 999999; background: #F5F8FA; position: absolute; width: 150px; height: 400px; overflow-y: auto;">
+                        <ul style="cursor:pointer; list-style: none; color:#97AABD;" class="p-0 pl-3 m-0">
+                            <Virtualize Items="Countries" Context="country">
+                                <li @onclick="() => SelectFilter(country)" class="pt-2 pb-2">@country.Name</li>
+                            </Virtualize>
+                        </ul>
                     </div>
                 }
-            </div>
-        </Body>
-    </ModalDefault>
-}
-<section class="section">
-    <div class="mt-3 section-header">
-        <div class="input-group">
-            <label style="font-size: 30px; font-weight: 600; color: black;">@Loc["Title"]</label>
-            <input type="search" placeholder="Recherche" class="form-control" @bind="TermMyContacts" @oninput="CountSearchAll">
-            <span class="input-group-btn">
-                <button type="button" class="btn" @onclick="SearchAll"><i class="fa fa-2x  fa-filter"></i></button>
-                <button type="button" class="btn" @onclick="ToggleAddContact"><i class="fas fa-user-plus"></i></button>
-            </span>
-            <div class="search-backdrop"></div>
+
+            </span> 
         </div>
     </div>
     <div class="row justify-content-center">
@@ -122,3 +78,71 @@
     </div>
 </section>
 
+@if (ShowContactAddModal)
+{
+    <ModalDefault Title="@Loc["SearchContact"]" ModalCancelClicked="() => ShowContactAddModal = ShowfilterExt = false">
+        <Body>
+            <div class="section-header">
+                <div class="input-group">
+                    <input type="search" @onkeyup="@Enter" placeholder="@Loc["Search"]" id="searchContact" name="searchContact" class="col-8 form-control" @bind="Term" @oninput="CountSuggestion">
+                    <span class="input-group-btn" style="position:relative;background: #F5F8FA; line-height: 50px;">
+                        <button type="button" class="btn" @onclick="() => ShowfilterExt = !ShowfilterExt" style="border-radius: 0; border-left: 1px solid grey;border-right:1px solid grey;font-size: 15px; font-weight: 400">@(FilterSelected == null ? Loc["ByFilter"] : "par " + FilterSelected.Name)<i class="pl-1 fas fa-caret-down"></i></button>
+                        <button type="button" class="btn" @onclick="GetSuggestions"><i class="fa fa-2x fa-search"></i></button>
+                        @if (ShowfilterExt)
+                        {
+                            <div style="z-index: 999999; background: #F5F8FA; position: absolute; width: 150px; height: 400px; overflow-y: auto;">
+                                <ul style="cursor:pointer; list-style: none; color:#97AABD;" class="p-0 pl-3 m-0">
+                                    <Virtualize Items="Countries" Context="country">
+                                        <li @onclick="() => SelectFilter(country)" class="pt-2 pb-2">@country.Name</li>
+                                    </Virtualize>
+                                </ul>
+                            </div>
+                        }
+
+                    </span>
+                </div>
+                @*<div class="input-group">
+                    <input type="search" @onkeyup="@Enter" placeholder="@Loc["Search"]" id="searchContact" name="searchContact" class="form-control" @bind="Term" @oninput="CountSuggestion">
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-lg" @onclick="GetSuggestions"><i class="fa fa-2x fa-search"></i></button>
+                    </span>
+                    <div class="search-backdrop"></div>
+                </div>*@
+            </div>
+            <div class="section-body mt-2">
+                @foreach (var contact in SuggestionItems)
+                {
+                    <div class="card col-12 slide-in-elliptic-top-fwd" style="border:1px solid grey;border-radius:15px;">
+                        <div class="card-body pl-2 pr-2">
+                            <div class="row">
+                                <div class="col-12">
+                                    <a style="color:black;font-size:22px;font-weight:700;" href="@Navigation.ToAbsoluteUri($"/ViewProfile/{contact.UserId}")">@contact.DisplayName</a>
+                                </div>
+                                <div class="col-12">@contact.Title</div>
+                                <div class="col-12 mb-2 mt-2">
+                                    <a style="font-weight:500;" href="tel:@contact.PhoneNumber" class="">@contact.PhoneNumber</a>
+                                </div>
+                                <div class="col-12 mt-2 mb-3">
+                                    @if (contact.SocialNetworks != null)
+                                    {
+                                        foreach (var socialNetwork in contact.SocialNetworks)
+                                        {
+                                            <a href="@socialNetwork.Url" class="btn p-0" target="_blank">
+                                                <img src="assets/img/social/@(socialNetwork.Name).svg" alt="@socialNetwork.Name" style="  width:35px;text-align:center" />
+                                            </a>
+                                        }
+                                    }
+                                </div>
+                                <div class="col-12">
+                                    <button @onclick="async e=> await Add(contact)" class="col-12 btn p-2" style="line-height: 30px; background: #F38E77; color: white;">
+                                        <span style="float: left; font-size: 15px; font-weight: 300;">@Loc["Insert"]</span><i style="float: right;  font-size: 30px;" class="fas fa-id-card"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                }
+            </div>
+        </Body>
+    </ModalDefault>
+}

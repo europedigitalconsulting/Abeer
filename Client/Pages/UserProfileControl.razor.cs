@@ -103,7 +103,7 @@ namespace Abeer.Client.Pages
         }
         async Task GotoContact()
         {
-            NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri("/contact/list").ToString(), true);
+            NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri("/contact/list").ToString(), false);
             await InvokeAsync(StateHasChanged);
         }         
 

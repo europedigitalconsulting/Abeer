@@ -147,6 +147,9 @@
   <data name="Password" xml:space="preserve">
     <value>Password</value>
   </data>
+  <data name="PasswordRequirements" xml:space="preserve">
+    <value>The password must contain at least 6 letters, and at least one lowercase letter, one uppercase letter, one number, and at least one special character.</value>
+  </data>
   <data name="Register" xml:space="preserve">
     <value>Register</value>
   </data>

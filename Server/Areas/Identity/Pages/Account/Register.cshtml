@@ -36,9 +36,9 @@
                 <img src="/assets/img/connexion/smartclik_logo.png" />
             </div>
             <form asp-route-returnUrl="@Model.ReturnUrl" method="post" class="card-register row pb-3 mt-3 mt-lg-5 justify-content-lg-center" style="color: #97AABD;font-size:14px;font-weight:400;">
-                <div class="close-modal col-12 float-right" >
+                <div class="close-modal col-12 float-right">
                     <i style="color:#02BF8A;font-size:28px;" class="fas fa-times-circle float-right"></i>
-                </div> 
+                </div>
                 <div class="col-lg-5 col-sm-12 bg-white">
                     <div id="first">
                         <div asp-validation-summary="All" class="text-danger"></div>
@@ -58,13 +58,13 @@
                             <input asp-for="Input.Email" class="form-control" placeholder="@localizer["Email"]" />
                             <span asp-validation-for="Input.Email" class="text-danger"></span>
                         </div>
-                        <div class="form-group group-info-country">
+                        @*<div class="form-group group-info-country">
                             <div class="checkbox">
                                 <label for="info-country">
                                     <input id="info-country" onclick="CheckInfoCountry()" type="checkbox" /><span class="text-danger">*</span> @localizer["RequestCountry"]
                                 </label>
                             </div>
-                        </div>
+                        </div>*@
                         <button id="btn-next" type="button" onclick="Next()" class="d-lg-none col-12 btn btn-success text-uppercase">@localizer["Next"]</button>
                     </div>
                 </div>
@@ -87,6 +87,7 @@
                         <div class="form-group">
                             <input asp-for="Input.Password" class="form-control" placeholder="@localizer["Password"]" />
                             <span asp-validation-for="Input.Password" class="text-danger"></span>
+                            <span>@localizer["PasswordRequirements"]</span>
                         </div>
                         <div class="form-group">
                             <input asp-for="Input.ConfirmPassword" class="form-control" placeholder="@localizer["ConfirmPassword"]" />
@@ -116,7 +117,7 @@
                             </div>
                         </div>
                         <div class="d-flex justify-content-between">
-                            <button id="btn-back" type="button" onclick="Back()" class="d-lg-none col-5 btn text-white" style="background:#0077D9" >@localizer["Back"]</button>
+                            <button id="btn-back" type="button" onclick="Back()" class="d-lg-none col-5 btn text-white" style="background:#0077D9">@localizer["Back"]</button>
                             <button id="btn-register" type="button" onclick="Submit()" class="col-5 btn btn-success">@localizer["Register"]</button>
                         </div>
                     </div>
@@ -161,20 +162,15 @@
 
         if (window.innerWidth < 1024) {
             $("#second").hide();
-        } 
+        }
 
         $(".close-modal").click(function () {
             window.location = "/";
         })
 
         function Next() {
-            if ($('#info-country').prop('checked') == true) {
-                $("#first").hide();
-                $("#second").show();
-            }
-            else {
-                CheckInfoCountry();
-            }
+            $("#first").hide();
+            $("#second").show();
         }
         function Back() {
             $("#first").show();
@@ -187,13 +183,7 @@
                 $(".group-disclaimer").addClass("text-danger");
             }
         }
-        function CheckInfoCountry() {
-            if ($('#info-country').prop('checked') == true) {
-                $(".group-info-country").removeClass("text-danger");
-            } else {
-                $(".group-info-country").addClass("text-danger");
-            }
-        }
+
         function DisplayFormCode() {
             if ($('#has-card').is(':checked')) {
                 $('.digit-code').show();
@@ -205,8 +195,7 @@
         }
         function Submit() {
             CheckDisclaimer();
-            CheckInfoCountry();
-            if ($('#info-country').prop('checked') == true && $('#disclaimer').prop('checked') == true) {
+            if ($('#disclaimer').prop('checked') == true) {
                 $("form").submit();
                 return;
             }

@@ -156,6 +156,9 @@
   <data name="Password" xml:space="preserve">
     <value>Mot de passe</value>
   </data>
+  <data name="PasswordRequirements" xml:space="preserve">
+    <value>Le mot de passe doit contenir au minimum 6 lettres, et au moins une lettre en minuscule, une en majuscule, un chiffre, et au moins un caractère spécial.</value>
+  </data>
   <data name="Register" xml:space="preserve">
     <value>S'inscrire</value>
   </data>

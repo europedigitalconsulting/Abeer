@@ -49,15 +49,15 @@
     }
 }
 <div class="logo-menu">
-    <a class="text-white" href="/"><img src="assets/logo.svg" width="80" title="Meetag"></a>
+    <a class="text-white" href="profile"><img src="assets/logo.svg" width="80" title="Meetag"></a>
 </div>
 <nav class="p-0 m-0 nav-menu">
     <div class="d-flex justify-content-around">
         <div class="hidden-sm mr-auto p-2 ">
-            <a class="text-white" href="/" style="font-size:20px;"><img src="assets/logo.svg" width="50" title="Meetag">Meetag</a>
+            <a class="text-white" href="profile" style="font-size:20px;"><img src="assets/logo.svg" width="50" title="Meetag">Meetag</a>
         </div>
         <div class="p-2">
-            <a href="profile" class="pr-2 text-center text-light">
+            <a href="profile" class="pr-2 text-center text-white">
                 <div>
                     <img src="/assets/img/menu/Search.svg">
                 </div>
@@ -65,14 +65,14 @@
             </a>
         </div>
         <div class="p-2">
-            <a href="profile" class="pr-2 text-center text-light">
+            <a href="/ads/MyAds" class="pr-2 text-center text-white">
                 <div>
                     <img src="/assets/img/menu/annonces.svg">
                 </div>
                 <span>Annonces</span>
             </a>
         </div><div class="p-2 mr-lg-3">
-            <a href="profile" class="text-center text-light">
+            <a href="profile" class="text-center text-white">
                 <div>
                     <img src="/assets/img/menu/Profile.svg">
                 </div>
@@ -80,84 +80,4 @@
             </a>
         </div>
     </div>
-</nav>
-
-<!--<nav class="p-0 m-0 nav navbar navbar-bg navbar-expand">
-    <div class="nav navbar-header">
-        <a class="navbar-brand" href="/"><img src="assets/logo.svg" width="50" title="Smart-Click" /></a>
-    </div>
-    <ul class="nav navbar-nav float-right mr-3" style="position:absolute;right:0;">
-        <li class="pt-1">
-            <a href="profile" class="pr-2 text-center text-light">
-                <div>
-                    <img src="/assets/img/menu/Search.svg" />
-                </div>
-                <span>@Loc["Search"]</span>
-            </a>
-        </li>
-        <li class="pt-1">
-            <a href="profile" class="pr-2 text-center text-light">
-                <div>
-                    <img src="/assets/img/menu/annonces.svg" />
-                </div>
-                <span>@Loc["Ads"]</span>
-            </a>
-        </li>
-        <li class="pt-1">
-            <a href="profile" class="text-center text-light">
-                <div>
-                    <img src="/assets/img/menu/Profile.svg" />
-                </div>
-                <span>@Loc["Profile"]</span>
-            </a>
-        </li>
-        <li class="hidden-sm">
-            <a href="/Identity/Account/register" class="text-decoration-none col-3">
-                <img class="pl-2 pt-2 pb-2" src="/assets/img/services/macarte_sm.svg" style="background: #F5F8FA; width: 100%; height: 60px;" />
-            </a>
-        </li>
-    </ul>-->
-
-    @*<ul class="nav navbar-nav  navbar-right">
-        <li class="dropdown">
-            @if (_user?.Identity.IsAuthenticated == true)
-                {
-            <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-                <img alt="image" src="@PhotoUrl" class="rounded-circle mr-1">
-                <div class="d-sm-none d-lg-inline-block">Hi, @_user.FindFirstValue("displayname")</div>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right">
-                <a href="profile" class="dropdown-item has-icon">
-                    <i class="fa fa-user"></i> @Loc["Profile"]
-                </a>
-                <a href="services" class="dropdown-item has-icon">
-                    <i class="fa fa-concierge-bell"></i> @Loc["Services"]
-                </a>
-                @if (_user.HasClaim(ClaimTypes.Role, "admin"))
-                        {
-                <div class="dropdown-divider"></div>
-                <a href="Users" class="dropdown-item has-icon">
-                    <i class="fa fa-users"></i>  @Loc["Users"]
-                </a>
-                <a href="/cards/manage" class="dropdown-item has-icon">
-                    <i class="far fa-credit-card"></i>  @Loc["Cards"]
-                </a>
-                <a href="/ads/manage" class="dropdown-item has-icon">
-                    <i class="fa fa-ad"></i>  @Loc["Offers"]
-                </a>
-                <a href="/ads/ManageAdPrices" class="dropdown-item has-icon">
-                    <i class="fa fa-money-bill-wave-alt"></i> @Loc["Prices"]
-                </a>
-                <a href="SocialNetwork" class="dropdown-item has-icon">
-                    <i class="fas fa-share-alt"></i> @Loc["SocialNetworks"]
-                </a>
-                        }
-                <div class="dropdown-divider"></div>
-                <a @onclick="Logout" class="dropdown-item has-icon text-danger">
-                    <i class="fa fa-sign-out-alt"></i> @Loc["Logout"]
-                </a>
-            </div>
-                }
-        </li>
-    </ul>*@
-<!--</nav>-->
+</nav> 
