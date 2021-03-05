@@ -132,6 +132,9 @@
   <data name="AssociateNewCard" xml:space="preserve">
     <value>Associate a new card</value>
   </data>
+  <data name="Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
   <data name="Bookmarks" xml:space="preserve">
     <value>Bookmarks</value>
   </data>
@@ -182,6 +185,9 @@
   </data>
   <data name="Email" xml:space="preserve">
     <value>Email</value>
+  </data>
+  <data name="Find-out" xml:space="preserve">
+    <value>Find out</value>
   </data>
   <data name="FirstName" xml:space="preserve">
     <value>First Name</value>

@@ -51,12 +51,16 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
             contact.UserAccepted = EnumUserAccepted.ACCEPTED;
             await _UnitOfWork.ContactRepository.Update(contact);
 
-            var contact2 = new Contact();
-            contact2.OwnerId = contact.UserId;
-            contact2.UserId = contact.OwnerId;
-            contact2.DateAccepted = DateTime.Now;
-            contact2.UserAccepted = EnumUserAccepted.ACCEPTED;
-            await _UnitOfWork.ContactRepository.Add(contact2);
+            var contact2 = await _UnitOfWork.ContactRepository.GetContact(userId, ownerId);
+            if (contact2 == null)
+            {
+                contact2 = new Contact();
+                contact2.OwnerId = contact.UserId;
+                contact2.UserId = contact.OwnerId;
+                contact2.DateAccepted = DateTime.Now;
+                contact2.UserAccepted = EnumUserAccepted.ACCEPTED;
+                await _UnitOfWork.ContactRepository.Add(contact2);
+            }
 
             DisplayName = user.DisplayName;
 

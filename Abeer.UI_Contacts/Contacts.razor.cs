@@ -96,6 +96,7 @@ namespace Abeer.UI_Contacts
 
         private async Task Add(ViewContact contact)
         {
+            Console.WriteLine(JsonConvert.SerializeObject(contact));
             var response = await HttpClient.GetAsync($"/api/Contacts/add/{contact.UserId}");
 
             response.EnsureSuccessStatusCode();
