@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Abeer.Shared;
+using Abeer.Services;
 
 namespace Abeer.Server.Areas.Identity.Pages.Account
 {
@@ -13,10 +14,12 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
     public class ConfirmEmailModel : PageModel
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly NotificationService _notificationService;
 
-        public ConfirmEmailModel(UserManager<ApplicationUser> userManager)
+        public ConfirmEmailModel(UserManager<ApplicationUser> userManager, NotificationService notificationService)
         {
             _userManager = userManager;
+            _notificationService = notificationService;
         }
 
         public bool Success { get; set; }
@@ -39,6 +42,12 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
             code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
             var result = await _userManager.ConfirmEmailAsync(user, code);
             Success = result.Succeeded;
+
+            if (Success)
+            {
+                await _notificationService.Create(user.Id, "Welcome", "/subscription-pack", "alert-welcome", "alert-welcome", "alert-welcome", "welcome");
+            }
+
             return Page();
         }
 

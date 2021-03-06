@@ -42,7 +42,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abeer.UI_Contacts", "Abeer.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abeer.UI_Admin", "Abeer.UI_Admin\Abeer.UI_Admin.csproj", "{549BF203-D0C9-4777-94AE-78FCA6ABF1BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abeer.Server.APIFeatures", "Abeer.Server.APIFeatures\Abeer.Server.APIFeatures.csproj", "{9CFAAEAD-2E05-4EE7-9DF9-C609E8C95115}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abeer.Server.APIFeatures", "Abeer.Server.APIFeatures\Abeer.Server.APIFeatures.csproj", "{9CFAAEAD-2E05-4EE7-9DF9-C609E8C95115}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

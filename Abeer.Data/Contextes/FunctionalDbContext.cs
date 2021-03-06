@@ -55,5 +55,6 @@ namespace Abeer.Data
         public IDbSet<PaymentModel> Payments => dbProvider.Set<PaymentModel>();
         public IDbSet<SubscriptionPack> SubscriptionPacks => dbProvider.Set<SubscriptionPack>();
         public IDbSet<SubscriptionHistory> SubscriptionHistories => dbProvider.Set<SubscriptionHistory>();
+        public IDbSet<Notification> Notifications => dbProvider.Set<Notification>();
     }
 }

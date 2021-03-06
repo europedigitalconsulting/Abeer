@@ -36,6 +36,8 @@ using System.Linq;
 using Abeer.Services.Data;
 using Abeer.Server.APIFeatures.Hubs;
 using Abeer.Shared.ReferentielTable;
+using Microsoft.AspNetCore.ResponseCompression;
+using Abeer.Shared.ViewModels;
 
 namespace Abeer.Server
 {
@@ -69,7 +71,7 @@ namespace Abeer.Server
                     Configuration.GetConnectionString("SecurityDbContextConnectionStrings"), options =>
                     options.MigrationsAssembly(typeof(SecurityDbContext).Assembly.FullName)), ServiceLifetime.Transient);
 
-            services.AddSingleton(sp =>
+            services.AddTransient(sp =>
             {
                 var provider = Configuration["Service:Database:DbProvider"];
                 Type instanceType = Type.GetType(provider);
@@ -77,7 +79,7 @@ namespace Abeer.Server
             });
 
 
-            services.AddSingleton<FunctionalDbContext>();
+            services.AddTransient<FunctionalDbContext>();
             services.AddTransient<FunctionalUnitOfWork>();
 
             services.AddSignalR();
@@ -197,11 +199,20 @@ namespace Abeer.Server
                     return tokenResponse;
                 });
             });
+
+            services.AddTransient<NotificationService>();
+
+            services.AddResponseCompression(opts =>
+            {
+                opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+                    new[] { "application/octet-stream" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseResponseCompression();
 
             using var scope = app.ApplicationServices.CreateScope();
 
@@ -209,7 +220,7 @@ namespace Abeer.Server
             SeedNetworkSocials(scope, env);
             SeedUserData(scope, env).Wait();
             SeedCountries(scope, env);
-
+            //SeedNotifications(scope, env).Wait();
 
             app.UseMiddleware<UrlShortnerRewriter>();
 
@@ -261,8 +272,33 @@ namespace Abeer.Server
                 endpoints.MapControllers();
                 endpoints.MapFallbackToFile("index.html");
                 endpoints.MapHub<SynchroHub>("/synchro");
+                endpoints.MapHub<NotificationHub>("/notification");
             });
         }
+
+        /*
+        private async Task SeedNotifications(IServiceScope scope, IWebHostEnvironment env)
+        {
+            var dbSecurity = scope.ServiceProvider.GetRequiredService<SecurityDbContext>();
+            var dbFunctional = scope.ServiceProvider.GetRequiredService<FunctionalUnitOfWork>();
+
+            dbSecurity.Database.EnsureCreated();
+            dbFunctional.EnsureCreated();
+
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var notificationService = scope.ServiceProvider.GetRequiredService<NotificationService>();
+
+            var users = await userManager.Users.ToListAsync();
+            
+            foreach(var user in users)
+            {
+                var notification = await notificationService.GetNotification(user.Id, "welcome");
+    
+                if(notification == null)
+                    await notificationService.Create(user.Id, "Welcome", "/subscription-pack", "alert-welcome", "alert-welcome", "alert-welcome", "welcome");
+            }
+        }
+        */
 
         private async Task SeedAdPrices(IServiceScope scope, IWebHostEnvironment env)
         {

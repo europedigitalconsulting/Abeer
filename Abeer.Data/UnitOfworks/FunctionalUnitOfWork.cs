@@ -20,6 +20,7 @@ namespace Abeer.Data.UnitOfworks
         private PaymentRepository _PaymentRepository;
         private SubscriptionPackRepository _SubscriptionPackRepository;
         private SubscriptionHistoryRepository _SubscriptionHistoryRepository;
+        private NotificationRepository _NotificationRepository;
 
         private FunctionalDbContext ApplicationDbContext { get; }
         private IServiceProvider ServiceProvider { get; }
@@ -129,6 +130,7 @@ namespace Abeer.Data.UnitOfworks
                 return _SubscriptionPackRepository;
             }
         }
+
         public SubscriptionHistoryRepository SubscriptionHistoryRepository
         {
             get
@@ -140,6 +142,16 @@ namespace Abeer.Data.UnitOfworks
             }
         }
 
+        public NotificationRepository NotificationRepository
+        {
+            get
+            {
+                if (_NotificationRepository == null)
+                    _NotificationRepository = ActivatorUtilities.CreateInstance<NotificationRepository>(ServiceProvider);
+
+                return _NotificationRepository;
+            }
+        }
 
         public int SaveChanges()
         {

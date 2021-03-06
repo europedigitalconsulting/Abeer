@@ -1,15 +1,25 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Abeer.Shared
+namespace Abeer.Shared.Functional
 {
     public class Notification
     {
-        public long Id { get; set; }
-        public string ReadUrl { get; set; }
+        public Guid Id { get; set; }
+        public string UserId { get; set; }
+        public string NotificationType { get; set; }
+        public string NotificationIcon { get; set; }
+        public string NotificationUrl { get; set; }
+        public bool IsDisplayOnlyOnce { get; set; }
+        public bool IsDisplayed { get; set; }
+        public int DisplayMax { get; set; }
+        public int DisplayCount { get; set; }
+        public string MessageTitle { get; set; }
+        public DateTime LastDisplayTime { get; set; }
         public string CssClass { get; set; }
         public string ImageUrl { get; set; }
-        public string IconClass { get; set; }
-        public string Title { get; set; }
-        public DateTime ReceivedDate { get; set; }
     }
 }

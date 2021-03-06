@@ -1,4 +1,5 @@
 ﻿using Abeer.Shared;
+using Abeer.Shared.Functional;
 
 namespace Abeer.Client.UISdk
 {
