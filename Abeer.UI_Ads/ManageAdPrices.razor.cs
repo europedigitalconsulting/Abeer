@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.Extensions.Configuration;
 
 namespace Abeer.UI_Ads
 {
@@ -29,6 +30,7 @@ namespace Abeer.UI_Ads
         [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
 
         [Inject] private NavigationManager navigationManager { get; set; }
+        [Inject] public IConfiguration Configuration { get; set; }
 
         void countTerm(KeyboardEventArgs e)
         {
@@ -48,7 +50,7 @@ namespace Abeer.UI_Ads
                 navigationManager.NavigateTo("/authentication/Login", true);
             }
 
-            var httpClient = HttpClientFactory.CreateClient("Abeer.Anonymous");
+            var httpClient = HttpClientFactory.CreateClient(Configuration["Service:Api:AnonymousApiName"]);
             var getAll = await httpClient.GetAsync("/api/AdPrice");
             getAll.EnsureSuccessStatusCode();
             var json = await getAll.Content.ReadAsStringAsync();

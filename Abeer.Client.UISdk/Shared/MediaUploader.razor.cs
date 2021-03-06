@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Tewr.Blazor.FileReader;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.Extensions.Configuration;
 
 namespace Abeer.Client.UISdk.Shared
 {
@@ -23,6 +24,8 @@ namespace Abeer.Client.UISdk.Shared
         public IHttpClientFactory HttpClientFactory { get; set; }
         [Inject]
         public NavigationManager NavigationManager { get; set; }
+        [Inject]
+        public IConfiguration Configuration { get; set; }
         private async Task HandleSelected(ChangeEventArgs changeEventArgs)
         {
             foreach (var file in await FileReaderService.CreateReference(_input).EnumerateFilesAsync())
@@ -34,7 +37,7 @@ namespace Abeer.Client.UISdk.Shared
                 var content = new MultipartFormDataContent();
                 content.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
                 content.Add(new StreamContent(ms, Convert.ToInt32(ms.Length)), "image", fileInfo.Name);
-                ImgUrl = await Repository.UploadAdImage(content, HttpClientFactory.CreateClient("Abeer.Anonymous"), 
+                ImgUrl = await Repository.UploadAdImage(content, HttpClientFactory.CreateClient(Configuration["Service:Api:AnonymousApiName"]), 
                     NavigationManager);
                 Console.WriteLine($"Upload Ad Image {ImgUrl}");
                 await OnChange.InvokeAsync(ImgUrl);

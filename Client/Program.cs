@@ -23,13 +23,15 @@ namespace Abeer.Client
 
             builder.RootComponents.Add<App>("app");
 
-            builder.Services.AddHttpClient("Abeer.Anonymous", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
+            Microsoft.Extensions.Configuration.IConfigurationRoot configurationRoot = builder.Configuration.Build();
+            
+            builder.Services.AddHttpClient(configurationRoot["Service:Api:AnonymousApiName"], client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
 
-            builder.Services.AddHttpClient("Abeer.ServerAPI", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
+            builder.Services.AddHttpClient(configurationRoot["Service:Api:ApiName"], client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
                 .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
 
             // Supply HttpClient instances that include access tokens when making requests to the server project
-            builder.Services.AddTransient(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("Abeer.ServerAPI"));
+            builder.Services.AddTransient(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient(configurationRoot["Service:Api:ApiName"]));
             
             builder.Services.AddLocalization();
             builder.Services.AddApiAuthorization();
@@ -48,7 +50,7 @@ namespace Abeer.Client
                 });
 
 
-            var gta = builder.Configuration.Build()["Service:GoogleAnalytics:GTA"];
+            var gta = configurationRoot["Service:GoogleAnalytics:GTA"];
             builder.Services.AddGoogleAnalytics(gta, true);
 
             builder.Services.AddScoped<IResizeListener, ResizeListener>();

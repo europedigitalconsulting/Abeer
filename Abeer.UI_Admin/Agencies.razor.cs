@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Abeer.Shared.Functional;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Configuration;
 
 namespace Abeer.UI_Admin
 {
@@ -13,10 +14,11 @@ namespace Abeer.UI_Admin
         public List<Agency> Items { get; set; } = new List<Agency>();
         public List<Agency> Suggestions { get; set; } = new List<Agency>();
         public List<Agency> SuggestionItems { get; set; } = new List<Agency>();
+        [Inject] public IConfiguration Configuration { get; set; }
 
         protected override async Task OnParametersSetAsync()
         {
-            var httpClient = HttpClientFactory.CreateClient("Abeer.Anonymous");
+            var httpClient = HttpClientFactory.CreateClient(Configuration["Service:Api:AnonymousApiName"]);
 
             var getMyAgencies = await httpClient.GetAsync("/api/Agencies");
             getMyAgencies.EnsureSuccessStatusCode();

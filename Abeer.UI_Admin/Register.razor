@@ -3,6 +3,7 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Users> Loc
 @inject IHttpClientFactory HttpClientFactory
 @inject NavigationManager NavigationManager
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 
 <div class="simple-form">
     <EditForm Model="ViewUserForm">
@@ -63,14 +64,14 @@
         string alea = rnd.Next(10000000, 99999999).ToString();
 
         ViewUserForm.Email = $"mabsalon{alea}@gmail.com";
-        ViewUserForm.UserName = $"mabsalon{alea}@gmail.com";  
+        ViewUserForm.UserName = $"mabsalon{alea}@gmail.com";
         ViewUserForm.DigitCode = $"123456789{alea}";
         StateHasChanged();
         await base.OnInitializedAsync();
     }
     protected async Task FormRegister()
     {
-        var httpClient = HttpClientFactory.CreateClient("Abeer.Anonymous");
+        var httpClient = HttpClientFactory.CreateClient(Configuration["Service:Api:AnonymousApiName"]);
         var result = await httpClient.PostAsJsonAsync<RegisterViewModel>("api/Users", ViewUserForm);
         if (result.IsSuccessStatusCode)
         {

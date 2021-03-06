@@ -3,6 +3,8 @@
 @inject IHttpClientFactory HttpClientFactory
 @inject NavigationManager Navigation
 @inject Abeer.Client.UISdk.NavigationUrlService NavigationUrlService
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+
 @using System.Security.Claims;
 
 @code
@@ -39,7 +41,7 @@
 
         if (!string.IsNullOrEmpty(ProfileId))
         {
-            var httpClient = HttpClientFactory.CreateClient("Abeer.Anonymous");
+            var httpClient = HttpClientFactory.CreateClient(Configuration["Service:Api:AnonymousApiName"]);
 
             var getProfile = await httpClient.GetAsync($"/api/viewProfile/{ProfileId}");
 
