@@ -46,8 +46,11 @@ namespace Abeer.Client
             builder.Services.AddCors((opt) => {
                 opt.AddDefaultPolicy(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyMethod());
                 });
-            
-            builder.Services.AddGoogleAnalytics("GTM-KQQCVLH", true);
+
+
+            var gta = builder.Configuration.Build()["Service:GoogleAnalytics:GTA"];
+            builder.Services.AddGoogleAnalytics(gta, true);
+
             builder.Services.AddScoped<IResizeListener, ResizeListener>();
             builder.Services.AddScoped<IMediaQueryService, MediaQueryService>();
 
