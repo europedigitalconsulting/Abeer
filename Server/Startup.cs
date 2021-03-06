@@ -483,6 +483,33 @@ namespace Abeer.Server
                         SoldBy = "system",
                         SoldDate = DateTime.UtcNow
                     }, michel.Id);
+
+
+                    //for (int i = 0; i < 10; i++)
+                    //{
+                    //    Random rnd = new Random();
+                    //    var xxx = rnd.Next(0, 999999).ToString();
+                    //    var test = new ApplicationUser
+                    //    {
+                    //        UserName = "admin" + xxx + "@abeer.io",
+                    //        Country = "France",
+                    //        DisplayName = "test-" + xxx,
+                    //        Email = "admin" + xxx + "@abeer.io",
+                    //        Title = "CEO",
+                    //        Description = "Lorem ipsum dolor sit amet,consectetur adipiscing elit,sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
+                    //        EmailConfirmed = true,
+                    //        FirstName = xxx,
+                    //        LastName = xxx,
+                    //        City = "Quincy Sous senart",
+                    //        PhoneNumber = "+33 7 80 81 10 24",
+                    //        PinDigit = "12345678901234567",
+                    //        PinCode = 12345,
+                    //        IsAdmin = true,
+                    //        IsUnlimited = true
+                    //    };
+
+                    //    var addResultX = await userManager.CreateAsync(test, "@Zerty971");
+                    //}
                 }
 
                 var abeer = await userManager.FindByNameAsync("admin2@abeer.io");
@@ -676,7 +703,6 @@ namespace Abeer.Server
                         });
                     }
                 }
-
             }
         }
     }

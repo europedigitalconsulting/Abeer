@@ -81,29 +81,29 @@ namespace Abeer.Server.Controllers
             return Ok(viewContacts);
         }
 
-        [HttpGet("add/{id}")]
-        public async Task<ActionResult<ViewContact>> Add(string id)
+        [HttpGet("add/{contactId}")]
+        public async Task<ActionResult<ViewContact>> Add(string contactId)
         {
-            if (User.NameIdentifier() == id)
+            if (User.NameIdentifier() == contactId)
                 return BadRequest();
 
-            var user = await _userManager.FindByIdAsync(id);
+            var userContact = await _userManager.FindByIdAsync(contactId);
 
-            if (user == null)
+            if (userContact == null)
                 return NotFound();
 
-            var contact = await _UnitOfWork.ContactRepository.FirstOrDefault(c => c.UserId == user.Id && c.OwnerId == User.NameIdentifier());
+            var contact = await _UnitOfWork.ContactRepository.FirstOrDefault(c => c.UserId == userContact.Id && c.OwnerId == User.NameIdentifier());
 
             if (contact == null)
             {
                 var result = await _UnitOfWork.ContactRepository.Add(new Contact
                 {
                     OwnerId = User.NameIdentifier(),
-                    UserId = user.Id,
+                    UserId = userContact.Id,
                     UserAccepted = EnumUserAccepted.PENDING
                 });
-                await SendEmailTemplate(user);
-                return Ok(new ViewContact(user, result));
+                await SendEmailTemplate(userContact);
+                return Ok(new ViewContact(userContact, result));
             }
             return Conflict();
         }

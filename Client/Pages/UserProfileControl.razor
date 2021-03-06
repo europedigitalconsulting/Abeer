@@ -141,10 +141,10 @@
                         }
                         else
                         {
-                            <div @onclick="() => TabMap = false" class="row pb-4 cursor-pointer" style="color:black;">
-                                <i class="fas fa-long-arrow-alt-left" style="font-size: 18px">&nbsp;&nbsp; Retour</i>
+                            <div @onclick="() => TabMap = false" class="col-12 pb-4 cursor-pointer" style="color:black;">
+                                <i class="fas fa-long-arrow-alt-left" style="font-size: 18px">&nbsp;&nbsp; @Loc["Back"]</i>
                             </div>
-                            <div class="row">
+                            <div class="col-12">
                                 <Virtualize Items="@User.CustomLinks" Context="customLink">
                                     <div class="card col-md-6 col-lg-3 col-sm-12">
                                         @if (string.IsNullOrEmpty(customLink.Logo))
@@ -159,7 +159,7 @@
                                             <h4 style="font-size:20px; color:black;" class="card-title">@customLink.Name</h4>
                                             <p style="font-size:13px; color:black;font-weight:300;" class="card-text">@customLink.DisplayInfo</p>
                                             <div style="display: flex; justify-content: center; align-items: center; ">
-                                                <a href="@customLink.Url" target="_blank" style="background: #02BF8A;" class="btn btn-success">Découvrir</a>
+                                                <a href="@customLink.Url" target="_blank" style="background: #02BF8A;" class="btn btn-success">@Loc["Discover"]</a>
                                             </div>
                                         </div>
                                     </div>
