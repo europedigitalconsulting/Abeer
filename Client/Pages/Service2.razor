@@ -1,5 +1,8 @@
 ﻿@page "/services"
 @inject IJSRuntime jsRuntime
+@inject IAnalytics analytics
+@inject NavigationManager NavigationManager 
+
 @using System.Security.Claims
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Services> Loc
 
@@ -34,7 +37,11 @@
             //new CardServiceViewModel{  PageName = "/subscription-pack", ImageUrl = "Abonnements.svg", Title = Loc["Title_subscribe"], Description = Loc["Subscribe"] },
         };
         CurrentCard = ListService?.First();
+
+        await analytics.TrackNavigation(NavigationManager.Uri);
+        await analytics.TrackEvent("ConnectHomePage", 1);
     }
+
     private void PreviousCard()
     {
         var tmp = ListService.FindIndex(i => i.Equals(CurrentCard));
@@ -95,7 +102,7 @@
                 <header class="offset-lg-ipad-pro offset-md-1 offset-lg-3">
                     <h1 class="h2" style="color:#97AABD;">Bienvenue sur  <strong style="color: #02BF8A">Meetag</strong></h1>
                     <div style="margin-left: -20px; border: 2px solid #02BF8A; width: 25px;"></div>
-                    <br /> 
+                    <br />
                     <p class="col-xl-6 col-lg-6 col-md-9 col-ipad-pro-7 mb-0" style="color: #97AABD; font-size: 22px; font-weight: 400"><strong style="color: #02BF8A">Meetag</strong> vous permet d’échanger et partager avec des milliers de personne vos cartes de visite virtuel en ligne.</p>
                 </header>
             </div>

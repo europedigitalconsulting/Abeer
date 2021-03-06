@@ -38,6 +38,8 @@ using Abeer.Server.APIFeatures.Hubs;
 using Abeer.Shared.ReferentielTable;
 using Microsoft.AspNetCore.ResponseCompression;
 using Abeer.Shared.ViewModels;
+using Blazor.Analytics;
+using BlazorPro.BlazorSize;
 
 namespace Abeer.Server
 {

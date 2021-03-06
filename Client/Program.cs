@@ -10,6 +10,8 @@ using Microsoft.JSInterop;
 using Abeer.Client.UISdk;
 using Tewr.Blazor.FileReader;
 using Abeer.Shared.Security;
+using Blazor.Analytics;
+using BlazorPro.BlazorSize;
 
 namespace Abeer.Client
 {
@@ -44,6 +46,10 @@ namespace Abeer.Client
             builder.Services.AddCors((opt) => {
                 opt.AddDefaultPolicy(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyMethod());
                 });
+            
+            builder.Services.AddGoogleAnalytics("GTM-KQQCVLH", true);
+            builder.Services.AddScoped<IResizeListener, ResizeListener>();
+            builder.Services.AddScoped<IMediaQueryService, MediaQueryService>();
 
             await builder.Build().RunAsync();
         }
