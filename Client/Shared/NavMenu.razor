@@ -5,7 +5,10 @@
 @inject NavigationManager Navigation
 
 @code
-{ protected ClaimsPrincipal _user;
+{ 
+    protected ClaimsPrincipal _user;
+
+    private bool ShowActivityDialog = false;
 
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
@@ -48,6 +51,25 @@
         Navigation.NavigateTo(Navigation.ToAbsoluteUri("Identity/account/logout?returnUrl=/Profile").ToString(), true);
     }
 }
+@if (ShowActivityDialog)
+{
+    <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+        <div class="modal-dialog  modal-dialog-centered  modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Activité</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="@(()=>ShowActivityDialog = false)">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <Abeer.Client.Shared.NotificationDialogs.DailyReminderDialog User="_user" Close="@(()=>ShowActivityDialog = false)"></Abeer.Client.Shared.NotificationDialogs.DailyReminderDialog>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
 <div class="logo-menu">
     <a class="text-white" href="profile"><img src="assets/logo.svg" width="80" title="Meetag"></a>
 </div>
@@ -71,7 +93,19 @@
                 </div>
                 <span>Annonces</span>
             </a>
-        </div><div class="p-2 mr-lg-3">
+        </div>
+        @if (_user?.Identity.IsAuthenticated == true)
+        {
+            <div class="p-2">
+                <a href="javascript:void(0)" class="pr-2 text-center text-white" @onclick="@(()=>ShowActivityDialog=true)">
+                    <div>
+                        <img src="/assets/img/menu/satistique_white.svg" width="20px">
+                    </div>
+                    <span>Activités</span>
+                </a>
+            </div>
+        }
+        <div class="p-2 mr-lg-3">
             <a href="profile" class="text-center text-white">
                 <div>
                     <img src="/assets/img/menu/Profile.svg">

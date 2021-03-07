@@ -150,6 +150,9 @@
   <data name="Documentation" xml:space="preserve">
     <value>Documentation</value>
   </data>
+  <data name="EndSubscription" xml:space="preserve">
+    <value>Date fin</value>
+  </data>
   <data name="hi" xml:space="preserve">
     <value>hi</value>
   </data>
@@ -279,6 +282,9 @@
   <data name="RegisterToSeeYourEvolution" xml:space="preserve">
     <value>If you haven't yet an account please register to see your own evolution wallet</value>
   </data>
+  <data name="Renew" xml:space="preserve">
+    <value>Renouveler votre abonnement</value>
+  </data>
   <data name="Replay" xml:space="preserve">
     <value>Replay the transaction</value>
   </data>
@@ -308,6 +314,9 @@
   </data>
   <data name="Sent" xml:space="preserve">
     <value>Sent</value>
+  </data>
+  <data name="StartSubscription" xml:space="preserve">
+    <value>Date début</value>
   </data>
   <data name="Status" xml:space="preserve">
     <value>Status</value>
@@ -362,5 +371,8 @@
   </data>
   <data name="WalletStatistics" xml:space="preserve">
     <value>Overview on your Wallet</value>
+  </data>
+  <data name="YourSubscription" xml:space="preserve">
+    <value>Votre abonnement</value>
   </data>
 </root>

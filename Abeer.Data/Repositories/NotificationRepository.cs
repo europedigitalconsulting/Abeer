@@ -22,11 +22,17 @@ namespace Abeer.Data.Repositories
 
         public Task<IList<Notification>> GetNotifications()
         {
-            return Task.Run(() => _context.Notifications.ToList());
+            return Task.Run<IList<Notification>>(() => _context.Notifications.ToList().OrderByDescending(n=>n.CreatedDate).ToList());
         }
+
+        public Task<IList<Notification>> GetNotifications(string userId, string notificationType)
+        {
+            return Task.Run<IList<Notification>>(() => _context.Notifications.Where(n=>n.UserId == userId && n.NotificationType == notificationType).OrderByDescending(n => n.CreatedDate).ToList());
+        }
+
         public Task<IList<Notification>> GetNotifications(string userId, bool isDisplayed = false)
         {
-            return Task.Run(() => _context.Notifications.Where(c => c.UserId == userId && c.IsDisplayed == isDisplayed));
+            return Task.Run<IList<Notification>>(() => _context.Notifications.Where(c => c.UserId == userId && c.IsDisplayed == isDisplayed)?.OrderByDescending(n=>n.CreatedDate).ToList());
         }
 
         public Task<Notification> GetNotification(Guid id)

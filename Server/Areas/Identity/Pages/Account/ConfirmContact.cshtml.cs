@@ -51,7 +51,16 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
             contact.UserAccepted = EnumUserAccepted.ACCEPTED;
             await _UnitOfWork.ContactRepository.Update(contact);
 
+            var invitation = await _UnitOfWork.InvitationRepository.GetInvitation(ownerId, userId);
+            
+            if(invitation != null)
+            {
+                invitation.InvitationStat = (int)EnumUserAccepted.ACCEPTED;
+                await _UnitOfWork.InvitationRepository.Update(invitation);
+            }
+
             var contact2 = await _UnitOfWork.ContactRepository.GetContact(userId, ownerId);
+
             if (contact2 == null)
             {
                 contact2 = new Contact();
@@ -60,6 +69,27 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
                 contact2.DateAccepted = DateTime.Now;
                 contact2.UserAccepted = EnumUserAccepted.ACCEPTED;
                 await _UnitOfWork.ContactRepository.Add(contact2);
+
+                var invitation2 = await _UnitOfWork.InvitationRepository.GetInvitation(userId, ownerId);
+
+                if (invitation2 != null)
+                {
+                    invitation.InvitationStat = (int)EnumUserAccepted.ACCEPTED;
+                    await _UnitOfWork.InvitationRepository.Update(invitation);
+                }
+                else
+                {
+                    invitation2 = new Shared.Functional.Invitation
+                    {
+                        OwnedId = contact.UserId,
+                        ContactId = contact.OwnerId,
+                        CreatedDate = DateTime.UtcNow,
+                        InvitationStat = (int)EnumUserAccepted.ACCEPTED,
+                        Id = Guid.NewGuid()
+                    };
+
+                    await _UnitOfWork.InvitationRepository.Add(invitation2);
+                }
             }
 
             DisplayName = user.DisplayName;

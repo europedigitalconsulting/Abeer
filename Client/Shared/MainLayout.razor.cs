@@ -19,8 +19,6 @@ namespace Abeer.Client.Shared
         protected string UserId;
         protected bool IsAuthenticated = false;
         protected string DisplayName;
-        protected DateTime? SubscriptionEnd;
-        protected bool IsUnlimited;
         protected bool IsAdmin;
         public ScreenSize ScreenSize { get; set; } = new ScreenSize();
 
@@ -46,15 +44,14 @@ namespace Abeer.Client.Shared
                 IsAuthenticated = true;
 
                 IsAdmin = authenticationState.User.HasClaim(ClaimTypes.Role, "admin");
+                
                 if (string.IsNullOrWhiteSpace(Name))
                     Name = UserId;
+
                 DisplayName = _user.FindFirstValue("displayname");
+
                 if (string.IsNullOrWhiteSpace(DisplayName))
                     DisplayName = Name;
-                if (!string.IsNullOrWhiteSpace(_user.FindFirstValue("subscribeEnd")))
-                    SubscriptionEnd = DateTime.Parse(_user.FindFirstValue("subscribeEnd"));
-                if (!string.IsNullOrWhiteSpace(_user.FindFirstValue("IsUnlimited")))
-                    IsUnlimited = bool.Parse(_user.FindFirstValue("IsUnlimited"));
             }
         }
 

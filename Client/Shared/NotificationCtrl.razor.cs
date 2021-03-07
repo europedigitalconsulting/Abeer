@@ -29,7 +29,8 @@ namespace Abeer.Client.Shared
 
         public Dictionary<string, Type> DialogTypes = new()
         {
-            { "welcome", typeof(WelcomeDialog) }
+            { "welcome", typeof(WelcomeDialog) },
+            { "daily-reminder", typeof(DailyReminderDialog) }
         };
 
         public Notification NextNotification
@@ -61,6 +62,8 @@ namespace Abeer.Client.Shared
                 {
                     Notifications = JsonConvert.DeserializeObject<List<Notification>>(json);
                 }
+
+                Console.WriteLine($"getted notifications {Notifications.Count}");
 
                 HubConnection = new HubConnectionBuilder().WithAutomaticReconnect()
                     .WithUrl(NavigationManager.ToAbsoluteUri("/notification")).Build();

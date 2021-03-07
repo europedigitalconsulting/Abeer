@@ -44,5 +44,6 @@ namespace Abeer.Data.SqlServerProvider
         public DbSet<SubscriptionPack> SubscriptionPack { get; set; }
         public DbSet<SubscriptionHistory> SubscriptionHistory { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<Invitation> Invitations { get; set; }
     }
 }

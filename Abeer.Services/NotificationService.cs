@@ -21,6 +21,9 @@ namespace Abeer.Services
         public async Task<IList<Notification>> GetNotifications(string userId, bool isDisplayed) =>
             await _UnitOfWork.NotificationRepository.GetNotifications(userId, isDisplayed);
 
+        public async Task<IList<Notification>> GetNotifications(string userId, string notificationType) =>
+            await _UnitOfWork.NotificationRepository.GetNotifications(userId, notificationType);
+
         public async Task Create(Notification notification)
         {
             await _UnitOfWork.NotificationRepository.Add(notification);
@@ -112,11 +115,21 @@ namespace Abeer.Services
         }
 
         public async Task<IList<Notification>> GetNotifications() =>
-            await _UnitOfWork.NotificationRepository.GetNotifications();
+            (await _UnitOfWork.NotificationRepository.GetNotifications())
+                ?.OrderByDescending(n=>n.CreatedDate).ToList();
 
         public async Task<Notification> GetNotification(string userId, string type)
         {
-            return await _UnitOfWork.NotificationRepository.FirstOrDefault(n => n.UserId == userId && n.NotificationType == type);
+            return (await _UnitOfWork.NotificationRepository.Where(n => n.UserId == userId && n.NotificationType == type))?
+                .OrderByDescending(n=>n.CreatedDate)
+                .FirstOrDefault();
+        }
+
+        public async Task<Notification> GetNotification(string userId, string type, bool isDisplayed)
+        {
+            return (await _UnitOfWork.NotificationRepository.Where(n => n.UserId == userId && n.NotificationType == type && n.IsDisplayed == isDisplayed))?
+                .OrderByDescending(n => n.CreatedDate)
+                .FirstOrDefault();
         }
     }
 }

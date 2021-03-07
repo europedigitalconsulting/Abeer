@@ -21,6 +21,7 @@ namespace Abeer.Data.UnitOfworks
         private SubscriptionPackRepository _SubscriptionPackRepository;
         private SubscriptionHistoryRepository _SubscriptionHistoryRepository;
         private NotificationRepository _NotificationRepository;
+        private InvitationRepository _InvitationRepository;
 
         private FunctionalDbContext ApplicationDbContext { get; }
         private IServiceProvider ServiceProvider { get; }
@@ -150,6 +151,17 @@ namespace Abeer.Data.UnitOfworks
                     _NotificationRepository = ActivatorUtilities.CreateInstance<NotificationRepository>(ServiceProvider);
 
                 return _NotificationRepository;
+            }
+        }
+
+        public InvitationRepository InvitationRepository
+        {
+            get
+            {
+                if (_InvitationRepository == null)
+                    _InvitationRepository = ActivatorUtilities.CreateInstance<InvitationRepository>(ServiceProvider);
+
+                return _InvitationRepository;
             }
         }
 

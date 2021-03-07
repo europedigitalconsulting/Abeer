@@ -410,16 +410,16 @@ namespace Abeer.Server
                     functionalDb.SaveChanges();
                 }
 
-                var michel = await userManager.FindByNameAsync("admin@abeer.io");
+                var michel = await userManager.FindByNameAsync("admin@meetag.co");
 
                 if (michel == null)
                 {
                     michel = new ApplicationUser
                     {
-                        UserName = "admin@abeer.io",
+                        UserName = "admin@meetag.co",
                         Country = "France",
                         DisplayName = "Michel Bruchet",
-                        Email = "admin@abeer.io",
+                        Email = "admin@meetag.co",
                         Title = "CEO",
                         Description = "Lorem ipsum dolor sit amet,consectetur adipiscing elit,sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
                         EmailConfirmed = true,
@@ -485,6 +485,84 @@ namespace Abeer.Server
                         SoldBy = "system",
                         SoldDate = DateTime.UtcNow
                     }, michel.Id);
+                }
+
+                var demo = await userManager.FindByNameAsync("demo@meetag.co");
+
+                if (demo == null)
+                {
+                    demo = new ApplicationUser
+                    {
+                        UserName = "demo@meetag.co",
+                        Country = "France",
+                        DisplayName = "Demonstration 1",
+                        Email = "demo@meetag.co",
+                        Title = "Demo",
+                        Description = "Lorem ipsum dolor sit amet,consectetur adipiscing elit,sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
+                        EmailConfirmed = true,
+                        FirstName = "Demo",
+                        LastName = "Bruchet",
+                        City = "Quincy Sous senart",
+                        PhoneNumber = "+33 7 80 81 10 24",
+                        PinDigit = "22345678901234567",
+                        PinCode = 12345,
+                        IsAdmin = true,
+                        IsUnlimited = false, SubscriptionStartDate = DateTime.UtcNow.AddDays(-1),
+                        SubscriptionEndDate = DateTime.UtcNow.AddDays(-1).AddDays(5)
+                    };
+
+                    var addResult = await userManager.CreateAsync(demo, "Xc9wf8or&");
+
+                    if (addResult.Succeeded)
+                    {
+                        await functionalDb.SocialNetworkRepository.AddSocialNetwork(
+                            new SocialNetwork
+                            {
+                                OwnerId = demo.Id,
+                                Name = "Facebook",
+                                Logo = "fab fa-facebook-square",
+                                DisplayInfo = "demo",
+                                BackgroundColor = "bg-primary",
+                                Url = "https://www.facebook.com/demo"
+                            });
+
+                        await functionalDb.SocialNetworkRepository.AddSocialNetwork(
+                            new SocialNetwork
+                            {
+                                OwnerId = demo.Id,
+                                Name = "Instagram",
+                                Logo = "fab fa-instagram-square",
+                                DisplayInfo = "@demo",
+                                BackgroundColor = "bg-danger",
+                                Url = "https://www.instagram.com"
+                            });
+                        await functionalDb.SocialNetworkRepository.AddSocialNetwork(
+                            new SocialNetwork
+                            {
+                                OwnerId = demo.Id,
+                                Name = "Whatsapp",
+                                Logo = "fab fa-whatsapp-square",
+                                DisplayInfo = "+33 780811024",
+                                BackgroundColor = "bg-success",
+                                Url = "whatsapp:33780811024"
+                            });
+                    }
+
+                    await functionalDb.CardRepository.Add(new Card
+                    {
+                        CardNumber = demo.PinDigit,
+                        CardType = "nfc",
+                        GeneratedBy = "System",
+                        GeneratedDate = DateTime.UtcNow,
+                        IsGenerated = true,
+                        IsSold = true,
+                        IsUsed = true,
+                        IsProcessing = true,
+                        PinCode = demo.PinCode.ToString(),
+                        Quantity = 1,
+                        SoldBy = "system",
+                        SoldDate = DateTime.UtcNow
+                    }, demo.Id);
                 }
             }
         }

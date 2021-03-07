@@ -21,6 +21,7 @@ using Abeer.Shared.Technical;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
+using Abeer.Shared.Functional;
 
 namespace Abeer.Server.Controllers
 {
@@ -82,7 +83,7 @@ namespace Abeer.Server.Controllers
         }
 
         [HttpGet("add/{contactId}")]
-        public async Task<ActionResult<ViewContact>> Add(string contactId)
+        public async Task<ActionResult<ViewContact>> AddInvitation(string contactId)
         {
             if (User.NameIdentifier() == contactId)
                 return BadRequest();
@@ -102,6 +103,17 @@ namespace Abeer.Server.Controllers
                     UserId = userContact.Id,
                     UserAccepted = EnumUserAccepted.PENDING
                 });
+
+                var invitation = new Invitation
+                {
+                    OwnedId = User.NameIdentifier(),
+                    ContactId = contact.OwnerId,
+                    CreatedDate = DateTime.UtcNow,
+                    InvitationStat = (int)EnumUserAccepted.PENDING
+                };
+
+                await _UnitOfWork.InvitationRepository.Add(invitation);
+
                 await SendEmailTemplate(userContact);
                 return Ok(new ViewContact(userContact, result));
             }
