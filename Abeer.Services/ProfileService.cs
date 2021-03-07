@@ -28,6 +28,8 @@ namespace Abeer.Services
 
             var roleClaims = context.Subject.FindAll(JwtClaimTypes.Role);
             context.IssuedClaims.AddRange(roleClaims);
+            
+            bool isReadonly = false;
 
             var user = await _userManager.FindByNameAsync(context.Subject.Identity.Name);
             
@@ -41,6 +43,24 @@ namespace Abeer.Services
                     if (notifications.Any(n => n.CreatedDate.Date.Equals(DateTime.UtcNow.Date)) == false)
                     {
                         await _notificationService.Create(user.Id, "daily-reminder", "subscription-pack", "reminder", "reminder", "reminder", "daily-reminder");
+                    }
+
+                    if(user.SubscriptionEndDate.HasValue && user.SubscriptionEndDate < DateTime.UtcNow)
+                    {
+                        notifications = await _notificationService.GetNotifications(user.Id, "expiredprofile");
+
+                        if (notifications.Any(n => n.CreatedDate.Date.Equals(DateTime.UtcNow.Date)) == false)
+                        {
+                            await _notificationService.Create(user.Id, "expiredprofile", "subscription-pack", "reminder", "reminder", "reminder", "expiredprofile");
+                            isReadonly = true;
+                        }
+                    }
+                    else if (user.SubscriptionEndDate.HasValue && user.SubscriptionEndDate.Value.Subtract(DateTime.UtcNow).Days <= 5)
+                    {
+                        notifications = await _notificationService.GetNotifications(user.Id, "soonexpireprofile");
+
+                        if (notifications.Any(n => n.CreatedDate.Date.Equals(DateTime.UtcNow.Date)) == false)
+                            await _notificationService.Create(user.Id, "soonexpireprofile", "subscription-pack", "reminder", "reminder", "reminder", "soonexpireprofile");
                     }
                 }
 
@@ -64,6 +84,9 @@ namespace Abeer.Services
 
                 if (!context.IssuedClaims.Any(c => c.Type == "photoUrl"))
                     context.IssuedClaims.Add(new System.Security.Claims.Claim("photoUrl", (string.IsNullOrWhiteSpace(user.PhotoUrl) ? user.GravatarUrl() : user.PhotoUrl)));
+
+                if (!context.IssuedClaims.Any(c => c.Type == "readonly") && isReadonly)
+                    context.IssuedClaims.Add(new System.Security.Claims.Claim("readonly", "true"));
             }
         }
 

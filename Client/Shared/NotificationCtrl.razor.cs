@@ -30,7 +30,9 @@ namespace Abeer.Client.Shared
         public Dictionary<string, Type> DialogTypes = new()
         {
             { "welcome", typeof(WelcomeDialog) },
-            { "daily-reminder", typeof(DailyReminderDialog) }
+            { "daily-reminder", typeof(DailyReminderDialog) },
+            { "expiredprofile", typeof(ExpiredProfileDialog) },
+            { "soonexpireprofile", typeof(SoonExpiredProfileDialog) }
         };
 
         public Notification NextNotification

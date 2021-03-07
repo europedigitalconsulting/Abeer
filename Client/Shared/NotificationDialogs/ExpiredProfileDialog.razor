@@ -1,0 +1,88 @@
+﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<ExpiredProfileDialog> Loc
+@inject HttpClient HttpClient
+
+@code
+{
+    [Parameter]
+    public ClaimsPrincipal User { get; set; }
+    [Parameter]
+    public EventCallback Close { get; set; }
+    private UserStatisticsViewModel UserStatistics { get; set; }
+    private AdsStatisticsViewModel AdsStatistics { get; set; }
+    private OwnerStatisticsViewModel OwnerStatistics { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (User.Identity.IsAuthenticated == true)
+        {
+            var getDailyStat = await HttpClient.GetAsync("api/Profile/daily");
+            getDailyStat.EnsureSuccessStatusCode();
+            var json = await getDailyStat.Content.ReadAsStringAsync();
+            var daily = JsonConvert.DeserializeObject<DailyStatisticsViewModel>(json);
+            UserStatistics = daily.UserStatistics;
+            AdsStatistics = daily.AdsStatistics;
+            OwnerStatistics = daily.OwnerStatistics;
+        }
+    }
+}
+
+<div class="card">
+    <div class="card-body text-center">
+        <img src="assets/img/stats.png">
+        <h4>@Loc["Title"]!</h4>
+        <p>@Loc["CatchPhrase"]</p>
+        @if (User.HasClaim(c => c.Type == "subscribeStart" || c.Type == "subscribeEnd"))
+        {
+            <h5>@Loc["YourSubscription"]</h5>
+            <dl>
+                @if (User.HasClaim(c => c.Type == "subscribeStart"))
+                {
+                    <dt>@Loc["subscribeStart"]</dt>
+                    <dd>@DateTime.Parse(User.FindFirstValue("subscribeStart"))</dd>
+                }
+                @if (User.HasClaim(c => c.Type == "subscribeEnd"))
+                {
+                    <dt>@Loc["subscribeEnd"]</dt>
+                    <dd>@DateTime.Parse(User.FindFirstValue("subscribeEnd"))</dd>
+                }
+            </dl>
+            <a href="subscription-pack" class="btn btn-success">@Loc["Subscription"]</a>
+        }
+        @if (UserStatistics != null)
+        {
+            <h5>@Loc["UserStatistics"]</h5>
+            <dl>
+                <dt>@Loc["UserTotal"]</dt>
+                <dd>@UserStatistics.NbOfUsers</dd>
+                <dt>@Loc["UserOnline"]</dt>
+                <dd>@UserStatistics.NbOfUsersOnline</dd>
+            </dl>
+        }
+        @if (AdsStatistics != null && AdsStatistics.AdsCount > 0)
+        {
+            <h5>@Loc["AdsStatistics"]</h5>
+            <dl>
+                <dt>@Loc["AdsTotal"]</dt>
+                <dd>@AdsStatistics.AdsCount</dd>
+                <dt>@Loc["AdsOnLine"]</dt>
+                <dd>@AdsStatistics.AdsOnline</dd>
+            </dl>
+        }
+        @if (OwnerStatistics != null && (OwnerStatistics.ContactsCount > 0 || AdsStatistics.AdsCount > 0))
+        {
+            <hr />
+            <h5>@Loc["YourStatistis"]</h5>
+            <dl>
+                <dt>@Loc["Contacts"]</dt>
+                <dd>@OwnerStatistics.ContactsCount</dd>
+                <dt>@Loc["InvitationSent"]</dt>
+                <dd>@OwnerStatistics.InvitationSentCount</dd>
+                <dt>@Loc["InvitationReceived"]</dt>
+                <dd>@OwnerStatistics.InvitationReceivedCount</dd>
+                <dt>@Loc["AdsPublished"]</dt>
+                <dd>@AdsStatistics.AdsCount</dd>
+            </dl>
+        }
+        <button class="btn btn-primary" @onclick="Close">@Loc["Continue"]</button><br />
+    </div>
+</div>
