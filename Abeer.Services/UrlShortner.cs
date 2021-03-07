@@ -19,11 +19,9 @@ namespace Abeer.Services
 
         public FunctionalDbContext DbContext { get; }
 
-        public async Task<string> CreateUrl(string scheme, HostString host, string longUrl, string code=null, bool isSingleClick=false, bool isSecure=false, string secureKey=null)
+        public async Task<string> CreateUrl(bool isSecure, bool isSingleClick, string shortnedUrl, string longUrl , string secureKey, string code = "")
         {
             code = string.IsNullOrWhiteSpace(code) ? GenerateCode() : code;
-
-            var shortedUrl = UriHelper.BuildAbsolute(scheme, host, $"/shortned/{code}");
 
             await Task.Run(() => DbContext.UrlShortneds.Add(new UrlShortned
             {
@@ -32,10 +30,19 @@ namespace Abeer.Services
                 IsSingle = isSingleClick,
                 SecureKey = secureKey,
                 LongUrl = longUrl,
-                ShortUrl = shortedUrl
+                ShortUrl = shortnedUrl
             }));
 
-            return shortedUrl;
+            return shortnedUrl;
+        }
+
+        public async Task<string> CreateUrl(string scheme, HostString host, string longUrl, string code=null, bool isSingleClick=false, bool isSecure=false, string secureKey=null)
+        {
+            code = string.IsNullOrWhiteSpace(code) ? GenerateCode() : code;
+
+            var shortedUrl = UriHelper.BuildAbsolute(scheme, host, $"/shortned/{code}");
+
+            return await CreateUrl(isSecure, isSingleClick, shortedUrl, longUrl, secureKey, code);
         }
 
         public async Task<UrlShortned> Resolve(HttpContext context)
