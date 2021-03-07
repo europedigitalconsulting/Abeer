@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Abeer.Data.UnitOfworks;
 using System;
 using Abeer.Shared.ReferentielTable;
+using Abeer.Services;
 
 namespace Abeer.Server.Areas.Identity.Pages.Account
 {
@@ -20,14 +21,16 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
         private readonly FunctionalUnitOfWork _UnitOfWork;
+        private readonly EventTrackingService _eventTrackingService;
 
-        public ConfirmContactModel(FunctionalUnitOfWork functionalUnitOfWork, IConfiguration configuration, UserManager<ApplicationUser> userManager)
+        public ConfirmContactModel(FunctionalUnitOfWork functionalUnitOfWork, IConfiguration configuration, UserManager<ApplicationUser> userManager, EventTrackingService eventTrackingService)
         {
             _userManager = userManager;
             _configuration = configuration;
             _UnitOfWork = functionalUnitOfWork;
+            _eventTrackingService = eventTrackingService;
         }
-         
+
         public string DisplayName { get; set; }
         public async Task<IActionResult> OnGetAsync(string data1, string data2)
         {
@@ -53,7 +56,16 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
 
             var invitation = await _UnitOfWork.InvitationRepository.GetInvitation(ownerId, userId);
             
-            if(invitation != null)
+            await _eventTrackingService.Create(new Shared.Functional.EventTrackingItem
+            {
+                Id = Guid.NewGuid(),
+                CreatedDate = DateTime.UtcNow,
+                Category = "contact",
+                Key = "confirmContact", 
+                UserId = contact.OwnerId
+            });
+
+            if (invitation != null)
             {
                 invitation.InvitationStat = (int)EnumUserAccepted.ACCEPTED;
                 await _UnitOfWork.InvitationRepository.Update(invitation);
@@ -89,6 +101,15 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
                     };
 
                     await _UnitOfWork.InvitationRepository.Add(invitation2);
+
+                    await _eventTrackingService.Create(new Shared.Functional.EventTrackingItem
+                    {
+                        Id = Guid.NewGuid(),
+                        CreatedDate = DateTime.UtcNow,
+                        Category = "contact",
+                        Key = "confirmContact",
+                        UserId = contact2.OwnerId
+                    });
                 }
             }
 

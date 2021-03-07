@@ -1,7 +1,8 @@
 ﻿@page "/services"
 @inject IJSRuntime jsRuntime
 @inject IAnalytics analytics
-@inject NavigationManager NavigationManager 
+@inject NavigationManager NavigationManager
+@inject IHttpClientFactory HttpClientFactory
 @inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 
 @using System.Security.Claims
@@ -22,13 +23,34 @@
 
     protected override async Task OnInitializedAsync()
     {
-
         authenticateState = await authenticationStateTask;
+
+        var httpClient = HttpClientFactory.CreateClient(Configuration["Service:Api:AnonymousApiName"]);
 
         if (authenticateState.User?.Identity.IsAuthenticated == true)
         {
+            await httpClient.PostAsJsonAsync<EventTrackingItem>("api/EventTracker", new EventTrackingItem
+            {
+                Category = "Navigation",
+                Key = "HomePage",
+                CreatedDate = DateTime.UtcNow,
+                Id = Guid.NewGuid(),
+                UserId = authenticateState.User.FindFirstValue(ClaimTypes.NameIdentifier)
+            });
+
             IsAdmin = (authenticateState.User.Identity.IsAuthenticated && authenticateState.User.HasClaim(ClaimTypes.Role, "admin"));
         }
+        else
+        {
+            await httpClient.PostAsJsonAsync<EventTrackingItem>("api/EventTracker", new EventTrackingItem
+            {
+                Category = "Navigation",
+                Key = "HomePage",
+                CreatedDate = DateTime.UtcNow,
+                Id = Guid.NewGuid()
+            });
+        }
+
         ListService = new List<CardServiceViewModel>
 {
             //new CardServiceViewModel{ PageName = "/Profile", ImageUrl = "Profil.svg", Title = Loc["Title_profil"], Description = ScreenSize.IsSmall ? "Consulter ou modifier vos informations personnelles" : Loc["Business_description"] },

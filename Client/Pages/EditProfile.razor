@@ -62,7 +62,10 @@
                         </div>
                     }
                 </div>
-                <button type="submit" @onclick="Update" class="col-lg-3 col-sm-6 btn btn-success" data-toggle="tooltip" title="@Loc["Update"]">@Loc["Update"]</button>
+                @if (IsReadOnly == false)
+                {
+                    <button type="submit" @onclick="Update" class="col-lg-3 col-sm-6 btn btn-success" data-toggle="tooltip" title="@Loc["Update"]">@Loc["Update"]</button>
+                }
                 <button @onclick="Close" class="col-lg-3 col-sm-6 btn btn-danger" data-toggle="tooltip" title="@Loc["Cancel"]">@Loc["Cancel"]</button>
             </div>
         </div>

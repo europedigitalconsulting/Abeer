@@ -4,7 +4,7 @@
 @inject NavigationManager Navigation
 @inject Abeer.Client.UISdk.NavigationUrlService NavigationUrlService
 @inject Microsoft.Extensions.Configuration.IConfiguration Configuration
-
+@inject HttpClient HttpClient
 @using System.Security.Claims;
 
 @code
@@ -37,6 +37,17 @@
             {
                 ProfileId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             }
+
+            var httpClient = HttpClientFactory.CreateClient(Configuration["Service:Api:AnonymousApiName"]);
+
+            await httpClient.PostAsJsonAsync<EventTrackingItem>("api/EventTracker", new EventTrackingItem
+            {
+                Category = "Navigation",
+                Key = "ViewProfile",
+                CreatedDate = DateTime.UtcNow,
+                Id = Guid.NewGuid(), UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)
+            });
+
         }
 
         if (!string.IsNullOrEmpty(ProfileId))

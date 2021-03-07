@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Abeer.Data.UnitOfworks;
@@ -35,7 +36,7 @@ namespace Abeer.Server.Controllers
             if (user == null)
                 return NotFound();
 
-            return Ok(new ViewApplicationUser
+            ViewApplicationUser applicationUser = new ViewApplicationUser
             {
                 City = user.City,
                 Email = user.Email,
@@ -56,7 +57,11 @@ namespace Abeer.Server.Controllers
                 LastName = user.LastName,
                 Title = user.Title,
                 PhotoUrl = user.PhotoUrl
-            });
+            };
+
+            applicationUser.IsReadOnly = user.SubscriptionEndDate.HasValue && user.SubscriptionEndDate < DateTime.UtcNow;
+
+            return base.Ok(applicationUser);
         }
     }
 }

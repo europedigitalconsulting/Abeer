@@ -25,15 +25,17 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
         private readonly UrlShortner _urlShortner;
         private readonly IServiceProvider _serviceProvider;
         private readonly IWebHostEnvironment _env;
+        private readonly EventTrackingService _eventTrackingService;
 
         public ForgotPasswordModel(UserManager<ApplicationUser> userManager,
-            IWebHostEnvironment env, IEmailSenderService emailSender, UrlShortner urlShortner, IServiceProvider serviceProvider)
+            IWebHostEnvironment env, IEmailSenderService emailSender, UrlShortner urlShortner, IServiceProvider serviceProvider, EventTrackingService eventTrackingService)
         {
             _userManager = userManager;
             _emailSender = emailSender;
             _urlShortner = urlShortner;
             _serviceProvider = serviceProvider;
             _env = env;
+            _eventTrackingService = eventTrackingService;
         }
 
         [BindProperty(SupportsGet =true)]
@@ -51,16 +53,48 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
             public string Email { get; set; }
         }
 
+        public async Task<IActionResult> OnGetAsync()
+        {
+            await _eventTrackingService.Create(new Shared.Functional.EventTrackingItem
+            {
+                Id = Guid.NewGuid(),
+                CreatedDate = DateTime.UtcNow,
+                Category = "ForgotPassword",
+                Key = "Start"
+            });
+
+            return Page();
+        }
+
         public async Task<IActionResult> OnPostAsync()
         {
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(Input.Email);
+
                 if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
                 {
                     // Don't reveal that the user does not exist or is not confirmed
+                    await _eventTrackingService.Create(new Shared.Functional.EventTrackingItem
+                    {
+                        Id = Guid.NewGuid(),
+                        CreatedDate = DateTime.UtcNow,
+                        Category = "ForgotPassword",
+                        Key = "Reveal"
+                    });
+
                     return RedirectToPage("./ForgotPasswordConfirmation");
                 }
+
+                await _eventTrackingService.Create(new Shared.Functional.EventTrackingItem
+                {
+                    Id = Guid.NewGuid(),
+                    CreatedDate = DateTime.UtcNow,
+                    Category = "ForgotPassword",
+                    Key = "requested",
+                    UserId = user.Id
+                });
+
 
                 // For more information on how to enable account confirmation and password reset please 
                 // visit https://go.microsoft.com/fwlink/?LinkID=532713

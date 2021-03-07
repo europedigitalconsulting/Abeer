@@ -22,6 +22,7 @@ namespace Abeer.Data.UnitOfworks
         private SubscriptionHistoryRepository _SubscriptionHistoryRepository;
         private NotificationRepository _NotificationRepository;
         private InvitationRepository _InvitationRepository;
+        private EventTrackingItemRepository _EventTrackingItemRepository;
 
         private FunctionalDbContext ApplicationDbContext { get; }
         private IServiceProvider ServiceProvider { get; }
@@ -162,6 +163,17 @@ namespace Abeer.Data.UnitOfworks
                     _InvitationRepository = ActivatorUtilities.CreateInstance<InvitationRepository>(ServiceProvider);
 
                 return _InvitationRepository;
+            }
+        }
+
+        public EventTrackingItemRepository EventTrackingItemRepository
+        {
+            get
+            {
+                if (_EventTrackingItemRepository == null)
+                    _EventTrackingItemRepository = ActivatorUtilities.CreateInstance<EventTrackingItemRepository>(ServiceProvider);
+
+                return _EventTrackingItemRepository;
             }
         }
 

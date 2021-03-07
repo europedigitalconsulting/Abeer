@@ -1,4 +1,5 @@
 ﻿using Abeer.Shared;
+using Abeer.Shared.Functional;
 using Abeer.Shared.ViewModels;
 
 using Microsoft.AspNetCore.Components;
@@ -30,6 +31,7 @@ namespace Abeer.Client.Pages
         public List<SocialNetwork> AvailableSocialNetworksToAdd { get; set; } = new List<SocialNetwork>();
         public List<SocialNetwork> SocialNetworkConnected { get; set; } = new List<SocialNetwork>();
         public List<CustomLink> CustomLinks { get; set; } = new List<CustomLink>();
+        public bool IsReadOnly => User?.IsReadOnly ?? false;
 
         [Inject] private NavigationManager navigationManager { get; set; }
 
@@ -54,11 +56,21 @@ namespace Abeer.Client.Pages
         }
         async Task Update()
         {
+            await HttpClient.PostAsJsonAsync<EventTrackingItem>("api/EventTracker", new EventTrackingItem
+            {
+                Category = "Navigation",
+                Key = "EditProfile",
+                CreatedDate = DateTime.UtcNow,
+                Id = Guid.NewGuid(), 
+                UserId = User.Id
+            });
+
             var response = await HttpClient.PutAsJsonAsync("/api/Profile", User);
             response.EnsureSuccessStatusCode();
 
             var json = await response.Content.ReadAsStringAsync();
             User = JsonConvert.DeserializeObject<ViewApplicationUser>(json);
+
 
             await Close();
         }

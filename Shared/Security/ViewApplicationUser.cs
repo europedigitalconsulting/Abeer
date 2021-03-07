@@ -34,6 +34,7 @@ namespace Abeer.Shared
         public int AdsCount { get; set; }
         public IList<SocialNetwork> SocialNetworkConnected { get; set; }
         public IList<CustomLink> CustomLinks { get; set; }
+        public bool IsReadOnly { get; set; }
 
         public static implicit operator ViewApplicationUser(ApplicationUser user)
         {

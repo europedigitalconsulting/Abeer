@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Abeer.Shared;
 using Abeer.Services;
+using System;
 
 namespace Abeer.Server.Areas.Identity.Pages.Account
 {
@@ -15,11 +16,13 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly NotificationService _notificationService;
+        private readonly EventTrackingService _eventTrackingService;
 
-        public ConfirmEmailModel(UserManager<ApplicationUser> userManager, NotificationService notificationService)
+        public ConfirmEmailModel(UserManager<ApplicationUser> userManager, NotificationService notificationService, EventTrackingService eventTrackingService)
         {
             _userManager = userManager;
             _notificationService = notificationService;
+            _eventTrackingService = eventTrackingService;
         }
 
         public bool Success { get; set; }
@@ -46,6 +49,15 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
             if (Success)
             {
                 await _notificationService.Create(user.Id, "Welcome", "/subscription-pack", "alert-welcome", "alert-welcome", "alert-welcome", "welcome");
+
+                await _eventTrackingService.Create(new Shared.Functional.EventTrackingItem
+                {
+                    Id = Guid.NewGuid(),
+                    CreatedDate = DateTime.UtcNow,
+                    Category = "profile",
+                    Key = "confirmEmail",
+                    UserId = user.Id
+                });
             }
 
             return Page();

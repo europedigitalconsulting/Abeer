@@ -203,6 +203,7 @@ namespace Abeer.Server
             });
 
             services.AddTransient<NotificationService>();
+            services.AddTransient<EventTrackingService>();
 
             services.AddResponseCompression(opts =>
             {

@@ -33,6 +33,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
         private readonly UrlShortner _urlShortner;
         private readonly IWebHostEnvironment _env;
         private readonly string _webRoot;
+        private readonly EventTrackingService _eventTrackingService;
 
         public LoginWithPinCodeModel(
             UserManager<ApplicationUser> userManager,
@@ -40,7 +41,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
             ILogger<RegisterModel> logger,
             IWebHostEnvironment env,
             IEmailSender emailSender,
-            IConfiguration configuration, UrlShortner urlShortner)
+            IConfiguration configuration, UrlShortner urlShortner, EventTrackingService eventTrackingService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -50,6 +51,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
             _urlShortner = urlShortner;
             _env = env;
             _webRoot = _env.WebRootPath;
+            _eventTrackingService = eventTrackingService;
         }
 
         [BindProperty]
@@ -91,6 +93,15 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
                     return Redirect($"./Register?PinDigit={Request.Query?["PinDigit"]}");
             }
 
+            await _eventTrackingService.Create(new Shared.Functional.EventTrackingItem
+            {
+                Id = Guid.NewGuid(),
+                CreatedDate = DateTime.UtcNow,
+                Category = "Login",
+                Key = "Start"
+            });
+
+
             return Page();
         }
 
@@ -107,6 +118,16 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
                     ModelState.AddModelError("", "User is not authorized");
                     return Page();
                 }
+
+                await _eventTrackingService.Create(new Shared.Functional.EventTrackingItem
+                {
+                    Id = Guid.NewGuid(),
+                    CreatedDate = DateTime.UtcNow,
+                    Category = "Login",
+                    Key = "Logged", 
+                    UserId = user.Id
+                });
+
 
                 user.IsOnline = true;
                 user.LastLogin = DateTime.UtcNow;

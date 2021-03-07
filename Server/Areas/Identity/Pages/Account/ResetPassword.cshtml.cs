@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Abeer.Shared;
+using Abeer.Services;
+using System;
 
 namespace Abeer.Server.Areas.Identity.Pages.Account
 {
@@ -14,10 +16,12 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
     public class ResetPasswordModel : PageModel
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly EventTrackingService _eventTrackingService;
 
-        public ResetPasswordModel(UserManager<ApplicationUser> userManager)
+        public ResetPasswordModel(UserManager<ApplicationUser> userManager, EventTrackingService eventTrackingService)
         {
             _userManager = userManager;
+            _eventTrackingService = eventTrackingService;
         }
 
         [BindProperty]
@@ -42,7 +46,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
             public string Code { get; set; }
         }
 
-        public IActionResult OnGet(string code = null)
+        public async Task<IActionResult> OnGetAsync(string code = null)
         {
             if (code == null)
             {
@@ -54,6 +58,15 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
                 {
                     Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code))
                 };
+
+                await _eventTrackingService.Create(new Shared.Functional.EventTrackingItem
+                {
+                    Id = Guid.NewGuid(),
+                    CreatedDate = DateTime.UtcNow,
+                    Category = "ResetPassword",
+                    Key = "Get"
+                });
+
                 return Page();
             }
         }
@@ -66,15 +79,34 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
             }
 
             var user = await _userManager.FindByEmailAsync(Input.Email);
+
             if (user == null)
             {
+                await _eventTrackingService.Create(new Shared.Functional.EventTrackingItem
+                {
+                    Id = Guid.NewGuid(),
+                    CreatedDate = DateTime.UtcNow,
+                    Category = "ResetPassword",
+                    Key = "Failed"
+                });
+
                 // Don't reveal that the user does not exist
                 return RedirectToPage("./ResetPasswordConfirmation");
             }
 
             var result = await _userManager.ResetPasswordAsync(user, Input.Code, Input.Password);
+
             if (result.Succeeded)
             {
+                await _eventTrackingService.Create(new Shared.Functional.EventTrackingItem
+                {
+                    Id = Guid.NewGuid(),
+                    CreatedDate = DateTime.UtcNow,
+                    Category = "ResetPassword",
+                    Key = "Reset",
+                    UserId = user.Id
+                });
+
                 return RedirectToPage("./ResetPasswordConfirmation");
             }
 

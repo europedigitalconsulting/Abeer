@@ -47,7 +47,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
             IWebHostEnvironment env,
             IEmailSenderService emailSender,
             IConfiguration configuration,
-            UrlShortner urlShortner, CountriesService countriesService, FunctionalUnitOfWork functionalUnitOfWork)
+            UrlShortner urlShortner, CountriesService countriesService, FunctionalUnitOfWork functionalUnitOfWork, EventTrackingService eventTrackingService)
         {
             _serviceProvider = serviceProvider;
             _userManager = userManager;
@@ -60,6 +60,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
             _functionalUnitOfWork = functionalUnitOfWork;
             _env = env;
             _webRoot = _env.WebRootPath;
+            _eventTrackingService = eventTrackingService;
         }
 
         [BindProperty]
@@ -110,6 +111,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
         }
 
         private static Random rdm = new Random();
+        private readonly EventTrackingService _eventTrackingService;
 
         public async Task OnGetAsync(string returnUrl = null)
         {
@@ -122,6 +124,15 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
                 Input.PinCode = int.Parse(Request.Query["PinCode"]);
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+            await _eventTrackingService.Create(new Shared.Functional.EventTrackingItem
+            {
+                Id = Guid.NewGuid(),
+                CreatedDate = DateTime.UtcNow,
+                Category = "Register",
+                Key = "Start"
+            });
+
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
@@ -208,6 +219,16 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
                             {"unSubscribeUrl", unSubscribeUrl },
                             {"callbackUrl", callbackUrl }
                         });
+
+                await _eventTrackingService.Create(new Shared.Functional.EventTrackingItem
+                {
+                    Id = Guid.NewGuid(),
+                    CreatedDate = DateTime.UtcNow,
+                    Category = "Register",
+                    Key = "Created",
+                    UserId = user.Id
+                });
+
 
                 _logger.LogInformation("set card is used");
 

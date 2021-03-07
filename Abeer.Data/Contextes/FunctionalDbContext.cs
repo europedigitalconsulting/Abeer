@@ -57,5 +57,6 @@ namespace Abeer.Data
         public IDbSet<SubscriptionHistory> SubscriptionHistories => dbProvider.Set<SubscriptionHistory>();
         public IDbSet<Notification> Notifications => dbProvider.Set<Notification>();
         public IDbSet<Invitation> Invitations => dbProvider.Set<Invitation>();
+        public IDbSet<EventTrackingItem> EventTrackingItems => dbProvider.Set<EventTrackingItem>();
     }
 }

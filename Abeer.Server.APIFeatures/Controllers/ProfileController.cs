@@ -118,6 +118,9 @@ namespace Abeer.Server.Controllers
                 Title = user.Title,
                 PhotoUrl = string.IsNullOrWhiteSpace(user.PhotoUrl) ? user.GravatarUrl() : user.PhotoUrl
             };
+
+            value.IsReadOnly = (user.SubscriptionEndDate.HasValue && user.SubscriptionEndDate < DateTime.UtcNow);
+
             return Ok(value);
         }
 

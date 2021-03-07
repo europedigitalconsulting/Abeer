@@ -29,6 +29,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly EventTrackingService _eventTrackingService;
         private readonly ILogger<LoginModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly UrlShortner _urlShortner;
@@ -38,9 +39,10 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
 
         public LoginModel(SignInManager<ApplicationUser> signInManager,
             ILogger<LoginModel> logger, FunctionalUnitOfWork functionalUnitOfWork,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager, EventTrackingService eventTrackingService)
         {
             _userManager = userManager;
+            _eventTrackingService = eventTrackingService;
             _signInManager = signInManager;
             _logger = logger;
             _functionalUnitOfWork = functionalUnitOfWork;
@@ -92,6 +94,14 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
                     return Redirect($"./Register?PinDigit={Request.Query?["PinDigit"]}");
             }
 
+            await _eventTrackingService.Create(new Shared.Functional.EventTrackingItem
+            {
+                Id = Guid.NewGuid(),
+                CreatedDate = DateTime.UtcNow,
+                Category = "navigation",
+                Key = "login"
+            });
+
             return Page();
         }
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
@@ -112,11 +122,22 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
                         user.LastLogin = DateTime.Now;
                         await _userManager.UpdateAsync(user);
                     }
+
+                    await _eventTrackingService.Create(new Shared.Functional.EventTrackingItem
+                    {
+                        Id = Guid.NewGuid(),
+                        CreatedDate = DateTime.UtcNow,
+                        Category = "navigation",
+                        Key = "logged", 
+                        UserId = user.Id
+                    });
+
                     _logger.LogInformation("User logged in.");
 
                     var identity = new ClaimsIdentity("Identity.Application");
 
                     identity.AddClaim(new Claim(JwtClaimTypes.Subject, user.Id));
+
                     identity.AddClaim(new Claim(JwtClaimTypes.Name, user.UserName));
 
                     identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id));
