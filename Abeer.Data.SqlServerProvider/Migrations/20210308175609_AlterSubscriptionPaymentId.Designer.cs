@@ -4,14 +4,16 @@ using Abeer.Data.SqlServerProvider;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Abeer.Data.SqlServerProvider.Migrations
 {
     [DbContext(typeof(FunctionalContext))]
-    partial class FunctionalContextModelSnapshot : ModelSnapshot
+    [Migration("20210308175609_AlterSubscriptionPaymentId")]
+    partial class AlterSubscriptionPaymentId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -492,9 +494,6 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                     b.Property<bool>("IsValidated")
                         .HasColumnType("bit");
 
-                    b.Property<string>("NoteToPayer")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("OrderNumber")
                         .HasColumnType("nvarchar(max)");
 
@@ -513,20 +512,11 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                     b.Property<Guid?>("Reference")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal>("SubTotal")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<Guid?>("SubscriptionId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("TokenId")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("TotalTTc")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("TotalTax")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(max)");

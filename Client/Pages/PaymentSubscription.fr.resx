@@ -117,62 +117,52 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CatchPhrase" xml:space="preserve">
-    <value>vous permet d’échanger et partager avec des milliers de personne vos cartes de visite virtuel en ligne</value>
+  <data name="CancelOrder" xml:space="preserve">
+    <value>Annuler</value>
   </data>
-  <data name="Currency" xml:space="preserve">
-    <value>€</value>
+  <data name="LabelBilledTo" xml:space="preserve">
+    <value>Vous</value>
   </data>
-  <data name="Month" xml:space="preserve">
-    <value>Mois</value>
+  <data name="LabelInvoice" xml:space="preserve">
+    <value>Confirmation de votre abonnement</value>
   </data>
-  <data name="Premium" xml:space="preserve">
-    <value>Premium</value>
+  <data name="LabelItem" xml:space="preserve">
+    <value>Pack</value>
   </data>
-  <data name="PremiumDescription" xml:space="preserve">
-    <value>&lt;ul class="list-inline"&gt;
-         &lt;li&gt;&lt;i class="far fa-check-circle"&gt;&lt;/i&gt; &lt;span&gt;1 Mois d'accès&lt;/span&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;i class="far fa-check-circle"&gt;&lt;/i&gt; &lt;span&gt;Support par email ou en ligne&lt;/span&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;i class="far fa-check-circle"&gt;&lt;/i&gt;&lt;span&gt;1 QRCode&lt;/span&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;i class="far fa-check-circle"&gt;&lt;/i&gt;&lt;span&gt;1 Tag NFC&lt;/span&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;i class="far fa-check-circle"&gt;&lt;/i&gt;&lt;span&gt;Annonces pendant 5j&lt;/span&gt;&lt;/li&gt;
-&lt;/ul&gt;</value>
+  <data name="LabelOrderDate" xml:space="preserve">
+    <value>Date</value>
   </data>
-  <data name="PriceTitle" xml:space="preserve">
-    <value>Adaptez notre offre à votre besoin</value>
+  <data name="LabelOrderNumber" xml:space="preserve">
+    <value>Numéro</value>
   </data>
-  <data name="Select" xml:space="preserve">
-    <value>Choisir ce plan</value>
+  <data name="LabelOrderSummary" xml:space="preserve">
+    <value>Résumé</value>
   </data>
-  <data name="Standard" xml:space="preserve">
-    <value>Standard</value>
+  <data name="LabelPrice" xml:space="preserve">
+    <value>Prix</value>
   </data>
-  <data name="StandardDescription" xml:space="preserve">
-    <value>&lt;ul class="list-inline"&gt;
-         &lt;li&gt;&lt;i class="far fa-check-circle"&gt;&lt;/i&gt; &lt;span&gt;1 Mois d'accès&lt;/span&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;i class="far fa-check-circle"&gt;&lt;/i&gt; &lt;span&gt;Support par email ou en ligne&lt;/span&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;i class="far fa-check-circle"&gt;&lt;/i&gt;&lt;span&gt;1 QRCode&lt;/span&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;i class="far fa-check-circle"&gt;&lt;/i&gt;&lt;span&gt;1 Tag NFC&lt;/span&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;i class="far fa-check-circle"&gt;&lt;/i&gt;&lt;span&gt;Annonces pendant 2j&lt;/span&gt;&lt;/li&gt;
-&lt;/ul&gt;</value>
+  <data name="LabelQuantity" xml:space="preserve">
+    <value>Qté</value>
   </data>
-  <data name="Title" xml:space="preserve">
-    <value>Choix abonnement</value>
+  <data name="LabelTotal" xml:space="preserve">
+    <value>Total</value>
   </data>
-  <data name="Warrenty" xml:space="preserve">
-    <value>Nous vous offrons une garantie 100% sastisfaction et un remboursement </value>
+  <data name="Modify" xml:space="preserve">
+    <value>Modifier votre abonnement</value>
   </data>
-  <data name="Yearly" xml:space="preserve">
-    <value>Offre Annuel (2 mois gratuit)</value>
+  <data name="OrderSummaryCatchPhrase" xml:space="preserve">
+    <value>Voici les informations de votre abonnement, si tout est correct, veuillez cliquer sur Payer avec "Paypal" sinon cliquez sur "Modifier"</value>
   </data>
-  <data name="YearlyDescription" xml:space="preserve">
-    <value>&lt;ul class="list-inline"&gt;
-         &lt;li&gt;&lt;i class="far fa-check-circle"&gt;&lt;/i&gt; &lt;span&gt;12 Mois d'accès&lt;/span&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;i class="far fa-check-circle"&gt;&lt;/i&gt; &lt;span&gt;2 Mois d'accès gratuits&lt;/span&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;i class="far fa-check-circle"&gt;&lt;/i&gt; &lt;span&gt;Support par email ou en ligne&lt;/span&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;i class="far fa-check-circle"&gt;&lt;/i&gt;&lt;span&gt;1 QRCode&lt;/span&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;i class="far fa-check-circle"&gt;&lt;/i&gt;&lt;span&gt;1 Tag NFC&lt;/span&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;i class="far fa-check-circle"&gt;&lt;/i&gt;&lt;span&gt;Annonces illimitées&lt;/span&gt;&lt;/li&gt;
-&lt;/ul&gt;</value>
+  <data name="PayWithCrypto" xml:space="preserve">
+    <value>Payer avec crypocoin</value>
+  </data>
+  <data name="PayWithPaypal" xml:space="preserve">
+    <value>Payer avec paypal</value>
+  </data>
+  <data name="TTC" xml:space="preserve">
+    <value>TTC</value>
+  </data>
+  <data name="VTA" xml:space="preserve">
+    <value>TVA (20%)</value>
   </data>
 </root>

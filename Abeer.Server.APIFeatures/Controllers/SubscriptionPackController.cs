@@ -39,6 +39,7 @@ namespace Abeer.Server.Controllers
             var list = await _functionalUnitOfWork.SubscriptionPackRepository.Where(x => x.Enable);
             return Ok(list);
         }
+
         [HttpGet("Get/{SubscriptionId}")]
         public async Task<IActionResult> Get(Guid SubscriptionId)
         {
@@ -57,6 +58,8 @@ namespace Abeer.Server.Controllers
             cryptoPaymentViewModel.RedirectSuccess = _configuration["Service:CryptoPayment:RedirectSuccess"];
             cryptoPaymentViewModel.RedirectError = _configuration["Service:CryptoPayment:RedirectError"];
             cryptoPaymentViewModel.EnableCryptoPayment = bool.Parse(_configuration["Service:CryptoPayment:Enable"]);
+            cryptoPaymentViewModel.VTA = _configuration["Service:Payment:VTA"];
+
             return await Task.Run(() => Ok(cryptoPaymentViewModel));
         }
         [HttpPost("Select")]

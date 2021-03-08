@@ -96,11 +96,17 @@ namespace Abeer.Client.Shared
             _next = null;
         }
 
+        public void Goto(string url)
+        {
+            SetDisplayedNotification().ContinueWith(t=>NavigationManager.NavigateTo(url, true));
+        }
+
         public RenderFragment RenderDialog(string type) => builder =>
         {
             builder.OpenComponent(0, DialogTypes[type]);
             builder.AddAttribute(1, "User", User);
             builder.AddAttribute(2, "Close", EventCallback.Factory.Create(this, () => SetDisplayedNotification()));
+            builder.AddAttribute(2, "Navigate", EventCallback.Factory.Create<string>(this, (url) => Goto(url)));
             builder.CloseComponent();
         };
     }

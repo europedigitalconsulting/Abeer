@@ -1,10 +1,20 @@
 ﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<WelcomeDialog> Loc
+
 @code
 {
     [Parameter]
     public ClaimsPrincipal User { get; set; }
+
     [Parameter]
     public EventCallback Close { get; set; }
+
+    [Parameter]
+    public EventCallback<string> Navigate { get; set; }
+
+    async Task GotoSubscribe()
+    {
+        await Navigate.InvokeAsync("subscription-pack");
+    }
 }
 
 <div class="card">
@@ -12,6 +22,6 @@
         <img src="assets/img/trophy.png">
         <h4>@Loc["Title"]!</h4>
         <p>@Loc["CatchPhrase"]</p> <button class="btn btn-primary" @onclick="Close">@Loc["Continue"]</button><br />
-        <a href="subscription-pack">@Loc["Subscription"]</a>
+        <a @onclick="GotoSubscribe">@Loc["Subscription"]</a>
     </div>
 </div>

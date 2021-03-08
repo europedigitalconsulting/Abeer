@@ -14,5 +14,6 @@ namespace Abeer.Shared.Functional
         public decimal Price { get; set; }
         public bool Enable { get; set; }
         public int Duration{ get; set; }
+        public bool Popuplar { get; set; }
     }
 }

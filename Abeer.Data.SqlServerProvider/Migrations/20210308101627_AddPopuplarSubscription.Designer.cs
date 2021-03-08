@@ -4,14 +4,16 @@ using Abeer.Data.SqlServerProvider;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Abeer.Data.SqlServerProvider.Migrations
 {
     [DbContext(typeof(FunctionalContext))]
-    partial class FunctionalContextModelSnapshot : ModelSnapshot
+    [Migration("20210308101627_AddPopuplarSubscription")]
+    partial class AddPopuplarSubscription
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -489,11 +491,11 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("AdId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("IsValidated")
                         .HasColumnType("bit");
-
-                    b.Property<string>("NoteToPayer")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OrderNumber")
                         .HasColumnType("nvarchar(max)");
@@ -507,26 +509,11 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                     b.Property<string>("PaymentReference")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PaymentType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("Reference")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("SubTotal")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<Guid?>("SubscriptionId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("TokenId")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("TotalTTc")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("TotalTax")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(max)");
@@ -537,45 +524,6 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Payment");
-                });
-
-            modelBuilder.Entity("Abeer.Shared.Functional.Subscription", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("Enable")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("End")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsValidated")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid?>("PaymentId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("Start")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("SubscriptionPackId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PaymentId");
-
-                    b.HasIndex("SubscriptionPackId");
-
-                    b.ToTable("Subscriptions");
                 });
 
             modelBuilder.Entity("Abeer.Shared.Functional.SubscriptionHistory", b =>
@@ -693,23 +641,6 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                         .IsRequired();
 
                     b.Navigation("AdPrice");
-                });
-
-            modelBuilder.Entity("Abeer.Shared.Functional.Subscription", b =>
-                {
-                    b.HasOne("Abeer.Shared.Functional.PaymentModel", "Payment")
-                        .WithMany()
-                        .HasForeignKey("PaymentId");
-
-                    b.HasOne("Abeer.Shared.Functional.SubscriptionPack", "SubscriptionPack")
-                        .WithMany()
-                        .HasForeignKey("SubscriptionPackId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Payment");
-
-                    b.Navigation("SubscriptionPack");
                 });
 
             modelBuilder.Entity("Abeer.Shared.Card", b =>

@@ -2,37 +2,34 @@
 @inject HttpClient httpClient
 @inject NavigationManager navigationManager
 @attribute [Authorize]
-@inject Microsoft.Extensions.Localization.IStringLocalizer<SubscriptionPack> Loc 
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SubscriptionPackPage> Loc
 
-<section class="section">
-    <div class="section-header">
-        <h1>@Loc["Title"]</h1>
-    </div>
-    <div class="row">
-        @foreach (var item in listSubscriptionPack)
-        {
-            <div class="card offset-4 col-4">
-                <div class="card-body">
-                    <h5 class="card-title">@item.Label</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">@item.Price</h6>
-                    <p class="card-text">@item.Description</p>
-                    <button @onclick="() => Select(item)" class="btn btn-primary">Sélectionner</button>
-                </div>
-            </div>
-        }
-    </div>
-</section>
 @code {
+    [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
+
     private List<SubscriptionPack> listSubscriptionPack { get; set; } = new List<SubscriptionPack>();
 
     protected override async Task OnInitializedAsync()
-    { 
+    {
+        var authState = await authenticationStateTask;
+        var user = authState.User;
+
         var subscriptionPacks = await httpClient.GetAsync("api/SubPack/GetAll");
         if (subscriptionPacks.IsSuccessStatusCode)
         {
             var json = await subscriptionPacks.Content.ReadAsStringAsync();
             listSubscriptionPack = JsonConvert.DeserializeObject<List<SubscriptionPack>>(json);
         }
+
+        await httpClient.PostAsJsonAsync<EventTrackingItem>("api/EventTracker", new EventTrackingItem
+        {
+            Category = "Subscription",
+            Key = "Start",
+            CreatedDate = DateTime.UtcNow,
+            Id = Guid.NewGuid(),
+            UserId = user.FindFirstValue(ClaimTypes.NameIdentifier)
+        });
+
         await base.OnInitializedAsync();
     }
     protected async Task Select(SubscriptionPack item)
@@ -51,3 +48,61 @@
         }
     }
 }
+<section class="section slide-in-elliptic-top-fwd">
+    <div class="d-none d-md-block d-xl-block">
+        <div class="row">
+            <div class="col-12 pt-5">
+                <header class="offset-lg-ipad-pro offset-md-1 offset-lg-3">
+                    <h1 class="h2" style="color:#97AABD;">@Loc["Title"] :: <strong style="color: #02BF8A">Meetag</strong></h1>
+                    <div style="margin-left: -20px; border: 2px solid #02BF8A; width: 25px;"></div>
+                    <br />
+                    <p class="col-xl-6 col-lg-6 col-md-9 col-ipad-pro-7 mb-0" style="color: #97AABD; font-size: 22px; font-weight: 400"><strong style="color: #02BF8A">Meetag</strong> @Loc["CatchPhrase"].</p>
+                </header>
+            </div>
+        </div>
+    </div>
+    <div class="section-body mt-ipad-pro-5 ">
+        <div class="pricing6 py-5 bg-light">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-8 text-center">
+                        <h3 class="mb-3">@Loc["PriceTitle"]</h3>
+                        <h6 class="subtitle font-weight-normal">@Loc["Warrenty"]</h6>
+                    </div>
+                </div>
+                <!-- row  -->
+                <div class="row mt-4">
+                    <Virtualize Items="listSubscriptionPack" Context="subscription">
+                        <!-- column  -->
+                        <div class="col-md-6">
+                            <div class="card card-shadow border-0 mb-4">
+                                <div class="card-body p-4">
+                                    <div class="d-flex align-items-center">
+                                        <h5 class="font-weight-medium mb-0">@Loc[subscription.Label]</h5>
+                                        @if (subscription.Popuplar)
+                                        {
+                                            <div class="ml-auto"><span class="badge badge-danger font-weight-normal p-2">@Loc["Popular"]</span></div>
+                                        }
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-5 text-center">
+                                            <div class="price-box my-3">
+                                                <sup>@Loc["Currency"]</sup><span class="text-dark display-5">@subscription.Price</span>
+                                                <h6 class="font-weight-light">@Loc["Month"]</h6>
+                                                <a class="btn btn-primary" @onclick="@(()=>Select(subscription))">@Loc["Select"]</a>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-7 align-self-center">
+                                            @((MarkupString)Loc[subscription.Description].ToString())
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- column  -->
+                    </Virtualize>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

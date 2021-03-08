@@ -31,6 +31,7 @@ namespace Abeer.Services
                 return subscribeStart;
             return null;
         }
+
         public static DateTime? SubscriptionEnd(this ClaimsPrincipal claimsPrincipal)
         {
             var value = claimsPrincipal.FindFirstValue("subscribeEnd");

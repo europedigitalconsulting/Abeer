@@ -11,6 +11,9 @@
     private AdsStatisticsViewModel AdsStatistics { get; set; }
     private OwnerStatisticsViewModel OwnerStatistics { get; set; }
 
+    [Parameter]
+    public EventCallback<string> Navigate { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         if (User.Identity.IsAuthenticated == true)
@@ -23,6 +26,11 @@
             AdsStatistics = daily.AdsStatistics;
             OwnerStatistics = daily.OwnerStatistics;
         }
+    }
+
+    async Task GotoSubscribe()
+    {
+        await Navigate.InvokeAsync("subscription-pack");
     }
 }
 
@@ -46,7 +54,7 @@
                     <dd>@DateTime.Parse(User.FindFirstValue("subscribeEnd"))</dd>
                 }
             </dl>
-            <a href="subscription-pack" class="btn btn-success">@Loc["Subscription"]</a>
+            <a @onclick="GotoSubscribe" class="btn btn-success">@Loc["Subscription"]</a>
         }
         @if (UserStatistics != null)
         {

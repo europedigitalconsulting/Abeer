@@ -50,6 +50,11 @@
     {
         Navigation.NavigateTo(Navigation.ToAbsoluteUri("Identity/account/logout?returnUrl=/Profile").ToString(), true);
     }
+
+    void Navigate(string url)
+    {
+        Navigation.NavigateTo(url, true);
+    }
 }
 @if (ShowActivityDialog)
 {
@@ -63,7 +68,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <Abeer.Client.Shared.NotificationDialogs.DailyReminderDialog User="_user" Close="@(()=>ShowActivityDialog = false)"></Abeer.Client.Shared.NotificationDialogs.DailyReminderDialog>
+                    <Abeer.Client.Shared.NotificationDialogs.DailyReminderDialog User="_user" Close="@(()=>ShowActivityDialog = false)" Navigate="@Navigate"></Abeer.Client.Shared.NotificationDialogs.DailyReminderDialog>
                 </div>
             </div>
         </div>

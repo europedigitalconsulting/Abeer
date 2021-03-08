@@ -18,5 +18,6 @@ namespace Cryptocoin.Payment
         public string OrderNumber { get; set; }
         public bool EnableCryptoPayment { get; set; }
         public List<Tuple<string, decimal>> Items { get; set; }
+        public string VTA { get; set; }
     }
 }

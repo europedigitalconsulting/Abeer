@@ -1,12 +1,10 @@
-﻿
-@page "/payment-subscription/{SubscriptionId}"
-
-@attribute [Microsoft.AspNetCore.Authorization.Authorize]
-@inject Microsoft.Extensions.Localization.IStringLocalizer<PaymentSubscription> Localizer
-@inject NavigationManager NavigationManager
-@inject HttpClient HttpClient
-
+﻿@page "/ConfirmPayment/Success/{subscriptionId}"
+@inject Microsoft.Extensions.Localization.IStringLocalizer<PaymentSuccess> Localizer
 <div class="col-12">
+    <div class="alert alert-success alert-dismissible fade show">
+        <strong>@Localizer["Success"]!</strong>@Localizer["CatchPhrase"].
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
     <div class="invoice">
         <div class="invoice-print">
             <div class="row">
@@ -54,10 +52,10 @@
                             </tr>
                             <tr>
                                 <td>1</td>
-                                <td> @SubPack?.Label</td>
-                                <td class="text-center"> @SubPack?.Price</td>
+                                <td> @Pack?.Label</td>
+                                <td class="text-center"> @Pack?.Price</td>
                                 <td class="text-center"> 1</td>
-                                <td class="text-right"> @(SubPack?.Price * 1)</td>
+                                <td class="text-right"> @Pack?.Price</td>
                             </tr>
                         </table>
                     </div>
@@ -68,7 +66,7 @@
                             <hr class="mt-2 mb-2">
                             <div class="invoice-detail-item">
                                 <div class="invoice-detail-name">@Localizer["LabelTotal"]</div>
-                                <div class="invoice-detail-value invoice-detail-value-lg">@SubPack?.Price</div>
+                                <div class="invoice-detail-value invoice-detail-value-lg">@Payment?.SubTotal</div>
                             </div>
                         </div>
                     </div>
@@ -79,7 +77,7 @@
                             <hr class="mt-2 mb-2">
                             <div class="invoice-detail-item">
                                 <div class="invoice-detail-name">@Localizer["VTA"]</div>
-                                <div class="invoice-detail-value invoice-detail-value-lg">@VTA</div>
+                                <div class="invoice-detail-value invoice-detail-value-lg">@Payment?.TotalTax</div>
                             </div>
                         </div>
                     </div><div class="row mt-4">
@@ -89,7 +87,7 @@
                             <hr class="mt-2 mb-2">
                             <div class="invoice-detail-item">
                                 <div class="invoice-detail-name">@Localizer["TTC"]</div>
-                                <div class="invoice-detail-value invoice-detail-value-lg">@TTC</div>
+                                <div class="invoice-detail-value invoice-detail-value-lg">@Payment?.TotalTTc</div>
                             </div>
                         </div>
                     </div>
@@ -97,104 +95,34 @@
             </div>
         </div>
         <hr>
-        <div class="text-md-right">
-            <div class="float-lg-left mb-lg-0 mb-3">
-                @if (cryptoPaymentViewModel?.EnableCryptoPayment == true)
-                {
-                    <CryptocoinPayment BeforeCallPayment="CreatePayment" CryptoConfig="cryptoPaymentViewModel"
-                                       OrderNumber="@OrderNumber" Price="@SubPack.Price" Items=@Cart PagePaymentError="ConfirmPayment/Error"
-                                       CssClass="btn btn-success btn-icon icon-left" LabelBtn="@Localizer["PayWithCrypto"]">
-                    </CryptocoinPayment>
-                }
-
-                <button class="btn btn-primary btn-icon icon-left" @onclick="PaypalPayment">@Localizer["PayWithPaypal"]</button>
-
-                <button class="btn btn-danger btn-icon icon-left" @onclick="GoToBack"><i class="fas fa-times"></i>@Localizer["Modify"]</button>
-            </div>
-        </div>
     </div>
 </div>
 
-@code{
+@code
+{
     [CascadingParameter] private Task<AuthenticationState> AuthenticationStateTask { get; set; }
     [Parameter] public string SubscriptionId { get; set; }
     private string OrderNumber { get; set; }
-    private List<Tuple<string, decimal>> Cart { get; set; } = new List<Tuple<string, decimal>>();
-    private SubscriptionPack SubPack { get; set; } = new SubscriptionPack();
     private ClaimsPrincipal User;
     private CryptoPaymentModel cryptoPaymentViewModel;
     private decimal VTA { get; set; }
     private decimal TTC { get; set; }
+    public Subscription Subscription { get; set; }
+    public PaymentModel Payment { get; set; }
+    public SubscriptionPack Pack { get; set; }
+    [Inject]public HttpClient HttpClient { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        Random rnd = new Random();
         var authenticateSate = await AuthenticationStateTask;
         User = authenticateSate.User;
-        OrderNumber = string.Concat(DateTime.UtcNow.ToString("yyyMMddHHmmss"), rnd.Next(100000, 999999));
 
-        var resultConfig = await HttpClient.GetAsync($"/api/SubPack/GetConfigCrypto");
+        var getResponse = await HttpClient.GetAsync($"api/Subscription/{SubscriptionId}");
+        getResponse.EnsureSuccessStatusCode();
 
-        if (resultConfig.IsSuccessStatusCode)
-        {
-            var jsonConfig = await resultConfig.Content.ReadAsStringAsync();
-            cryptoPaymentViewModel = JsonConvert.DeserializeObject<CryptoPaymentModel>(jsonConfig);
-        }
-        else
-        {
-            NavigationManager.NavigateTo("/ConfirmPayment/Error", true);
-            return;
-        }
-        Console.WriteLine($"/api/SubP" +
-            $"ack/Get/{SubscriptionId}");
-        var result = await HttpClient.GetAsync($"/api/SubPack/Get/{SubscriptionId}");
+        var json = await getResponse.Content.ReadAsStringAsync();
+        Subscription = JsonConvert.DeserializeObject<Subscription>(json);
 
-        if (result.IsSuccessStatusCode)
-        {
-            var json = await result.Content.ReadAsStringAsync();
-            SubPack = JsonConvert.DeserializeObject<SubscriptionPack>(json);
-            Cart.Add(new Tuple<string, decimal>(SubPack.Label, SubPack.Price));
-            VTA = ((Decimal.Parse(cryptoPaymentViewModel.VTA) * SubPack.Price) / 100.00M);
-            TTC = SubPack.Price + VTA;
-            StateHasChanged();
-        }
-        else
-        {
-            NavigationManager.NavigateTo("/ConfirmPayment/Error", true);
-            return;
-        }
-
-        await base.OnInitializedAsync();
-    }
-
-    private async Task CreatePayment()
-    {
-        HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("UserId", User.FindFirstValue(ClaimTypes.NameIdentifier));
-        var result = await HttpClient.GetAsync($"/api/Payments/create-payment-subscribe/{SubPack.Id}/{OrderNumber}", HttpCompletionOption.ResponseContentRead);
-        if (!result.IsSuccessStatusCode)
-        {
-            NavigationManager.NavigateTo("/ConfirmPayment/Error", true);
-            return;
-        }
-    }
-    private async Task PaypalPayment()
-    {
-        var result = await HttpClient.PostAsJsonAsync<Subscription>($"api/Paypal/CreateSubscription/{OrderNumber}", new Subscription
-        {
-            CreateDate = DateTime.UtcNow,
-            SubscriptionPack = SubPack,
-            SubscriptionPackId = SubPack.Id,
-            UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)
-        });
-
-        result.EnsureSuccessStatusCode();
-
-        var json = await result.Content.ReadAsStringAsync();
-        var payment = JsonConvert.DeserializeObject<PaymentModel>(json);
-        NavigationManager.NavigateTo($"/api/paypal/pay/{payment.Id}", true);
-    }
-    private void GoToBack()
-    {
-        NavigationManager.NavigateTo("subscription-pack", true);
+        await  base.OnInitializedAsync();
     }
 }

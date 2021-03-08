@@ -406,8 +406,9 @@ namespace Abeer.Server
 
                 if (subscriptionPack == null || subscriptionPack.Count == 0)
                 {
-                    subscriptionPack.Add(await functionalDb.SubscriptionPackRepository.AddSubscriptionPack(new SubscriptionPack { Enable = true, Label = "Standard", Price = 100, Description = "Abonnement Standard", Duration = 12 }));
-                    subscriptionPack.Add(await functionalDb.SubscriptionPackRepository.AddSubscriptionPack(new SubscriptionPack { Enable = true, Label = "Premium", Price = 400, Description = "Abonnement Premium", Duration = 12 }));
+                    subscriptionPack.Add(await functionalDb.SubscriptionPackRepository.AddSubscriptionPack(new SubscriptionPack { Enable = true, Popuplar=true, Label = "Standard", Price = 85, Description = "StandardDescription", Duration = 1 }));
+                    subscriptionPack.Add(await functionalDb.SubscriptionPackRepository.AddSubscriptionPack(new SubscriptionPack { Enable = true, Label = "Premium", Price = 124, Description = "PremiumDescription", Duration = 1 }));
+                    subscriptionPack.Add(await functionalDb.SubscriptionPackRepository.AddSubscriptionPack(new SubscriptionPack { Enable = true, Label = "Yearly", Price = 1240, Description = "YearlyDescription", Duration = 12 }));
                     functionalDb.SaveChanges();
                 }
 
