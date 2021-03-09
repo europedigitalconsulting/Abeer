@@ -11,13 +11,13 @@ using System.Collections.Generic;
 using Transaction = PayPal.v1.Payments.Transaction;
 using BraintreeHttp;
 using System.Linq;
-using Newtonsoft.Json;
 using Abeer.Data.UnitOfworks;
 using Abeer.Services;
 using Abeer.Shared.Functional;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Abeer.Shared;
+using Microsoft.AspNetCore.Hosting;
+using static Abeer.Services.TemplateRenderManager;
 
 namespace Abeer.Server.Controllers
 {
@@ -29,14 +29,23 @@ namespace Abeer.Server.Controllers
         private readonly IConfiguration _configuration;
         private readonly FunctionalUnitOfWork _functionalUnitOfWork;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly UrlShortner _urlShortner;
+        private readonly IEmailSenderService _emailSenderService;
+        private readonly IWebHostEnvironment _env;
+        private readonly IServiceProvider _serviceProvider;
+
         private readonly Random rnd = new Random();
 
-        public PaypalController(ILogger<PaypalController> logger, IConfiguration configuration, FunctionalUnitOfWork functionalUnitOfWork, UserManager<ApplicationUser> userManager)
+        public PaypalController(ILogger<PaypalController> logger, IConfiguration configuration, FunctionalUnitOfWork functionalUnitOfWork, UserManager<ApplicationUser> userManager, UrlShortner urlShortner, IEmailSenderService emailSenderService, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             _logger = logger;
             _configuration = configuration;
             _functionalUnitOfWork = functionalUnitOfWork;
             _userManager = userManager;
+            _urlShortner = urlShortner;
+            _emailSenderService = emailSenderService;
+            _env = env;
+            _serviceProvider = serviceProvider;
         }
 
         /*
@@ -168,6 +177,9 @@ namespace Abeer.Server.Controllers
                 await _userManager.UpdateAsync(user);
 
                 _logger.LogInformation($"The paypal controller has a new response '{result}' from the Paypal API");
+
+                await SendEmailTemplate(user, subscription.Id, "subscription", "subscription");
+
                 return Redirect($"{_configuration["Service:FrontOffice:Url"].TrimEnd('/')}/ConfirmPayment/Success/{subscription.Id}");
             }
             else if (paymentModel.PaymentType == "Ad")
@@ -182,6 +194,47 @@ namespace Abeer.Server.Controllers
 
             return BadRequest();
         }
+
+        private async Task SendEmailTemplate(ApplicationUser user, Guid subscriptionId, string emailTemplate, string emailSubject)
+        {
+            var longUrl = $"{_configuration["Service:FrontOffice:Url"].TrimEnd('/')}/ConfirmPayment/Success/{subscriptionId}";
+
+            var frontWebSite = _configuration["Service:FrontOffice:Url"];
+            var logoUrl = $"{_configuration["Service:FrontOffice:Url"]}/assets/img/logo_full.png";
+            var login = $"{user.DisplayName}";
+
+            var code = GenerateCode();
+            var shortedUrl = $"{_configuration["Service:FrontOffice:Url"].TrimEnd('/')}/shortned/{code}";
+
+            var callbackUrl = await _urlShortner.CreateUrl(false, false, shortedUrl, longUrl, null, code);
+
+            var parameters = new Dictionary<string, string>()
+                        {
+                            {"login", login },
+                            {"frontWebSite", frontWebSite },
+                            {"logoUrl", logoUrl },
+                            {"callbackUrl", callbackUrl }
+                        };
+
+            var message = GenerateHtmlTemplate(_serviceProvider, _env.WebRootPath, emailTemplate, parameters);
+            await _emailSenderService.SendEmailAsync(user.Email, emailSubject, message);
+        }
+
+        private static string GenerateCode()
+        {
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var stringChars = new char[8];
+
+            var random = new Random();
+
+            for (int i = 0; i < stringChars.Length; i++)
+            {
+                stringChars[i] = chars[random.Next(chars.Length)];
+            }
+
+            return new string(stringChars);
+        }
+
 
         [HttpGet("cancel")]
         public async Task<IActionResult> CancelPayment()

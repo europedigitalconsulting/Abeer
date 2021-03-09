@@ -1,8 +1,10 @@
 ﻿@page "/subscription-pack"
+@attribute [Authorize]
 @inject HttpClient httpClient
 @inject NavigationManager navigationManager
-@attribute [Authorize]
 @inject Microsoft.Extensions.Localization.IStringLocalizer<SubscriptionPackPage> Loc
+@inject IHttpClientFactory HttpClientFactory
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 
 @code {
     [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
@@ -14,7 +16,19 @@
         var authState = await authenticationStateTask;
         var user = authState.User;
 
+        var httpClient = HttpClientFactory.CreateClient(Configuration["Service:Api:AnonymousApiName"]);
+
+        await httpClient.PostAsJsonAsync<EventTrackingItem>("api/EventTracker", new EventTrackingItem
+        {
+            Category = "Subscription",
+            Key = "start",
+            CreatedDate = DateTime.UtcNow,
+            Id = Guid.NewGuid(),
+            UserId = user.FindFirstValue(ClaimTypes.NameIdentifier)
+        });
+
         var subscriptionPacks = await httpClient.GetAsync("api/SubPack/GetAll");
+
         if (subscriptionPacks.IsSuccessStatusCode)
         {
             var json = await subscriptionPacks.Content.ReadAsStringAsync();

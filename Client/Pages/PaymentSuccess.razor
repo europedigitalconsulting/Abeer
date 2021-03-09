@@ -1,5 +1,7 @@
 ﻿@page "/ConfirmPayment/Success/{subscriptionId}"
 @inject Microsoft.Extensions.Localization.IStringLocalizer<PaymentSuccess> Localizer
+@inject IHttpClientFactory HttpClientFactory
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 <div class="col-12">
     <div class="alert alert-success alert-dismissible fade show">
         <strong>@Localizer["Success"]!</strong>@Localizer["CatchPhrase"].
@@ -110,12 +112,23 @@
     public Subscription Subscription { get; set; }
     public PaymentModel Payment { get; set; }
     public SubscriptionPack Pack { get; set; }
-    [Inject]public HttpClient HttpClient { get; set; }
+    [Inject] public HttpClient HttpClient { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         var authenticateSate = await AuthenticationStateTask;
         User = authenticateSate.User;
+
+        var httpClient = HttpClientFactory.CreateClient(Configuration["Service:Api:AnonymousApiName"]);
+
+        await httpClient.PostAsJsonAsync<EventTrackingItem>("api/EventTracker", new EventTrackingItem
+        {
+            Category = "Subscription",
+            Key = "success",
+            CreatedDate = DateTime.UtcNow,
+            Id = Guid.NewGuid(),
+            UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)
+        });
 
         var getResponse = await HttpClient.GetAsync($"api/Subscription/{SubscriptionId}");
         getResponse.EnsureSuccessStatusCode();
@@ -123,6 +136,6 @@
         var json = await getResponse.Content.ReadAsStringAsync();
         Subscription = JsonConvert.DeserializeObject<Subscription>(json);
 
-        await  base.OnInitializedAsync();
+        await base.OnInitializedAsync();
     }
 }

@@ -5,6 +5,8 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<PaymentSubscription> Localizer
 @inject NavigationManager NavigationManager
 @inject HttpClient HttpClient
+@inject IHttpClientFactory HttpClientFactory
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 
 <div class="col-12">
     <div class="invoice">
@@ -132,6 +134,18 @@
         var authenticateSate = await AuthenticationStateTask;
         User = authenticateSate.User;
         OrderNumber = string.Concat(DateTime.UtcNow.ToString("yyyMMddHHmmss"), rnd.Next(100000, 999999));
+
+
+        var httpClient = HttpClientFactory.CreateClient(Configuration["Service:Api:AnonymousApiName"]);
+
+        await httpClient.PostAsJsonAsync<EventTrackingItem>("api/EventTracker", new EventTrackingItem
+        {
+            Category = "Subscription",
+            Key = $"choose;{SubscriptionId}",
+            CreatedDate = DateTime.UtcNow,
+            Id = Guid.NewGuid(),
+            UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)
+        });
 
         var resultConfig = await HttpClient.GetAsync($"/api/SubPack/GetConfigCrypto");
 
