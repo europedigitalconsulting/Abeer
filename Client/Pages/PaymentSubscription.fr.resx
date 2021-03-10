@@ -120,6 +120,9 @@
   <data name="CancelOrder" xml:space="preserve">
     <value>Annuler</value>
   </data>
+  <data name="Currency" xml:space="preserve">
+    <value>€</value>
+  </data>
   <data name="LabelBilledTo" xml:space="preserve">
     <value>Vous</value>
   </data>
