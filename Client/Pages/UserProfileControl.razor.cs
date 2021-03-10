@@ -48,6 +48,7 @@ namespace Abeer.Client.Pages
         private int PinCode;
         private string NewDigitCode;
         private int NewPinCode;
+        private bool ModalConnectDesktop;
 
         private string ChangePhotoError = "";
         private string _PhotoType = "Gravatar";
@@ -219,6 +220,13 @@ namespace Abeer.Client.Pages
             ModalEditProfil = true;
             ToggleMenu = false;
         }
+
+        private void OpenConnectDesktop()
+        {
+            ModalConnectDesktop = true;
+            ToggleMenu = false;
+        }
+
         private void OpenModalSocialNetwork()
         {
             NewSocialLink = new SocialNetwork { OwnerId = User.Id };

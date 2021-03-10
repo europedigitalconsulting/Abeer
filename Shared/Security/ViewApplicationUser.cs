@@ -36,6 +36,9 @@ namespace Abeer.Shared
         public IList<CustomLink> CustomLinks { get; set; }
         public bool IsReadOnly { get; set; }
 
+        public DateTime? SubscriptionStart { get; set; }
+        public DateTime? SubscriptionEnd { get; set; }
+        
         public static implicit operator ViewApplicationUser(ApplicationUser user)
         {
             return new ViewApplicationUser()
@@ -60,7 +63,10 @@ namespace Abeer.Shared
                 LastName = user.LastName,
                 NubmerOfView = user.NubmerOfView,
                 PhotoUrl = user.PhotoUrl,
-                PinCode = user.PinCode
+                PinCode = user.PinCode,
+                SubscriptionStart = user.SubscriptionStartDate,
+                SubscriptionEnd = user.SubscriptionEndDate,
+                IsReadOnly = user.SubscriptionEndDate.HasValue && user.SubscriptionEndDate <= DateTime.UtcNow
             };
         }
     }

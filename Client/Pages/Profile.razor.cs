@@ -20,6 +20,7 @@ namespace Abeer.Client.Pages
         public ViewApplicationUser UserProfile { get; set; } = new ViewApplicationUser();
         public List<SocialNetwork> AvailableSocialNetworks { get; set; } = new List<SocialNetwork>();
         public ClaimsPrincipal User { get; set; }
+        public bool ReadOnly { get; set; }
 
         protected override async Task OnParametersSetAsync()
         {
