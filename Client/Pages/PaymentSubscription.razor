@@ -1,5 +1,4 @@
-﻿
-@page "/payment-subscription/{SubscriptionId}"
+﻿@page "/payment-subscription/{SubscriptionId}"
 
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
 @inject Microsoft.Extensions.Localization.IStringLocalizer<PaymentSubscription> Localizer
@@ -8,111 +7,102 @@
 @inject IHttpClientFactory HttpClientFactory
 @inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 
-<div class="col-12">
-    <div class="invoice">
-        <div class="invoice-print">
+<div class="section mt-5">
+    <div class="row align-items-center">
+        <div class="col-sm-12 col-md-7 pt-3">
+            <header>
+                <h4 class=" " style="color:#97AABD;font-weight:400">@Localizer["LabelInvoice"]</h4>
+                <div style="margin-left: -20px; border: 2px solid #02BF8A; width: 25px;"></div>
+                <br />
+            </header>
+        </div>
+        <div class="col-sm-12 col-md-5 text-right invoice-number">
+            <span class="btn" style="font-weight:300;color:white;background:#F4957D">@Localizer["LabelOrderNumber"] @OrderNumber</span>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-lg-12">
             <div class="row">
-                <div class="col-lg-12">
-                    <div class="invoice-title">
-                        <h2> @Localizer["LabelInvoice"]</h2>
-                        <div class="invoice-number"> @Localizer["LabelOrderNumber"] @OrderNumber</div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <address>
-                                <strong> @Localizer["LabelBilledTo"]</strong><br>
-                                @User.FindFirstValue(ClaimTypes.Surname)  @User.FindFirstValue(ClaimTypes.GivenName) <br>
-                                @User.FindFirstValue("LabelCity") <br />
-                                @User.FindFirstValue("LabelCountry")
-                            </address>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                        </div>
-                        <div class="col-md-6 text-md-right">
-                            <address>
-                                <strong> @Localizer["LabelOrderDate"]</strong><br>
-                                @DateTime.Now.ToLongDateString()<br><br>
-                            </address>
-                        </div>
-                    </div>
+                <div class="col-6">
+                    <address>
+                        <strong> @Localizer["LabelBilledTo"]</strong><br>
+                        @User.FindFirstValue(ClaimTypes.Surname)  @User.FindFirstValue(ClaimTypes.GivenName) <br>
+                        @User.FindFirstValue("city") <br />
+                        @User.FindFirstValue("country")
+                    </address>
                 </div>
-            </div>
-
-            <div class="row mt-4">
-                <div class="col-md-12">
-                    <div class="section-title"> @Localizer["LabelOrderSummary"]</div>
-                    <p class="section-lead"> @Localizer["OrderSummaryCatchPhrase"]</p>
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover table-md">
-                            <tr>
-                                <th data-width="40">#</th>
-                                <th> @Localizer["LabelItem"]</th>
-                                <th class="text-center"> @Localizer["LabelPrice"]</th>
-                                <th class="text-center"> @Localizer["LabelQuantity"]</th>
-                                <th class="text-right"> @Localizer["LabelTotal"]</th>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td> @SubPack?.Label</td>
-                                <td class="text-center"> @SubPack?.Price</td>
-                                <td class="text-center"> 1</td>
-                                <td class="text-right"> @(SubPack?.Price * 1)</td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="row mt-4">
-                        <div class="col-lg-8">
-                        </div>
-                        <div class="col-lg-4 text-right">
-                            <hr class="mt-2 mb-2">
-                            <div class="invoice-detail-item">
-                                <div class="invoice-detail-name">@Localizer["LabelTotal"]</div>
-                                <div class="invoice-detail-value invoice-detail-value-lg">@SubPack?.Price</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mt-4">
-                        <div class="col-lg-8">
-                        </div>
-                        <div class="col-lg-4 text-right">
-                            <hr class="mt-2 mb-2">
-                            <div class="invoice-detail-item">
-                                <div class="invoice-detail-name">@Localizer["VTA"]</div>
-                                <div class="invoice-detail-value invoice-detail-value-lg">@VTA</div>
-                            </div>
-                        </div>
-                    </div><div class="row mt-4">
-                        <div class="col-lg-8">
-                        </div>
-                        <div class="col-lg-4 text-right">
-                            <hr class="mt-2 mb-2">
-                            <div class="invoice-detail-item">
-                                <div class="invoice-detail-name">@Localizer["TTC"]</div>
-                                <div class="invoice-detail-value invoice-detail-value-lg">@TTC</div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="col-6 text-right">
+                    <address>
+                        <strong> @Localizer["LabelOrderDate"]</strong><br>
+                        @DateTime.Now.ToLongDateString()<br><br>
+                    </address>
                 </div>
             </div>
         </div>
-        <hr>
-        <div class="text-md-right">
-            <div class="float-lg-left mb-lg-0 mb-3">
-                @if (cryptoPaymentViewModel?.EnableCryptoPayment == true)
-                {
-                    <CryptocoinPayment BeforeCallPayment="CreatePayment" CryptoConfig="cryptoPaymentViewModel"
-                                       OrderNumber="@OrderNumber" Price="@SubPack.Price" Items=@Cart PagePaymentError="ConfirmPayment/Error"
-                                       CssClass="btn btn-success btn-icon icon-left" LabelBtn="@Localizer["PayWithCrypto"]">
-                    </CryptocoinPayment>
-                }
+    </div>
 
-                <button class="btn btn-primary btn-icon icon-left" @onclick="PaypalPayment">@Localizer["PayWithPaypal"]</button>
-
-                <button class="btn btn-danger btn-icon icon-left" @onclick="GoToBack"><i class="fas fa-times"></i>@Localizer["Modify"]</button>
+    <div class="row ">
+        <div class="col-md-12">
+            <div class="section-title mt-4"> @Localizer["LabelOrderSummary"]</div>
+            <p class="section-lead mt-2"> @Localizer["OrderSummaryCatchPhrase"]</p>
+            @*<div class="table-responsive">
+                <table class="table table-striped table-hover table-md">
+                    <tr>
+                        <th data-width="40">#</th>
+                        <th> @Localizer["LabelItem"]</th>
+                        <th class="text-center"> @Localizer["LabelPrice"]</th>
+                        <th class="text-center"> @Localizer["LabelQuantity"]</th>
+                        <th class="text-right"> @Localizer["LabelTotal"]</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td> @SubPack?.Label</td>
+                        <td class="text-center"> @SubPack?.Price</td>
+                        <td class="text-center"> 1</td>
+                        <td class="text-right"> @(SubPack?.Price * 1)</td>
+                    </tr>
+                </table>
+            </div>*@
+            <div class="row mt-5">
+                <div class="col-10">
+                    @Localizer["LabelTotal"]
+                </div>
+                <div class="col-2 text-right">
+                    @SubPack?.Price
+                </div>
             </div>
+            <hr class="my-2">
+            <div class="row mb-4">
+                <div class="col-10">
+                    @Localizer["VTA"]
+                </div>
+                <div class="col-2 text-right">
+                    @VTA
+                </div>
+            </div>
+            <hr class="my-2">
+            <div class="row">
+                <div class="col-10">
+                    @Localizer["TTC"]
+                </div>
+                <div class="col-2 text-right">
+                    @TTC
+                </div>
+            </div>
+        </div>
+    </div> 
+    <div class="text-md-right">
+        <div class="float-right mb-lg-0 mb-3">
+            @if (cryptoPaymentViewModel?.EnableCryptoPayment == true)
+            {
+                <CryptocoinPayment BeforeCallPayment="CreatePayment" CryptoConfig="cryptoPaymentViewModel"
+                                   OrderNumber="@OrderNumber" Price="@SubPack.Price" Items=@Cart PagePaymentError="ConfirmPayment/Error"
+                                   CssClass="btn btn-success btn-icon icon-left" LabelBtn="@Localizer["PayWithCrypto"]">
+                </CryptocoinPayment>
+            }
+
+            <button class="btn btn-primary btn-icon icon-left mt-4" @onclick="PaypalPayment">@Localizer["PayWithPaypal"]</button>
         </div>
     </div>
 </div>
@@ -136,7 +126,7 @@
         OrderNumber = string.Concat(DateTime.UtcNow.ToString("yyyMMddHHmmss"), rnd.Next(100000, 999999));
 
 
-        var httpClient = HttpClientFactory.CreateClient(Configuration["Service:Api:AnonymousApiName"]);
+        var httpClient = HttpClientFactory.CreateClient(Configuration["Service:Api:ApiName"]);
 
         await httpClient.PostAsJsonAsync<EventTrackingItem>("api/EventTracker", new EventTrackingItem
         {
@@ -159,8 +149,7 @@
             NavigationManager.NavigateTo("/ConfirmPayment/Error", true);
             return;
         }
-        Console.WriteLine($"/api/SubP" +
-            $"ack/Get/{SubscriptionId}");
+
         var result = await HttpClient.GetAsync($"/api/SubPack/Get/{SubscriptionId}");
 
         if (result.IsSuccessStatusCode)

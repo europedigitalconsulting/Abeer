@@ -22,7 +22,7 @@ namespace Abeer.UI_Ads
             getAds.EnsureSuccessStatusCode();
             var json = await getAds.Content.ReadAsStringAsync();
             Ads = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Abeer.Shared.Functional.AdModel>>(json);
-            await base.OnParametersSetAsync();
+            await base.OnInitializedAsync();
         }
 
         private void OpenEditModal(Abeer.Shared.Functional.AdModel ad)

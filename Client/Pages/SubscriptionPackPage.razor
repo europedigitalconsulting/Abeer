@@ -1,121 +1,57 @@
 ﻿@page "/subscription-pack"
 @attribute [Authorize]
-@inject HttpClient httpClient
-@inject NavigationManager navigationManager
 @inject Microsoft.Extensions.Localization.IStringLocalizer<SubscriptionPackPage> Loc
-@inject IHttpClientFactory HttpClientFactory
-@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 
-@code {
-    [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
-
-    private List<SubscriptionPack> listSubscriptionPack { get; set; } = new List<SubscriptionPack>();
-
-    protected override async Task OnInitializedAsync()
-    {
-        var authState = await authenticationStateTask;
-        var user = authState.User;
-
-        var httpClient = HttpClientFactory.CreateClient(Configuration["Service:Api:AnonymousApiName"]);
-
-        await httpClient.PostAsJsonAsync<EventTrackingItem>("api/EventTracker", new EventTrackingItem
-        {
-            Category = "Subscription",
-            Key = "start",
-            CreatedDate = DateTime.UtcNow,
-            Id = Guid.NewGuid(),
-            UserId = user.FindFirstValue(ClaimTypes.NameIdentifier)
-        });
-
-        var subscriptionPacks = await httpClient.GetAsync("api/SubPack/GetAll");
-
-        if (subscriptionPacks.IsSuccessStatusCode)
-        {
-            var json = await subscriptionPacks.Content.ReadAsStringAsync();
-            listSubscriptionPack = JsonConvert.DeserializeObject<List<SubscriptionPack>>(json);
-        }
-
-        await httpClient.PostAsJsonAsync<EventTrackingItem>("api/EventTracker", new EventTrackingItem
-        {
-            Category = "Subscription",
-            Key = "Start",
-            CreatedDate = DateTime.UtcNow,
-            Id = Guid.NewGuid(),
-            UserId = user.FindFirstValue(ClaimTypes.NameIdentifier)
-        });
-
-        await base.OnInitializedAsync();
-    }
-    protected async Task Select(SubscriptionPack item)
-    {
-        if (item.Price == 0)
-        {
-            var subscriptionPack = await httpClient.PostAsJsonAsync<SubscriptionPack>("/api/SubPack/Select", item);
-            if (subscriptionPack.IsSuccessStatusCode)
-            {
-                navigationManager.NavigateTo("/", true);
-            }
-        }
-        else
-        {
-            navigationManager.NavigateTo($"/payment-subscription/{item.Id}", true);
-        }
-    }
-}
-<section class="section slide-in-elliptic-top-fwd">
+<section class="section slide-in-elliptic-top-fwd pt-sm-5">
     <div class="d-none d-md-block d-xl-block">
         <div class="row">
-            <div class="col-12 pt-5">
-                <header class="offset-lg-ipad-pro offset-md-1 offset-lg-3">
-                    <h1 class="h2" style="color:#97AABD;">@Loc["Title"] :: <strong style="color: #02BF8A">Meetag</strong></h1>
+            <div class="col-12 pt-3">
+                <header class="offset-lg-ipad-pro offset-md-1 offset-lg-1">
+                    <h1 class="h2" style="color:#97AABD;font-weight:400">@Loc["Title"] <strong style="color: #02BF8A">Meetag</strong></h1>
                     <div style="margin-left: -20px; border: 2px solid #02BF8A; width: 25px;"></div>
                     <br />
-                    <p class="col-xl-6 col-lg-6 col-md-9 col-ipad-pro-7 mb-0" style="color: #97AABD; font-size: 22px; font-weight: 400"><strong style="color: #02BF8A">Meetag</strong> @Loc["CatchPhrase"].</p>
                 </header>
             </div>
         </div>
     </div>
-    <div class="section-body mt-ipad-pro-5 ">
-        <div class="pricing6 py-5 bg-light">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-md-8 text-center">
-                        <h3 class="mb-3">@Loc["PriceTitle"]</h3>
-                        <h6 class="subtitle font-weight-normal">@Loc["Warrenty"]</h6>
-                    </div>
+    <div class="section-body mt-ipad-pro-5 mt-md-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div style="color:#97AABD;" class="col-md-8 text-center">
+                    <h4 class="mb-3">@Loc["PriceTitle"]</h4>
+                    <p class="subtitle" style="font-size:18px;">@Loc["Warrenty"]</p>
                 </div>
-                <!-- row  -->
-                <div class="row mt-4">
-                    <Virtualize Items="listSubscriptionPack" Context="subscription">
-                        <!-- column  -->
-                        <div class="col-md-6">
-                            <div class="card card-shadow border-0 mb-4">
-                                <div class="card-body p-4">
-                                    <div class="d-flex align-items-center">
-                                        <h5 class="font-weight-medium mb-0">@Loc[subscription.Label]</h5>
-                                        @if (subscription.Popuplar)
+            </div>
+            <!-- row  -->
+            <div class="row mt-5 justify-content-center">
+                <Virtualize Items="listSubscriptionPack" Context="subscription">
+                    <!-- column  -->
+                    <div class="col-md-4 col-sm-12 " style="position:relative;">
+                        <div class="card  mb-4" style=" border-radius: 10px; box-shadow: #DFDFDF 0px 8px 12px 0px">
+                            <img src="/assets/img/bg_intro.png" style="position:absolute;left:0;width:100%;z-index:99999;" />
+                            <div class="card-body pb-0 mb-0">
+                                <div class="text-center" style="margin-top:25%;">
+                                    <h3 style="color:#97AABD;padding-bottom:200px;" class="font-weight-medium mb-0">@Loc[subscription.Label]</h3>
+                                    @if (subscription.Popuplar)
                                         {
-                                            <div class="ml-auto"><span class="badge badge-danger font-weight-normal p-2">@Loc["Popular"]</span></div>
-                                        }
+                                    <div class=" " style="color:white; background:#45CA9E;border-radius:5px; position:absolute; top:-14px; right:-20px;">
+                                        <span class="badge font-weight-normal p-2">@Loc["Popular"]</span>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-lg-5 text-center">
-                                            <div class="price-box my-3">
-                                                <sup>@Loc["Currency"]</sup><span class="text-dark display-5">@subscription.Price</span>
-                                                <h6 class="font-weight-light">@Loc["Month"]</h6>
-                                                <a class="btn btn-primary" @onclick="@(()=>Select(subscription))">@Loc["Select"]</a>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-7 align-self-center">
-                                            @((MarkupString)Loc[subscription.Description].ToString())
-                                        </div>
+                                        }
+                                </div>
+                                <div class="row text-center">
+                                    <div class="col-12 mt-2">
+                                        <h4 class="font-weight-medium" style="color: #97AABD;"><sup>@Loc["Currency"]</sup>@subscription.Price / @Loc["Month"]</h4>
+                                    </div>
+                                    <div class="cursor-pointer col-12 my-2">
+                                        <a style=" font-size: 14px;  background: #F4957D; color: white; font-weight: 400;" class="btn col-lg-8 col-md-12 " @onclick="@(()=>Select(subscription))">@Loc["Select"]</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <!-- column  -->
-                    </Virtualize>
-                </div>
+                    </div>
+                    <!-- column  -->
+                </Virtualize>
             </div>
         </div>
     </div>

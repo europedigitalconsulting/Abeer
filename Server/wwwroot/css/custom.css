@@ -53,6 +53,9 @@
     .m-sm-3 {
         margin: 1rem !important;
     }
+    .pt-sm-5 {
+        padding-top: 3rem !important;
+    }
 }
 
 @media (min-width: 768px) { 
@@ -76,6 +79,11 @@
     }
     .logo-menu{
         display:none;
+    }
+    .footer {
+        width: 70%; 
+        margin-left: auto;
+        margin-right: auto;
     }
 }
 

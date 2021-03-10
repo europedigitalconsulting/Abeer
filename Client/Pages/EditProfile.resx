@@ -174,6 +174,9 @@
   <data name="CustomLinks" xml:space="preserve">
     <value>Custom Links</value>
   </data>
+  <data name="Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
   <data name="DisplayName" xml:space="preserve">
     <value>Display name</value>
   </data>
@@ -185,9 +188,6 @@
   </data>
   <data name="Email" xml:space="preserve">
     <value>Email</value>
-  </data>
-  <data name="Find-out" xml:space="preserve">
-    <value>Find out</value>
   </data>
   <data name="FirstName" xml:space="preserve">
     <value>First Name</value>
