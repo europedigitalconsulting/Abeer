@@ -94,18 +94,7 @@ namespace Abeer.Client.Pages
 
             await InvokeAsync(StateHasChanged);
         }
-
-
-        async Task GotoEditProfile()
-        {
-            NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri("/profile/edit").ToString(), true);
-            await InvokeAsync(StateHasChanged);
-        }
-        async Task GotoContact()
-        {
-            NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri("/contact/list").ToString(), false);
-            await InvokeAsync(StateHasChanged);
-        }         
+     
 
         private SocialNetwork NewSocialLink = new SocialNetwork();
         private CustomLink NewCustomLink = new CustomLink();

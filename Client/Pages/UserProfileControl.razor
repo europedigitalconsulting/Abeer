@@ -42,11 +42,11 @@
                                 </div>
                                 @if (!ScreenSize.IsSmall)
                                 {
-                                    <div class="p-2 cursor-pointer" @onclick="GotoContact">
-                                        <div class="pr-2 text-center" style="color:black; font-weight:400;">
+                                    <div class="p-2 cursor-pointer">
+                                        <a href="/contact/list" class="pr-2 text-center" style="color:black; font-weight:400;">
                                             <div><i style="font-size: 20px;" class="fa fa-users"></i></div>
                                             <span style="font-size:12px;">@Loc["Contacts"]</span>
-                                        </div>
+                                        </a>
                                     </div>
                                 }
                             }
@@ -144,27 +144,25 @@
                             <div @onclick="() => TabMap = false" class="col-12 pb-4 cursor-pointer" style="color:black;">
                                 <i class="fas fa-long-arrow-alt-left" style="font-size: 18px">&nbsp;&nbsp; @Loc["Back"]</i>
                             </div>
-                            <div class="col-12">
-                                <Virtualize Items="@User.CustomLinks" Context="customLink">
-                                    <div class="card col-md-6 col-lg-3 col-sm-12">
-                                        @if (string.IsNullOrEmpty(customLink.Logo))
-                                        {
-                                            <i class="fas fa-paperclip rounded-circle img-thumbnail" style="font-size: 105px; width: 155px; margin-left: auto; margin-right: auto;"></i>
-                                        }
-                                        else
-                                        {
-                                            <img alt="image" src="@(customLink.Logo.ToLower())" class="card-img-top" height="150">
-                                        }
-                                        <div class="card-body">
-                                            <h4 style="font-size:20px; color:black;" class="card-title">@customLink.Name</h4>
-                                            <p style="font-size:13px; color:black;font-weight:300;" class="card-text">@customLink.DisplayInfo</p>
-                                            <div style="display: flex; justify-content: center; align-items: center; ">
-                                                <a href="@customLink.Url" target="_blank" style="background: #02BF8A;" class="btn btn-success">@Loc["Discover"]</a>
-                                            </div>
+                            <Virtualize Items="@User.CustomLinks" Context="customLink">
+                                <div class="card col-md-6 col-lg-3 col-sm-12">
+                                    @if (string.IsNullOrEmpty(customLink.Logo))
+                                    {
+                                        <i class="fas fa-paperclip rounded-circle img-thumbnail" style="font-size: 105px; width: 155px; margin-left: auto; margin-right: auto;"></i>
+                                    }
+                                    else
+                                    {
+                                        <img alt="image" src="@(customLink.Logo.ToLower())" class="card-img-top" height="150">
+                                    }
+                                    <div class="card-body">
+                                        <h4 style="font-size:20px; color:black;" class="card-title">@customLink.Name</h4>
+                                        <p style="font-size:13px; color:black;font-weight:300;" class="card-text">@customLink.DisplayInfo</p>
+                                        <div style="display: flex; justify-content: center; align-items: center; ">
+                                            <a href="@customLink.Url" target="_blank" style="background: #02BF8A;" class="btn btn-success">@Loc["Find-out"]</a>
                                         </div>
                                     </div>
-                                </Virtualize>
-                            </div>
+                                </div>
+                            </Virtualize>
                         }
                     </div>
                 </div>
@@ -188,13 +186,13 @@
                             </div>
                         </a>
                     </div>
-                    <div class="p-2" @onclick="GotoContact">
-                        <div class="pr-2 text-center text-light">
+                    <div class="p-2">
+                        <a href="/contact/list" class="pr-2 text-center text-light">
                             <div>
                                 <i style="font-size: 16px; color: black;" class="fa fa-users" aria-hidden="true"></i>
                             </div>
                             <span style="font-size: 12px; color: black; font-weight: 400;">@Loc["Contacts"]</span>
-                        </div>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -211,8 +209,8 @@
                 <div @onclick="() => ToggleMenu = !ToggleMenu" style="position:fixed;top:60px;right:20px;padding:10px 15px 10px 15px;background:#F5F8FA;border-radius:10px;z-index:999999">
                     <i style="font-size:22px" class="fas fa-times"></i>
                 </div>
-                <div class="modal-body" style="display: flex;justify-content: center; align-items: center;">
-                    <div class="" style="color: white; width: calc(100vw); height: calc(100vw); margin-left: auto; margin-right: auto; display: flex; justify-content: center; align-items: center; z-index: 999;">
+                <div class="modal-body" style="margin-top: 100px; display: flex; justify-content: center; align-items: center;">
+                    <div class="" style="color: white; width: calc(100vw); margin-left: auto; margin-right: auto; z-index: 999;">
 
                         <ul style="list-style: none; width:100%; color:#97AABD;" class="pl-0 pr-0 ml-0 mr-0">
                             <li> @Loc["UpdateInfo"]</li>
@@ -248,7 +246,7 @@
 {
     <ModalDefault Title="@Loc["Title"]" ModalCancelClicked="() => ModalEditProfil = false" MaxWidthModal="800px">
         <Body>
-            <EditProfile CloseToggle="UpdateProfil" User="User"></EditProfile>
+            <EditProfile CloseToggle="UpdateProfil"></EditProfile>
         </Body>
     </ModalDefault>
 }
@@ -451,7 +449,7 @@
                     <input @bind="NewCustomLink.Name" class="form-control" />
                 </div>
                 <div class="form-group">
-                    @Loc["Name"]
+                    @Loc["Description"]
                     <textarea @bind="NewCustomLink.DisplayInfo" class="form-control" />
                 </div>
                 <div class="form-group">
