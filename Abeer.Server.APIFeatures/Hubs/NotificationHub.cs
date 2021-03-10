@@ -16,14 +16,21 @@ namespace Abeer.Server.APIFeatures.Hubs
 
     public interface INotificationHubInvokeMethods
     {
-        Task InvokeSendNotification(Notification notification);
+        Task InvokeDailyReminder(Notification notification);
+        Task InvokeSoonExpireProfil(Notification notification);
     }
 
     public class NotificationHub : Hub<INotificationHub>, INotificationHubInvokeMethods
     {
-        public async Task InvokeSendNotification(Notification notification)
+        public async Task InvokeDailyReminder(Notification notification)
         {
-            await Clients.Others.OnNotification(notification);
+            var connectionId = Context.ConnectionId;
+            await Clients.Client(connectionId).OnNotification(notification);
+        }
+        public async Task InvokeSoonExpireProfil(Notification notification)
+        {
+            var connectionId = Context.ConnectionId;
+            await Clients.Client(connectionId).OnNotification(notification); 
         }
     }
 }

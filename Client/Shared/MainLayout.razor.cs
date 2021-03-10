@@ -1,10 +1,14 @@
-﻿using Abeer.Shared.Functional;
+﻿using Abeer.Shared.ClientHub;
+using Abeer.Shared.EventNotification;
+using Abeer.Shared.Functional;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Web; 
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.SignalR.Client;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -12,6 +16,7 @@ namespace Abeer.Client.Shared
 {
     public partial class MainLayout : LayoutComponentBase
     {
+        private NotificationClient NotificationClient { get; set; }  
         public DateTime LastLogin { get; set; }
         protected ClaimsPrincipal _user;
         protected IEnumerable<Claim> _claims;
@@ -21,12 +26,40 @@ namespace Abeer.Client.Shared
         protected string DisplayName;
         protected bool IsAdmin;
         public ScreenSize ScreenSize { get; set; } = new ScreenSize();
-
-        [CascadingParameter]
-        private Task<AuthenticationState> authenticationStateTask { get; set; }
+        [Inject] public HttpClient httpClient { get; set; }
+        [CascadingParameter]  private Task<AuthenticationState> authenticationStateTask { get; set; }
         private AuthenticationState authenticationState { get; set; }
         [Inject] private NavigationManager navigationManager { get; set; }
 
+        protected override async Task OnInitializedAsync()
+        {
+            var authState = await authenticationStateTask;
+            _user = authState.User;
+
+            if (_user.Identity.IsAuthenticated)
+            {
+                Console.WriteLine($"start get notification for user {_user.Identity.Name}");
+
+                var getNotifications = await httpClient.GetAsync("api/Notification");
+                getNotifications.EnsureSuccessStatusCode();
+
+                var json = await getNotifications.Content.ReadAsStringAsync();
+
+                NotificationClient = new NotificationClient(navigationManager.ToAbsoluteUri("/notification").AbsoluteUri);
+                await NotificationClient.StartAsync();
+                NotificationClient.NotificationEvent += ShowNotification; 
+                if (!string.IsNullOrEmpty(json))
+                {
+                    var temp = JsonConvert.DeserializeObject<List<Notification>>(json); 
+                    await NotificationClient.SendNotifications(temp);
+                }
+            }
+        }
+        public async void ShowNotification(object sender, NotificationEventArgs e)
+        { 
+            NotificationClient.Notifications.Add(e.Notification);
+            await InvokeAsync(StateHasChanged);
+        }
         protected override async Task OnParametersSetAsync()
         {
             await GetClaimsPrincipalData();
