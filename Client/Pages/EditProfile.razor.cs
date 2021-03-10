@@ -19,12 +19,11 @@ namespace Abeer.Client.Pages
     {
         [Parameter]
         public EventCallback<ViewApplicationUser> CloseToggle { get; set; } 
-        private CustomLink NewCustomLink = new CustomLink();
 
         [Inject] private NavigationManager NavigationManager { get; set; }
         [Inject] private HttpClient HttpClient { get; set; }
-        [Parameter]
-        public ViewApplicationUser User { get; set; } 
+
+        public ViewApplicationUser User { get; set; } = new ViewApplicationUser();
 
         public List<SocialNetwork> AvailableSocialNetworks { get; set; } = new List<SocialNetwork>();
 
@@ -39,11 +38,9 @@ namespace Abeer.Client.Pages
         {
             var response = await HttpClient.GetAsync($"api/Profile");
             if (response.IsSuccessStatusCode)
-            {   
-                CustomLinks = User.CustomLinks.ToList();
-
-                var responseSocialNetwork = await HttpClient.GetAsync("api/socialnetwork");
-                response.EnsureSuccessStatusCode(); 
+            { 
+                var json = await response.Content.ReadAsStringAsync();
+                User = JsonConvert.DeserializeObject<ViewApplicationUser>(json);
             }
         } 
 
