@@ -126,6 +126,9 @@
   <data name="Month" xml:space="preserve">
     <value>Mois</value>
   </data>
+  <data name="Popular" xml:space="preserve">
+    <value>Recommander</value>
+  </data>
   <data name="Premium" xml:space="preserve">
     <value>Premium</value>
   </data>
@@ -157,7 +160,7 @@
 &lt;/ul&gt;</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Choix abonnement</value>
+    <value>Nos Abonnements</value>
   </data>
   <data name="Warrenty" xml:space="preserve">
     <value>Nous vous offrons une garantie 100% sastisfaction et un remboursement </value>

@@ -151,7 +151,7 @@
     <value>Modifier votre abonnement</value>
   </data>
   <data name="OrderSummaryCatchPhrase" xml:space="preserve">
-    <value>Voici les informations de votre abonnement, si tout est correct, veuillez cliquer sur Payer avec "Paypal" sinon cliquez sur "Modifier"</value>
+    <value>Voici les informations de votre abonnement, si tout est correct, veuillez cliquer sur Payer avec "Paypal"</value>
   </data>
   <data name="PayWithCrypto" xml:space="preserve">
     <value>Payer avec crypocoin</value>
