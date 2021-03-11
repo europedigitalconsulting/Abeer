@@ -10,6 +10,7 @@ using Abeer.Shared.Functional;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Newtonsoft.Json;
+using Abeer.Shared.ViewModels;
 
 namespace Abeer.UI_Contacts
 {
@@ -107,13 +108,15 @@ namespace Abeer.UI_Contacts
             response.EnsureSuccessStatusCode();
 
             var json = await response.Content.ReadAsStringAsync();
-            var viewContact = JsonConvert.DeserializeObject<ViewContact>(json);
+            var contactViewModel = JsonConvert.DeserializeObject<ContactViewModel>(json);
 
             SuggestionItems.Remove(contact);
-            All.Add(viewContact);
+            All.Add(contactViewModel.ViewContact);
             Items = All.ToList();
 
             await InvokeAsync(StateHasChanged);
+
+            await NotificationClient.SendNotificationsToUser(contactViewModel.Notification, contact.UserId);
         }
 
         async Task Remove(ViewContact contact)

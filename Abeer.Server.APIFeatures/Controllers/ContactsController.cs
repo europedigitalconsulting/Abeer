@@ -37,13 +37,14 @@ namespace Abeer.Server.Controllers
         private readonly UrlShortner _urlShortner;
         private readonly IEmailSenderService _emailSender;
         private readonly IConfiguration _configuration;
-
+        private readonly NotificationService _notificationService;
         public ContactsController(
-            UrlShortner urlShortner,
+            UrlShortner urlShortner, NotificationService notificationService,
             IWebHostEnvironment env, IConfiguration configuration,
             IServiceProvider serviceProvider,
             IEmailSenderService emailSender, FunctionalUnitOfWork onlineWalletUnitOfWork, UserManager<ApplicationUser> userManager)
         {
+            _notificationService = notificationService;
             _serviceProvider = serviceProvider;
             _UnitOfWork = onlineWalletUnitOfWork;
             _userManager = userManager;
@@ -107,7 +108,7 @@ namespace Abeer.Server.Controllers
                 var invitation = new Invitation
                 {
                     OwnedId = User.NameIdentifier(),
-                    ContactId = contact.OwnerId,
+                    ContactId = result.Id.ToString(),
                     CreatedDate = DateTime.UtcNow,
                     InvitationStat = (int)EnumUserAccepted.PENDING
                 };
@@ -115,7 +116,9 @@ namespace Abeer.Server.Controllers
                 await _UnitOfWork.InvitationRepository.Add(invitation);
 
                 await SendEmailTemplate(userContact);
-                return Ok(new ViewContact(userContact, result));
+
+                Notification notif = await _notificationService.Create(User.NameIdentifier(), "add-contact", "contact/list", "reminder", "reminder", "reminder", "add-contact");
+                return Ok(new ContactViewModel() { ViewContact = new ViewContact(userContact, result), Notification = notif });
             }
             return Conflict();
         }

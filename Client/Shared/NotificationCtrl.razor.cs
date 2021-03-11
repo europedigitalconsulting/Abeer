@@ -33,7 +33,8 @@ namespace Abeer.Client.Shared
             { "welcome", typeof(WelcomeDialog) },
             { "daily-reminder", typeof(DailyReminderDialog) },
             { "expiredprofile", typeof(ExpiredProfileDialog) },
-            { "soonexpireprofile", typeof(SoonExpiredProfileDialog) }
+            { "soonexpireprofile", typeof(SoonExpiredProfileDialog) },
+            { "add-contact", typeof(AddContactDialog) }
         };
 
         public Notification NextNotification
