@@ -76,13 +76,13 @@ namespace Abeer.Client.Shared
 
 
         public async Task SetDisplayedNotification()
-        {
+        { 
             _next.IsDisplayed = true;
             _next.DisplayCount += 1;
             _next.LastDisplayTime = DateTime.UtcNow;
             var post = await httpClient.PutAsJsonAsync<Notification>("api/notification", _next);
             post.EnsureSuccessStatusCode();
-            NotificationClient.Notifications.Remove(_next);
+            bool uno = NotificationClient.Notifications.Remove(_next); 
             _next = null;
         }
 
@@ -96,7 +96,7 @@ namespace Abeer.Client.Shared
             builder.OpenComponent(0, DialogTypes[type]);
             builder.AddAttribute(1, "User", User);
             builder.AddAttribute(2, "Close", EventCallback.Factory.Create(this, () => SetDisplayedNotification()));
-            builder.AddAttribute(2, "Navigate", EventCallback.Factory.Create<string>(this, (url) => Goto(url)));
+            builder.AddAttribute(3, "Navigate", EventCallback.Factory.Create<string>(this, (url) => Goto(url)));
             builder.CloseComponent();
         };
     }

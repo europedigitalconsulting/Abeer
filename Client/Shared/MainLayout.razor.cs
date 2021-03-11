@@ -4,6 +4,7 @@ using Abeer.Shared.Functional;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.SignalR.Client;
 using Newtonsoft.Json;
 using System;
@@ -30,7 +31,8 @@ namespace Abeer.Client.Shared
         [CascadingParameter]  private Task<AuthenticationState> authenticationStateTask { get; set; }
         private AuthenticationState authenticationState { get; set; }
         [Inject] private NavigationManager navigationManager { get; set; }
-
+        [Inject]
+        IAccessTokenProvider tokenProvider { get; set; }
         protected override async Task OnInitializedAsync()
         {
             var authState = await authenticationStateTask;
@@ -44,8 +46,10 @@ namespace Abeer.Client.Shared
                 getNotifications.EnsureSuccessStatusCode();
 
                 var json = await getNotifications.Content.ReadAsStringAsync();
-
-                NotificationClient = new NotificationClient(navigationManager.ToAbsoluteUri("/notification").AbsoluteUri);
+                var accessTokenResult = await tokenProvider.RequestAccessToken();
+                accessTokenResult.TryGetToken(out var accessToken); 
+                NotificationClient = new NotificationClient(navigationManager.ToAbsoluteUri("/notification").AbsoluteUri, accessToken.Value);
+                
                 await NotificationClient.StartAsync();
                 NotificationClient.NotificationEvent += ShowNotification; 
                 if (!string.IsNullOrEmpty(json))
@@ -56,7 +60,7 @@ namespace Abeer.Client.Shared
             }
         }
         public async void ShowNotification(object sender, NotificationEventArgs e)
-        { 
+        {
             NotificationClient.Notifications.Add(e.Notification);
             await InvokeAsync(StateHasChanged);
         }

@@ -40,6 +40,7 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Abeer.Shared.ViewModels;
 using Blazor.Analytics;
 using BlazorPro.BlazorSize;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Abeer.Server
 {
@@ -85,6 +86,7 @@ namespace Abeer.Server
             services.AddTransient<FunctionalUnitOfWork>();
 
             services.AddSignalR();
+            services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
 
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<SecurityDbContext>()

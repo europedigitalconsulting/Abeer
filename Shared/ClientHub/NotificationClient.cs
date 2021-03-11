@@ -13,13 +13,15 @@ namespace Abeer.Shared.ClientHub
     public class NotificationClient : IAsyncDisposable
     {
         private string HubUrl { get; set; }
-        private HubConnection _hubConnection; 
-        public List<Notification> Notifications { get; set; } 
+        private string Token { get; set; }
+        private HubConnection _hubConnection;
+        public List<Notification> Notifications { get; set; }
         private bool _started = false;
-        public NotificationClient(string hubUrl)
+        public NotificationClient(string hubUrl, string token = "")
         {
             HubUrl = hubUrl;
             Notifications = new List<Notification>();
+            Token = token;
         }
         public async Task StartAsync()
         {
@@ -32,13 +34,19 @@ namespace Abeer.Shared.ClientHub
 
                 _hubConnection = new HubConnectionBuilder()
                     .WithAutomaticReconnect(x.ToArray())
-                    .WithUrl(HubUrl)
+                    .WithUrl(HubUrl, options =>
+                    {
+                        options.AccessTokenProvider = async () =>
+                        {
+                            return await Task.Run(() => Token);
+                        };
+                    })
                     .Build();
 
                 _hubConnection.On<Notification>("OnNotification", (notification) =>
                 {
-                    NotificationHandle(notification); 
-                });
+                    NotificationHandle(notification);
+                }); 
 
                 // start the connection
                 await _hubConnection.StartAsync();

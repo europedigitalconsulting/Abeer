@@ -25,20 +25,6 @@ namespace Abeer.UI_Contacts
  
         protected override async Task OnInitializedAsync()
         {
-            var getNotifications = await httpClient.GetAsync("api/Notification");
-            getNotifications.EnsureSuccessStatusCode();
-
-            var json = await getNotifications.Content.ReadAsStringAsync();
-            if (!string.IsNullOrEmpty(json))
-            {
-                var temp = JsonConvert.DeserializeObject<List<Notification>>(json);
-                Console.WriteLine($"getted notifications {temp.Count}");
-                if (NotificationClient != null)
-                {
-                    await NotificationClient.SendNotifications(temp);
-                }
-            }
-
             var getMyContacts = await httpClient.GetAsync("/api/Contacts");
             var getCountries = await httpClient.GetAsync("/api/Countries");
 
