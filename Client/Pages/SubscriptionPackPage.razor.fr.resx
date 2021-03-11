@@ -133,12 +133,12 @@
     <value>Premium</value>
   </data>
   <data name="PremiumDescription" xml:space="preserve">
-    <value>&lt;ul class="list-inline"&gt;
-         &lt;li&gt;&lt;i class="far fa-check-circle"&gt;&lt;/i&gt; &lt;span&gt;1 Mois d'accès&lt;/span&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;i class="far fa-check-circle"&gt;&lt;/i&gt; &lt;span&gt;Support par email ou en ligne&lt;/span&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;i class="far fa-check-circle"&gt;&lt;/i&gt;&lt;span&gt;1 QRCode&lt;/span&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;i class="far fa-check-circle"&gt;&lt;/i&gt;&lt;span&gt;1 Tag NFC&lt;/span&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;i class="far fa-check-circle"&gt;&lt;/i&gt;&lt;span&gt;Annonces pendant 5j&lt;/span&gt;&lt;/li&gt;
+    <value>&lt;ul class="sub"&gt;
+         &lt;li&gt;&lt;span&gt;1 Mois d'accès&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Support par email ou en ligne&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;1 QRCode&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;1 Tag NFC&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Annonces pendant 5j&lt;/span&gt;&lt;/li&gt;
 &lt;/ul&gt;</value>
   </data>
   <data name="PriceTitle" xml:space="preserve">
@@ -151,12 +151,12 @@
     <value>Standard</value>
   </data>
   <data name="StandardDescription" xml:space="preserve">
-    <value>&lt;ul class="list-inline"&gt;
-         &lt;li&gt;&lt;i class="far fa-check-circle"&gt;&lt;/i&gt; &lt;span&gt;1 Mois d'accès&lt;/span&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;i class="far fa-check-circle"&gt;&lt;/i&gt; &lt;span&gt;Support par email ou en ligne&lt;/span&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;i class="far fa-check-circle"&gt;&lt;/i&gt;&lt;span&gt;1 QRCode&lt;/span&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;i class="far fa-check-circle"&gt;&lt;/i&gt;&lt;span&gt;1 Tag NFC&lt;/span&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;i class="far fa-check-circle"&gt;&lt;/i&gt;&lt;span&gt;Annonces pendant 2j&lt;/span&gt;&lt;/li&gt;
+    <value>&lt;ul class="sub"&gt;
+         &lt;li&gt;&lt;span&gt;1 Mois d'accès&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Support par email ou en ligne&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;1 QRCode&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;1 Tag NFC&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Annonces pendant 2j&lt;/span&gt;&lt;/li&gt;
 &lt;/ul&gt;</value>
   </data>
   <data name="Title" xml:space="preserve">
@@ -169,13 +169,13 @@
     <value>Offre Annuel (2 mois gratuit)</value>
   </data>
   <data name="YearlyDescription" xml:space="preserve">
-    <value>&lt;ul class="list-inline"&gt;
-         &lt;li&gt;&lt;i class="far fa-check-circle"&gt;&lt;/i&gt; &lt;span&gt;12 Mois d'accès&lt;/span&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;i class="far fa-check-circle"&gt;&lt;/i&gt; &lt;span&gt;2 Mois d'accès gratuits&lt;/span&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;i class="far fa-check-circle"&gt;&lt;/i&gt; &lt;span&gt;Support par email ou en ligne&lt;/span&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;i class="far fa-check-circle"&gt;&lt;/i&gt;&lt;span&gt;1 QRCode&lt;/span&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;i class="far fa-check-circle"&gt;&lt;/i&gt;&lt;span&gt;1 Tag NFC&lt;/span&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;i class="far fa-check-circle"&gt;&lt;/i&gt;&lt;span&gt;Annonces illimitées&lt;/span&gt;&lt;/li&gt;
-&lt;/ul&gt;</value>
+    <value>&lt;ul class="sub"&gt;
+         &lt;li&gt;&lt;span&gt;12 Mois d'accès&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;2 Mois d'accès gratuits&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Support par email ou en ligne&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;1 QRCode&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;1 Tag NFC&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Annonces illimitées&lt;/span&gt;&lt;/li&gt;
+         &lt;/ul&gt;</value>
   </data>
 </root>

@@ -14,7 +14,7 @@
             </div>
         </div>
     </div>
-    <div class="section-body mt-ipad-pro-5 mt-md-5">
+    <div class="section-body mt-ipad-pro-5 mt-md-3">
         <div class="container">
             <div class="row justify-content-center">
                 <div style="color:#97AABD;" class="col-md-8 text-center">
@@ -31,7 +31,10 @@
                             <img src="/assets/img/bg_intro.png" style="position:absolute;left:0;width:100%;z-index:99999;" />
                             <div class="card-body pb-0 mb-0">
                                 <div class="text-center" style="margin-top:25%;">
-                                    <h3 style="color:#97AABD;padding-bottom:200px;" class="font-weight-medium mb-0">@Loc[subscription.Label]</h3>
+                                    <h3 style="color:#97AABD;" class="font-weight-medium mb-0">@Loc[subscription.Label]</h3>
+                                    <div class="text-left ml-3 my-3">
+                                        @((MarkupString)Loc[subscription.Description].ToString())
+                                    </div>
                                     @if (subscription.Popuplar)
                                         {
                                     <div class=" " style="color:white; background:#45CA9E;border-radius:5px; position:absolute; top:-14px; right:-20px;">

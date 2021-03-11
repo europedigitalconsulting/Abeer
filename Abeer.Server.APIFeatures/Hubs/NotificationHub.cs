@@ -1,14 +1,24 @@
 ﻿using Abeer.Shared.Functional;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Abeer.Server.APIFeatures.Hubs
 {
+    public class CustomUserIdProvider : IUserIdProvider
+    { 
+
+        public string GetUserId(HubConnectionContext connection)
+        {
+            return connection.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        }
+    }
     public interface INotificationHub
     {
         Task OnNotification(Notification notification);
@@ -16,14 +26,25 @@ namespace Abeer.Server.APIFeatures.Hubs
 
     public interface INotificationHubInvokeMethods
     {
-        Task InvokeSendNotification(Notification notification);
-    }
-
+        Task InvokeDailyReminder(Notification notification);
+        Task InvokeSoonExpireProfil(Notification notification);
+    } 
+    [Authorize]
     public class NotificationHub : Hub<INotificationHub>, INotificationHubInvokeMethods
     {
-        public async Task InvokeSendNotification(Notification notification)
+        public async Task InvokeDailyReminder(Notification notification)
+        { 
+            var userId = Context.UserIdentifier; 
+            await Clients.User(userId).OnNotification(notification);
+        }
+        public async Task InvokeSoonExpireProfil(Notification notification)
         {
-            await Clients.Others.OnNotification(notification);
+            var userId = Context.UserIdentifier;
+            await Clients.User(userId).OnNotification(notification);
+        }
+        public override async Task OnConnectedAsync()
+        { 
+            await base.OnConnectedAsync();
         }
     }
 }

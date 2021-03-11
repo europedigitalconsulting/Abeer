@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Abeer.Shared;
+using Abeer.Shared.ClientHub;
+using Abeer.Shared.Functional;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Newtonsoft.Json;
@@ -12,24 +15,26 @@ namespace Abeer.UI_Contacts
 {
     public partial class Contacts : ComponentBase
     {
+        [CascadingParameter] private NotificationClient NotificationClient { get; set; }
+        [Inject] private HttpClient httpClient { get; set; }
         public List<ViewContact> All { get; set; } = new List<ViewContact>();
         public List<ViewContact> Items { get; set; } = new List<ViewContact>();
         public List<ViewContact> Suggestions { get; set; } = new List<ViewContact>();
         public List<ViewContact> SuggestionItems { get; set; } = new List<ViewContact>();
         public List<Country> Countries { get; set; } = new List<Country>();
-
+ 
         protected override async Task OnInitializedAsync()
         {
-            var getMyContacts = await HttpClient.GetAsync("/api/Contacts");
-            var getCountries = await HttpClient.GetAsync("/api/Countries");
+            var getMyContacts = await httpClient.GetAsync("/api/Contacts");
+            var getCountries = await httpClient.GetAsync("/api/Countries");
 
             getMyContacts.EnsureSuccessStatusCode();
             getCountries.EnsureSuccessStatusCode();
 
-            var json = await getMyContacts.Content.ReadAsStringAsync();
+            var json2 = await getMyContacts.Content.ReadAsStringAsync();
             var jsonCountry = await getCountries.Content.ReadAsStringAsync();
 
-            All = JsonConvert.DeserializeObject<List<ViewContact>>(json);
+            All = JsonConvert.DeserializeObject<List<ViewContact>>(json2);
             Countries = JsonConvert.DeserializeObject<List<Country>>(jsonCountry);
             Items = All.ToList();
 
@@ -66,7 +71,7 @@ namespace Abeer.UI_Contacts
         {
             if (!string.IsNullOrWhiteSpace(Term))
             {
-                var getSuggestion = await HttpClient.GetAsync($"api/Contacts/suggestions?Term={Term}&Filter={FilterSelected?.Name ?? ""}");
+                var getSuggestion = await httpClient.GetAsync($"api/Contacts/suggestions?Term={Term}&Filter={FilterSelected?.Name ?? ""}");
                 getSuggestion.EnsureSuccessStatusCode();
                 var json = await getSuggestion.Content.ReadAsStringAsync();
                 SuggestionItems = JsonConvert.DeserializeObject<List<ViewContact>>(json);
@@ -97,7 +102,7 @@ namespace Abeer.UI_Contacts
         private async Task Add(ViewContact contact)
         {
             Console.WriteLine(JsonConvert.SerializeObject(contact));
-            var response = await HttpClient.GetAsync($"/api/Contacts/add/{contact.UserId}");
+            var response = await httpClient.GetAsync($"/api/Contacts/add/{contact.UserId}");
 
             response.EnsureSuccessStatusCode();
 
@@ -113,7 +118,7 @@ namespace Abeer.UI_Contacts
 
         async Task Remove(ViewContact contact)
         {
-            var deleteResult = await HttpClient.DeleteAsync($"/api/contacts/{contact.Id}");
+            var deleteResult = await httpClient.DeleteAsync($"/api/contacts/{contact.Id}");
             deleteResult.EnsureSuccessStatusCode();
             Items.Remove(contact);
             await InvokeAsync(StateHasChanged);

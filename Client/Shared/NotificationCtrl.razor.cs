@@ -1,4 +1,6 @@
 ﻿using Abeer.Client.Shared.NotificationDialogs;
+using Abeer.Shared.ClientHub;
+using Abeer.Shared.EventNotification;
 using Abeer.Shared.Functional;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -17,13 +19,12 @@ namespace Abeer.Client.Shared
 {
     public partial class NotificationCtrl : ComponentBase
     {
-        private List<Notification> Notifications { get; set; }
-        private HubConnection HubConnection { get; set; }
+        [Parameter] public NotificationClient NotificationClient { get; set; } 
+        [Parameter] public ClaimsPrincipal User { get; set; }
 
         [Inject] public NavigationManager NavigationManager { get; set; }
         [Inject] public HttpClient httpClient { get; set; }
         [CascadingParameter] public Task<AuthenticationState> authenticationStateTask { get; set; }
-        public ClaimsPrincipal User { get; set; }
 
         Notification _next;
 
@@ -40,59 +41,48 @@ namespace Abeer.Client.Shared
             get
             {
                 if (_next == null)
-                    _next = Notifications?.FirstOrDefault();
+                    _next = NotificationClient?.Notifications?.FirstOrDefault();
 
                 return _next;
             }
         }
 
-        protected override async Task OnInitializedAsync()
-        {
-            var authState = await authenticationStateTask;
-            User = authState.User;
+        //protected override async Task OnInitializedAsync()
+        //{
+        //    var authState = await authenticationStateTask;
+        //    User = authState.User;
 
-            if (User.Identity.IsAuthenticated)
-            {
-                Console.WriteLine($"start get notification for user {User.Identity.Name}");
+        //    if (User.Identity.IsAuthenticated)
+        //    {
+        //        Console.WriteLine($"start get notification for user {User.Identity.Name}");
 
-                var getNotifications = await httpClient.GetAsync("api/Notification");
-                getNotifications.EnsureSuccessStatusCode();
+        //        var getNotifications = await httpClient.GetAsync("api/Notification");
+        //        getNotifications.EnsureSuccessStatusCode();
 
-                var json = await getNotifications.Content.ReadAsStringAsync();
+        //        var json = await getNotifications.Content.ReadAsStringAsync();
 
-                if (!string.IsNullOrEmpty(json))
-                {
-                    Notifications = JsonConvert.DeserializeObject<List<Notification>>(json);
-                }
+        //        NotificationClient = new NotificationClient(NavigationManager.ToAbsoluteUri("/notification").AbsoluteUri);
+        //        await NotificationClient.StartAsync();
+        //        NotificationClient.NotificationEvent += TestNotification;
 
-                Console.WriteLine($"getted notifications {Notifications.Count}");
+        //        if (!string.IsNullOrEmpty(json))
+        //        {
+        //            var temp = JsonConvert.DeserializeObject<List<Notification>>(json);
+        //            Console.WriteLine($"getted notifications {temp.Count}");
+        //            await NotificationClient.SendNotifications(temp);
+        //        } 
+        //    }
+        //}
 
-                HubConnection = new HubConnectionBuilder().WithAutomaticReconnect()
-                    .WithUrl(NavigationManager.ToAbsoluteUri("/notification")).Build();
-
-                HubConnection.On<Notification>("OnNotification", (notification) =>
-                {
-                    Notifications.Add(notification);
-                    StateHasChanged();
-                });
-
-                await HubConnection.StartAsync();
-            }
-        }
-
-        public async ValueTask DisposeAsync()
-        {
-            await HubConnection.DisposeAsync();
-        }
 
         public async Task SetDisplayedNotification()
-        {
+        { 
             _next.IsDisplayed = true;
             _next.DisplayCount += 1;
             _next.LastDisplayTime = DateTime.UtcNow;
             var post = await httpClient.PutAsJsonAsync<Notification>("api/notification", _next);
             post.EnsureSuccessStatusCode();
-            Notifications.Remove(_next);
+            bool uno = NotificationClient.Notifications.Remove(_next); 
             _next = null;
         }
 
@@ -106,7 +96,7 @@ namespace Abeer.Client.Shared
             builder.OpenComponent(0, DialogTypes[type]);
             builder.AddAttribute(1, "User", User);
             builder.AddAttribute(2, "Close", EventCallback.Factory.Create(this, () => SetDisplayedNotification()));
-            builder.AddAttribute(2, "Navigate", EventCallback.Factory.Create<string>(this, (url) => Goto(url)));
+            builder.AddAttribute(3, "Navigate", EventCallback.Factory.Create<string>(this, (url) => Goto(url)));
             builder.CloseComponent();
         };
     }

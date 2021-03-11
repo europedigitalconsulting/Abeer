@@ -7,7 +7,11 @@
 @inject IHttpClientFactory HttpClientFactory
 @inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 
+
 <div class="section mt-5">
+    <div class="cursor-pointer">
+        <a class="text-dark" href="/subscription-pack"><i class="mr-2 fas fa-long-arrow-alt-left"></i>@Localizer["Back"]</a>
+    </div>
     <div class="row align-items-center">
         <div class="col-sm-12 col-md-7 pt-3">
             <header>
@@ -47,51 +51,51 @@
             <div class="section-title mt-4"> @Localizer["LabelOrderSummary"]</div>
             <p class="section-lead mt-2"> @Localizer["OrderSummaryCatchPhrase"]</p>
             @*<div class="table-responsive">
-                <table class="table table-striped table-hover table-md">
-                    <tr>
-                        <th data-width="40">#</th>
-                        <th> @Localizer["LabelItem"]</th>
-                        <th class="text-center"> @Localizer["LabelPrice"]</th>
-                        <th class="text-center"> @Localizer["LabelQuantity"]</th>
-                        <th class="text-right"> @Localizer["LabelTotal"]</th>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td> @SubPack?.Label</td>
-                        <td class="text-center"> @SubPack?.Price</td>
-                        <td class="text-center"> 1</td>
-                        <td class="text-right"> @(SubPack?.Price * 1)</td>
-                    </tr>
-                </table>
-            </div>*@
+                    <table class="table table-striped table-hover table-md">
+                        <tr>
+                            <th data-width="40">#</th>
+                            <th> @Localizer["LabelItem"]</th>
+                            <th class="text-center"> @Localizer["LabelPrice"]</th>
+                            <th class="text-center"> @Localizer["LabelQuantity"]</th>
+                            <th class="text-right"> @Localizer["LabelTotal"]</th>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td> @SubPack?.Label</td>
+                            <td class="text-center"> @SubPack?.Price</td>
+                            <td class="text-center"> 1</td>
+                            <td class="text-right"> @(SubPack?.Price * 1)</td>
+                        </tr>
+                    </table>
+                </div>*@
             <div class="row mt-5">
-                <div class="col-10">
+                <div class="col-9">
                     @Localizer["LabelTotal"]
                 </div>
-                <div class="col-2 text-right">
-                    @SubPack?.Price
+                <div class="col-3 text-right">
+                    @SubPack?.Price @Localizer["Currency"]
                 </div>
             </div>
             <hr class="my-2">
             <div class="row mb-4">
-                <div class="col-10">
+                <div class="col-9">
                     @Localizer["VTA"]
                 </div>
-                <div class="col-2 text-right">
-                    @VTA
+                <div class="col-3 text-right">
+                    @VTA @Localizer["Currency"]
                 </div>
             </div>
             <hr class="my-2">
             <div class="row">
-                <div class="col-10">
+                <div class="col-9">
                     @Localizer["TTC"]
                 </div>
-                <div class="col-2 text-right">
-                    @TTC
+                <div class="col-3 text-right">
+                    @TTC @Localizer["Currency"]
                 </div>
             </div>
         </div>
-    </div> 
+    </div>
     <div class="text-md-right">
         <div class="float-right mb-lg-0 mb-3">
             @if (cryptoPaymentViewModel?.EnableCryptoPayment == true)
@@ -101,8 +105,9 @@
                                    CssClass="btn btn-success btn-icon icon-left" LabelBtn="@Localizer["PayWithCrypto"]">
                 </CryptocoinPayment>
             }
-
-            <button class="btn btn-primary btn-icon icon-left mt-4" @onclick="PaypalPayment">@Localizer["PayWithPaypal"]</button>
+            <div class="mt-5" @onclick="PaypalPayment">
+                <img src="/assets/img/Paypal_01.png" alt="Paypal" />
+            </div>
         </div>
     </div>
 </div>
