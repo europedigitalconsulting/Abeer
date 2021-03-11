@@ -80,24 +80,16 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
             if (Input == null)
                 Input = new InputModel();
 
-            if (!string.IsNullOrEmpty(Request.Query?["PinCode"]))
+            if (!string.IsNullOrEmpty(Request.Query?["PinDigit"]))
             {
-                Input.PinCode = int.Parse(Request.Query?["PinCode"]);
-            }
-
-            if (Input.PinCode > 0)
-            {
-                var user = await _userManager.Users.Where(u => u.PinCode == Input.PinCode).ToListAsync();
-
-                if (user == null || user.Count == 0)
-                    return Redirect($"./Register?PinDigit={Request.Query?["PinDigit"]}");
+                Input.PinDigit = Request.Query?["PinDigit"];
             }
 
             await _eventTrackingService.Create(new Shared.Functional.EventTrackingItem
             {
                 Id = Guid.NewGuid(),
                 CreatedDate = DateTime.UtcNow,
-                Category = "Login",
+                Category = "LoginWithPinCode",
                 Key = "Start"
             });
 

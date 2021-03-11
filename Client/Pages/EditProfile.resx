@@ -165,6 +165,9 @@
   <data name="ConfirmPassword" xml:space="preserve">
     <value>Confirm new password</value>
   </data>
+  <data name="ConnectDesktop" xml:space="preserve">
+    <value>Associer mon poste</value>
+  </data>
   <data name="Contacts" xml:space="preserve">
     <value>Contacts</value>
   </data>

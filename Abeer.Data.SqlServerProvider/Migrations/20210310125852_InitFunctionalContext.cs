@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Abeer.Data.SqlServerProvider.Migrations
 {
-    public partial class InitNet5 : Migration
+    public partial class InitFunctionalContext : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -15,6 +15,7 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                     PriceName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PriceDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Value = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Currency = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DelayToDisplay = table.Column<int>(type: "int", nullable: false),
                     DisplayDuration = table.Column<int>(type: "int", nullable: true),
                     MaxViewCount = table.Column<int>(type: "int", nullable: false)
@@ -46,7 +47,9 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    OwnerId = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    OwnerId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserAccepted = table.Column<int>(type: "int", nullable: false),
+                    DateAccepted = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -91,11 +94,65 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "EventTrackingItems",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Key = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Category = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EventTrackingItems", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Invitations",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    OwnedId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ContactId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    InvitationStat = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Invitations", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Notifications",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NotificationType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NotificationIcon = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NotificationUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsDisplayOnlyOnce = table.Column<bool>(type: "bit", nullable: false),
+                    IsDisplayed = table.Column<bool>(type: "bit", nullable: false),
+                    DisplayMax = table.Column<int>(type: "int", nullable: false),
+                    DisplayCount = table.Column<int>(type: "int", nullable: false),
+                    MessageTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastDisplayTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CssClass = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notifications", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Payment",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AdId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Reference = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     SubscriptionId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     OrderNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -104,7 +161,12 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                     TokenId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsValidated = table.Column<bool>(type: "bit", nullable: false),
                     ValidatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PayerID = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    PayerID = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PaymentType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SubTotal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    TotalTax = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    TotalTTc = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    NoteToPayer = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -153,7 +215,8 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Enable = table.Column<bool>(type: "bit", nullable: false),
-                    Duration = table.Column<int>(type: "int", nullable: false)
+                    Duration = table.Column<int>(type: "int", nullable: false),
+                    Popuplar = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -189,6 +252,7 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Currency = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Url1 = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Url2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Url3 = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -205,7 +269,8 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                     IsValid = table.Column<bool>(type: "bit", nullable: false),
                     ValidateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    AdPriceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    AdPriceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Country = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -242,7 +307,8 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                     Icon = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SoldBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Quantity = table.Column<int>(type: "int", nullable: false),
-                    BatchId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    BatchId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CsvFileContent = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -251,6 +317,37 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                         name: "FK_Card_Batches_BatchId",
                         column: x => x.BatchId,
                         principalTable: "Batches",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Subscriptions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SubscriptionPackId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Start = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    End = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsValidated = table.Column<bool>(type: "bit", nullable: false),
+                    PaymentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Enable = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Subscriptions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Subscriptions_Payment_PaymentId",
+                        column: x => x.PaymentId,
+                        principalTable: "Payment",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Subscriptions_SubscriptionPack_SubscriptionPackId",
+                        column: x => x.SubscriptionPackId,
+                        principalTable: "SubscriptionPack",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -291,6 +388,16 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                 name: "IX_CardStatu_CardId",
                 table: "CardStatu",
                 column: "CardId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Subscriptions_PaymentId",
+                table: "Subscriptions",
+                column: "PaymentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Subscriptions_SubscriptionPackId",
+                table: "Subscriptions",
+                column: "SubscriptionPackId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -311,7 +418,13 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                 name: "CustomLink");
 
             migrationBuilder.DropTable(
-                name: "Payment");
+                name: "EventTrackingItems");
+
+            migrationBuilder.DropTable(
+                name: "Invitations");
+
+            migrationBuilder.DropTable(
+                name: "Notifications");
 
             migrationBuilder.DropTable(
                 name: "SocialNetwork");
@@ -320,7 +433,7 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                 name: "SubscriptionHistory");
 
             migrationBuilder.DropTable(
-                name: "SubscriptionPack");
+                name: "Subscriptions");
 
             migrationBuilder.DropTable(
                 name: "UrlShortned");
@@ -330,6 +443,12 @@ namespace Abeer.Data.SqlServerProvider.Migrations
 
             migrationBuilder.DropTable(
                 name: "Card");
+
+            migrationBuilder.DropTable(
+                name: "Payment");
+
+            migrationBuilder.DropTable(
+                name: "SubscriptionPack");
 
             migrationBuilder.DropTable(
                 name: "Batches");

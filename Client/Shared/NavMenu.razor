@@ -1,11 +1,13 @@
 ﻿@namespace Abeer.Client.Shared
 
 @using System.Security.Claims
+@using Abeer.Client.UISdk
 @inject Microsoft.Extensions.Localization.IStringLocalizer<NavMenu> Loc
 @inject NavigationManager Navigation
+@inject NavigationUrlService NavigationUrlService
 
 @code
-{ 
+{
     protected ClaimsPrincipal _user;
 
     private bool ShowActivityDialog = false;
@@ -107,6 +109,17 @@
                         <img src="/assets/img/menu/satistique_white.svg" width="20px">
                     </div>
                     <span>Activités</span>
+                </a>
+            </div>
+        }
+        @if (_user?.Identity.IsAuthenticated == false && !string.IsNullOrEmpty(NavigationUrlService.ProfileId))
+        {
+            <div class="p-2">
+                <a href="/Identity/Account/LoginWithPinCode?PinDigit=@NavigationUrlService.ProfileId" class="pr-2 text-center text-white">
+                    <div>
+                        <img src="/assets/img/menu/nfc.svg" width="20px">
+                    </div>
+                    <span>Connexion NFC</span>
                 </a>
             </div>
         }

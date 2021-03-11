@@ -22,6 +22,7 @@
     protected override Task OnInitializedAsync()
     {
         NavigationUrlService.ProfileUrl = Navigation.ToAbsoluteUri("/profile/Edit").ToString();
+        NavigationUrlService.ProfileId = ProfileId;
         return base.OnInitializedAsync();
     }
 
@@ -31,6 +32,8 @@
 
         User = authState.User;
 
+        var httpClient = HttpClientFactory.CreateClient(Configuration["Service:Api:AnonymousApiName"]);
+
         if (User.Identity.IsAuthenticated)
         {
             if (string.IsNullOrEmpty(ProfileId))
@@ -38,36 +41,38 @@
                 ProfileId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             }
 
-            var httpClient = HttpClientFactory.CreateClient(Configuration["Service:Api:AnonymousApiName"]);
-
             await httpClient.PostAsJsonAsync<EventTrackingItem>("api/EventTracker", new EventTrackingItem
             {
                 Category = "Navigation",
-                Key = "ViewProfile",
+                Key = $"ViewProfile#{ProfileId}",
                 CreatedDate = DateTime.UtcNow,
-                Id = Guid.NewGuid(), UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)
+                Id = Guid.NewGuid(),
+                UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)
             });
-
         }
-
-        if (!string.IsNullOrEmpty(ProfileId))
+        else
         {
-            var httpClient = HttpClientFactory.CreateClient(Configuration["Service:Api:AnonymousApiName"]);
-
-            var getProfile = await httpClient.GetAsync($"/api/viewProfile/{ProfileId}");
-
-            if (getProfile.StatusCode == System.Net.HttpStatusCode.NotFound)
-                Navigation.NavigateTo(Navigation.ToAbsoluteUri($"/Identity/Account/Register?PinCode={ProfileId}").ToString(), true);
-
-            getProfile.EnsureSuccessStatusCode();
-            var json = await getProfile.Content.ReadAsStringAsync();
-            UserProfile = Newtonsoft.Json.JsonConvert.DeserializeObject<ViewApplicationUser>(json);
-
-            NavigationUrlService.SetUrls($"https://www.google.com/maps/search/?api=1&query={UserProfile.Address},{UserProfile.City}%20{UserProfile.Country}&query_place_id={UserProfile.DisplayName}",
-                Navigation.ToAbsoluteUri($"/contact/import/{UserProfile.Id}").ToString());
-
-            await InvokeAsync(StateHasChanged);
+            await httpClient.PostAsJsonAsync<EventTrackingItem>("api/EventTracker", new EventTrackingItem
+            {
+                Category = "Navigation",
+                Key = $"ViewProfile#{ProfileId}",
+                CreatedDate = DateTime.UtcNow,
+                Id = Guid.NewGuid()
+            });
         }
+
+        var getProfile = await httpClient.GetAsync($"/api/viewProfile/{ProfileId}");
+
+        if (getProfile.StatusCode == System.Net.HttpStatusCode.NotFound)
+            Navigation.NavigateTo(Navigation.ToAbsoluteUri($"/Identity/Account/Register?PinCode={ProfileId}").ToString(), true);
+
+        getProfile.EnsureSuccessStatusCode();
+        var json = await getProfile.Content.ReadAsStringAsync();
+        UserProfile = Newtonsoft.Json.JsonConvert.DeserializeObject<ViewApplicationUser>(json);
+
+        NavigationUrlService.SetUrls($"https://www.google.com/maps/search/?api=1&query={UserProfile.Address},{UserProfile.City}%20{UserProfile.Country}&query_place_id={UserProfile.DisplayName}",
+            Navigation.ToAbsoluteUri($"/contact/import/{UserProfile.Id}").ToString());
+
 
         NavigationUrlService.ShowImport = true;
 
@@ -83,14 +88,14 @@
             }
         }
 
-        await base.OnParametersSetAsync();
+        await InvokeAsync(StateHasChanged);
     }
 }
 
 @if (UserProfile != null)
 {
     <UserProfileControl User="UserProfile" ReadOnly="true"
-                        ProfileUrl="@Navigation.ToAbsoluteUri($"/ViewProfile/{UserProfile.Id}").ToString()">
+                        ProfileUrl="@Navigation.ToAbsoluteUri($"/ViewProfile/{UserProfile.Id}").ToString()" IsAuthenticated="@User.Identity.IsAuthenticated" ProfileId="@ProfileId">
     </UserProfileControl>
 }
 else

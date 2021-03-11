@@ -98,6 +98,17 @@ namespace Abeer.Client.UISdk
             }
         }
 
+        private string _ProfileId;
+        public string ProfileId
+        {
+            get => _ProfileId;
+            set
+            {
+                _ProfileId = value;
+                OnPropertyChanged();
+            }
+        }
+
         private string _ImportContactUrl;
         
         public string ImportContactUrl

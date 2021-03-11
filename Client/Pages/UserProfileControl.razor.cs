@@ -25,7 +25,10 @@ namespace Abeer.Client.Pages
         public ViewApplicationUser User { get; set; } = new ViewApplicationUser();
         [Parameter]
         public List<SocialNetwork> AvailableSocialNetworks { get; set; } = new List<SocialNetwork>();
-
+        [Parameter]
+        public bool IsAuthenticated { get; set; }
+        [Parameter]
+        public string ProfileId { get; set; }
         [CascadingParameter]
         public ScreenSize ScreenSize { get; set; }
         [Inject] public NavigationManager NavigationManager { get; set; }
@@ -48,7 +51,6 @@ namespace Abeer.Client.Pages
         private int PinCode;
         private string NewDigitCode;
         private int NewPinCode;
-        private bool ModalConnectDesktop;
 
         private string ChangePhotoError = "";
         private string _PhotoType = "Gravatar";
@@ -210,11 +212,6 @@ namespace Abeer.Client.Pages
             ToggleMenu = false;
         }
 
-        private void OpenConnectDesktop()
-        {
-            ModalConnectDesktop = true;
-            ToggleMenu = false;
-        }
 
         private void OpenModalSocialNetwork()
         {
