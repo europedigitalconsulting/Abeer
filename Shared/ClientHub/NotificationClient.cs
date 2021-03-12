@@ -46,7 +46,7 @@ namespace Abeer.Shared.ClientHub
                 _hubConnection.On<Notification>("OnNotification", (notification) =>
                 {
                     NotificationHandle(notification);
-                }); 
+                });
 
                 // start the connection
                 await _hubConnection.StartAsync();
@@ -62,6 +62,18 @@ namespace Abeer.Shared.ClientHub
 
         public async Task SendNotifications(List<Notification> notifs)
         {
+            await SendingNotifications(notifs);
+        }
+        public async Task SendNotifications(Notification notif)
+        {
+            await SendingNotifications(new List<Notification> { notif });
+        }
+        public async Task SendNotificationsToUser(Notification notif, string userId)
+        {
+            await SendingNotifications(new List<Notification> { notif }, userId);
+        }
+        private async Task SendingNotifications(List<Notification> notifs, string userId = null)
+        {
             foreach (Notification item in notifs)
             {
                 switch (item.NotificationType)
@@ -72,13 +84,15 @@ namespace Abeer.Shared.ClientHub
                     case "daily-reminder":
                         await _hubConnection.SendAsync("InvokeDailyReminder", item);
                         break;
+                    case "add-contact":
+                        await _hubConnection.SendAsync("InvokeAddContact", item, userId);
+                        break;
                     default:
                         break;
                 }
 
             }
         }
-
         public async ValueTask DisposeAsync()
         {
             await StopAsync();

@@ -24,14 +24,14 @@ namespace Abeer.Services
         public async Task<IList<Notification>> GetNotifications(string userId, string notificationType) =>
             await _UnitOfWork.NotificationRepository.GetNotifications(userId, notificationType);
 
-        public async Task Create(Notification notification)
+        public async Task<Notification> Create(Notification notification)
         {
-            await _UnitOfWork.NotificationRepository.Add(notification);
+            return await _UnitOfWork.NotificationRepository.Add(notification);
         }
 
-        public async Task Create(string userId, string title, string notificationUrl)
+        public async Task<Notification> Create(string userId, string title, string notificationUrl)
         {
-            await Create(new Notification
+            return await Create(new Notification
             {
                 UserId = userId,
                 CssClass = "alert-info",
@@ -39,15 +39,15 @@ namespace Abeer.Services
                 ImageUrl = "alert-info",
                 IsDisplayOnlyOnce = true,
                 MessageTitle = title,
-                NotificationUrl = notificationUrl, 
-                NotificationIcon  = "alert-info", 
+                NotificationUrl = notificationUrl,
+                NotificationIcon = "alert-info",
                 NotificationType = "alert-info"
             });
         }
 
-        public async Task Create(string userId, string title, string notificationUrl, string cssClass)
+        public async Task<Notification> Create(string userId, string title, string notificationUrl, string cssClass)
         {
-            await Create(new Notification
+            return await Create(new Notification
             {
                 UserId = userId,
                 CssClass = cssClass,
@@ -61,9 +61,9 @@ namespace Abeer.Services
             });
         }
 
-        public async Task Create(string userId, string title, string notificationUrl, string cssClass, string imageUrl)
+        public async Task<Notification> Create(string userId, string title, string notificationUrl, string cssClass, string imageUrl)
         {
-            await Create(new Notification
+            return await Create(new Notification
             {
                 UserId = userId,
                 CssClass = cssClass,
@@ -82,9 +82,9 @@ namespace Abeer.Services
             await _UnitOfWork.NotificationRepository.Update(notification);
         }
 
-        public async Task Create(string userId, string title, string notificationUrl, string cssClass, string imageUrl, string notificationIcon)
+        public async Task<Notification> Create(string userId, string title, string notificationUrl, string cssClass, string imageUrl, string notificationIcon)
         {
-            await Create(new Notification
+            return await Create(new Notification
             {
                 UserId = userId,
                 CssClass = cssClass,
@@ -98,9 +98,9 @@ namespace Abeer.Services
             });
         }
 
-        public async Task Create(string userId, string title, string notificationUrl, string cssClass, string imageUrl, string notificationIcon, string notificationType)
+        public async Task<Notification> Create(string userId, string title, string notificationUrl, string cssClass, string imageUrl, string notificationIcon, string notificationType)
         {
-            await Create(new Notification
+            return await Create(new Notification
             {
                 UserId = userId,
                 CssClass = cssClass,
@@ -116,12 +116,12 @@ namespace Abeer.Services
 
         public async Task<IList<Notification>> GetNotifications() =>
             (await _UnitOfWork.NotificationRepository.GetNotifications())
-                ?.OrderByDescending(n=>n.CreatedDate).ToList();
+                ?.OrderByDescending(n => n.CreatedDate).ToList();
 
         public async Task<Notification> GetNotification(string userId, string type)
         {
             return (await _UnitOfWork.NotificationRepository.Where(n => n.UserId == userId && n.NotificationType == type))?
-                .OrderByDescending(n=>n.CreatedDate)
+                .OrderByDescending(n => n.CreatedDate)
                 .FirstOrDefault();
         }
 

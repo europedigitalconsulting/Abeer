@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace Abeer.Server.APIFeatures.Hubs
 {
     public class CustomUserIdProvider : IUserIdProvider
-    { 
+    {
 
         public string GetUserId(HubConnectionContext connection)
         {
@@ -28,13 +28,14 @@ namespace Abeer.Server.APIFeatures.Hubs
     {
         Task InvokeDailyReminder(Notification notification);
         Task InvokeSoonExpireProfil(Notification notification);
-    } 
+        Task InvokeAddContact(Notification notification, string userId);
+    }
     [Authorize]
     public class NotificationHub : Hub<INotificationHub>, INotificationHubInvokeMethods
     {
         public async Task InvokeDailyReminder(Notification notification)
-        { 
-            var userId = Context.UserIdentifier; 
+        {
+            var userId = Context.UserIdentifier;
             await Clients.User(userId).OnNotification(notification);
         }
         public async Task InvokeSoonExpireProfil(Notification notification)
@@ -42,8 +43,12 @@ namespace Abeer.Server.APIFeatures.Hubs
             var userId = Context.UserIdentifier;
             await Clients.User(userId).OnNotification(notification);
         }
+        public async Task InvokeAddContact(Notification notification, string userId)
+        {
+            await Clients.User(userId).OnNotification(notification);
+        }
         public override async Task OnConnectedAsync()
-        { 
+        {
             await base.OnConnectedAsync();
         }
     }
