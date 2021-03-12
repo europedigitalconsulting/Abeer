@@ -1,22 +1,26 @@
 ﻿@namespace Abeer.Client.UISdk.Shared
 @using Microsoft.AspNetCore.Components.Web
-@code
-{
-    [Parameter]
-    public string Id { get; set; }
-}
 <div class="row">
     <div class="col-1">
         <label for="file-input-@Id">
             <i class="fa fa-2x fa-paperclip"></i>
         </label>
-        <input id="file-input-@Id" type="file" @ref="_input" @onchange="HandleSelected" accept=".jpg, .jpeg, png" class="form-control" style="display: none" />
+        <input id="file-input-@Id" type="file" @ref="_input" @onchange="HandleSelected" accept="@(IsVideo ? ".mp4" : ".jpg, .jpeg, .png")" class="form-control" style="display: none" />
     </div>
 
     @if (ImgUrl != null)
     {
+
+
         <div class="col-5">
-            <img src="@ImgUrl" class="img-thumbnail"/>
+            @if (IsVideo)
+            {
+                <a href="@ImgUrl" target="_blank">@ImgUrl</a>
+            }
+            else
+            {
+                <img src="@ImgUrl" class="img-thumbnail" />
+            }
         </div>
     }
 </div>

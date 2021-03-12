@@ -13,9 +13,13 @@ namespace Abeer.Client.UISdk.Shared
     {
         private ElementReference _input;
         [Parameter]
+        public string Id { get; set; }
+        [Parameter]
         public string ImgUrl { get; set; }
         [Parameter]
         public EventCallback<string> OnChange { get; set; }
+        [Parameter]
+        public bool IsVideo { get; set; }
         [Inject]
         public IFileReaderService FileReaderService { get; set; }
         [Inject]
@@ -26,6 +30,12 @@ namespace Abeer.Client.UISdk.Shared
         public NavigationManager NavigationManager { get; set; }
         [Inject]
         public IConfiguration Configuration { get; set; }
+
+        public MediaUploader()
+        {
+            Id = Guid.NewGuid().ToString();
+        }
+
         private async Task HandleSelected(ChangeEventArgs changeEventArgs)
         {
             foreach (var file in await FileReaderService.CreateReference(_input).EnumerateFilesAsync())
@@ -45,3 +55,4 @@ namespace Abeer.Client.UISdk.Shared
         }
     }
 }
+

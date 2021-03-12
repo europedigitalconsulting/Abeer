@@ -7,15 +7,18 @@ namespace Abeer.Shared
 {
     public class ApplicationUser : IdentityUser
     {
-        public string FirstName { get; set; } = "MArc";
-        public string LastName { get; set; } = "Absalon";
-        public string DisplayName { get; set; } = "Over";
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string DisplayName { get; set; }
         public string Title { get; set; } 
         public string Description { get; set; }
+        public bool DisplayDescription { get; set; } = true;
         public bool IsOnline { get; set; }
         [NotMapped]
         public bool IsLocked { get; set; } 
         public bool IsUnlimited { get; set; }
+        public string DescriptionVideo { get; set; }
+        public string DescriptionVideoCover { get; set; }
         public DateTime LastLogin { get; set; }
         public DateTime? SubscriptionStartDate { get; set; }
         public DateTime? SubscriptionEndDate { get; set; }

@@ -64,6 +64,15 @@
                                         </p>
                                     </div>
                                 }
+                                @if (!string.IsNullOrEmpty(User.DescriptionVideo))
+                                {
+                                    if (!string.IsNullOrEmpty(User.DescriptionVideoCover))
+                                    {
+                                        <video controls poster="@User.DescriptionVideoCover" class="col-12">
+                                            <source src="@User.DescriptionVideo" type="video/mp4" />
+                                        </video>
+                                    }
+                                }
                                 <div class="mt-4">
                                     <ul style="list-style: none;font-weight: 500;" class="pl-0">
                                         @if (!string.IsNullOrWhiteSpace(User.City))

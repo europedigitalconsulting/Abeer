@@ -52,76 +52,51 @@ namespace Abeer.Server.Controllers
         [AllowAnonymous]
         [HttpGet("GetUserProfileNoDetail")]
         public async Task<ActionResult<ApplicationUser>> GetUserProfileNoDetail([FromQuery] string userId)
-        { 
+        {
             if (string.IsNullOrEmpty(userId))
                 userId = User.NameIdentifier();
 
             var user = await _userManager
                 .FindByIdAsync(userId);
 
-            var value = new ViewApplicationUser
-            {
-                City = user.City,
-                Email = user.Email,
-                PhoneNumber = user.PhoneNumber,
-                Id = user.Id,
-                SocialNetworkConnected = await _functionalUnitOfWork
-                    .SocialNetworkRepository
-                    .GetSocialNetworkLinks(user.Id) ?? new List<SocialNetwork>(),
-                CustomLinks = await _functionalUnitOfWork
+            var view = (ViewApplicationUser)user;
+
+            view.SocialNetworkConnected = await _functionalUnitOfWork
+                .SocialNetworkRepository
+                .GetSocialNetworkLinks(user.Id) ?? new List<SocialNetwork>();
+
+            view.CustomLinks = await _functionalUnitOfWork
                     .CustomLinkRepository
-                    .GetCustomLinkLinks(user.Id) ?? new List<CustomLink>(), 
-                Country = user.Country,
-                Description = user.Description,
-                DisplayName = user.DisplayName, 
-                LastLogin = user.LastLogin,
-                LastName = user.LastName,
-                Title = user.Title,
-                PhotoUrl = string.IsNullOrWhiteSpace(user.PhotoUrl) ? user.GravatarUrl() : user.PhotoUrl
-            };
-            return Ok(value);
+                    .GetCustomLinkLinks(user.Id) ?? new List<CustomLink>();
+
+            view.PhotoUrl = string.IsNullOrWhiteSpace(user.PhotoUrl) ? user.GravatarUrl() : user.PhotoUrl;
+
+            return Ok(view);
         }
         [HttpGet]
         public async Task<ActionResult<ApplicationUser>> GetUserProfile([FromQuery] string userId)
-        { 
+        {
             if (string.IsNullOrEmpty(userId))
                 userId = User.NameIdentifier();
 
             var user = await _userManager
                 .FindByIdAsync(userId);
 
-            var value = new ViewApplicationUser
-            {
-                City = user.City,
-                Email = user.Email,
-                PinCode = user.PinCode,
-                DigitCode = user.PinDigit?.ToString(),
-                PhoneNumber = user.PhoneNumber,
-                Id = user.Id,
-                SocialNetworkConnected = await _functionalUnitOfWork
-                    .SocialNetworkRepository
-                    .GetSocialNetworkLinks(user.Id) ?? new List<SocialNetwork>(),
-                CustomLinks = await _functionalUnitOfWork
+            var view = (ViewApplicationUser)user;
+
+            view.SocialNetworkConnected = await _functionalUnitOfWork
+                .SocialNetworkRepository
+                .GetSocialNetworkLinks(user.Id) ?? new List<SocialNetwork>();
+
+            view.CustomLinks = await _functionalUnitOfWork
                     .CustomLinkRepository
-                    .GetCustomLinkLinks(user.Id) ?? new List<CustomLink>(),
-                Address = user.Address,
-                Country = user.Country,
-                Description = user.Description,
-                DisplayName = user.DisplayName,
-                FirstName = user.FirstName,
-                IsAdmin = user.IsAdmin,
-                IsManager = user.IsManager,
-                IsOnline = user.IsOnline,
-                IsOperator = user.IsOperator,
-                LastLogin = user.LastLogin,
-                LastName = user.LastName,
-                Title = user.Title,
-                PhotoUrl = string.IsNullOrWhiteSpace(user.PhotoUrl) ? user.GravatarUrl() : user.PhotoUrl
-            };
+                    .GetCustomLinkLinks(user.Id) ?? new List<CustomLink>();
 
-            value.IsReadOnly = (user.SubscriptionEndDate.HasValue && user.SubscriptionEndDate < DateTime.UtcNow);
+            view.PhotoUrl = string.IsNullOrWhiteSpace(user.PhotoUrl) ? user.GravatarUrl() : user.PhotoUrl;
 
-            return Ok(value);
+            view.IsReadOnly = (user.SubscriptionEndDate.HasValue && user.SubscriptionEndDate < DateTime.UtcNow);
+
+            return Ok(view);
         }
 
         [HttpGet("daily")]
@@ -162,7 +137,7 @@ namespace Abeer.Server.Controllers
 
             return Ok(daily);
         }
-        
+
         [HttpPost("SaveNewCard")]
         public async Task<ActionResult<ApplicationUser>> SaveNewCard(ApplicationUser userForm)
         {
@@ -197,13 +172,29 @@ namespace Abeer.Server.Controllers
         {
             var user = await _userManager.FindByIdAsync(applicationUser.Id);
 
-            user.FirstName = applicationUser.FirstName;
-            user.LastName = applicationUser.LastName;
-            user.DisplayName = applicationUser.DisplayName;
-            user.Description = applicationUser.Description;
+            user.Title = applicationUser.Title;
+            user.Address = applicationUser.Address;
             user.City = applicationUser.City;
             user.Country = applicationUser.Country;
+            user.DisplayDescription = applicationUser.DisplayDescription;
+            user.DescriptionVideo = applicationUser.DescriptionVideo;
+            user.DescriptionVideoCover = applicationUser.DescriptionVideoCover;
+            user.Description = applicationUser.Description;
+            user.PinDigit = applicationUser.PinDigit;
+            user.PinCode = applicationUser.PinCode;
+            user.DisplayName = applicationUser.DisplayName;
+            user.FirstName = applicationUser.FirstName;
+            user.PhoneNumber = applicationUser.PhoneNumber;
+            user.IsAdmin = applicationUser.IsAdmin;
+            user.IsManager = applicationUser.IsManager;
+            user.IsOnline = applicationUser.IsOnline;
+            user.IsOperator = applicationUser.IsOperator;
+            user.LastLogin = applicationUser.LastLogin;
+            user.LastName = applicationUser.LastName;
+            user.NubmerOfView = applicationUser.NubmerOfView;
             user.PhotoUrl = applicationUser.PhotoUrl;
+            user.SubscriptionStartDate = user.SubscriptionStartDate;
+            user.SubscriptionEndDate = user.SubscriptionEndDate;
 
             var result = await _userManager.UpdateAsync(user);
 
@@ -243,7 +234,7 @@ namespace Abeer.Server.Controllers
                 return Conflict();
 
             var user = await _userManager.FindByIdAsync(changeMailViewModel.UserId);
-            if (mailExist != null ||user == null || changeMailViewModel.NewMail == user.Email || user.EmailConfirmed == false)
+            if (mailExist != null || user == null || changeMailViewModel.NewMail == user.Email || user.EmailConfirmed == false)
                 return NotFound();
 
             try
@@ -279,9 +270,9 @@ namespace Abeer.Server.Controllers
                 return Ok();
             }
             catch (Exception ex)
-            { 
+            {
                 throw;
-            } 
+            }
         }
 
         [HttpGet("PinCode/{id}")]

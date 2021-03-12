@@ -174,11 +174,17 @@
   <data name="Country" xml:space="preserve">
     <value>Country</value>
   </data>
+  <data name="Cover" xml:space="preserve">
+    <value>Couverture de la vidéo</value>
+  </data>
   <data name="CustomLinks" xml:space="preserve">
     <value>Custom Links</value>
   </data>
   <data name="Description" xml:space="preserve">
     <value>Description</value>
+  </data>
+  <data name="DisplayDescription" xml:space="preserve">
+    <value>Ajouter un texte de description</value>
   </data>
   <data name="DisplayName" xml:space="preserve">
     <value>Display name</value>
@@ -299,6 +305,9 @@
   </data>
   <data name="UseGravatarPhoto" xml:space="preserve">
     <value>Use gravatar service</value>
+  </data>
+  <data name="Video" xml:space="preserve">
+    <value>Vidéo</value>
   </data>
   <data name="ViewQrCode" xml:space="preserve">
     <value>View and share qr code</value>
