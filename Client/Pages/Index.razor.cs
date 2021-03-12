@@ -9,9 +9,7 @@ namespace Abeer.Client.Pages
     public partial class Index
     {
         public IEnumerable<string> Months = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.MonthNames;
-        public string CurrentMonth => System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(DateTime.Now.Month);
-
-        public IEnumerable<Article> Articles { get; set; }
+        public string CurrentMonth => System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(DateTime.Now.Month);         
 
         private ClaimsPrincipal User;
 

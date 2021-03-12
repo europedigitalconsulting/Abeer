@@ -8,9 +8,10 @@
                  LabelDashboard="@Loc["Dashboard"]"
                  LabelLogout="@Loc["Logout"]"
                  LabelMyAccount="@Loc["MyAccount"]"
-                 LabelUserList="@Loc["UserList"]"></NavMenu>
+                 LabelUserList="@Loc["UserList"]"
+                 ModalClicked="OpenMessageClicked">
+        </NavMenu>
         <div class="container">
-
             <div class="main-content " style="min-height: calc(100vh - 60 px);">
                 <CascadingValue Value="ScreenSize">
                     <CascadingValue Value="NotificationClient">
@@ -19,6 +20,10 @@
                 </CascadingValue>
             </div>
         </div>
+        @if (ModalOpenMessage)
+        { 
+            <Abeer.UI_Tchat.Tchat ModalContactChat="OpenMessageClicked"></Abeer.UI_Tchat.Tchat>
+        }
     </div>
 
     <footer class="footer d-none d-md-block d-xl-block">
