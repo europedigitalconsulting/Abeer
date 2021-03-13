@@ -207,4 +207,7 @@
   <data name="UpdateTitle" xml:space="preserve">
     <value>Modifier les informations d'un contact</value>
   </data>
+  <data name="YourContacts" xml:space="preserve">
+    <value>Vos contacts</value>
+  </data>
 </root>

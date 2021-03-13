@@ -34,46 +34,7 @@
         </div>
     </div>
     <div class="row justify-content-center">
-        <Virtualize Items="Items" Context="contact">
-            <div class="card m-sm-3 col-lg-3 col-sm-12 slide-in-elliptic-top-fwd" style="border:1px solid grey;border-radius:15px;">
-                <div class="card-body pl-2 pr-2">
-                    <div class="row">
-                        <div class="col-12">
-                            <a style="color:black;font-size:22px;font-weight:700;" href="@Navigation.ToAbsoluteUri($"/ViewProfile/{contact.UserId}")">@contact.Contact.DisplayName</a>
-                        </div>
-                        <div class="col-12">@contact.Contact.Title</div>
-                        <div class="col-12 mb-2 mt-2">
-                            <a style="font-weight:500;" href="tel:@contact.Contact.PhoneNumber" class="">@contact.Contact.PhoneNumber</a>
-                        </div>
-                        <div class="col-12 mt-2 mb-3">
-                            @if (contact.Contact.SocialNetworkConnected != null)
-                            {
-                                foreach (var socialNetwork in contact.Contact.SocialNetworkConnected)
-                                {
-                                    <a href="@socialNetwork.Url" class="btn p-0" target="_blank">
-                                        <img src="assets/img/social/@(socialNetwork.Name).svg" alt="@socialNetwork.Name" style="  width:35px;text-align:center" />
-                                    </a>
-                                }
-                            }
-                        </div>
-                        <div class="col-12">
-                            @if (contact.UserAccepted == EnumUserAccepted.ACCEPTED)
-                            {
-                                <button class="col-12 btn p-2" style="line-height: 30px; background: #1478D9; color: white;">
-                                    <span style="float: left; font-size: 15px; font-weight: 300;">@Loc["PublishedAds"]</span><i style="float: right;  font-size: 30px;" class="fas fa-ad"></i>
-                                </button>
-                            }
-                            @if (contact.UserAccepted == EnumUserAccepted.PENDING)
-                            {
-                                <button class="col-12 btn p-2" style="line-height: 30px; background: orange; color: white;">
-                                    <span style="float: left; font-size: 15px; font-weight: 300;">@Loc["Pending"]</span><i style="float: right;  font-size: 30px;" class="fas fa-ad"></i>
-                                </button>
-                            }
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </Virtualize>
+        <ContactList Items="Items" Loc="Loc"></ContactList>
     </div>
 </section>
 
@@ -154,8 +115,8 @@
                                                             break;
                                                         }
 
+                                                    }
                                                 }
-                                            }
                                             </div>
 
                                         </div>

@@ -66,21 +66,21 @@ namespace Abeer.Server.Controllers
 
             if (contacts.Any())
             {
-                contacts.ForEach(async (contact) =>
-               {
-                   var uContact = await _userManager.FindByIdAsync(contact.UserId);
-                   ViewContact item = new(user, uContact, contact);
+                foreach(var contact in contacts)
+                {
+                    var uContact = await _userManager.FindByIdAsync(contact.UserId);
+                    ViewContact item = new(user, uContact, contact);
 
-                   user.NubmerOfView += 1;
-                   await _userManager.UpdateAsync(user);
+                    user.NubmerOfView += 1;
+                    await _userManager.UpdateAsync(user);
 
-                   item.Contact.NumberOfView = user.NubmerOfView;
-                   item.Contact.SocialNetworkConnected = await _UnitOfWork.SocialNetworkRepository.GetSocialNetworkLinks(contact.UserId) ??
-                       new List<SocialNetwork>();
-                   
-                   item.Contact.CustomLinks = await _UnitOfWork.CustomLinkRepository.GetCustomLinkLinks(contact.UserId) ?? new List<CustomLink>();
-                   viewContacts.Add(item);
-               });
+                    item.Contact.NumberOfView = user.NubmerOfView;
+                    item.Contact.SocialNetworkConnected = await _UnitOfWork.SocialNetworkRepository.GetSocialNetworkLinks(item.UserId) ??
+                        new List<SocialNetwork>();
+
+                    item.Contact.CustomLinks = await _UnitOfWork.CustomLinkRepository.GetCustomLinkLinks(item.UserId) ?? new List<CustomLink>();
+                    viewContacts.Add(item);
+                }
             }
 
             return Ok(viewContacts);
