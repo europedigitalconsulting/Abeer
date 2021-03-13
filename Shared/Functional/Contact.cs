@@ -15,16 +15,22 @@ namespace Abeer.Shared
 
         public ViewContact(ApplicationUser user, ApplicationUser contact)
         {
-            Owner = user;
-            Contact = contact;
+            if(user != null)
+                Owner = user;
+
+            if(contact != null)
+                Contact = contact;
         }
 
         public ViewContact(ApplicationUser user, ApplicationUser uContact, Contact contact) : this(user, uContact)
         {
-            UserAccepted = contact.UserAccepted;
-            UserId = contact.UserId;
-            OwnerId = contact.OwnerId;
-            DateAccepted = contact.DateAccepted;
+            if (contact != null)
+            {
+                UserAccepted = contact.UserAccepted;
+                UserId = contact.UserId;
+                OwnerId = contact.OwnerId;
+                DateAccepted = contact.DateAccepted;
+            }
         }
 
         public Guid Id { get; set; }

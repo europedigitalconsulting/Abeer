@@ -1,0 +1,43 @@
+﻿@page "/contact/browse"
+@using System.Net.Http
+
+@inject NavigationManager Navigation
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Browse> Loc
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+
+<section class="section">
+    <div class="mt-4">
+        <label style="font-size: 30px; font-weight: 600; color: black;" class="">@Loc["Title"]</label>
+    </div>
+    <div class="section-header p-0">
+        @if (Country == null)
+        {
+            <h2>@Loc["SelectCountry"]</h2>
+        }
+        else
+        {
+            <h2>@Loc["ListOfContacts", Country.Name]</h2><button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="ClearCountrySelection">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        }
+    </div>
+    <div class="section-body">
+        @if (Country == null)
+        {
+            <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                <Virtualize Items="Countries" Context="country">
+                    <button type="button" class="btn btn-secondary" @onclick="@(async () => await SelectCountry(country))"><img src="assets/flags/@(country.Eeacode.ToLower()).svg" />@country.Name</button>
+                </Virtualize>
+            </div>
+        }
+        else
+        {
+            <ContactList Items="Contacts" Loc="Loc"></ContactList>
+        }
+        <br /><br />
+    </div>
+
+    <div class="section-footer">
+        <a href="/contact/list" class="btn btn-success"><i class="fas fa-address-book fa-10x"></i>&nbsp;@Loc["ViewYourOwnContacts"]</a>
+    </div>
+</section>

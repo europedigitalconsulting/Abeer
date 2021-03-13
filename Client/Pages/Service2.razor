@@ -17,7 +17,7 @@
     private AuthenticationState authenticateState { get; set; }
     private List<CardServiceViewModel> ListService { get; set; } = new List<CardServiceViewModel>();
     private CardServiceViewModel CurrentCard { get; set; } = new CardServiceViewModel();
-    public bool IsAdmin { get; set; }
+    private bool IsAdmin { get; set; }
 
     (TouchPoint ReferencePoint, DateTime StartTime) startPoint;
 
@@ -54,7 +54,7 @@
         ListService = new List<CardServiceViewModel>
 {
             //new CardServiceViewModel{ PageName = "/Profile", ImageUrl = "Profil.svg", Title = Loc["Title_profil"], Description = ScreenSize.IsSmall ? "Consulter ou modifier vos informations personnelles" : Loc["Business_description"] },
-            new CardServiceViewModel{  PageName = "/contact/list", ImageUrl = "Contact.svg", Title = Loc["Title_contact"], Description = Loc["Contact_description"]},
+            new CardServiceViewModel{  PageName = "/contact/browse", ImageUrl = "Contact.svg", Title = Loc["Title_contact"], Description = Loc["Contact_description"]},
             new CardServiceViewModel{  PageName = "/ads/MyAds", ImageUrl = "Annonces.svg", Title = Loc["Title_ads"], Description = Loc["ad_description"]},
            // new CardServiceViewModel{  PageName = "/agencies", ImageUrl = "Magasins.svg", Title = Loc["Title_agencies"], Description = Loc["Agencies_description"]},
             //new CardServiceViewModel{  PageName = "/subscription-pack", ImageUrl = "Abonnements.svg", Title = Loc["Title_subscribe"], Description = Loc["Subscribe"] },

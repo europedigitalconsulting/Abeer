@@ -22,6 +22,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
 using Abeer.Shared.Functional;
+using System.Globalization;
 
 namespace Abeer.Server.Controllers
 {
@@ -238,6 +239,53 @@ namespace Abeer.Server.Controllers
 
             await _UnitOfWork.ContactRepository.Add(contact);
             return CreatedAtAction("GetContact", new { id = contact.Id }, contact);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("countries")]
+        public async Task<ActionResult<IList<Country>>> GetCountries()
+        {
+            var contacts = await _userManager.Users.ToListAsync();
+            var countries = await _UnitOfWork.CountriesRepository.GetCountries(CultureInfo.CurrentCulture.TwoLetterISOLanguageName);
+            countries = countries.Where(c => contacts.Any(co => co.Country.Equals(c.Eeacode, StringComparison.OrdinalIgnoreCase))).ToList();
+            return Ok(countries);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("bycountry/{countryEacode}")]
+        public async Task<ActionResult<IList<ViewContact>>> GetContactsByCountry(string countryEacode)
+        {
+
+            var suggestions = await _userManager?.Users.Where(c => c.Country.Equals(countryEacode)).ToListAsync();
+
+            if (suggestions == null)
+                return NotFound();
+
+            var contacts = new List<ViewContact>();
+
+            ApplicationUser user = null;
+            IList<Contact> links = new List<Contact>();
+
+            if (User.Identity.IsAuthenticated)
+            {
+                user = await _userManager.FindByIdAsync(User.NameIdentifier());
+                links = await _UnitOfWork.ContactRepository.GetContacts(user.Id);
+            }
+
+            foreach (var suggestion in suggestions)
+            {
+                Contact link = null;
+
+                if(user != null && links != null)
+                {
+                    link = links.FirstOrDefault(l => l.UserId == suggestion.Id && l.OwnerId == user.Id);
+                }
+
+                var contact = new ViewContact(user, suggestion, link);
+                contacts.Add(contact);
+            }
+
+            return Ok(contacts);
         }
     }
 }

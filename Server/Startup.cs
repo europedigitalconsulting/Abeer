@@ -421,7 +421,7 @@ namespace Abeer.Server
                     michel = new ApplicationUser
                     {
                         UserName = "admin@meetag.co",
-                        Country = "France",
+                        Country = "FR",
                         DisplayName = "Michel Bruchet",
                         Email = "admin@meetag.co",
                         Title = "CEO",
@@ -498,7 +498,7 @@ namespace Abeer.Server
                     demo = new ApplicationUser
                     {
                         UserName = "demo@meetag.co",
-                        Country = "France",
+                        Country = "FR",
                         DisplayName = "Demonstration 1",
                         Email = "demo@meetag.co",
                         Title = "Demo",
