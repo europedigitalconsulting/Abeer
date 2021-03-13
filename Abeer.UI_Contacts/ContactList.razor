@@ -1,4 +1,5 @@
-﻿@code
+﻿@inject NavigationManager NavigationManager 
+@code
 {
     [Parameter]
     public Microsoft.Extensions.Localization.IStringLocalizer Loc { get; set; }
@@ -13,25 +14,32 @@
         ViewContact = viewApplicationUser;
         ModalDisplayVideo = true;
     }
+
+    void GotoContact(ViewContact contact)
+    {
+        NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri($"/viewprofile/{contact.Contact.DigitCode}").ToString(), true);
+    }
 }
 <div class="container" id="contacts">
     <h5 class="section-title h1">@Loc["YourContacts"]</h5>
     <div class="row">
         <Virtualize Items="Items" Context="contact">
             <!-- Team member -->
-            <div class="col-xs-12 col-sm-6 col-md-4">
+            <div class="col-xs-12 col-sm-6 col-md-4" @onclick="@(()=>GotoContact(contact))" style="cursor:pointer">
                 <div class="image-flip">
                     <div class="mainflip flip-0">
                         <div class="frontside">
                             <div class="card">
                                 <div class="card-body text-center">
-                                    <p><UserPhotoControl User="contact.Contact" Loc="Loc"></UserPhotoControl></p>
+                                    <p>
+                                        <UserPhotoControl User="contact.Contact" Loc="Loc"></UserPhotoControl>
+                                    </p>
                                     <h4 class="card-title">@contact.Contact.DisplayName</h4>
-                                    <p class="card-text">@contact.Contact.Title.</p>                                    
+                                    <p class="card-text">@contact.Contact.Title.</p>
                                 </div>
-                                @if (contact.UserAccepted == EnumUserAccepted.PENDING || contact.UserAccepted == EnumUserAccepted.REJECT)
-                                {
-                                    <div class="card-footer">
+                                <div class="card-footer">
+                                    @if (contact.UserAccepted == EnumUserAccepted.PENDING || contact.UserAccepted == EnumUserAccepted.REJECT)
+                                    {
                                         <p>
                                             @switch (contact.UserAccepted)
                                             {
@@ -47,8 +55,8 @@
                                                     }
                                             }
                                         </p>
-                                    </div>
                                     }
+                                </div>
                             </div>
                         </div>
                         <div class="backside">
