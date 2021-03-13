@@ -59,23 +59,26 @@ namespace Abeer.Server.Controllers
         public async Task<ActionResult<IEnumerable<ViewContact>>> GetContacts()
         {
             List<ViewContact> viewContacts = new List<ViewContact>();
-            var contacts = (await _UnitOfWork.ContactRepository.GetContacts(User.NameIdentifier()))?.ToList();
+
+            var user = await _userManager.FindByIdAsync(User.NameIdentifier());
+
+            var contacts = (await _UnitOfWork.ContactRepository.GetContacts(user.Id))?.ToList();
 
             if (contacts.Any())
             {
                 contacts.ForEach(async (contact) =>
                {
-                   var user = await _userManager.FindByIdAsync(contact.UserId);
-                   ViewContact item = new ViewContact(user, contact);
+                   var uContact = await _userManager.FindByIdAsync(contact.UserId);
+                   ViewContact item = new(user, uContact, contact);
 
                    user.NubmerOfView += 1;
                    await _userManager.UpdateAsync(user);
 
-                   item.NumberOfView = user.NubmerOfView;
-                   item.SocialNetworks = await _UnitOfWork.SocialNetworkRepository.GetSocialNetworkLinks(contact.UserId) ??
+                   item.Contact.NumberOfView = user.NubmerOfView;
+                   item.Contact.SocialNetworkConnected = await _UnitOfWork.SocialNetworkRepository.GetSocialNetworkLinks(contact.UserId) ??
                        new List<SocialNetwork>();
-
-                   item.CustomLinks = new List<CustomLink>();
+                   
+                   item.Contact.CustomLinks = await _UnitOfWork.CustomLinkRepository.GetCustomLinkLinks(contact.UserId) ?? new List<CustomLink>();
                    viewContacts.Add(item);
                });
             }
@@ -86,9 +89,13 @@ namespace Abeer.Server.Controllers
         [HttpGet("add/{contactId}")]
         public async Task<ActionResult<ViewContact>> AddInvitation(string contactId)
         {
+            if (string.IsNullOrEmpty(contactId))
+                return BadRequest();
+
             if (User.NameIdentifier() == contactId)
                 return BadRequest();
 
+            var user = await _userManager.FindByIdAsync(User.NameIdentifier());
             var userContact = await _userManager.FindByIdAsync(contactId);
 
             if (userContact == null)
@@ -118,7 +125,7 @@ namespace Abeer.Server.Controllers
                 await SendEmailTemplate(userContact);
 
                 Notification notif = await _notificationService.Create(User.NameIdentifier(), "Demande de contact", "contact/list", "reminder", "reminder", "reminder", "add-contact");
-                return Ok(new ContactViewModel() { ViewContact = new ViewContact(userContact, result), Notification = notif });
+                return Ok(new ContactViewModel() { ViewContact = new ViewContact(user, userContact), Notification = notif });
             }
             return Conflict();
         }
@@ -155,7 +162,9 @@ namespace Abeer.Server.Controllers
             if (string.IsNullOrEmpty(term))
                 return BadRequest();
 
-            var users = await Task.Run(() => _userManager?.Users.ToList().Where(c => c.EmailConfirmed && (filter == null || c.Country == filter)
+            var user = await _userManager.FindByIdAsync(User.NameIdentifier());
+
+            var suggestions = await Task.Run(() => _userManager?.Users.ToList().Where(c => c.EmailConfirmed && (filter == null || c.Country == filter)
                           && (c.FirstName != null && c.FirstName.Contains(term, StringComparison.OrdinalIgnoreCase)
                           || c.LastName != null && c.LastName.Contains(term, StringComparison.OrdinalIgnoreCase)
                           || c.Description != null && c.Description.Contains(term, StringComparison.OrdinalIgnoreCase) ||
@@ -163,16 +172,16 @@ namespace Abeer.Server.Controllers
                          c.Email != null && c.Email.Contains(term, StringComparison.OrdinalIgnoreCase) ||
                          c.Title != null && c.Title.Contains(term, StringComparison.OrdinalIgnoreCase))));
 
-            if (users == null)
+            if (suggestions == null)
                 return NotFound();
 
             List<ViewContact> contacts = new List<ViewContact>();
             var allUserContacts = await _UnitOfWork.ContactRepository.Where(x => x.UserId == User.NameIdentifier() || x.OwnerId == User.NameIdentifier());
-            users = users.Where(u => !allUserContacts.Any(c => u.Id == c.OwnerId || u.Id == c.UserId || u.Id == User.NameIdentifier())).ToList();
+            suggestions = suggestions.Where(u => !allUserContacts.Any(c => u.Id == c.OwnerId || u.Id == c.UserId || u.Id == User.NameIdentifier())).ToList();
 
-            foreach (var user in users)
+            foreach (var suggestion in suggestions)
             {
-                contacts.Add(new ViewContact(user, null));
+                contacts.Add(new ViewContact(user, suggestion));
             }
 
             return Ok(contacts);

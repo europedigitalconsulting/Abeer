@@ -8,57 +8,34 @@ namespace Abeer.Shared
 {
     public class ViewContact
     {
-        private ApplicationUser user;
-
         public ViewContact()
         {
-            CustomLinks = new List<CustomLink>();
-            SocialNetworks = new List<SocialNetwork>();
+
         }
 
-        public ViewContact(ApplicationUser user, Contact contact):this()
+        public ViewContact(ApplicationUser user, ApplicationUser contact)
         {
-            Id = contact?.Id.ToString();
-            UserId = user.Id;
-            OwnerId = contact?.OwnerId;
-            UserAccepted = (int?)contact?.UserAccepted;
-            FirstName = user.FirstName;
-            LastName = user.LastName;
-            DisplayName = user.DisplayName;
-            Title = user.Title;
-            Description = user.Description;
-            IsOnline = user.IsOnline;
-            LastLogin = user.LastLogin;
-            Address = user.Address;
-            Country = user.Country;
-            City = user.City;
-            Email = user.Email;
-            PhoneNumber = user.PhoneNumber;
-            PhotoUrl = string.IsNullOrWhiteSpace(user.PhotoUrl) ? user.GravatarUrl() : user.PhotoUrl;
+            Owner = user;
+            Contact = contact;
         }
 
-        public virtual List<SocialNetwork> SocialNetworks { get; set; }
-        public virtual List<CustomLink> CustomLinks { get; set; }
+        public ViewContact(ApplicationUser user, ApplicationUser uContact, Contact contact) : this(user, uContact)
+        {
+            UserAccepted = contact.UserAccepted;
+            UserId = contact.UserId;
+            OwnerId = contact.OwnerId;
+            DateAccepted = contact.DateAccepted;
+        }
 
-        public string Id { get; set; }
+        public Guid Id { get; set; }
         public string UserId { get; set; }
         public string OwnerId { get; set; }
-        public int? UserAccepted { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string DisplayName { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public bool IsOnline { get; set; }
-        public DateTime LastLogin { get; set; }
-        public string Address { get; set; }
-        public string Country { get; set; }
-        public string City { get; set; }
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
-        public int NumberOfView { get; set; }
-        public string PhotoUrl { get; set; }
+        public EnumUserAccepted UserAccepted { get; set; }
+        public DateTime? DateAccepted { get; set; }
+        public ViewApplicationUser Contact { get; set; }
+        public ViewApplicationUser Owner { get; set; }
     }
+
     public class Contact
     {
         [Key]

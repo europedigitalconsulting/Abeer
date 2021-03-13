@@ -151,10 +151,10 @@ namespace Abeer.Shared
 
         public static string GravatarUrl(this ViewContact contact)
         {
-            if (!string.IsNullOrEmpty(contact?.Email))
+            if (!string.IsNullOrEmpty(contact?.Contact?.Email))
             {
                 var gravatar = new Gravatar();
-                return gravatar.GetImageSource(contact.Email);
+                return gravatar.GetImageSource(contact.Contact.Email);
             }
             else
             {

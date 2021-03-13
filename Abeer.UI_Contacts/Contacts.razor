@@ -4,7 +4,7 @@
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
 
 @inject NavigationManager Navigation
-@inject Microsoft.Extensions.Localization.IStringLocalizer<Contacts> Loc 
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Contacts> Loc
 
 
 <section class="section">
@@ -30,7 +30,7 @@
                     </div>
                 }
 
-            </span> 
+            </span>
         </div>
     </div>
     <div class="row justify-content-center">
@@ -39,16 +39,16 @@
                 <div class="card-body pl-2 pr-2">
                     <div class="row">
                         <div class="col-12">
-                            <a style="color:black;font-size:22px;font-weight:700;" href="@Navigation.ToAbsoluteUri($"/ViewProfile/{contact.UserId}")">@contact.DisplayName</a>
+                            <a style="color:black;font-size:22px;font-weight:700;" href="@Navigation.ToAbsoluteUri($"/ViewProfile/{contact.UserId}")">@contact.Contact.DisplayName</a>
                         </div>
-                        <div class="col-12">@contact.Title</div>
+                        <div class="col-12">@contact.Contact.Title</div>
                         <div class="col-12 mb-2 mt-2">
-                            <a style="font-weight:500;" href="tel:@contact.PhoneNumber" class="">@contact.PhoneNumber</a>
+                            <a style="font-weight:500;" href="tel:@contact.Contact.PhoneNumber" class="">@contact.Contact.PhoneNumber</a>
                         </div>
                         <div class="col-12 mt-2 mb-3">
-                            @if (contact.SocialNetworks != null)
+                            @if (contact.Contact.SocialNetworkConnected != null)
                             {
-                                foreach (var socialNetwork in contact.SocialNetworks)
+                                foreach (var socialNetwork in contact.Contact.SocialNetworkConnected)
                                 {
                                     <a href="@socialNetwork.Url" class="btn p-0" target="_blank">
                                         <img src="assets/img/social/@(socialNetwork.Name).svg" alt="@socialNetwork.Name" style="  width:35px;text-align:center" />
@@ -57,13 +57,13 @@
                             }
                         </div>
                         <div class="col-12">
-                            @if (contact.UserAccepted == (int)EnumUserAccepted.ACCEPTED)
+                            @if (contact.UserAccepted == EnumUserAccepted.ACCEPTED)
                             {
                                 <button class="col-12 btn p-2" style="line-height: 30px; background: #1478D9; color: white;">
                                     <span style="float: left; font-size: 15px; font-weight: 300;">@Loc["PublishedAds"]</span><i style="float: right;  font-size: 30px;" class="fas fa-ad"></i>
                                 </button>
                             }
-                            @if (contact.UserAccepted == (int)EnumUserAccepted.PENDING)
+                            @if (contact.UserAccepted == EnumUserAccepted.PENDING)
                             {
                                 <button class="col-12 btn p-2" style="line-height: 30px; background: orange; color: white;">
                                     <span style="float: left; font-size: 15px; font-weight: 300;">@Loc["Pending"]</span><i style="float: right;  font-size: 30px;" class="fas fa-ad"></i>
@@ -79,7 +79,7 @@
 
 @if (ShowContactAddModal)
 {
-    <ModalDefault Title="@Loc["SearchContact"]" ModalCancelClicked="() => ShowContactAddModal = ShowfilterExt = false">
+    <ModalDefault Title="@Loc["SearchContact"]" ModalCancelClicked="() => ShowContactAddModal = ShowfilterExt = false" WidthModal="modal-lg">
         <Body>
             <div class="section-header">
                 <div class="input-group">
@@ -101,46 +101,71 @@
                     </span>
                 </div>
                 @*<div class="input-group">
-                    <input type="search" @onkeyup="@Enter" placeholder="@Loc["Search"]" id="searchContact" name="searchContact" class="form-control" @bind="Term" @oninput="CountSuggestion">
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-lg" @onclick="GetSuggestions"><i class="fa fa-2x fa-search"></i></button>
-                    </span>
-                    <div class="search-backdrop"></div>
-                </div>*@
+                        <input type="search" @onkeyup="@Enter" placeholder="@Loc["Search"]" id="searchContact" name="searchContact" class="form-control" @bind="Term" @oninput="CountSuggestion">
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-lg" @onclick="GetSuggestions"><i class="fa fa-2x fa-search"></i></button>
+                        </span>
+                        <div class="search-backdrop"></div>
+                    </div>*@
             </div>
             <div class="section-body mt-2">
-                @foreach (var contact in SuggestionItems)
-                {
-                    <div class="card col-12 slide-in-elliptic-top-fwd" style="border:1px solid grey;border-radius:15px;">
-                        <div class="card-body pl-2 pr-2">
-                            <div class="row">
-                                <div class="col-12">
-                                    <a style="color:black;font-size:22px;font-weight:700;" href="@Navigation.ToAbsoluteUri($"/ViewProfile/{contact.UserId}")">@contact.DisplayName</a>
-                                </div>
-                                <div class="col-12">@contact.Title</div>
-                                <div class="col-12 mb-2 mt-2">
-                                    <a style="font-weight:500;" href="tel:@contact.PhoneNumber" class="">@contact.PhoneNumber</a>
-                                </div>
-                                <div class="col-12 mt-2 mb-3">
-                                    @if (contact.SocialNetworks != null)
-                                    {
-                                        foreach (var socialNetwork in contact.SocialNetworks)
-                                        {
-                                            <a href="@socialNetwork.Url" class="btn p-0" target="_blank">
-                                                <img src="assets/img/social/@(socialNetwork.Name).svg" alt="@socialNetwork.Name" style="  width:35px;text-align:center" />
-                                            </a>
-                                        }
-                                    }
-                                </div>
-                                <div class="col-12">
-                                    <button @onclick="async e=> await Add(contact)" class="col-12 btn p-2" style="line-height: 30px; background: #F38E77; color: white;">
-                                        <span style="float: left; font-size: 15px; font-weight: 300;">@Loc["Insert"]</span><i style="float: right;  font-size: 30px;" class="fas fa-id-card"></i>
-                                    </button>
-                                </div>
-                            </div>
+                <div class="container">
+                    <div class="card card-default" id="card_contacts">
+                        <div id="contacts" class="panel-collapse collapse show" aria-expanded="true" style="">
+                            <!-- contacts card -->
+                            <ul class="list-group pull-down" id="contact-list">
+                                <Virtualize Items="SuggestionItems" Context="Contact">
+                                    <li class="list-group-item">
+                                        <div class="row w-100">
+                                            <div class="col-12 col-sm-6 col-md-3 px-0">
+                                                <UserPhotoControl User="Contact.Contact" Loc="Loc"></UserPhotoControl>
+                                            </div>
+                                            <div class="col-12 col-sm-6 col-md-9 text-center text-sm-left">
+                                                @if (Contact.Contact.IsOnline)
+                                                {<span class="fa fa-mobile fa-2x text-success float-right pulse" title="online now"></span>}
+                                                <label class="name lead">@Contact.Contact.DisplayName</label>
+                                                <br>
+                                                <span class="fa fa-map-marker fa-fw text-muted" data-toggle="tooltip" title="" data-original-title="@Contact.Contact.Address  - @Contact.Contact.City  - @Contact.Contact.Country"></span>
+                                                <span class="text-muted">@Contact.Contact.Address - @Contact.Contact.City - @Contact.Contact.Country</span>
+                                                <br>
+                                                <span class="fa fa-phone fa-fw text-muted" data-toggle="tooltip" title="" data-original-title="@Contact.Contact.PhoneNumber"></span>
+                                                <span class="text-muted small">@Contact.Contact.PhoneNumber</span>
+                                                <br>
+                                                <span class="fa fa-envelope fa-fw text-muted" data-toggle="tooltip" data-original-title="" title=""></span>
+                                                <span class="text-muted small text-truncate">@Contact.Contact.Email</span>
+                                                <hr />
+                                                @if (Contact.UserAccepted == EnumUserAccepted.NO_REQUEST)
+                                                {
+                                                    <button class="btn btn-primary" @onclick="@(async () => await Add(Contact))"><i class="fas fa-user-plus"></i>&nbsp;@Loc["SendInviter"]</button>
+                                                }
+                                                else
+                                                {
+                                                    switch (Contact.UserAccepted)
+                                                    {
+                                                        case EnumUserAccepted.PENDING:
+                                                            {
+                                                                <span class="badge badge-default">@Loc["InvitationPending"]</span>
+                                                                break;
+                                                            }
+                                                        case EnumUserAccepted.REJECT:
+                                                            {
+                                                                <span class="badge badge-warning">@Loc["InvitationRefused"]</span>
+                                                                {<button class="btn btn-primary" @onclick="@(async () => await Add(Contact))"><i class="fas fa-user-plus"></i>&nbsp;@Loc["ReSendInvitation"]</button>}
+                                                            break;
+                                                        }
+
+                                                }
+                                            }
+                                            </div>
+
+                                        </div>
+                                    </li>
+                                </Virtualize>
+                            </ul>
                         </div>
-                    </div> 
-                }
+                        <!--/contacts list-->
+                    </div>
+                </div>
             </div>
         </Body>
     </ModalDefault>

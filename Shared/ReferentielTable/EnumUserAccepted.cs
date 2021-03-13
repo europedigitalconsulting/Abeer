@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Abeer.Shared.ReferentielTable
 {
-    public enum EnumUserAccepted
+    public enum EnumUserAccepted:int
     {
         NO_REQUEST = 0,
-        ACCEPTED = 1,
-        PENDING = 2,
+        PENDING = 1,
+        ACCEPTED = 2,
         REJECT = 3
     }
 }

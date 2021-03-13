@@ -25,17 +25,22 @@ namespace Abeer.Server.APIFeatures.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Notification>>> List(string userId)
+        public async Task<ActionResult<IEnumerable<Notification>>> List()
         {
-            if (string.IsNullOrEmpty(userId))
+            string userID = string.Empty;
+
+            if (Request.Query.ContainsKey("UserId"))
+                userID = Request.Query["UserId"]; 
+
+            if (User.Identity.IsAuthenticated && string.IsNullOrEmpty(userID))
             {
-                if (User.Identity.IsAuthenticated)
-                {
-                    userId = User.NameIdentifier();
-                }
+                userID = User.NameIdentifier();
             }
 
-            var notifications = await _notificationService.GetNotifications(userId, false);
+            if (string.IsNullOrEmpty(userID))
+                return BadRequest();
+
+            var notifications = await _notificationService.GetNotifications(userID, false);
             return Ok(notifications);
         }
 

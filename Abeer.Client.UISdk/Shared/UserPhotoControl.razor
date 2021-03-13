@@ -9,7 +9,7 @@
 }
 @if (User != null && string.IsNullOrEmpty(User.VideoProfileUrl))
 {
-    <img style="border:2px solid black; position: absolute; left: 51%; top: 52%; transform: translate(-50%, -50%); " width="160" height="160" alt="image" src="@User.PhotoUrl" class="rounded-circle author-box-picture">
+    <img style="border:2px solid black; position: absolute; left: 51%; top: 52%; transform: translate(-50%, -50%); " width="160" height="160" alt="image" src="@(string.IsNullOrEmpty(User.PhotoUrl) ? "assets/img/nophoto.png" : User.PhotoUrl)" class="rounded-circle author-box-picture">
 }
 else if (User != null)
 {

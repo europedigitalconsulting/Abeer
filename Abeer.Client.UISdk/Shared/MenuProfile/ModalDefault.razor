@@ -1,6 +1,7 @@
 ﻿@namespace Abeer.Client.UISdk.Shared 
 @code { 
     [Parameter] public string MaxWidthModal { get; set; } = "auto";
+    [Parameter] public string WidthModal { get; set; }
     [Parameter] public string Title{ get; set; }
     [Parameter] public string BtnValidLabel{ get; set; }
     [Parameter] public string BtnCancelLabel { get; set; }
@@ -18,7 +19,7 @@
     }
 }
 <div class="modal fade show effect-open" style="display:block;z-index:9999999;" aria-modal="true" role="dialog">
-    <div class="modal-dialog modal-dialog-centered  modal-dialog-scrollable" style="max-width:@MaxWidthModal;">
+    <div class="modal-dialog modal-dialog-centered  modal-dialog-scrollable @WidthModal" style="max-width:@MaxWidthModal;">
         <div class="modal-content">
             <div class="modal-header p-3" style="background-color: #4192DF;font-size:18px;color:white;">
                 <span class="modal-title">@Title</span>

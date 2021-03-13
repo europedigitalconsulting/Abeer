@@ -159,6 +159,12 @@
   <data name="InsertTitle" xml:space="preserve">
     <value>Ajouter un nouveau contact</value>
   </data>
+  <data name="InvitationPending" xml:space="preserve">
+    <value>Votre invitation est en cours...</value>
+  </data>
+  <data name="InvitationRefused" xml:space="preserve">
+    <value>Votre invitation a été refusée</value>
+  </data>
   <data name="MyContactList" xml:space="preserve">
     <value>Liste des contacts</value>
   </data>
@@ -174,11 +180,17 @@
   <data name="PublishedAds" xml:space="preserve">
     <value>Annonces publiées</value>
   </data>
+  <data name="ReSendInvitation" xml:space="preserve">
+    <value>Réenvoyer votre invitation</value>
+  </data>
   <data name="Search" xml:space="preserve">
     <value>Rechercher</value>
   </data>
   <data name="SearchContact" xml:space="preserve">
     <value>Rechercher</value>
+  </data>
+  <data name="SendInviter" xml:space="preserve">
+    <value>Inviter</value>
   </data>
   <data name="SendTo" xml:space="preserve">
     <value>Envoyer à </value>

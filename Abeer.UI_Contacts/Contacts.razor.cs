@@ -56,13 +56,13 @@ namespace Abeer.UI_Contacts
                 if (string.IsNullOrWhiteSpace(TermMyContacts))
                     Items = All.ToList();
                 else
-                    Items = All.Where(c => (FilterSelected == null || c.Country == FilterSelected.Name)
-                        && (c.FirstName.Contains(TermMyContacts, StringComparison.OrdinalIgnoreCase)
-                        || c.LastName.Contains(TermMyContacts, StringComparison.OrdinalIgnoreCase)
-                        || c.Description.Contains(TermMyContacts, StringComparison.OrdinalIgnoreCase) ||
-                        c.DisplayName.Contains(TermMyContacts, StringComparison.OrdinalIgnoreCase) ||
-                        c.Email.Contains(TermMyContacts, StringComparison.OrdinalIgnoreCase) ||
-                        c.Title.Contains(TermMyContacts, StringComparison.OrdinalIgnoreCase))).ToList();
+                    Items = All.Where(c => (FilterSelected == null || c.Contact.Country == FilterSelected.Name)
+                        && (c.Contact.FirstName.Contains(TermMyContacts, StringComparison.OrdinalIgnoreCase)
+                        || c.Contact.LastName.Contains(TermMyContacts, StringComparison.OrdinalIgnoreCase)
+                        || c.Contact.Description.Contains(TermMyContacts, StringComparison.OrdinalIgnoreCase) ||
+                        c.Contact.DisplayName.Contains(TermMyContacts, StringComparison.OrdinalIgnoreCase) ||
+                        c.Contact.Email.Contains(TermMyContacts, StringComparison.OrdinalIgnoreCase) ||
+                        c.Contact.Title.Contains(TermMyContacts, StringComparison.OrdinalIgnoreCase))).ToList();
             });
             Showfilter = false;
             await InvokeAsync(StateHasChanged);
@@ -70,6 +70,8 @@ namespace Abeer.UI_Contacts
 
         private async Task GetSuggestions()
         {
+            Console.WriteLine($"search filter {Term}");
+
             if (!string.IsNullOrWhiteSpace(Term))
             {
                 var getSuggestion = await httpClient.GetAsync($"api/Contacts/suggestions?Term={Term}&Filter={FilterSelected?.Name ?? ""}");
@@ -102,18 +104,13 @@ namespace Abeer.UI_Contacts
 
         private async Task Add(ViewContact contact)
         {
-            Console.WriteLine(JsonConvert.SerializeObject(contact));
-            var response = await httpClient.GetAsync($"/api/Contacts/add/{contact.UserId}");
+            var response = await httpClient.GetAsync($"/api/Contacts/add/{contact.Contact.Id}");
 
             response.EnsureSuccessStatusCode();
 
             var json = await response.Content.ReadAsStringAsync();
             var contactViewModel = JsonConvert.DeserializeObject<ContactViewModel>(json);
-
-            SuggestionItems.Remove(contact);
-            All.Add(contactViewModel.ViewContact);
-            Items = All.ToList();
-
+            contact.UserAccepted = Shared.ReferentielTable.EnumUserAccepted.PENDING;
             await InvokeAsync(StateHasChanged);
 
             await NotificationClient.SendNotificationsToUser(contactViewModel.Notification, contact.UserId);
