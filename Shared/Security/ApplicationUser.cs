@@ -19,6 +19,8 @@ namespace Abeer.Shared
         public bool IsUnlimited { get; set; }
         public string DescriptionVideo { get; set; }
         public string DescriptionVideoCover { get; set; }
+        public string VideoProfileUrl { get; set; }
+        public string VideProfileCoverUrl { get; set; }
         public DateTime LastLogin { get; set; }
         public DateTime? SubscriptionStartDate { get; set; }
         public DateTime? SubscriptionEndDate { get; set; }

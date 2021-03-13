@@ -1,0 +1,37 @@
+﻿@using Abeer.Shared 
+@code
+{
+    [Parameter]
+    public ViewApplicationUser User { get; set; }
+    [Parameter]
+    public Microsoft.Extensions.Localization.IStringLocalizer Loc { get; set; }
+    private bool ModalDisplayVideo = false;
+}
+@if (User != null && string.IsNullOrEmpty(User.VideoProfileUrl))
+{
+    <img style="border:2px solid black; position: absolute; left: 51%; top: 52%; transform: translate(-50%, -50%); " width="160" height="160" alt="image" src="@User.PhotoUrl" class="rounded-circle author-box-picture">
+}
+else if (User != null)
+{
+    <a @onclick="@(()=>ModalDisplayVideo=true)">
+        <img style="border:2px solid black; position: absolute; left: 51%; top: 52%; transform: translate(-50%, -50%); " width="160" height="160" alt="image" src="@User.VideProfileCoverUrl" class="rounded-circle author-box-picture" />
+    </a>
+}
+
+@if (ModalDisplayVideo)
+{
+    <div class="modal fade show effect-open" id="myModal" style="display:block;z-index:9999999;height:550px; max-height:550px;" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="userVideo">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="@(()=>ModalDisplayVideo=false)">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <video controls src="@User.VideoProfileUrl" poster="@User.VideProfileCoverUrl"></video>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>      
+}

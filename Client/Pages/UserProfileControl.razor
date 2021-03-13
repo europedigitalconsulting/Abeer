@@ -10,10 +10,10 @@
                         <i style="font-size: 20px; position: absolute; right: -20px; top: 0px; z-index: 9999999999;" class="p-3 fas fa-ellipsis-v p-3" aria-hidden="true" @onclick="() => ToggleMenu = !ToggleMenu"></i>
 
                     }
-                    <div style="position:relative; width:100%;">
-                        <img src="/assets/img/profilphoto.png" />
-                        <img style="border:2px solid black; position: absolute; left: 51%; top: 52%; transform: translate(-50%, -50%); " width="160" height="160" alt="image" src="@User.PhotoUrl" class="rounded-circle author-box-picture">
-                    </div>
+                <div style="position:relative; width:100%;">
+                    <img src="/assets/img/profilphoto.png" />
+                    <UserPhotoControl User="User" Loc="@Loc"></UserPhotoControl>
+                </div>
                 </div>
                 <div class="mt-4 pt-lg-6" @ontouchstart="() => ToggleMenu = false">
                     <div class="author-box-name">
@@ -253,7 +253,7 @@
 }
 @if (ModalEditProfil)
 {
-    <ModalDefault Title="@Loc["Title"]" ModalCancelClicked="() => ModalEditProfil = false" MaxWidthModal="800px">
+    <ModalDefault Title="@Loc["Title"]" ModalCancelClicked="@(() => ModalEditProfil = false)" MaxWidthModal="800px">
         <Body>
             <EditProfile CloseToggle="UpdateProfil"></EditProfile>
         </Body>
@@ -261,33 +261,53 @@
 }
 @if (ModalChangePhoto)
 {
-    <ModalDefault Title="@Loc["ChangePhoto"]" ModalValidClicked="ChangePhoto" BtnValidLabel="@Loc["ChangePhoto"]" ModalCancelClicked="() => ModalChangePhoto = false">
+    <ModalDefault Title="@Loc["ChangePhoto"]" ModalValidClicked="ChangePhoto" BtnValidLabel="@Loc["ChangePhoto"]" ModalCancelClicked="@(() => ModalEditProfil = false)">
         <Body>
             @if (ChangePhotoHasError)
             {
                 <div class="alert alert-danger">
                     @ChangePhotoError
-                </div>}
+                </div>
+            }
             <div class="form-group">
 
                 @Loc["PhotoType"]
                 <select @bind="PhotoType" class="form-control">
                     <option value="Gravatar">@Loc["UseGravatarPhoto"]</option>
-                    <option value="Custom">@Loc["UseCustomPhoto"]</option>
+                    <option value="Photo">@Loc["UseCustomPhoto"]</option>
+                    <option value="Video">@Loc["UseVideo"]</option>
                 </select>
             </div>
-            @if (PhotoType == "Custom")
+            @if (PhotoType == "Photo")
             {
                 <div class="form-group">
                     @Loc["UseCustomPhoto"]
                     <MediaUploader ImgUrl="@User.PhotoUrl" OnChange="@((fileUrl)=>User.PhotoUrl = fileUrl)"></MediaUploader>
-                </div>}
+                </div>
+            }
+            @if (PhotoType == "Video")
+            {
+                <div class="form-row">
+                    <div class="form-group col-sm-12">
+                        @Loc["Video"]
+                        <MediaUploader ImgUrl="@User.VideoProfileUrl" OnChange="@((fileUrl) => User.VideoProfileUrl = fileUrl)" IsVideo="true"></MediaUploader>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-sm-12">
+                        @Loc["Cover"]
+                        <MediaUploader ImgUrl="@User.VideProfileCoverUrl" OnChange="@((fileUrl) => User.VideProfileCoverUrl = fileUrl)" IsVideo="false"></MediaUploader>
+                    </div>
+                </div>
+
+            }
         </Body>
     </ModalDefault>
 }
 @if (ModalChangeMail)
 {
-    <ModalDefault Title="@Loc["TitleChangeMail"]" BtnValidLabel="@Loc["Update"]" ModalValidClicked="ChangeMail" ModalCancelClicked="() => ModalChangeMail = false">
+    <ModalDefault Title="@Loc["TitleChangeMail"]" BtnValidLabel="@Loc["Update"]" ModalValidClicked="ChangeMail" ModalCancelClicked="@(() => ModalEditProfil = false)">
         <Body>
             <div class="info">
                 <p class="text-danger">
@@ -315,7 +335,7 @@
 }
 @if (ModalChangePinCode)
 {
-    <ModalDefault Title="@Loc["AddCard"]" ModalValidClicked="SaveNewCard" BtnValidLabel="@Loc["Update"]" ModalCancelClicked="() => ModalChangePinCode = false">
+    <ModalDefault Title="@Loc["AddCard"]" ModalValidClicked="SaveNewCard" BtnValidLabel="@Loc["Update"]" ModalCancelClicked="@(() => ModalEditProfil = false)">
         <Body>
             <div class="form-group">
                 @Loc["DigitCode"]
@@ -344,7 +364,7 @@
 }
 @if (ModalChangePassword)
 {
-    <ModalDefault Title="@Loc["ChangePassword"]" ModalValidClicked="ChangePassword" BtnValidLabel="@Loc["Update"]" ModalCancelClicked="() => ModalChangePassword = false">
+    <ModalDefault Title="@Loc["ChangePassword"]" ModalValidClicked="ChangePassword" BtnValidLabel="@Loc["Update"]" ModalCancelClicked="@(() => ModalEditProfil = false)">
         <Body>
             @if (ChangePasswordHasError)
             {
@@ -394,7 +414,7 @@
 }
 @if (ModalSocialNetwork)
 {
-    <ModalDefault Title="@Loc["AddASocialNetwork"]" ModalCancelClicked="() => ModalSocialNetwork = false">
+    <ModalDefault Title="@Loc["AddASocialNetwork"]" ModalCancelClicked="@(() => ModalEditProfil = false)">
         <Body>
             <Virtualize Items="@User.SocialNetworkConnected" Context="socialNetwork">
                 <div class="input-group mb-3">
@@ -450,7 +470,7 @@
 }
 @if (ModalCustomLink)
 {
-    <ModalDefault Title="@Loc["AddCustomLink"]" ModalValidClicked="AddCustomLink" BtnValidLabel="@Loc["AddCustomLink"]" ModalCancelClicked="() => ModalCustomLink = false">
+    <ModalDefault Title="@Loc["AddCustomLink"]" ModalValidClicked="AddCustomLink" BtnValidLabel="@Loc["AddCustomLink"]" ModalCancelClicked="@(() => ModalCustomLink = false)">
         <Body>
             <div class="card m-1">
                 <div class="form-group">

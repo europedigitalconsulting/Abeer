@@ -20,6 +20,8 @@ namespace Abeer.Shared
         public bool DisplayDescription { get; set; } = true;
         public string DescriptionVideo { get; set; }
         public string DescriptionVideoCover { get; set; }
+        public string VideoProfileUrl { get; set; }
+        public string VideProfileCoverUrl { get; set; }
         public bool IsOnline { get; set; }
         public DateTime LastLogin { get; set; }
         public bool IsAdmin { get; set; }
@@ -49,11 +51,13 @@ namespace Abeer.Shared
                 Title = user.Title,
                 Address = user.Address,
                 City = user.City,
-                Country = user.Country, 
+                Country = user.Country,
                 CustomLinks = new List<CustomLink>(),
-                DisplayDescription = user.DisplayDescription, 
+                DisplayDescription = user.DisplayDescription,
                 DescriptionVideo = user.DescriptionVideo,
-                DescriptionVideoCover = user.DescriptionVideoCover, 
+                DescriptionVideoCover = user.DescriptionVideoCover,
+                VideoProfileUrl = user.VideoProfileUrl,
+                VideProfileCoverUrl = user.VideProfileCoverUrl,
                 Description = user.Description,
                 DigitCode = user.PinDigit,
                 DisplayName = user.DisplayName,

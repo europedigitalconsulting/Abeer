@@ -306,6 +306,9 @@
   <data name="UseGravatarPhoto" xml:space="preserve">
     <value>Use gravatar service</value>
   </data>
+  <data name="UseVideo" xml:space="preserve">
+    <value>Utiliser une vidéo profil</value>
+  </data>
   <data name="Video" xml:space="preserve">
     <value>Vidéo</value>
   </data>

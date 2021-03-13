@@ -180,7 +180,6 @@ namespace Abeer.Server.Controllers
             user.DescriptionVideo = applicationUser.DescriptionVideo;
             user.DescriptionVideoCover = applicationUser.DescriptionVideoCover;
             user.Description = applicationUser.Description;
-            user.PinDigit = applicationUser.PinDigit;
             user.PinCode = applicationUser.PinCode;
             user.DisplayName = applicationUser.DisplayName;
             user.FirstName = applicationUser.FirstName;
@@ -193,6 +192,8 @@ namespace Abeer.Server.Controllers
             user.LastName = applicationUser.LastName;
             user.NubmerOfView = applicationUser.NubmerOfView;
             user.PhotoUrl = applicationUser.PhotoUrl;
+            user.VideoProfileUrl = applicationUser.VideoProfileUrl;
+            user.VideProfileCoverUrl = applicationUser.VideProfileCoverUrl;
             user.SubscriptionStartDate = user.SubscriptionStartDate;
             user.SubscriptionEndDate = user.SubscriptionEndDate;
 
