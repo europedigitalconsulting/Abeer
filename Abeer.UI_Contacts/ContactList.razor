@@ -20,7 +20,7 @@
         NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri($"/viewprofile/{contact.Contact.DigitCode}").ToString(), true);
     }
 }
-<div class="container" id="contacts">
+<div class="container slide-in-elliptic-top-fwd" id="contacts">
     <h5 class="section-title h1">@Loc["YourContacts"]</h5>
     <div class="row">
         <Virtualize Items="Items" Context="contact">
