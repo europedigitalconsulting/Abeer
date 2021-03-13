@@ -31,6 +31,8 @@
 
     public string PhotoUrl { get; set; }
 
+    [Parameter] public EventCallback ModalClicked { get; set; }
+
     protected override async Task OnParametersSetAsync()
     {
         await base.OnParametersSetAsync();
@@ -55,6 +57,11 @@
     void Navigate(string url)
     {
         Navigation.NavigateTo(url, true);
+    }
+
+    public async Task ValidModal()
+    {
+        await ModalClicked.InvokeAsync();
     }
 }
 @if (ShowActivityDialog)
@@ -85,14 +92,6 @@
             <a class="text-white" href="profile" style="font-size:20px;"><img src="assets/logo.svg" width="50" title="Meetag">Meetag</a>
         </div>
         <div class="p-2 font-size-sm-menu">
-            <a href="profile" class="pr-2 text-center text-white">
-                <div>
-                    <img src="/assets/img/menu/Search.svg">
-                </div>
-                <span>Accueil</span>
-            </a>
-        </div>
-        <div class="p-2 font-size-sm-menu">
             <a href="/ads/MyAds" class="pr-2 text-center text-white">
                 <div>
                     <img src="/assets/img/menu/annonces.svg">
@@ -105,18 +104,31 @@
             <div class="p-2 font-size-sm-menu">
                 <a href="javascript:void(0)" class="pr-2 text-center text-white" @onclick="@(()=>ShowActivityDialog=true)">
                     <div>
-                        <img src="/assets/img/menu/satistique_white.svg" width="20px">
+                        <img src="/assets/img/menu/satistique_white.svg" width="20">
                     </div>
                     <span>Activités</span>
                 </a>
             </div>
+            @if (false)
+            {
+                <div class="p-2 font-size-sm-menu">
+                    <a href="javascript:void(0)" class="pr-2 text-center text-white" @onclick="@(() => ValidModal())">
+                        <div>
+                            <img src="/assets/img/menu/comments.svg">
+                        </div>
+                        <span>Messages</span>
+                    </a>
+                </div>
+            }
+
+
         }
         @if (_user?.Identity.IsAuthenticated == false && !string.IsNullOrEmpty(NavigationUrlService.ProfileId))
         {
             <div class="p-2">
                 <a href="/Identity/Account/LoginWithPinCode?PinDigit=@NavigationUrlService.ProfileId" class="pr-2 text-center text-white">
                     <div>
-                        <img src="/assets/img/menu/nfc.svg" width="20px">
+                        <img src="/assets/img/menu/nfc.svg" width="20">
                     </div>
                     <span>Connexion NFC</span>
                 </a>

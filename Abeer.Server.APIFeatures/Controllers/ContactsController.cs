@@ -117,7 +117,7 @@ namespace Abeer.Server.Controllers
 
                 await SendEmailTemplate(userContact);
 
-                Notification notif = await _notificationService.Create(User.NameIdentifier(), "add-contact", "contact/list", "reminder", "reminder", "reminder", "add-contact");
+                Notification notif = await _notificationService.Create(User.NameIdentifier(), "Demande de contact", "contact/list", "reminder", "reminder", "reminder", "add-contact");
                 return Ok(new ContactViewModel() { ViewContact = new ViewContact(userContact, result), Notification = notif });
             }
             return Conflict();

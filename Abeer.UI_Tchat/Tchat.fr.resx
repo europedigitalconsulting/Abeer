@@ -117,16 +117,82 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CatchPhrase" xml:space="preserve">
-    <value>Rendez-vous sur votre boite mail si vous souhaiter valider cette demande</value>
+  <data name="AddContact" xml:space="preserve">
+    <value>Ajouter un contact</value>
   </data>
-  <data name="Continue" xml:space="preserve">
-    <value>Continuer</value>
+  <data name="ByFilter" xml:space="preserve">
+    <value>par filtre</value>
   </data>
-  <data name="Reject" xml:space="preserve">
-    <value>Refuser</value>
+  <data name="ById" xml:space="preserve">
+    <value>Si vous connaissez l'identifiant de l'utilisateur vous pouvez rechercher pour son identifiant</value>
+  </data>
+  <data name="ByName" xml:space="preserve">
+    <value>Si vous connaissez son nom vous pouvez rechercher par son nom</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="ConfirmDelete" xml:space="preserve">
+    <value>Etes-vous sur de vouloir supprimer ce contact ?</value>
+  </data>
+  <data name="ContactDisplayName" xml:space="preserve">
+    <value>Nom à afficher</value>
+  </data>
+  <data name="ContactId" xml:space="preserve">
+    <value>Identifiant</value>
+  </data>
+  <data name="Contacts" xml:space="preserve">
+    <value>Mes contacts</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="DeleteTitle" xml:space="preserve">
+    <value>Supprimer le contact</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Accueil</value>
+  </data>
+  <data name="Insert" xml:space="preserve">
+    <value>Ajouter</value>
+  </data>
+  <data name="InsertTitle" xml:space="preserve">
+    <value>Ajouter un nouveau contact</value>
+  </data>
+  <data name="MyContactList" xml:space="preserve">
+    <value>Liste des contacts</value>
+  </data>
+  <data name="MyContactListCatchPhrase" xml:space="preserve">
+    <value>Cette page vous permet de gérer votre liste de contacts, vous pouvez ajouter, modifier ou supprimer des contacts</value>
+  </data>
+  <data name="NoContactFound" xml:space="preserve">
+    <value>Aucun contact n'a été trouvé, vous pouvez ajouter un nouveau contact</value>
+  </data>
+  <data name="Pending" xml:space="preserve">
+    <value>En attente...</value>
+  </data>
+  <data name="PublishedAds" xml:space="preserve">
+    <value>Annonces publiées</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Rechercher</value>
+  </data>
+  <data name="SearchContact" xml:space="preserve">
+    <value>Rechercher</value>
+  </data>
+  <data name="SendTo" xml:space="preserve">
+    <value>Envoyer à </value>
+  </data>
+  <data name="SocialLinks" xml:space="preserve">
+    <value>Liens sociaux</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Une demande de contact vient de vous être envoyée.</value>
+    <value>Mes contacts</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="UpdateTitle" xml:space="preserve">
+    <value>Modifier les informations d'un contact</value>
   </data>
 </root>

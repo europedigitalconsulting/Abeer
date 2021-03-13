@@ -31,8 +31,8 @@ namespace Abeer.Client.Shared
         [CascadingParameter]  private Task<AuthenticationState> authenticationStateTask { get; set; }
         private AuthenticationState authenticationState { get; set; }
         [Inject] private NavigationManager navigationManager { get; set; }
-        [Inject]
-        IAccessTokenProvider tokenProvider { get; set; }
+        [Inject] IAccessTokenProvider tokenProvider { get; set; }
+        public bool ModalOpenMessage { get; set; }
         protected override async Task OnInitializedAsync()
         {
             var authState = await authenticationStateTask;
@@ -97,5 +97,10 @@ namespace Abeer.Client.Shared
             navigationManager.NavigateTo("authentication/logout");
         }
 
+        protected async Task OpenMessageClicked()
+        { 
+            ModalOpenMessage = !ModalOpenMessage;
+            StateHasChanged();
+        }
     }
 }
