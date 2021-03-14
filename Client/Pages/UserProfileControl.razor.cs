@@ -34,6 +34,9 @@ namespace Abeer.Client.Pages
         [Inject] public NavigationManager NavigationManager { get; set; }
         [Inject] private HttpClient HttpClient { get; set; }
 
+        [CascadingParameter]
+        private Task<AuthenticationState> AuthenticationStateTask { get; set; }
+
         public List<SocialNetwork> AvailableSocialNetworksToAdd { get; set; } = new List<SocialNetwork>();
 
 
@@ -74,10 +77,17 @@ namespace Abeer.Client.Pages
             {
                 _PhotoType = value;
             }
-        } 
+        }
+
+        public Contact Link { get; set; }
+        public ClaimsPrincipal CurrentUser { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
+            var authenticateState = await AuthenticationStateTask;
+            
+            CurrentUser = authenticateState.User;
+                        
             AvailableSocialNetworks.ForEach(a =>
             {
                 if (!User.SocialNetworkConnected.ToList().Exists(c => a.Name.Equals(c.Name, StringComparison.OrdinalIgnoreCase)))
@@ -90,6 +100,19 @@ namespace Abeer.Client.Pages
         protected override async Task OnParametersSetAsync()
         {
             await base.OnParametersSetAsync();
+
+            if (CurrentUser.Identity?.IsAuthenticated == true && !string.IsNullOrEmpty(User?.Id))
+            {
+                Console.WriteLine($"api/contacts/getbycontactid/{User.Id}");
+                var getLink = await HttpClient.GetAsync($"api/contacts/getbycontactid/{User.Id}");
+ 
+                if (getLink.IsSuccessStatusCode)
+                {
+                    var jLink = await getLink.Content.ReadAsStringAsync();
+                    Link = JsonConvert.DeserializeObject<Contact>(jLink);
+                }
+            }
+
             if (string.IsNullOrEmpty(User.PhotoUrl))
             {
                 User.PhotoUrl = "https://www.gravatar.com/avatar.php?gravatar_id=e511eeb916b3fa2202f38abfa29532b0&amp;rating=PG&amp;size=1600";
@@ -98,6 +121,28 @@ namespace Abeer.Client.Pages
             await InvokeAsync(StateHasChanged);
         }
      
+
+        public async Task LinkContact()
+        {
+            var response = await HttpClient.GetAsync($"/api/contacts/{User.Id}");
+            response.EnsureSuccessStatusCode();
+
+            var getLink = await HttpClient.GetAsync($"api/contacts/getbycontactid/{User.Id}");
+
+            if (getLink.IsSuccessStatusCode)
+            {
+                var jLink = await getLink.Content.ReadAsStringAsync();
+                Link = JsonConvert.DeserializeObject<Contact>(jLink);
+            }
+        }
+
+        public async Task Unlink()
+        {
+            var response = await HttpClient.DeleteAsync($"/api/contacts/{Link.Id}");
+            response.EnsureSuccessStatusCode();
+            Link = null;
+            await InvokeAsync(StateHasChanged);
+        }
 
         private SocialNetwork NewSocialLink = new SocialNetwork();
         private CustomLink NewCustomLink = new CustomLink();

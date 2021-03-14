@@ -10,10 +10,10 @@
                         <i style="font-size: 20px; position: absolute; right: -20px; top: 0px; z-index: 9999999999;" class="p-3 fas fa-ellipsis-v p-3" aria-hidden="true" @onclick="() => ToggleMenu = !ToggleMenu"></i>
 
                     }
-                <div style="position:relative; width:100%;">
-                    <img src="/assets/img/profilphoto.png" />
-                    <UserPhotoControl User="User" Loc="@Loc"></UserPhotoControl>
-                </div>
+                    <div style="position:relative; width:100%;">
+                        <img src="/assets/img/profilphoto.png" />
+                        <UserPhotoControl User="User" Loc="@Loc"></UserPhotoControl>
+                    </div>
                 </div>
                 <div class="mt-4 pt-lg-6" @ontouchstart="() => ToggleMenu = false">
                     <div class="author-box-name">
@@ -116,7 +116,23 @@
                                     </Virtualize>
                                 </div>
                             }
-                            <Abeer.Client.UISdk.SocialShareLinks Text="@Loc["ShareText", User.DisplayName]" Content="@User.Description" Source="@Loc["ShareSource"]" TargetUrl="@NavigationManager.ToAbsoluteUri($"/ViewProfile/{User.Id}").ToString()" Title="@Loc["ShareTitle", User.DisplayName]" Loc="Loc"></Abeer.Client.UISdk.SocialShareLinks>
+                            @if (!string.IsNullOrEmpty(User?.DisplayName))
+                            {
+                                <Abeer.Client.UISdk.SocialShareLinks Text="@Loc["ShareText", User.DisplayName]" Content="@User.Description" Source="@Loc["ShareSource"]" TargetUrl="@NavigationManager.ToAbsoluteUri($"/ViewProfile/{User.Id}").ToString()" Title="@Loc["ShareTitle", User.DisplayName]" Loc="Loc"></Abeer.Client.UISdk.SocialShareLinks>
+                            }
+
+                            @if (Link == null)
+                            {
+                                <button class="btn btn-primary" @onclick="LinkContact"><i class="fas fa-link"></i>&nbsp;@Loc["LinkContact"]</button>
+                            }
+                            else if (Link.UserAccepted == Abeer.Shared.ReferentielTable.EnumUserAccepted.ACCEPTED)
+                            {
+                                <button class="btn btn-warning" @onclick="Unlink"><i class="fas fa-unlink"></i>&nbsp;@Loc["UnLinkContact"]</button>
+                            }
+                            else if (Link.UserAccepted == Abeer.Shared.ReferentielTable.EnumUserAccepted.PENDING)
+                            {
+                                <span class="badge badge-secondary">@Loc["Pending"]</span>
+                            }
                         </div>
                             @if (!ReadOnly)
                             {

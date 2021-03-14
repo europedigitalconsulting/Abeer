@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Authorization;
 using System.Net.Mime;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using System.Collections.Concurrent;
 using Abeer.Data.UnitOfworks;
 using System;
 using Abeer.Services;
@@ -19,8 +18,6 @@ using Microsoft.AspNetCore.Hosting;
 using Abeer.Shared.ReferentielTable;
 using Abeer.Shared.Technical;
 using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.WebUtilities;
-using System.Text;
 using Abeer.Shared.Functional;
 using System.Globalization;
 
@@ -125,11 +122,28 @@ namespace Abeer.Server.Controllers
 
                 await SendEmailTemplate(userContact);
 
-                Notification notif = await _notificationService.Create(User.NameIdentifier(), "Demande de contact", "contact/list", "reminder", "reminder", "reminder", "add-contact");
+                Notification notif = await _notificationService.Create(userContact.Id, "Demande de contact", "contact/list", "reminder", "reminder", "reminder", "add-contact");
                 return Ok(new ContactViewModel() { ViewContact = new ViewContact(user, userContact), Notification = notif });
             }
             return Conflict();
         }
+
+        [HttpDelete("{contactLinkId}")]
+        public async Task<ActionResult<ViewContact>> Remove(Guid contactLinkId)
+        {
+            var user = await _userManager.FindByIdAsync(User.NameIdentifier());
+
+            var contact = await _UnitOfWork.ContactRepository.GetContact(contactLinkId);
+
+            if (contact == null)
+                return NotFound();
+
+            _UnitOfWork.ContactRepository.Remove(contact);
+
+            await _notificationService.Create(contact.UserId, "Suppression de contact", "contact/list", "reminder", "reminder", "reminder", "remove-contact");
+            return Ok();
+        }
+
         private async Task SendEmailTemplate(ApplicationUser user)
         {
             string data1 = CryptHelper.Rijndael.Encrypt($"{user.Id}", _configuration["QrCode:Key"]);
@@ -202,12 +216,27 @@ namespace Abeer.Server.Controllers
             return contact;
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> RemoveContactAsync(Guid id)
+        // GET: api/Contacts/5
+        [HttpGet("getbycontactid/{contactId}")]
+        public async Task<ActionResult<Contact>> GetContactByContactId(string contactId)
         {
-            await _UnitOfWork.ContactRepository.Delete(id);
-            _UnitOfWork.SaveChanges();
-            return Ok();
+            if (string.IsNullOrEmpty(contactId))
+                return BadRequest();
+
+            var user = await _userManager.FindByIdAsync(User.NameIdentifier());
+            var ucontact = await _userManager.FindByIdAsync(contactId);
+            
+            if (user == null || ucontact == null)
+                return BadRequest();
+
+            var contact = await _UnitOfWork.ContactRepository.GetContact(ucontact.Id, user.Id);
+
+            if (contact == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(contact);
         }
 
         // PUT: api/Contacts/5

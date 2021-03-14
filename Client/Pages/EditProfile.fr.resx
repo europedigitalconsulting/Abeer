@@ -222,6 +222,9 @@
   <data name="LastName" xml:space="preserve">
     <value>Nom de famille</value>
   </data>
+  <data name="LinkContact" xml:space="preserve">
+    <value>Se Connecter</value>
+  </data>
   <data name="Logo" xml:space="preserve">
     <value>Logo</value>
   </data>
@@ -249,6 +252,9 @@
   <data name="PasswordNotConfirmedError" xml:space="preserve">
     <value>Les adresse mails ne sont pas identiques</value>
   </data>
+  <data name="Pending" xml:space="preserve">
+    <value>En cours...</value>
+  </data>
   <data name="Phone" xml:space="preserve">
     <value>Téléphone</value>
   </data>
@@ -263,6 +269,9 @@
   </data>
   <data name="Save" xml:space="preserve">
     <value>Enregistrer</value>
+  </data>
+  <data name="ShareSource" xml:space="preserve">
+    <value>Meetage.co</value>
   </data>
   <data name="SocialNetworkConnected" xml:space="preserve">
     <value>Réseaux sociaux connectés</value>
@@ -284,6 +293,9 @@
   </data>
   <data name="TxtDesc2" xml:space="preserve">
     <value>Un mail de validation sera envoyé sur la nouvelle adresse mail.</value>
+  </data>
+  <data name="UnLinkContact" xml:space="preserve">
+    <value>se désabonner</value>
   </data>
   <data name="Update" xml:space="preserve">
     <value>Modifier</value>
