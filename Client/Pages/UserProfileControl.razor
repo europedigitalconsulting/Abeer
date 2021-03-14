@@ -55,85 +55,91 @@
                     <div class="row mt-lg-5" style=" border-top: 1px solid black; padding-top: 21px;">
                         @if (!TabMap)
                         {
-                        <div class="col-md-6 col-sm-12">
-                            @if (!string.IsNullOrEmpty(User.Description))
-                            {
-                                <div class="" style="text-align:left;">
-                                    <p>
-                                        @User.Description
-                                    </p>
-                                </div>
-                            }
-                            @if (!string.IsNullOrEmpty(User.DescriptionVideo))
-                            {
-                                if (!string.IsNullOrEmpty(User.DescriptionVideoCover))
+                            <div class="col-md-6 col-sm-12">
+                                @if (!string.IsNullOrEmpty(User.Description))
                                 {
-                                    <video controls poster="@User.DescriptionVideoCover" class="col-12">
-                                        <source src="@User.DescriptionVideo" type="video/mp4" />
-                                    </video>
+                                    <div class="" style="text-align:left;">
+                                        <p>
+                                            @User.Description
+                                        </p>
+                                    </div>
                                 }
-                            }
-                            <div class="mt-4">
-                                <ul style="list-style: none;font-weight: 500;" class="pl-0">
-                                    @if (!string.IsNullOrWhiteSpace(User.City))
+                                @if (!string.IsNullOrEmpty(User.DescriptionVideo))
+                                {
+                                    if (!string.IsNullOrEmpty(User.DescriptionVideoCover))
                                     {
-                                        <li class="pb-2">
-                                            <span class="p-2 w-100">
-                                                <i class="fa fa-map-marker text-dark pr-2" aria-hidden="true"></i>
-                                                @User.City, @User.Country
-                                            </span>
-                                        </li>
+                                        <video controls poster="@User.DescriptionVideoCover" class="col-12">
+                                            <source src="@User.DescriptionVideo" type="video/mp4" />
+                                        </video>
                                     }
-                                    @if (!string.IsNullOrWhiteSpace(User.Email))
-                                    {
-                                        <li class="pb-2">
-                                            <a href="mailto:@User.Email" class="p-2 w-100">
-                                                <i class="fa fa-envelope text-dark pr-2" aria-hidden="true"></i>
-                                                @User.Email
-                                            </a>
-                                        </li>
-                                    }
-                                    @if (!string.IsNullOrWhiteSpace(User.PhoneNumber))
-                                    {
-                                        <li class="pb-2">
-                                            <span class="p-2 w-100">
-                                                <i class="fa fa-phone text-dark pr-2" aria-hidden="true"></i>
-                                                @User.PhoneNumber
-                                            </span>
-                                        </li>
-                                    }
-                                </ul>
-                            </div>
-                            @if (User.SocialNetworkConnected != null)
-                            {
-                                <div class="row col-12">
-                                    <Virtualize Items="@User.SocialNetworkConnected" Context="socialNetwork">
-                                        <div class="card text-white mb-3 mr-1">
-                                            <a href="@socialNetwork.Url" target="_blank">
-                                                <img alt="image" src="assets/img/social/@(socialNetwork.Name).svg" style="  width:40px;text-align:center">
-                                            </a>
-                                        </div>
-                                    </Virtualize>
+                                }
+                                <div class="mt-4">
+                                    <ul style="list-style: none;font-weight: 500;" class="pl-0">
+                                        @if (!string.IsNullOrWhiteSpace(User.City))
+                                        {
+                                            <li class="pb-2">
+                                                <span class="p-2 w-100">
+                                                    <i class="fa fa-map-marker text-dark pr-2" aria-hidden="true"></i>
+                                                    @User.City, @User.Country
+                                                </span>
+                                            </li>
+                                        }
+                                        @if (!string.IsNullOrWhiteSpace(User.Email))
+                                        {
+                                            <li class="pb-2">
+                                                <a href="mailto:@User.Email" class="p-2 w-100">
+                                                    <i class="fa fa-envelope text-dark pr-2" aria-hidden="true"></i>
+                                                    @User.Email
+                                                </a>
+                                            </li>
+                                        }
+                                        @if (!string.IsNullOrWhiteSpace(User.PhoneNumber))
+                                        {
+                                            <li class="pb-2">
+                                                <span class="p-2 w-100">
+                                                    <i class="fa fa-phone text-dark pr-2" aria-hidden="true"></i>
+                                                    @User.PhoneNumber
+                                                </span>
+                                            </li>
+                                        }
+                                    </ul>
                                 </div>
-                            }
-                            @if (!string.IsNullOrEmpty(User?.DisplayName))
-                            {
-                                <Abeer.Client.UISdk.SocialShareLinks Text="@Loc["ShareText", User.DisplayName]" Content="@User.Description" Source="@Loc["ShareSource"]" TargetUrl="@NavigationManager.ToAbsoluteUri($"/ViewProfile/{User.Id}").ToString()" Title="@Loc["ShareTitle", User.DisplayName]" Loc="Loc"></Abeer.Client.UISdk.SocialShareLinks>
-                            }
+                                @if (User.SocialNetworkConnected != null)
+                                {
+                                    <div class="row col-12">
+                                        <Virtualize Items="@User.SocialNetworkConnected" Context="socialNetwork">
+                                            <div class="card text-white mb-3 mr-1">
+                                                <a href="@socialNetwork.Url" target="_blank">
+                                                    <img alt="image" src="assets/img/social/@(socialNetwork.Name).svg" style="  width:40px;text-align:center">
+                                                </a>
+                                            </div>
+                                        </Virtualize>
+                                    </div>
+                                }
+                                @if (CurrentUser.Identity?.IsAuthenticated == true)
+                                {
+                                    @if (!string.IsNullOrEmpty(User?.DisplayName))
+                                    {
+                                        <Abeer.Client.UISdk.SocialShareLinks Text="@Loc["ShareText", User.DisplayName]" Content="@User.Description" Source="@Loc["ShareSource"]" TargetUrl="@NavigationManager.ToAbsoluteUri($"/ViewProfile/{User.Id}").ToString()" Title="@Loc["ShareTitle", User.DisplayName]" Loc="Loc"></Abeer.Client.UISdk.SocialShareLinks>
+                                    }
 
-                            @if (Link == null)
-                            {
-                                <button class="btn btn-primary" @onclick="LinkContact"><i class="fas fa-link"></i>&nbsp;@Loc["LinkContact"]</button>
-                            }
-                            else if (Link.UserAccepted == Abeer.Shared.ReferentielTable.EnumUserAccepted.ACCEPTED)
-                            {
-                                <button class="btn btn-warning" @onclick="Unlink"><i class="fas fa-unlink"></i>&nbsp;@Loc["UnLinkContact"]</button>
-                            }
-                            else if (Link.UserAccepted == Abeer.Shared.ReferentielTable.EnumUserAccepted.PENDING)
-                            {
-                                <span class="badge badge-secondary">@Loc["Pending"]</span>
-                            }
-                        </div>
+                                    @if (Link == null)
+                                    {
+                                        if (User.Id != CurrentUserId)
+                                        {
+                                            <button class="btn btn-primary" @onclick="LinkContact"><i class="fas fa-link"></i>&nbsp;@Loc["LinkContact"]</button>
+                                        }
+                                    }
+                                    else if (Link.UserAccepted == Abeer.Shared.ReferentielTable.EnumUserAccepted.ACCEPTED)
+                                    {
+                                        <button class="btn btn-warning" @onclick="Unlink"><i class="fas fa-unlink"></i>&nbsp;@Loc["UnLinkContact"]</button>
+                                    }
+                                    else if (Link.UserAccepted == Abeer.Shared.ReferentielTable.EnumUserAccepted.PENDING)
+                                    {
+                                        <span class="badge badge-secondary">@Loc["Pending"]</span>
+                                    }
+                                }
+                            </div>
                             @if (!ReadOnly)
                             {
 

@@ -81,6 +81,7 @@ namespace Abeer.Client.Pages
 
         public Contact Link { get; set; }
         public ClaimsPrincipal CurrentUser { get; set; }
+        public string CurrentUserId => CurrentUser?.FindFirstValue(ClaimTypes.NameIdentifier);
 
         protected override async Task OnInitializedAsync()
         {
@@ -95,23 +96,27 @@ namespace Abeer.Client.Pages
                     AvailableSocialNetworksToAdd.Add(a); 
                 }
             });
+
+            if (CurrentUser.Identity?.IsAuthenticated == true && !string.IsNullOrEmpty(User?.Id))
+            {
+                if (CurrentUserId != User.Id)
+                {
+                    Console.WriteLine($"api/contacts/getbycontactid/{User.Id}");
+                    var getLink = await HttpClient.GetAsync($"api/contacts/getbycontactid/{User.Id}");
+
+                    if (getLink.IsSuccessStatusCode)
+                    {
+                        var jLink = await getLink.Content.ReadAsStringAsync();
+                        Link = JsonConvert.DeserializeObject<Contact>(jLink);
+                    }
+                }
+            }
+
             await base.OnInitializedAsync();
         }
         protected override async Task OnParametersSetAsync()
         {
             await base.OnParametersSetAsync();
-
-            if (CurrentUser.Identity?.IsAuthenticated == true && !string.IsNullOrEmpty(User?.Id))
-            {
-                Console.WriteLine($"api/contacts/getbycontactid/{User.Id}");
-                var getLink = await HttpClient.GetAsync($"api/contacts/getbycontactid/{User.Id}");
- 
-                if (getLink.IsSuccessStatusCode)
-                {
-                    var jLink = await getLink.Content.ReadAsStringAsync();
-                    Link = JsonConvert.DeserializeObject<Contact>(jLink);
-                }
-            }
 
             if (string.IsNullOrEmpty(User.PhotoUrl))
             {
