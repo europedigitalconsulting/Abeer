@@ -270,6 +270,33 @@
   <data name="Save" xml:space="preserve">
     <value>Save</value>
   </data>
+  <data name="ShareIt" xml:space="preserve">
+    <value>Partager le profil</value>
+  </data>
+  <data name="ShareOnEmail" xml:space="preserve">
+    <value>Partager par email</value>
+  </data>
+  <data name="ShareOnFacebook" xml:space="preserve">
+    <value>Partager sur Facebook</value>
+  </data>
+  <data name="ShareOnPinterest" xml:space="preserve">
+    <value>Partager sur Pinterest</value>
+  </data>
+  <data name="ShareOnTumblr" xml:space="preserve">
+    <value>Partager sur Tumblr</value>
+  </data>
+  <data name="ShareOnTwitter" xml:space="preserve">
+    <value>Partager sur Twitter</value>
+  </data>
+  <data name="ShareSource" xml:space="preserve">
+    <value>Meetag.co</value>
+  </data>
+  <data name="ShareText" xml:space="preserve">
+    <value>Découvrez sur le site meetag.co - le premier réseau qui vous simplifie les affaires - le profil de {0}</value>
+  </data>
+  <data name="ShareTitle" xml:space="preserve">
+    <value>Meetag.co - Profil - {0}</value>
+  </data>
   <data name="SocialNetworkConnected" xml:space="preserve">
     <value>Social Network connected</value>
   </data>
