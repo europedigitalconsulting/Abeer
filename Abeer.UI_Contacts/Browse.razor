@@ -26,7 +26,7 @@
         {
             <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
                 <Virtualize Items="Countries" Context="country">
-                    <button type="button" class="btn btn-secondary" @onclick="@(async () => await SelectCountry(country))"><img src="assets/flags/@(country.Eeacode.ToLower()).svg" />@country.Name</button>
+                    <button type="button" class="btn btn-primary" style="width:180px; height:180px" @onclick="@(async () => await SelectCountry(country))"><img src="assets/flags/@(country.Eeacode.ToLower()).svg" />@country.Name</button>
                 </Virtualize>
             </div>
         }

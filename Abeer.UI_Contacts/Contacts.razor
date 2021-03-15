@@ -79,7 +79,7 @@
                                     <li class="list-group-item">
                                         <div class="row w-100">
                                             <div class="col-12 col-sm-6 col-md-3 px-0">
-                                                <UserPhotoControl User="Contact.Contact" Loc="Loc"></UserPhotoControl>
+                                                <UserPhotoControl User="Contact.Contact" Loc="Loc" Width="@(ScreenSize?.IsSmall == true ? 36 : 160)" Height="@(ScreenSize?.IsSmall == true ? 36 : 160)" Left="12%"></UserPhotoControl>
                                             </div>
                                             <div class="col-12 col-sm-6 col-md-9 text-center text-sm-left">
                                                 @if (Contact.Contact.IsOnline)

@@ -5,16 +5,23 @@
     public ViewApplicationUser User { get; set; }
     [Parameter]
     public Microsoft.Extensions.Localization.IStringLocalizer Loc { get; set; }
+    [Parameter]
+    public int Width { get; set; } = 160;
+    [Parameter]
+    public int Height { get; set; } = 160;
+    [Parameter]
+    public string Left { get; set; } = "51%";
+
     private bool ModalDisplayVideo = false;
 }
 @if (User != null && string.IsNullOrEmpty(User.VideoProfileUrl))
 {
-    <img style="border:2px solid black; position: absolute; left: 51%; top: 52%; transform: translate(-50%, -50%); " width="160" height="160" alt="image" src="@(string.IsNullOrEmpty(User.PhotoUrl) ? "assets/img/nophoto.png" : User.PhotoUrl)" class="rounded-circle author-box-picture">
+    <img style="border:2px solid black; position: absolute; left: @Left; top: 52%; transform: translate(-50%, -50%); " width="@Width" height="@Height" alt="image" src="@(string.IsNullOrEmpty(User.PhotoUrl) ? "assets/img/nophoto.png" : User.PhotoUrl)" class="rounded-circle author-box-picture">
 }
 else if (User != null)
 {
     <a @onclick="@(()=>ModalDisplayVideo=true)">
-        <img style="border:2px solid black; position: absolute; left: 51%; top: 52%; transform: translate(-50%, -50%); " width="160" height="160" alt="image" src="@User.VideProfileCoverUrl" class="rounded-circle author-box-picture" />
+        <img style="border:2px solid black; position: absolute; left: @Left; top: 52%; transform: translate(-50%, -50%); " width="@Width" height="@Height" alt="image" src="@User.VideProfileCoverUrl" class="rounded-circle author-box-picture" />
     </a>
 }
 

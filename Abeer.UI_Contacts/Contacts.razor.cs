@@ -23,7 +23,9 @@ namespace Abeer.UI_Contacts
         public List<ViewContact> Suggestions { get; set; } = new List<ViewContact>();
         public List<ViewContact> SuggestionItems { get; set; } = new List<ViewContact>();
         public List<Country> Countries { get; set; } = new List<Country>();
- 
+        [CascadingParameter]
+        public ScreenSize ScreenSize { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
             var getMyContacts = await httpClient.GetAsync("/api/Contacts");

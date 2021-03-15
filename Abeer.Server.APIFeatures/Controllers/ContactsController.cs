@@ -77,6 +77,9 @@ namespace Abeer.Server.Controllers
                         new List<SocialNetwork>();
 
                     item.Contact.CustomLinks = await _UnitOfWork.CustomLinkRepository.GetCustomLinkLinks(item.UserId) ?? new List<CustomLink>();
+
+                    item.Contact.NumberOfContacts = (await _UnitOfWork.ContactRepository.GetContacts(item.Contact.Id)).Count;
+
                     viewContacts.Add(item);
                 }
             }
@@ -196,7 +199,9 @@ namespace Abeer.Server.Controllers
 
             foreach (var suggestion in suggestions)
             {
-                contacts.Add(new ViewContact(user, suggestion));
+                var item = new ViewContact(user, suggestion);
+                item.Contact.NumberOfContacts = (await _UnitOfWork.ContactRepository.GetContacts(item.Contact.Id)).Count;
+                contacts.Add(item);
             }
 
             return Ok(contacts);
@@ -310,8 +315,10 @@ namespace Abeer.Server.Controllers
                     link = links.FirstOrDefault(l => l.UserId == suggestion.Id && l.OwnerId == user.Id);
                 }
 
-                var contact = new ViewContact(user, suggestion, link);
-                contacts.Add(contact);
+                var item = new ViewContact(user, suggestion, link);
+                item.Contact.NumberOfContacts = (await _UnitOfWork.ContactRepository.GetContacts(item.Contact.Id)).Count;
+
+                contacts.Add(item);
             }
 
             return Ok(contacts);
