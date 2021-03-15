@@ -219,12 +219,15 @@
                         </a>
                     </div>
                     <div class="p-2">
-                        <a href="/contact/list" class="pr-2 text-center text-light">
-                            <div>
-                                <i style="font-size: 16px; color: black;" class="fa fa-users" aria-hidden="true"></i>
-                            </div>
-                            <span style="font-size: 12px; color: black; font-weight: 400;">@Loc["Contacts"]</span>
-                        </a>
+                        @if (!ReadOnly)
+                        {
+                            <a href="/contact/list" class="pr-2 text-center text-light">
+                                <div>
+                                    <i style="font-size: 16px; color: black;" class="fa fa-users" aria-hidden="true"></i>
+                                </div> 
+                                <span style="font-size: 12px; color: black; font-weight: 400;">@Loc["Contacts"]</span> 
+                            </a>
+                        }
                     </div>
                 </div>
             </div>

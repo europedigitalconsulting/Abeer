@@ -15,4 +15,16 @@ namespace Abeer.Shared.EventNotification
             Notification = notification;
         }
     }
+    public class MessageReceivedEventArgs : EventArgs
+    { 
+        public string Text { get; set; }
+        public string UserSendId { get; set; }
+        public string ContactReceiveId { get; set; }
+        public MessageReceivedEventArgs(string text, string userSendId, string contactReceiveId)
+        {
+            Text = text;
+            UserSendId = userSendId;
+            ContactReceiveId = contactReceiveId;
+        }
+    }
 }

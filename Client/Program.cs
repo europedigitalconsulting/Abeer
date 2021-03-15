@@ -12,6 +12,7 @@ using Tewr.Blazor.FileReader;
 using Abeer.Shared.Security;
 using Blazor.Analytics;
 using BlazorPro.BlazorSize;
+using Abeer.Shared.StateContainer;
 
 namespace Abeer.Client
 {
@@ -35,6 +36,10 @@ namespace Abeer.Client
             
             builder.Services.AddLocalization();
             builder.Services.AddApiAuthorization();
+
+            builder.Services.AddApiAuthorization();
+            builder.Services.AddScoped<StateTchatContainer>();
+
             builder.Services.Configure<AnimateOptions>(options =>
             {
                 options.Animation = Animations.FadeDown;

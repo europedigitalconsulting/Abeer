@@ -2,6 +2,8 @@
 @inherits LayoutComponentBase
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Resources> Loc
 @inject Abeer.Client.UISdk.NavigationUrlService NavigationUrlService
+@inject StateTchatContainer StateTchatContainer
+@implements IDisposable
 <MediaQueryList>
     <div id="app" class="full-height">
         <NavMenu LabelContacts="@Loc["ContactList"]"
@@ -9,7 +11,7 @@
                  LabelLogout="@Loc["Logout"]"
                  LabelMyAccount="@Loc["MyAccount"]"
                  LabelUserList="@Loc["UserList"]"
-                 ModalClicked="OpenMessageClicked">
+                 NotifyClient="NotificationClient">
         </NavMenu>
         <div class="container">
             <div class="main-content " style="min-height: calc(100vh - 60 px);">
@@ -20,9 +22,9 @@
                 </CascadingValue>
             </div>
         </div>
-        @if (ModalOpenMessage)
-        { 
-            <Abeer.UI_Tchat.Tchat ModalContactChat="OpenMessageClicked"></Abeer.UI_Tchat.Tchat>
+        @if (StateTchatContainer.ModalChatContactOpen)
+        {
+            <Abeer.UI_Tchat.Tchat NotifyClient="NotificationClient"></Abeer.UI_Tchat.Tchat>
         }
     </div>
 
@@ -36,4 +38,4 @@
     <MediaQuery Media="@Breakpoints.LargeUp" @bind-Matches="ScreenSize.IsLarge" />
     <MediaQuery Media="@Breakpoints.MediumUp" @bind-Matches="ScreenSize.IsMedium" />
     <MediaQuery Media="@Breakpoints.SmallDown" @bind-Matches="ScreenSize.IsSmall" />
-</MediaQueryList>
+</MediaQueryList> 

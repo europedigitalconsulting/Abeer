@@ -51,7 +51,7 @@
     <!--blazor scripts-->
     <script src="_content/Microsoft.AspNetCore.Components.WebAssembly.Authentication/AuthenticationService.js"></script>
     <script src="_framework/blazor.webassembly.js"></script>
-    
+
     <!--blazor analytics-->
     <script src="_content/Blazor-Analytics/blazor-analytics.js"></script>
 
@@ -80,7 +80,19 @@
 
     <!--service-worker-->
     <script>navigator.serviceWorker.register('service-worker.js');</script>
-
+    <script>
+        window.scrollToElementId = (elementId) => {
+            /*console.info('scrolling to element', elementId);*/
+            var element = document.getElementById(elementId);
+            if (!element) {
+/*                console.warn('element was not found', elementId);*/
+                return;
+            } 
+            /*console.info('Height to element', element.scrollHeight);*/
+            element.scrollTop = element.scrollHeight;
+            //document.getElementById("msg_card_body").scrollTop = 590
+        }
+    </script>
 </body>
 
 </html>

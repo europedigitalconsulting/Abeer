@@ -47,5 +47,6 @@ namespace Abeer.Data.SqlServerProvider
         public DbSet<EventTrackingItem> EventTrackingItems { get; set; }
         public DbSet<Invitation> Invitations { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
+        public DbSet<Message> Messages { get; set; }
     }
 }

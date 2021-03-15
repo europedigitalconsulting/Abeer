@@ -36,6 +36,7 @@ namespace Abeer.Shared.ClientHub
                     .WithAutomaticReconnect(x.ToArray())
                     .WithUrl(HubUrl, options =>
                     {
+                        options.CloseTimeout = TimeSpan.FromSeconds(360);
                         options.AccessTokenProvider = async () =>
                         {
                             return await Task.Run(() => Token);
@@ -47,6 +48,10 @@ namespace Abeer.Shared.ClientHub
                 {
                     NotificationHandle(notification);
                 });
+                _hubConnection.On<string, string, string>("OnMessageReceived", (text, userSendId, contactReceiveId) =>
+                 {
+                     MessageReceivedHandle(text, userSendId, contactReceiveId);
+                 });
 
                 // start the connection
                 await _hubConnection.StartAsync();
@@ -57,8 +62,20 @@ namespace Abeer.Shared.ClientHub
         {
             NotificationEvent?.Invoke(this, new NotificationEventArgs(notification));
         }
+        private void MessageReceivedHandle(string text, string userSendId, string contactReceiveId)
+        {
+            MessageReceivedEvent?.Invoke(this, new MessageReceivedEventArgs(text, userSendId, contactReceiveId));
+        }
+        private void ModalCloseChatHandle()
+        {
+            ModalCloseChatEvent?.Invoke(this);
+        }
         public delegate void NotificationEventHandler(object sender, NotificationEventArgs e);
+        public delegate void MessageReceivedEventHandler(object sender, MessageReceivedEventArgs e);
+        public delegate void ModalCloseChatEventHandler(object sender);
         public event NotificationEventHandler NotificationEvent;
+        public event MessageReceivedEventHandler MessageReceivedEvent;
+        public event ModalCloseChatEventHandler ModalCloseChatEvent;
 
         public async Task SendNotifications(List<Notification> notifs)
         {
@@ -72,6 +89,15 @@ namespace Abeer.Shared.ClientHub
         {
             await SendingNotifications(new List<Notification> { notif }, userId);
         }
+        public async Task CloseModalContactTchat()
+        {
+            await _hubConnection.SendAsync("InvokeCloseModalContactTchat");
+        }
+        public async Task SendMessage(string text, string contactReceiveId)
+        {
+            await _hubConnection.SendAsync("InvokeSendMessage", text, contactReceiveId);
+        }
+
         private async Task SendingNotifications(List<Notification> notifs, string userId = null)
         {
             foreach (Notification item in notifs)

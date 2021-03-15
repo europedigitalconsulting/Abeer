@@ -168,7 +168,7 @@ namespace Abeer.Server.Controllers
 
         }
         [HttpPut]
-        public async Task<ActionResult<ApplicationUser>> UpdateUser(ApplicationUser applicationUser)
+        public async Task<ActionResult<ApplicationUser>> UpdateUser(ViewApplicationUser applicationUser)
         {
             var user = await _userManager.FindByIdAsync(applicationUser.Id);
 
@@ -180,6 +180,7 @@ namespace Abeer.Server.Controllers
             user.DescriptionVideo = applicationUser.DescriptionVideo;
             user.DescriptionVideoCover = applicationUser.DescriptionVideoCover;
             user.Description = applicationUser.Description;
+            user.PinDigit = applicationUser.DigitCode;
             user.PinCode = applicationUser.PinCode;
             user.DisplayName = applicationUser.DisplayName;
             user.FirstName = applicationUser.FirstName;
@@ -190,7 +191,7 @@ namespace Abeer.Server.Controllers
             user.IsOperator = applicationUser.IsOperator;
             user.LastLogin = applicationUser.LastLogin;
             user.LastName = applicationUser.LastName;
-            user.NubmerOfView = applicationUser.NubmerOfView;
+            user.NubmerOfView = applicationUser.NumberOfView;
             user.PhotoUrl = applicationUser.PhotoUrl;
             user.VideoProfileUrl = applicationUser.VideoProfileUrl;
             user.VideProfileCoverUrl = applicationUser.VideProfileCoverUrl;
