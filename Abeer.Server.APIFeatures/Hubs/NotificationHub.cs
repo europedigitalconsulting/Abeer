@@ -24,7 +24,7 @@ namespace Abeer.Server.APIFeatures.Hubs
     public interface INotificationHub
     {
         Task OnNotification(Notification notification);
-        Task OnMessageReceived(string text, string userSendId, string contactReceiveId);
+        Task OnMessageReceived(string text, string userIdFrom, string userIdTo);
     }
 
     public interface INotificationHubInvokeMethods
@@ -32,7 +32,7 @@ namespace Abeer.Server.APIFeatures.Hubs
         Task InvokeDailyReminder(Notification notification);
         Task InvokeSoonExpireProfil(Notification notification);
         Task InvokeAddContact(Notification notification, string userId);
-        Task InvokeSendMessage(string text, string contactReceiveId);
+        Task InvokeSendMessage(string text, string userIdTo);
     }
     [Authorize]
     public class NotificationHub : Hub<INotificationHub>, INotificationHubInvokeMethods
@@ -59,10 +59,10 @@ namespace Abeer.Server.APIFeatures.Hubs
         {
             await Clients.User(userId).OnNotification(notification);
         }
-        public async Task InvokeSendMessage(string text, string contactReceiveId)
+        public async Task InvokeSendMessage(string text, string userIdTo)
         {
-            var userSendId = Context.UserIdentifier;
-            await Clients.User(contactReceiveId).OnMessageReceived(text, userSendId, contactReceiveId);
+            var userIdFrom = Context.UserIdentifier;
+            await Clients.User(userIdTo).OnMessageReceived(text, userIdFrom, userIdTo);
         }
          
         public override async Task OnConnectedAsync()

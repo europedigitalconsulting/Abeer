@@ -48,9 +48,9 @@ namespace Abeer.Shared.ClientHub
                 {
                     NotificationHandle(notification);
                 });
-                _hubConnection.On<string, string, string>("OnMessageReceived", (text, userSendId, contactReceiveId) =>
+                _hubConnection.On<string, string, string>("OnMessageReceived", (text, userIdFrom, userIdTo) =>
                  {
-                     MessageReceivedHandle(text, userSendId, contactReceiveId);
+                     MessageReceivedHandle(text, userIdFrom, userIdTo);
                  });
 
                 // start the connection
@@ -62,9 +62,9 @@ namespace Abeer.Shared.ClientHub
         {
             NotificationEvent?.Invoke(this, new NotificationEventArgs(notification));
         }
-        private void MessageReceivedHandle(string text, string userSendId, string contactReceiveId)
+        private void MessageReceivedHandle(string text, string userIdFrom, string userIdTo)
         {
-            MessageReceivedEvent?.Invoke(this, new MessageReceivedEventArgs(text, userSendId, contactReceiveId));
+            MessageReceivedEvent?.Invoke(this, new MessageReceivedEventArgs(text, userIdFrom, userIdTo));
         }
         private void ModalCloseChatHandle()
         {
@@ -93,9 +93,9 @@ namespace Abeer.Shared.ClientHub
         {
             await _hubConnection.SendAsync("InvokeCloseModalContactTchat");
         }
-        public async Task SendMessage(string text, string contactReceiveId)
+        public async Task SendMessage(string text, string userIdTo)
         {
-            await _hubConnection.SendAsync("InvokeSendMessage", text, contactReceiveId);
+            await _hubConnection.SendAsync("InvokeSendMessage", text, userIdTo);
         }
 
         private async Task SendingNotifications(List<Notification> notifs, string userId = null)

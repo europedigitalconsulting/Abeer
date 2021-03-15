@@ -33,8 +33,7 @@ namespace Abeer.Client.Shared
         [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
         private AuthenticationState authenticationState { get; set; }
         [Inject] private NavigationManager navigationManager { get; set; }
-        [Inject] IAccessTokenProvider tokenProvider { get; set; }
-        public bool ModalOpenMessage { get; set; }
+        [Inject] IAccessTokenProvider tokenProvider { get; set; } 
         protected override async Task OnInitializedAsync()
         {
             StateTchatContainer.OnChange += StateHasChanged; 
@@ -48,11 +47,12 @@ namespace Abeer.Client.Shared
                 var getNotifications = await httpClient.GetAsync("api/Notification");
                 getNotifications.EnsureSuccessStatusCode();
 
+
+                StateTchatContainer.MyContacts.Clear();
                 var getMyContacts = await httpClient.GetAsync("/api/Contacts");
                 getMyContacts.EnsureSuccessStatusCode();
 
                 var jsonContact = await getMyContacts.Content.ReadAsStringAsync();
-                StateTchatContainer.MyContacts.Clear();
                 if (!string.IsNullOrEmpty(jsonContact))
                     StateTchatContainer.SetMyContacts(JsonConvert.DeserializeObject<List<ViewContact>>(jsonContact));
 
@@ -110,15 +110,15 @@ namespace Abeer.Client.Shared
         }
         public async void MessageReceived(object sender, MessageReceivedEventArgs e)
         {
-            var tmp = StateTchatContainer.MyContacts.FirstOrDefault(x => x.UserId == e.UserSendId);
+            var tmp = StateTchatContainer.MyContacts.FirstOrDefault(x => x.UserId == e.UserIdFrom);
             if (tmp != null && StateTchatContainer.ContactSelected?.UserId != tmp.UserId)
                 tmp.HasNewMsg = true; 
 
             Message msg = new Message();
             msg.DateSent = DateTime.Now;
             msg.Text = e.Text;
-            msg.UserIdFrom = Guid.Parse(e.UserSendId);
-            msg.UserIdTo = Guid.Parse(e.ContactReceiveId);
+            msg.UserIdFrom = Guid.Parse(e.UserIdFrom);
+            msg.UserIdTo = Guid.Parse(e.UserIdTo);
             StateTchatContainer.ListMessage.Add(msg);
            await InvokeAsync(StateHasChanged);
         }
