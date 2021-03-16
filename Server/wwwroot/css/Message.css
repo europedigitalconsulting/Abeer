@@ -130,10 +130,9 @@
 }
 
     .contacts li {
-        cursor:pointer; 
+        cursor: pointer;
         width: 100% !important;
-        padding: 5px 10px;
-        margin-bottom: 15px !important;
+        padding: 5px 10px 0px 5px;
     }
         .contacts li:hover {
             background: rgba(0,0,0,0.3);

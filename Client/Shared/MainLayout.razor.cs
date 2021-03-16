@@ -33,10 +33,10 @@ namespace Abeer.Client.Shared
         [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
         private AuthenticationState authenticationState { get; set; }
         [Inject] private NavigationManager navigationManager { get; set; }
-        [Inject] IAccessTokenProvider tokenProvider { get; set; } 
+        [Inject] IAccessTokenProvider tokenProvider { get; set; }
         protected override async Task OnInitializedAsync()
         {
-            StateTchatContainer.OnChange += StateHasChanged; 
+            StateTchatContainer.OnChange += StateHasChanged;
             var authState = await authenticationStateTask;
             _user = authState.User;
 
@@ -112,7 +112,7 @@ namespace Abeer.Client.Shared
         {
             var tmp = StateTchatContainer.MyContacts.FirstOrDefault(x => x.UserId == e.UserIdFrom);
             if (tmp != null && StateTchatContainer.ContactSelected?.UserId != tmp.UserId)
-                tmp.HasNewMsg = true; 
+                tmp.HasNewMsg = true;
 
             Message msg = new Message();
             msg.DateSent = DateTime.Now;
@@ -120,12 +120,13 @@ namespace Abeer.Client.Shared
             msg.UserIdFrom = Guid.Parse(e.UserIdFrom);
             msg.UserIdTo = Guid.Parse(e.UserIdTo);
             StateTchatContainer.ListMessage.Add(msg);
-           await InvokeAsync(StateHasChanged);
+            await InvokeAsync(StateHasChanged);
         }
         public async void Dispose()
         {
             StateTchatContainer.OnChange -= StateHasChanged;
-            await NotificationClient.DisposeAsync();
+            if (NotificationClient != null)
+                await NotificationClient.DisposeAsync();
         }
     }
 }

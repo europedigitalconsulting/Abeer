@@ -1,4 +1,5 @@
-﻿ 
+﻿
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Tchat> Loc
 <div class="container-fluid contact-list">
     <div @onclick="CloseContact" class="close-contact cursor-pointer"><i style="font-size:25px;" class="fas fa-times"></i></div>
     <div class="row justify-content-center">
@@ -6,15 +7,15 @@
             <div class="card mb-sm-3 mb-md-0 contacts_card">
                 <div class="card-header">
                     <div class="input-group">
-                        <input type="text" placeholder="Search..." name="" class="form-control search">
-                        <div class="input-group-prepend">
+                        <input type="text" placeholder="@Loc["Search"]" @bind="Search" class="form-control search">
+                        <div class="input-group-prepend" @onclick="ValidSearch">
                             <span class="input-group-text search_btn"><i class="fas fa-search"></i></span>
                         </div>
                     </div>
                 </div>
                 <div class="card-body contacts_body">
                     <ui class="contacts">
-                        <Virtualize Context="ViewContact" Items="StateTchatContainer?.MyContacts">
+                        <Virtualize Context="ViewContact" Items="ListContact">
                             <li @onclick="() => OpenChat(ViewContact)">
                                 <div class="d-flex bd-highlight">
                                     <div class="img_cont">
