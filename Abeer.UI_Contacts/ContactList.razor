@@ -70,7 +70,7 @@
                                     @if (!string.IsNullOrEmpty(contact.Contact.VideoProfileUrl))
                                     {
                                         <a @onclick="@(() => DisplayDescriptionVideo(contact.Contact))">
-                                            <img style="border:2px solid black; position: absolute; left: 51%; top: 52%; transform: translate(-50%, -50%); " width="160" height="160" alt="image" src="@contact.Contact.VideProfileCoverUrl" class="rounded-circle author-box-picture" />
+                                            <img style="border:2px solid black; position: absolute; left: 51%; top: 52%; transform: translate(-50%, -50%); " width="160" height="160" alt="image" src="@contact.Contact.VideProfileCoverUrl" class="hidden-sm rounded-circle author-box-picture" />
                                         </a>
                                     }
                                     @if (contact.Contact.SocialNetworkConnected?.Any() == true)

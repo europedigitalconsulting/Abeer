@@ -4,7 +4,7 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<NavMenu> Loc
 @inject NavigationManager Navigation
 @inject Abeer.Client.UISdk.NavigationUrlService NavigationUrlService
-
+@inject StateTchatContainer StateTchatContainer
 @code
 {
     protected ClaimsPrincipal _user;
@@ -33,14 +33,16 @@
 
     [Parameter] public EventCallback ModalClicked { get; set; }
 
+    [Parameter] public NotificationClient NotifyClient { get; set; }
+
     protected override async Task OnParametersSetAsync()
     {
         await base.OnParametersSetAsync();
 
         var authState = await authenticationStateTask;
-
         _user = authState.User;
         PhotoUrl = _user.FindFirstValue("photoUrl") ?? _user.Identity.GravatarUrl();
+
         await InvokeAsync(StateHasChanged);
     }
 
@@ -59,9 +61,10 @@
         Navigation.NavigateTo(url, true);
     }
 
-    public async Task ValidModal()
+    public async Task OpenModalTchatContact()
     {
-        await ModalClicked.InvokeAsync();
+        StateTchatContainer.SetModalChatContactOpen(!StateTchatContainer.ModalChatContactOpen);
+        await InvokeAsync(StateHasChanged);
     }
 }
 @if (ShowActivityDialog)
@@ -109,18 +112,18 @@
                     <span>Activités</span>
                 </a>
             </div>
-            @if (false)
-            {
-                <div class="p-2 font-size-sm-menu">
-                    <a href="javascript:void(0)" class="pr-2 text-center text-white" @onclick="@(() => ValidModal())">
-                        <div>
-                            <img src="/assets/img/menu/comments.svg">
-                        </div>
-                        <span>Messages</span>
-                    </a>
-                </div>
-            }
-
+            <div class="p-2 font-size-sm-menu" style="position:relative">
+                @if (StateTchatContainer.MyContacts.Any(x => x.HasNewMsg))
+                {
+                    <div class="new-msg-menu"></div>
+                }
+                <a href="javascript:void(0)" class="pr-2 text-center text-white" @onclick="@(() => OpenModalTchatContact())">
+                    <div>
+                        <img src="/assets/img/menu/comments.svg">
+                    </div>
+                    <span>Messages</span>
+                </a>
+            </div>
 
         }
         @if (_user?.Identity.IsAuthenticated == false && !string.IsNullOrEmpty(NavigationUrlService.ProfileId))

@@ -36,6 +36,7 @@ namespace Abeer.Shared
         public Guid Id { get; set; }
         public string UserId { get; set; }
         public string OwnerId { get; set; }
+        public bool HasNewMsg { get; set; }
         public EnumUserAccepted UserAccepted { get; set; }
         public DateTime? DateAccepted { get; set; }
         public ViewApplicationUser Contact { get; set; }

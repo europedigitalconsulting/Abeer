@@ -31,7 +31,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Shared\Chat\" />
 		<Folder Include="wwwroot\assets\img\social\" />
 	</ItemGroup>
 
