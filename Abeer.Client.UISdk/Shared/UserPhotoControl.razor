@@ -21,7 +21,7 @@
 else if (User != null)
 {
     <img style="border:2px solid black; position: absolute; left: @Left; top: 52%; transform: translate(-50%, -50%); " width="@Width" height="@Height" alt="image" src="@User.VideProfileCoverUrl" class="rounded-circle author-box-picture" />
-    <button class="btn btn-secondary" @onclick="@(()=>ModalDisplayVideo=true)">
+    <button class="btn button-video-play" @onclick="@(()=>ModalDisplayVideo=true)">
         <i class="fas fa-play-circle"></i>
     </button>
 }

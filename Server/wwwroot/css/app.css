@@ -4275,3 +4275,10 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
         background-color: #8c0615;
         border-color: #8c0615;
     }
+
+.button-video-play
+{
+position:relative;
+top:70px;
+left:5px;
+}
