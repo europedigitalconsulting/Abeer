@@ -317,6 +317,8 @@ namespace Abeer.Server.Controllers
 
                 var item = new ViewContact(user, suggestion, link);
                 item.Contact.NumberOfContacts = (await _UnitOfWork.ContactRepository.GetContacts(item.Contact.Id)).Count;
+                item.Contact.SocialNetworkConnected = await _UnitOfWork.SocialNetworkRepository.GetSocialNetworkLinks(item.Contact.Id);
+                item.Contact.CustomLinks = await _UnitOfWork.CustomLinkRepository.GetCustomLinkLinks(item.Contact.Id);
 
                 contacts.Add(item);
             }

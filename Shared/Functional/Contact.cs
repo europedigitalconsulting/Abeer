@@ -26,10 +26,15 @@ namespace Abeer.Shared
         {
             if (contact != null)
             {
+                Id = contact.Id;
                 UserAccepted = contact.UserAccepted;
                 UserId = contact.UserId;
                 OwnerId = contact.OwnerId;
                 DateAccepted = contact.DateAccepted;
+            }
+            else
+            {
+                Id = Guid.NewGuid();
             }
         }
 

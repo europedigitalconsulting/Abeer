@@ -1,4 +1,4 @@
-﻿@using Abeer.Shared 
+﻿@using Abeer.Shared
 @code
 {
     [Parameter]
@@ -20,9 +20,10 @@
 }
 else if (User != null)
 {
-    <a @onclick="@(()=>ModalDisplayVideo=true)">
-        <img style="border:2px solid black; position: absolute; left: @Left; top: 52%; transform: translate(-50%, -50%); " width="@Width" height="@Height" alt="image" src="@User.VideProfileCoverUrl" class="rounded-circle author-box-picture" />
-    </a>
+    <img style="border:2px solid black; position: absolute; left: @Left; top: 52%; transform: translate(-50%, -50%); " width="@Width" height="@Height" alt="image" src="@User.VideProfileCoverUrl" class="rounded-circle author-box-picture" />
+    <button class="btn btn-secondary" @onclick="@(()=>ModalDisplayVideo=true)">
+        <i class="fas fa-play-circle"></i>
+    </button>
 }
 
 @if (ModalDisplayVideo)
@@ -40,5 +41,5 @@ else if (User != null)
                 </div>
             </div>
         </div>
-    </div>      
+    </div>
 }

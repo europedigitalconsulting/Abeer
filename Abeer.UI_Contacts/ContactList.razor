@@ -1,4 +1,4 @@
-﻿@inject NavigationManager NavigationManager 
+﻿@inject NavigationManager NavigationManager
 @code
 {
     [Parameter]
@@ -19,74 +19,109 @@
     {
         NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri($"/viewprofile/{contact.Contact.DigitCode}").ToString(), true);
     }
+
+    ViewContact flipedFrontCard = null;
+
+    void FlipCard(ViewContact contact)
+    {
+        flipedFrontCard = contact;
+    }
+
+    string GetFilpedCardStatus(ViewContact contact)
+    {
+        if (flipedFrontCard == null)
+            return "null";
+        if (contact.Id == flipedFrontCard.Id)
+            return $"selected";
+        else
+            return "none";
+    }
 }
 <div class="container slide-in-elliptic-top-fwd" id="contacts">
     <h5 class="section-title h1">@Loc["YourContacts"]</h5>
     <div class="row">
         <Virtualize Items="Items" Context="contact">
             <!-- Team member -->
-            <div class="col-xs-12 col-sm-6 col-md-4" @onclick="@(()=>GotoContact(contact))" style="cursor:pointer">
+            <div class="col-xs-12 col-sm-6 col-md-4">
                 <div class="image-flip">
                     <div class="mainflip flip-0">
                         <div class="frontside">
-                            <div class="card">
-                                <div class="card-body text-center">
-                                    <p>
-                                        <UserPhotoControl User="contact.Contact" Loc="Loc"></UserPhotoControl>
-                                    </p>
-                                    <h4 class="card-title">@contact.Contact.DisplayName (@contact.Contact.NumberOfContacts)</h4>
-                                    <p class="card-text">@contact.Contact.Title.</p>
-                                </div>
-                                <div class="card-footer">
-                                    @if (contact.UserAccepted == EnumUserAccepted.PENDING || contact.UserAccepted == EnumUserAccepted.REJECT)
-                                    {
+                            @{
+                                var status = GetFilpedCardStatus(contact);
+                            }
+                            @if (status != "selected")
+                            {
+                                <div class="card">
+                                    <div class="card-body text-center" style="height:250px;">
+                                        <h4 class="card-title">@contact.Contact.DisplayName (@contact.Contact.NumberOfContacts)</h4>
+                                        <p class="card-text">@contact.Contact.Title.</p>
                                         <p>
-                                            @switch (contact.UserAccepted)
-                                            {
-                                                case EnumUserAccepted.PENDING:
-                                                    {
-                                                        <span class="badge badge-default">@Loc["InvitationPending"]</span>
-                                                        break;
-                                                    }
-                                                case EnumUserAccepted.REJECT:
-                                                    {
-                                                        <span class="badge badge-warning">@Loc["InvitationRefused"]</span>
-                                                        break;
-                                                    }
-                                            }
+                                            <UserPhotoControl User="contact.Contact" Loc="Loc"></UserPhotoControl>
                                         </p>
-                                    }
+                                    </div>
+                                    <div class="card-footer">
+                                        @if (contact.UserAccepted == EnumUserAccepted.PENDING || contact.UserAccepted == EnumUserAccepted.REJECT)
+                                        {
+                                            <p>
+                                                @switch (contact.UserAccepted)
+                                                {
+                                                    case EnumUserAccepted.PENDING:
+                                                        {
+                                                            <span class="badge badge-default">@Loc["InvitationPending"]</span>
+                                                            break;
+                                                        }
+                                                    case EnumUserAccepted.REJECT:
+                                                        {
+                                                            <span class="badge badge-warning">@Loc["InvitationRefused"]</span>
+                                                            break;
+                                                        }
+                                                }
+                                            </p>
+                                        }
+                                    <p>
+                                        @if (contact.Contact.SocialNetworkConnected?.Count > 0)
+                                        {
+                                            <ul class="list-inline">
+                                                <Virtualize Items="contact.Contact.SocialNetworkConnected" Context="socialNetwork">
+                                                    <a href="@socialNetwork.Url" target="_blank">
+                                                        <img alt="image" src="assets/img/social/@(socialNetwork.Name).svg" style="  width:40px;text-align:center" />
+                                                    </a>
+                                                </Virtualize>
+                                            </ul>
+                                        }
+                                    </p>
+                                        <a @onclick="@(() => GotoContact(contact))" class="btn btn-secondary"><i class="fas fa-eye"></i></a>
+                                        <a @onclick="@(() => FlipCard(contact))" class="btn btn-secondary"><i class="fas fa-plus-square"></i></a>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="backside">
-                            <div class="card">
-                                <div class="card-body text-center mt-4">
-                                    <h4 class="card-title">@contact.Contact.DisplayName</h4>
-                                    @if (contact.Contact.DisplayDescription)
-                                    {
-                                        <p class="card-text">@contact.Contact.Description</p>
-                                    }
-                                    @if (!string.IsNullOrEmpty(contact.Contact.VideoProfileUrl))
-                                    {
-                                        <a @onclick="@(() => DisplayDescriptionVideo(contact.Contact))">
-                                            <img style="border:2px solid black; position: absolute; left: 51%; top: 52%; transform: translate(-50%, -50%); " width="160" height="160" alt="image" src="@contact.Contact.VideProfileCoverUrl" class="hidden-sm rounded-circle author-box-picture" />
-                                        </a>
-                                    }
-                                    @if (contact.Contact.SocialNetworkConnected?.Any() == true)
-                                    {
+                            }
+                            else
+                            {
+                                <div class="card">
+                                    <div class="card-body text-center mt-4">
+                                        <h4 class="card-title">@contact.Contact.DisplayName</h4>
+                                        @if (contact.Contact.DisplayDescription)
+                                        {
+                                            <p class="card-text">@contact.Contact.Description</p>
+                                        }
+                                    </div>
+                                    <div class="card-footer">
+                                        @if (contact.Contact.SocialNetworkConnected?.Any() == true)
+                                        {
                                         <ul class="list-inline">
                                             <Virtualize Items="contact.Contact.SocialNetworkConnected" Context="socialNetwork">
-                                                <li class="list-inline-item">
-                                                    <a class="social-icon text-xs-center" target="_blank" href="@socialNetwork.Url">
-                                                        <i class="fa @socialNetwork.Logo"></i>
-                                                    </a>
-                                                </li>
+                                                <a href="@socialNetwork.Url" target="_blank">
+                                                    <img alt="image" src="assets/img/social/@(socialNetwork.Name).svg" style="  width:16px;text-align:center" />
+                                                </a>
                                             </Virtualize>
                                         </ul>
-                                    }
+                                        }
+                                        <a @onclick="@(() => GotoContact(contact))" class="btn btn-secondary"><i class="fas fa-eye"></i></a>
+                                        <a @onclick="@(() => flipedFrontCard = null)" class="btn btn-secondary"><i class="fas fa-minus-square"></i></a>
+                                    </div>
                                 </div>
-                            </div>
+
+                            }
                         </div>
                     </div>
                 </div>
