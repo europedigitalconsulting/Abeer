@@ -17,14 +17,10 @@ namespace Abeer.Shared.EventNotification
     }
     public class MessageReceivedEventArgs : EventArgs
     { 
-        public string Text { get; set; }
-        public string UserIdFrom { get; set; }
-        public string UserIdTo { get; set; }
-        public MessageReceivedEventArgs(string text, string userIdFrom, string userIdTo)
+        public Message Message { get; set; } 
+        public MessageReceivedEventArgs(Message message)
         {
-            Text = text;
-            UserIdFrom = userIdFrom;
-            UserIdTo = userIdTo;
+            Message = message;
         }
     }
 }
