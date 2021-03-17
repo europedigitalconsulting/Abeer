@@ -116,6 +116,23 @@
                                         </Virtualize>
                                     </div>
                                 }
+                                @if (User.CustomLinks != null)
+                                {
+                                    <Virtualize Items="@User.CustomLinks" Context="customLink">
+                                        <div class="card text-white mb-3 mr-1">
+                                            <a href="@customLink.Url" target="_blank">
+                                                @if (!string.IsNullOrEmpty(customLink.Logo))
+                                                {
+                                                    <img alt="@customLink.Name" src="@customLink.Logo" style="width:80px;text-align:center" />
+                                                }
+                                                else
+                                                {
+                                                    <i title="@customLink.Name" class="fas fa-photo-video"></i>
+                                                }
+                                            </a>
+                                        </div>
+                                    </Virtualize>
+                                }
                                 @if (CurrentUser.Identity?.IsAuthenticated == true)
                                 {
                                     @if (!string.IsNullOrEmpty(User?.DisplayName))
@@ -176,25 +193,6 @@
                             <div @onclick="() => TabMap = false" class="col-12 pb-4 cursor-pointer" style="color:black;">
                                 <i class="fas fa-long-arrow-alt-left" style="font-size: 18px">&nbsp;&nbsp; @Loc["Back"]</i>
                             </div>
-                            <Virtualize Items="@User.CustomLinks" Context="customLink">
-                                <div class="card col-md-6 col-lg-3 col-sm-12">
-                                    @if (string.IsNullOrEmpty(customLink.Logo))
-                                    {
-                                        <i class="fas fa-paperclip rounded-circle img-thumbnail" style="font-size: 105px; width: 155px; margin-left: auto; margin-right: auto;"></i>
-                                    }
-                                    else
-                                    {
-                                        <img alt="image" src="@(customLink.Logo.ToLower())" class="card-img-top" height="150">
-                                    }
-                                    <div class="card-body">
-                                        <h4 style="font-size:20px; color:black;" class="card-title">@customLink.Name</h4>
-                                        <p style="font-size:13px; color:black;font-weight:300;" class="card-text">@customLink.DisplayInfo</p>
-                                        <div style="display: flex; justify-content: center; align-items: center; ">
-                                            <a href="@customLink.Url" target="_blank" style="background: #02BF8A;" class="btn btn-success">@Loc["Find-out"]</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </Virtualize>
                         }
                     </div>
                 </div>
