@@ -67,14 +67,17 @@ namespace Abeer.UI_Tchat
                 var response = await httpClient.PostAsJsonAsync("/api/Tchat", vm);
                 response.EnsureSuccessStatusCode();
 
-                var json = await response.Content.ReadAsStringAsync();
-                if (!string.IsNullOrEmpty(json))
-                {
-                    var msg = JsonConvert.DeserializeObject<Message>(json);
-                    StateTchatContainer.ListMessage.Add(msg);
-                    await NotifyClient.SendMessage(MsgText, StateTchatContainer.ContactSelected.UserId);
-                    MsgText = string.Empty;
-                    StateHasChanged();
+                if (response.IsSuccessStatusCode)
+                { 
+                    var json = await response.Content.ReadAsStringAsync();
+                    if (!string.IsNullOrEmpty(json))
+                    {
+                        var msg = JsonConvert.DeserializeObject<Message>(json);
+                        StateTchatContainer.ListMessage.Add(msg);
+                        await NotifyClient.SendMessage(msg);
+                        MsgText = string.Empty;
+                        StateHasChanged();
+                    }
                 }
             }
         }
@@ -93,13 +96,13 @@ namespace Abeer.UI_Tchat
         }
 
         protected void ValidSearch()
-        { 
+        {
             if (!string.IsNullOrEmpty(Search))
-            { 
+            {
                 ListContact = StateTchatContainer.MyContacts.Where(x => x.Contact.FirstName.Contains(Search, StringComparison.InvariantCultureIgnoreCase)
                 || x.Contact.Email.Contains(Search, StringComparison.InvariantCultureIgnoreCase)
                 || x.Contact.LastName.Contains(Search, StringComparison.InvariantCultureIgnoreCase)
-                || x.Contact.DisplayName.Contains(Search, StringComparison.InvariantCultureIgnoreCase)).ToList(); 
+                || x.Contact.DisplayName.Contains(Search, StringComparison.InvariantCultureIgnoreCase)).ToList();
                 StateHasChanged();
             }
         }

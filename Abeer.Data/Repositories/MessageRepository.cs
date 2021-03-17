@@ -24,6 +24,12 @@ namespace Abeer.Data.Repositories
         {
             return Task.Run<IList<Message>>(() => _context.Messages.Where(n => (n.UserIdFrom == userId && n.UserIdTo == contactId) || (n.UserIdFrom == contactId && n.UserIdTo == userId)).ToList());
         }
+        public Task<IList<Message>> GetMessageUnread(Guid userIdTo)
+        {
+            var resp = _context.Messages.Where(x => x.UserIdTo == userIdTo && x.DateReceived == null).ToList();
+
+            return Task.Run<IList<Message>>(() => resp);
+        }
 
         public Task Update(Message Message)
         {

@@ -24,7 +24,7 @@ namespace Abeer.Server.APIFeatures.Hubs
     public interface INotificationHub
     {
         Task OnNotification(Notification notification);
-        Task OnMessageReceived(string text, string userIdFrom, string userIdTo);
+        Task OnMessageReceived(Message message);
     }
 
     public interface INotificationHubInvokeMethods
@@ -32,7 +32,7 @@ namespace Abeer.Server.APIFeatures.Hubs
         Task InvokeDailyReminder(Notification notification);
         Task InvokeSoonExpireProfil(Notification notification);
         Task InvokeAddContact(Notification notification, string userId);
-        Task InvokeSendMessage(string text, string userIdTo);
+        Task InvokeSendMessage(Message message);
     }
     [Authorize]
     public class NotificationHub : Hub<INotificationHub>, INotificationHubInvokeMethods
@@ -40,8 +40,7 @@ namespace Abeer.Server.APIFeatures.Hubs
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly FunctionalUnitOfWork FunctionalUnitOfWork;
         public NotificationHub(FunctionalUnitOfWork functionalUnitOfWork, UserManager<ApplicationUser> userManager)
-        {
-
+        { 
             FunctionalUnitOfWork = functionalUnitOfWork;
             _userManager = userManager;
         }
@@ -59,30 +58,29 @@ namespace Abeer.Server.APIFeatures.Hubs
         {
             await Clients.User(userId).OnNotification(notification);
         }
-        public async Task InvokeSendMessage(string text, string userIdTo)
+        public async Task InvokeSendMessage(Message message)
         {
             var userIdFrom = Context.UserIdentifier;
-            await Clients.User(userIdTo).OnMessageReceived(text, userIdFrom, userIdTo);
+            await Clients.User(message.UserIdTo.ToString()).OnMessageReceived(message);
         }
          
         public override async Task OnConnectedAsync()
         { 
             var userId = Context.UserIdentifier;
-            var ttt = await _userManager.FindByIdAsync(userId);
-            if (ttt != null)
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user != null)
             {
-                ttt.IsOnline = true;
-                await _userManager.UpdateAsync(ttt);
-                Contact fff = await FunctionalUnitOfWork.ContactRepository.GetContact(Guid.Parse(ttt.Id));
+                user.IsOnline = true;
+                await _userManager.UpdateAsync(user); 
             }
             await base.OnConnectedAsync();
         }
         public override async Task OnDisconnectedAsync(Exception e)
         { 
             var userId = Context.UserIdentifier;
-            var ttt = await _userManager.FindByIdAsync(userId);
-            ttt.IsOnline = false;
-            await _userManager.UpdateAsync(ttt);
+            var user = await _userManager.FindByIdAsync(userId);
+            user.IsOnline = false;
+            await _userManager.UpdateAsync(user);
             await base.OnDisconnectedAsync(e);
         }
     }

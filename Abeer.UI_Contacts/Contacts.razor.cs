@@ -72,8 +72,6 @@ namespace Abeer.UI_Contacts
 
         private async Task GetSuggestions()
         {
-            Console.WriteLine($"search filter {Term}");
-
             if (!string.IsNullOrWhiteSpace(Term))
             {
                 var getSuggestion = await httpClient.GetAsync($"api/Contacts/suggestions?Term={Term}&Filter={FilterSelected?.Name ?? ""}");
