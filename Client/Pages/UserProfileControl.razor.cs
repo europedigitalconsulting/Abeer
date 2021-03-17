@@ -100,8 +100,7 @@ namespace Abeer.Client.Pages
             if (CurrentUser.Identity?.IsAuthenticated == true && !string.IsNullOrEmpty(User?.Id))
             {
                 if (CurrentUserId != User.Id)
-                {
-                    Console.WriteLine($"api/contacts/getbycontactid/{User.Id}");
+                { 
                     var getLink = await HttpClient.GetAsync($"api/contacts/getbycontactid/{User.Id}");
 
                     if (getLink.IsSuccessStatusCode)
@@ -201,7 +200,6 @@ namespace Abeer.Client.Pages
         }
         private async Task ChangePhoto()
         {
-            Console.WriteLine(JsonConvert.SerializeObject(User));
             User.PhotoUrl = User.PhotoUrl;
             var response = await HttpClient.PutAsJsonAsync("/api/Profile", User);
             response.EnsureSuccessStatusCode();

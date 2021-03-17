@@ -150,6 +150,9 @@
   <data name="ChangePassword" xml:space="preserve">
     <value>Mot de passe</value>
   </data>
+  <data name="ChangePasswordFailedError" xml:space="preserve">
+    <value>Votre ancien mot de passe n'est pas correct. Si vous ne vous en rappelez plus, vous pouvez vous déconnecter et cliquer sur "mot de passe oublié" pour le réinitialiser.</value>
+  </data>
   <data name="ChangePhoto" xml:space="preserve">
     <value>Ma photo</value>
   </data>
@@ -250,7 +253,10 @@
     <value>Ancien mot de passe</value>
   </data>
   <data name="PasswordNotConfirmedError" xml:space="preserve">
-    <value>Les adresse mails ne sont pas identiques</value>
+    <value>Les mots de passe ne sont pas identiques</value>
+  </data>
+  <data name="PasswordRequirements" xml:space="preserve">
+    <value>Le mot de passe doit contenir au minimum 6 lettres, et au moins une lettre en minuscule, une en majuscule, un chiffre, et au moins un caractère spécial.</value>
   </data>
   <data name="Pending" xml:space="preserve">
     <value>En cours...</value>

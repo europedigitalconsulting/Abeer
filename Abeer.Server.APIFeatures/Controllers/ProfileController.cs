@@ -207,7 +207,7 @@ namespace Abeer.Server.Controllers
         }
 
         [HttpPut("ChangePassword")]
-        public async Task<ActionResult<ApplicationUser>> ChangePassword(ChangePasswordViewModel changePasswordViewModel)
+        public async Task<ActionResult> ChangePassword(ChangePasswordViewModel changePasswordViewModel)
         {
             if (changePasswordViewModel.UserId != User.NameIdentifier())
                 return BadRequest();
@@ -222,7 +222,7 @@ namespace Abeer.Server.Controllers
             if (result.Succeeded)
                 return Ok(user);
 
-            return BadRequest(result.Errors?.FirstOrDefault()?.Code);
+            return NotFound();
         }
         [HttpPut("ChangeEmail")]
         public async Task<ActionResult> ChangeEmail(ChangeMailViewModel changeMailViewModel)

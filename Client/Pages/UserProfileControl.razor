@@ -285,7 +285,7 @@
 }
 @if (ModalChangePhoto)
 {
-    <ModalDefault Title="@Loc["ChangePhoto"]" ModalValidClicked="ChangePhoto" BtnValidLabel="@Loc["ChangePhoto"]" ModalCancelClicked="@(() => ModalEditProfil = false)">
+    <ModalDefault Title="@Loc["ChangePhoto"]" ModalValidClicked="ChangePhoto" BtnValidLabel="@Loc["ChangePhoto"]" ModalCancelClicked="@(() => ModalChangePhoto = false)">
         <Body>
             @if (ChangePhotoHasError)
             {
@@ -331,7 +331,7 @@
 }
 @if (ModalChangeMail)
 {
-    <ModalDefault Title="@Loc["TitleChangeMail"]" BtnValidLabel="@Loc["Update"]" ModalValidClicked="ChangeMail" ModalCancelClicked="@(() => ModalEditProfil = false)">
+    <ModalDefault Title="@Loc["TitleChangeMail"]" BtnValidLabel="@Loc["Update"]" ModalValidClicked="ChangeMail" ModalCancelClicked="@(() => ModalChangeMail = false)">
         <Body>
             <div class="info">
                 <p class="text-danger">
@@ -359,7 +359,7 @@
 }
 @if (ModalChangePinCode)
 {
-    <ModalDefault Title="@Loc["AddCard"]" ModalValidClicked="SaveNewCard" BtnValidLabel="@Loc["Update"]" ModalCancelClicked="@(() => ModalEditProfil = false)">
+    <ModalDefault Title="@Loc["AddCard"]" ModalValidClicked="SaveNewCard" BtnValidLabel="@Loc["Update"]" ModalCancelClicked="@(() => ModalChangePinCode = false)">
         <Body>
             <div class="form-group">
                 @Loc["DigitCode"]
@@ -388,7 +388,7 @@
 }
 @if (ModalChangePassword)
 {
-    <ModalDefault Title="@Loc["ChangePassword"]" ModalValidClicked="ChangePassword" BtnValidLabel="@Loc["Update"]" ModalCancelClicked="@(() => ModalEditProfil = false)">
+    <ModalDefault Title="@Loc["ChangePassword"]" ModalValidClicked="ChangePassword" BtnValidLabel="@Loc["Update"]" ModalCancelClicked="@(() => ModalChangePassword = false)">
         <Body>
             @if (ChangePasswordHasError)
             {
@@ -402,6 +402,7 @@
             <div class="form-group">
                 @Loc["NewPassword"]
                 <input type="password" class="form-control" @bind="NewPassword" />
+                <span style="font-size:11px">@Loc["PasswordRequirements"]</span>
             </div>
             <div class="form-group">
                 @Loc["ConfirmPassword"]
@@ -438,7 +439,7 @@
 }
 @if (ModalSocialNetwork)
 {
-    <ModalDefault Title="@Loc["AddASocialNetwork"]" ModalCancelClicked="@(() => ModalEditProfil = false)">
+    <ModalDefault Title="@Loc["AddASocialNetwork"]" ModalCancelClicked="@(() => ModalSocialNetwork = false)">
         <Body>
             <Virtualize Items="@User.SocialNetworkConnected" Context="socialNetwork">
                 <div class="input-group mb-3">
