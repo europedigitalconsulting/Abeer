@@ -17,7 +17,7 @@
 
     void GotoContact(ViewContact contact)
     {
-        NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri($"/viewprofile/{contact.Contact.DigitCode}").ToString(), true);
+        NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri($"/viewprofile/{(!string.IsNullOrEmpty(contact.Contact.DigitCode) ? contact.Contact.DigitCode : contact.Contact.Id)}").ToString(), true);
     }
 
     ViewContact flipedFrontCard = null;
