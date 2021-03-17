@@ -10,8 +10,7 @@ namespace Abeer.Shared
         public Guid UserIdFrom { get; set; }
         public Guid UserIdTo { get; set; }
         public string Text { get; set; }
-        public bool MessageRead { get; set; }
         public DateTime DateSent { get; set; }
-        public DateTime DateReceived { get; set; }
+        public DateTime? DateReceived { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Abeer.Shared;
+using Abeer.Shared;
 using Abeer.Shared.ClientHub;
 using Abeer.Shared.EventNotification;
 using Abeer.Shared.Functional;
@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -56,20 +57,36 @@ namespace Abeer.Client.Shared
                 if (!string.IsNullOrEmpty(jsonContact))
                     StateTchatContainer.SetMyContacts(JsonConvert.DeserializeObject<List<ViewContact>>(jsonContact));
 
-                var json = await getNotifications.Content.ReadAsStringAsync();
-                var accessTokenResult = await tokenProvider.RequestAccessToken();
-                accessTokenResult.TryGetToken(out var accessToken);
+                var getResponse = await httpClient.GetAsync("/api/Tchat/GetMessageUnread");
+                getResponse.EnsureSuccessStatusCode();
+
+                var jsonResp = await getResponse.Content.ReadAsStringAsync();
+                if (!string.IsNullOrEmpty(jsonResp))
+                {
+                    var listContactUnread = JsonConvert.DeserializeObject<List<string>>(jsonResp);
+                    foreach (var item in StateTchatContainer.MyContacts)
+                    {
+                        if (listContactUnread.Contains(item.UserId.ToString()))
+                        {
+                            item.HasNewMsg = true;
+                        }
+                    }
+                }         
+
                 NotificationClient = new NotificationClient(navigationManager.ToAbsoluteUri("/notification").AbsoluteUri, accessToken.Value);
 
                 await NotificationClient.StartAsync();
                 NotificationClient.NotificationEvent += ShowNotification;
                 NotificationClient.MessageReceivedEvent += MessageReceived;
+
+                var json = await getNotifications.Content.ReadAsStringAsync();
                 if (!string.IsNullOrEmpty(json))
                 {
                     var temp = JsonConvert.DeserializeObject<List<Notification>>(json);
                     await NotificationClient.SendNotifications(temp);
                 }
             }
+
         }
         public async void ShowNotification(object sender, NotificationEventArgs e)
         {
@@ -110,16 +127,16 @@ namespace Abeer.Client.Shared
         }
         public async void MessageReceived(object sender, MessageReceivedEventArgs e)
         {
-            var tmp = StateTchatContainer.MyContacts.FirstOrDefault(x => x.UserId == e.UserIdFrom);
+            var tmp = StateTchatContainer.MyContacts.FirstOrDefault(x => x.UserId == e.Message.UserIdFrom.ToString());
             if (tmp != null && StateTchatContainer.ContactSelected?.UserId != tmp.UserId)
                 tmp.HasNewMsg = true;
 
-            Message msg = new Message();
-            msg.DateSent = DateTime.Now;
-            msg.Text = e.Text;
-            msg.UserIdFrom = Guid.Parse(e.UserIdFrom);
-            msg.UserIdTo = Guid.Parse(e.UserIdTo);
+            var response = await httpClient.PutAsJsonAsync("/api/Tchat", e.Message);
+            response.EnsureSuccessStatusCode();
+            var json = await response.Content.ReadAsStringAsync();
+            var msg = JsonConvert.DeserializeObject<Message>(json);
             StateTchatContainer.ListMessage.Add(msg);
+
             await InvokeAsync(StateHasChanged);
         }
         public async void Dispose()

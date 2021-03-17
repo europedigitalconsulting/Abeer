@@ -13,6 +13,21 @@
         width: 100vw;
         height: 530px;
     }
+    .cursor-left {
+        top: 185px;
+        left: 27px;
+        cursor: pointer;
+        z-index: 999;
+    }
+    .cursor-right {
+        top: 185px;
+        right: 27px;
+        cursor: pointer;
+        z-index: 999;
+    }
+    .cursor-left img, .cursor-right img {
+        width:50px
+    }
 }
 
 @media (min-width: 768px) { 
@@ -29,6 +44,23 @@
         right: 5px;
         z-index: 99999999999;
         width: 350px;
+    }
+    .cursor-left {
+        top: 165px;
+        left: 40px;
+        cursor: pointer;
+        z-index: 999;
+    }
+
+    .cursor-right {
+        top: 165px;
+        right: 40px;
+        cursor: pointer;
+        z-index: 999;
+    }
+
+    .cursor-left img, .cursor-right img {
+        width: 100px
     }
 }
 
@@ -298,18 +330,27 @@
             }
 
 
-.contacts_body::-webkit-scrollbar-track, .msg_card_body::-webkit-scrollbar-track, .type_msg::-webkit-scrollbar-track {
+.contacts_body::-webkit-scrollbar-track,
+.msg_card_body::-webkit-scrollbar-track,
+.type_msg::-webkit-scrollbar-track,
+.tchat-body::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
     border-radius: 10px;
     background-color: transparent;
 }
 
-.contacts_body::-webkit-scrollbar, .msg_card_body::-webkit-scrollbar, .type_msg::-webkit-scrollbar {
+.contacts_body::-webkit-scrollbar,
+.msg_card_body::-webkit-scrollbar,
+.type_msg::-webkit-scrollbar,
+.tchat-body::-webkit-scrollbar {
     width: 12px;
     background-color: transparent;
 }
 
-.contacts_body::-webkit-scrollbar-thumb, .msg_card_body::-webkit-scrollbar-thumb, .type_msg::-webkit-scrollbar-thumb {
+.contacts_body::-webkit-scrollbar-thumb,
+.msg_card_body::-webkit-scrollbar-thumb,
+.type_msg::-webkit-scrollbar-thumb,
+.tchat-body::-webkit-scrollbar-thumb {
     border-radius: 10px;
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
     background-color: white;

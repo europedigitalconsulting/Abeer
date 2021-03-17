@@ -48,9 +48,9 @@ namespace Abeer.Shared.ClientHub
                 {
                     NotificationHandle(notification);
                 });
-                _hubConnection.On<string, string, string>("OnMessageReceived", (text, userIdFrom, userIdTo) =>
+                _hubConnection.On<Message>("OnMessageReceived", (message) =>
                  {
-                     MessageReceivedHandle(text, userIdFrom, userIdTo);
+                     MessageReceivedHandle(message);
                  });
 
                 // start the connection
@@ -62,9 +62,9 @@ namespace Abeer.Shared.ClientHub
         {
             NotificationEvent?.Invoke(this, new NotificationEventArgs(notification));
         }
-        private void MessageReceivedHandle(string text, string userIdFrom, string userIdTo)
+        private void MessageReceivedHandle(Message message)
         {
-            MessageReceivedEvent?.Invoke(this, new MessageReceivedEventArgs(text, userIdFrom, userIdTo));
+            MessageReceivedEvent?.Invoke(this, new MessageReceivedEventArgs(message));
         }
         private void ModalCloseChatHandle()
         {
@@ -93,9 +93,9 @@ namespace Abeer.Shared.ClientHub
         {
             await _hubConnection.SendAsync("InvokeCloseModalContactTchat");
         }
-        public async Task SendMessage(string text, string userIdTo)
+        public async Task SendMessage(Message msg)
         {
-            await _hubConnection.SendAsync("InvokeSendMessage", text, userIdTo);
+            await _hubConnection.SendAsync("InvokeSendMessage", msg);
         }
 
         private async Task SendingNotifications(List<Notification> notifs, string userId = null)
@@ -104,7 +104,7 @@ namespace Abeer.Shared.ClientHub
             {
                 switch (item.NotificationType)
                 {
-                    case "soonexpireprofile":
+                    case "expiredprofile":
                         await _hubConnection.SendAsync("InvokeSoonExpireProfil", item);
                         break;
                     case "daily-reminder":
