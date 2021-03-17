@@ -5,6 +5,7 @@ using Abeer.Shared.Functional;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.SignalR.Client;
 using Newtonsoft.Json;
 using System;
@@ -19,7 +20,7 @@ namespace Abeer.Client.Shared
 {
     public partial class NotificationCtrl : ComponentBase
     {
-        [Parameter] public NotificationClient NotificationClient { get; set; } 
+        [Parameter] public NotificationClient NotificationClient { get; set; }
         [Parameter] public ClaimsPrincipal User { get; set; }
 
         [Inject] public NavigationManager NavigationManager { get; set; }
@@ -28,6 +29,7 @@ namespace Abeer.Client.Shared
 
         Notification _next;
 
+        (TouchPoint ReferencePoint, DateTime StartTime) startPoint;
         public Dictionary<string, Type> DialogTypes = new()
         {
             { "welcome", typeof(WelcomeDialog) },
@@ -77,19 +79,60 @@ namespace Abeer.Client.Shared
 
 
         public async Task SetDisplayedNotification()
-        { 
+        {
+            //_next.IsDisplayed = true;
+            //_next.DisplayCount += 1;
+            //_next.LastDisplayTime = DateTime.UtcNow;
+            //var post = await httpClient.PutAsJsonAsync<Notification>("api/notification", _next);
+            //post.EnsureSuccessStatusCode();
+            //bool uno = NotificationClient.Notifications.Remove(_next); 
+            _next = null;
+        }
+
+        private async Task NextCard()
+        {
             _next.IsDisplayed = true;
             _next.DisplayCount += 1;
             _next.LastDisplayTime = DateTime.UtcNow;
             var post = await httpClient.PutAsJsonAsync<Notification>("api/notification", _next);
             post.EnsureSuccessStatusCode();
-            bool uno = NotificationClient.Notifications.Remove(_next); 
-            _next = null;
-        }
 
+            var tmp = NotificationClient.Notifications.IndexOf(_next);
+            NotificationClient.Notifications.Remove(_next);
+
+            if (tmp < NotificationClient.Notifications.Count)
+            {
+                _next = NotificationClient.Notifications[tmp];
+            } 
+            StateHasChanged();
+        }
+        private void HandleTouchStart(TouchEventArgs args)
+        {
+            startPoint.ReferencePoint = args.TargetTouches[0];
+            startPoint.StartTime = DateTime.Now;
+        }
+        private async Task HandleTouchEnd(TouchEventArgs args)
+        {
+            var endReference = args.ChangedTouches[0];
+            var endTime = DateTime.Now;
+
+            var diffX = startPoint.ReferencePoint.ClientX - endReference.ClientX;
+            var diffTime = DateTime.Now - startPoint.StartTime;
+            var velocityX = Math.Abs(diffX / diffTime.Milliseconds);
+
+            var swipeThreshold = 0.8;
+
+            if (velocityX < swipeThreshold) return;
+
+            if (velocityX >= swipeThreshold)
+            {
+                await NextCard();
+            }
+            StateHasChanged();
+        }
         public void Goto(string url)
         {
-            SetDisplayedNotification().ContinueWith(t=>NavigationManager.NavigateTo(url, true));
+            SetDisplayedNotification().ContinueWith(t => NavigationManager.NavigateTo(url, true));
         }
 
         public RenderFragment RenderDialog(string type) => builder =>

@@ -1,4 +1,4 @@
-using Abeer.Shared;
+﻿using Abeer.Shared;
 using Abeer.Shared.ClientHub;
 using Abeer.Shared.EventNotification;
 using Abeer.Shared.Functional;
@@ -41,15 +41,18 @@ namespace Abeer.Client.Shared
             var authState = await authenticationStateTask;
             _user = authState.User;
 
+            var accessTokenResult = await tokenProvider.RequestAccessToken();
+            if (!accessTokenResult.TryGetToken(out var accessToken) && _user.Identity.IsAuthenticated)
+                navigationManager.NavigateTo("/Identity/Account/Login", true);
+
             if (_user.Identity.IsAuthenticated)
             {
+                StateTchatContainer.MyContacts.Clear();
                 Console.WriteLine($"start get notification for user {_user.Identity.Name}");
 
                 var getNotifications = await httpClient.GetAsync("api/Notification");
                 getNotifications.EnsureSuccessStatusCode();
 
-
-                StateTchatContainer.MyContacts.Clear();
                 var getMyContacts = await httpClient.GetAsync("/api/Contacts");
                 getMyContacts.EnsureSuccessStatusCode();
 

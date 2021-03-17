@@ -45,7 +45,6 @@
             <dl>
                 @if (User.HasClaim(c => c.Type == "subscribeStart") && DateTime.TryParse(User.FindFirstValue("subscribeStart"), out DateTime value))
                 {
-                    Console.WriteLine(User.FindFirstValue("subscribeStart"));
                     <dt>@Loc["subscribeStart"]</dt>
                     <dd>@DateTime.Parse(User.FindFirstValue("subscribeStart"))</dd>
                 }
