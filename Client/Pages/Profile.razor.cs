@@ -30,10 +30,13 @@ namespace Abeer.Client.Pages
 
             if (User.Identity.IsAuthenticated)
             {
-                var response = await httpClient.GetAsync("api/Profile/GetUserProfileNoDetail");
+                var response = await httpClient.GetAsync($"api/Profile/GetUserProfileNoDetail?userId={User.FindFirstValue(ClaimTypes.NameIdentifier)}");
+
                 if (response.IsSuccessStatusCode)
                 {
                     var json = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"GetUserProfileNoDetail:{json}");
+
                     UserProfile = JsonConvert.DeserializeObject<ViewApplicationUser>(json);
 
                     NavigationUrlService.SetUrls($"https://www.google.com/maps/search/?api=1&query={UserProfile.Address},{UserProfile.City}%20{UserProfile.Country}&query_place_id={UserProfile.DisplayName}",

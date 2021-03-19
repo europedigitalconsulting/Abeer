@@ -53,14 +53,17 @@ namespace Abeer.Client.Shared
                 var getNotifications = await httpClient.GetAsync("api/Notification");
                 getNotifications.EnsureSuccessStatusCode();
 
-                var getMyContacts = await httpClient.GetAsync("/api/Contacts");
+                var getMyContacts = await httpClient.GetAsync("api/Contacts");
                 getMyContacts.EnsureSuccessStatusCode();
 
                 var jsonContact = await getMyContacts.Content.ReadAsStringAsync();
+
+                Console.WriteLine($"Contacts:{jsonContact}");
+
                 if (!string.IsNullOrEmpty(jsonContact))
                     StateTchatContainer.SetMyContacts(JsonConvert.DeserializeObject<List<ViewContact>>(jsonContact));
 
-                var getResponse = await httpClient.GetAsync("/api/Tchat/GetMessageUnread");
+                var getResponse = await httpClient.GetAsync("api/Tchat/GetMessageUnread");
                 getResponse.EnsureSuccessStatusCode();
 
                 var jsonResp = await getResponse.Content.ReadAsStringAsync();

@@ -51,7 +51,7 @@ namespace Abeer.Server.Controllers
 
         [AllowAnonymous]
         [HttpGet("GetUserProfileNoDetail")]
-        public async Task<ActionResult<ApplicationUser>> GetUserProfileNoDetail([FromQuery] string userId)
+        public async Task<ActionResult<ApplicationUser>> GetUserProfileNoDetail([FromQuery]string userId)
         {
             if (string.IsNullOrEmpty(userId))
                 userId = User.NameIdentifier();

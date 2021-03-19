@@ -1,6 +1,7 @@
 ﻿@page "/"
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Resources> Loc
 @inject Microsoft.Extensions.Localization.IStringLocalizer<TransactionTable> TransactionListLoc
+@attribute [Authorize]
 @code
 {
     [CascadingParameter]
