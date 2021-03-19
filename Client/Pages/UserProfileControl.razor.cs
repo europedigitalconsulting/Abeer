@@ -70,6 +70,8 @@ namespace Abeer.Client.Pages
         public string NewMail { get; set; }
         public string ConfirmMail { get; set; }
         private string Error;
+        private bool DisplayModifyPinCode;
+
         public string PhotoType
         {
             get => _PhotoType;
@@ -182,15 +184,17 @@ namespace Abeer.Client.Pages
             user.PinCode = NewPinCode;
 
             var response = await HttpClient.PostAsJsonAsync($"api/Profile/SaveNewCard", user);
+            
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
                 var result = JsonConvert.DeserializeObject<ApplicationUser>(json);
-
+               
                 PinCode = result.PinCode;
                 DigitCode = result.PinDigit.ToString();
                 NewDigitCode = "";
                 NewPinCode = 0;
+                DisplayModifyPinCode = false;
             }
             else
             {
@@ -242,6 +246,9 @@ namespace Abeer.Client.Pages
         }
         private void OpenModalChangePinCode()
         {
+            PinCode = User.PinCode;
+            DigitCode = User.DigitCode;
+
             ModalChangePinCode = true;
             ToggleMenu = false;
         }

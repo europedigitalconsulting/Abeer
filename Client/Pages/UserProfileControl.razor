@@ -359,7 +359,7 @@
 }
 @if (ModalChangePinCode)
 {
-    <ModalDefault Title="@Loc["AddCard"]" ModalValidClicked="SaveNewCard" BtnValidLabel="@Loc["Update"]" ModalCancelClicked="@(() => ModalChangePinCode = false)">
+    <ModalDefault Title="@Loc["AddCard"]" ModalCancelClicked="@(() => ModalChangePinCode = false)">
         <Body>
             <div class="form-group">
                 @Loc["DigitCode"]
@@ -371,18 +371,25 @@
             </div>
             <div class="text-center">
                 <button type="button" class="btn btn-success" @onclick="@(() => ModalChangePinCode = false)">@Loc["Close"]</button>
+                <button type="button" class="btn btn-primary" @onclick="@(() => DisplayModifyPinCode = true)">@Loc["AssociateNewCard"]</button>
             </div>
-            <span class="modal-title mt-2 mb-2">@Loc["AssociateNewCard"]</span>
+            @if (DisplayModifyPinCode)
+            {
+                <span class="modal-title mt-2 mb-2">@Loc["AssociateNewCard"]</span>
 
-            <div class="form-group">
-                @Loc["DigitCode"]
-                <input type="text" class="form-control" @bind="NewDigitCode" />
-            </div>
-            <div class="form-group">
-                @Loc["PinCode"]
-                <input type="text" class="form-control" @bind="NewPinCode" />
-                <span class="text-danger">@Error</span>
-            </div>
+                <div class="form-group">
+                    @Loc["DigitCode"]
+                    <input type="text" class="form-control" @bind="NewDigitCode" />
+                </div>
+                <div class="form-group">
+                    @Loc["PinCode"]
+                    <input type="text" class="form-control" @bind="NewPinCode" />
+                    <span class="text-danger">@Error</span>
+                </div>
+                <div class="text-center">
+                    <button type="button" class="btn btn-success" @onclick="SaveNewCard">@Loc["Save"]</button>
+                </div>
+            }
         </Body>
     </ModalDefault>
 }
