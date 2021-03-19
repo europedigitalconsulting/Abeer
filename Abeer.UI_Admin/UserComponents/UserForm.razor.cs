@@ -18,13 +18,5 @@ namespace Abeer.Client.Pages
         public ApplicationUser User { get; set; }
         [Parameter]
         public string Mode { get; set; }
-
-        protected override void OnParametersSet()
-        {
-            if (User != null)
-                Console.WriteLine($"User:{JsonConvert.SerializeObject(User)}");
-
-            base.OnParametersSet();
-        }
     }
 }

@@ -50,15 +50,10 @@ namespace Abeer.Client.Shared
                 StateTchatContainer.MyContacts.Clear();
                 Console.WriteLine($"start get notification for user {_user.Identity.Name}");
 
-                var getNotifications = await httpClient.GetAsync("api/Notification");
-                getNotifications.EnsureSuccessStatusCode();
-
                 var getMyContacts = await httpClient.GetAsync("api/Contacts");
                 getMyContacts.EnsureSuccessStatusCode();
 
                 var jsonContact = await getMyContacts.Content.ReadAsStringAsync();
-
-                Console.WriteLine($"Contacts:{jsonContact}");
 
                 if (!string.IsNullOrEmpty(jsonContact))
                     StateTchatContainer.SetMyContacts(JsonConvert.DeserializeObject<List<ViewContact>>(jsonContact));
@@ -77,7 +72,10 @@ namespace Abeer.Client.Shared
                             item.HasNewMsg = true;
                         }
                     }
-                }         
+                }
+
+                var getNotifications = await httpClient.GetAsync("api/Notification");
+                getNotifications.EnsureSuccessStatusCode();
 
                 NotificationClient = new NotificationClient(navigationManager.ToAbsoluteUri("/notification").AbsoluteUri, accessToken.Value);
 
@@ -86,6 +84,7 @@ namespace Abeer.Client.Shared
                 NotificationClient.MessageReceivedEvent += MessageReceived;
 
                 var json = await getNotifications.Content.ReadAsStringAsync();
+                
                 if (!string.IsNullOrEmpty(json))
                 {
                     var temp = JsonConvert.DeserializeObject<List<Notification>>(json);
