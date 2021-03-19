@@ -139,7 +139,7 @@ namespace Abeer.Client.Shared
         {
             builder.OpenComponent(0, DialogTypes[type]);
             builder.AddAttribute(1, "User", User);
-            builder.AddAttribute(2, "Close", EventCallback.Factory.Create(this, () => SetDisplayedNotification()));
+            builder.AddAttribute(2, "Close", EventCallback.Factory.Create(this, async() => await SetDisplayedNotification()));
             builder.AddAttribute(3, "Navigate", EventCallback.Factory.Create<string>(this, (url) => Goto(url)));
             builder.CloseComponent();
         };

@@ -100,6 +100,11 @@ namespace Abeer.Shared.ClientHub
 
         private async Task SendingNotifications(List<Notification> notifs, string userId = null)
         {
+            if (Notifications.Any())
+                Notifications.AddRange(notifs);
+            else
+                Notifications = notifs;
+
             foreach (Notification item in notifs)
             {
                 switch (item.NotificationType)

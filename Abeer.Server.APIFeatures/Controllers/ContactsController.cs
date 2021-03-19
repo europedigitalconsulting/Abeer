@@ -125,7 +125,7 @@ namespace Abeer.Server.Controllers
 
                 await SendEmailTemplate(userContact);
 
-                Notification notif = await _notificationService.Create(userContact.Id, "Demande de contact", "contact/list", "reminder", "reminder", "reminder", "add-contact");
+                Notification notif = await _notificationService.Create(contactId, "Demande de contact", "contact/list", "reminder", "reminder", "reminder", "add-contact");
                 return Ok(new ContactViewModel() { ViewContact = new ViewContact(user, userContact), Notification = notif });
             }
             return Conflict();
@@ -199,6 +199,9 @@ namespace Abeer.Server.Controllers
 
             foreach (var suggestion in suggestions)
             {
+                if (suggestion.Id == user.Id)
+                    continue;
+
                 var item = new ViewContact(user, suggestion);
                 item.Contact.NumberOfContacts = (await _UnitOfWork.ContactRepository.GetContacts(item.Contact.Id)).Count;
                 contacts.Add(item);
