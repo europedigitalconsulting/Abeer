@@ -1,3 +1,4 @@
+#region usings
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -23,25 +24,17 @@ using Abeer.Data;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore.Internal;
-using DbProvider.LiteDbProvider;
 using Abeer.Shared.Data;
 using Abeer.Shared.Functional;
-using System.Net;
 using Abeer.Shared.Security;
 using Microsoft.AspNetCore.Authorization;
-using Abeer.Client;
 using System.Collections.Generic;
 using System.Linq;
 using Abeer.Services.Data;
 using Abeer.Server.APIFeatures.Hubs;
-using Abeer.Shared.ReferentielTable;
 using Microsoft.AspNetCore.ResponseCompression;
-using Abeer.Shared.ViewModels;
-using Blazor.Analytics;
-using BlazorPro.BlazorSize;
 using Microsoft.AspNetCore.SignalR;
-
+#endregion
 namespace Abeer.Server
 {
     public class Startup
@@ -69,10 +62,7 @@ namespace Abeer.Server
 
             var provider = Configuration["Service:Database:DbProvider"];
 
-            services.AddDbContext<SecurityDbContext>(options =>
-                options.UseSqlite(
-                    Configuration.GetConnectionString("SecurityDbContextConnectionStrings"), options =>
-                    options.MigrationsAssembly(typeof(SecurityDbContext).Assembly.FullName)), ServiceLifetime.Transient);
+            RegisterSecurityDbContext(services);
 
             services.AddTransient(sp =>
             {
@@ -212,6 +202,24 @@ namespace Abeer.Server
                 opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
                     new[] { "application/octet-stream" });
             });
+        }
+
+        private void RegisterSecurityDbContext(IServiceCollection services)
+        {
+            if (Configuration["IdentityServer:DataBase:DbType"].Equals("SqlServer", StringComparison.OrdinalIgnoreCase))
+            {
+                services.AddDbContext<SecurityDbContext>(options =>
+                    options.UseSqlServer(
+                        Configuration.GetConnectionString(Configuration["IdentityServer:DataBase:ConnectionString"]), options =>
+                        options.MigrationsAssembly(typeof(SecurityDbContext).Assembly.FullName)), ServiceLifetime.Transient);
+            }
+            else
+            {
+                services.AddDbContext<SecurityDbContext>(options =>
+                    options.UseSqlite(
+                        Configuration.GetConnectionString(Configuration["IdentityServer:DataBase:ConnectionString"]), options =>
+                        options.MigrationsAssembly(typeof(SecurityDbContext).Assembly.FullName)), ServiceLifetime.Transient);
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -408,7 +416,7 @@ namespace Abeer.Server
 
                 if (subscriptionPack == null || subscriptionPack.Count == 0)
                 {
-                    subscriptionPack.Add(await functionalDb.SubscriptionPackRepository.AddSubscriptionPack(new SubscriptionPack { Enable = true, Popuplar=true, Label = "Standard", Price = 85, Description = "StandardDescription", Duration = 1 }));
+                    subscriptionPack.Add(await functionalDb.SubscriptionPackRepository.AddSubscriptionPack(new SubscriptionPack { Enable = true, Popuplar = true, Label = "Standard", Price = 85, Description = "StandardDescription", Duration = 1 }));
                     subscriptionPack.Add(await functionalDb.SubscriptionPackRepository.AddSubscriptionPack(new SubscriptionPack { Enable = true, Label = "Premium", Price = 124, Description = "PremiumDescription", Duration = 1 }));
                     subscriptionPack.Add(await functionalDb.SubscriptionPackRepository.AddSubscriptionPack(new SubscriptionPack { Enable = true, Label = "Yearly", Price = 1240, Description = "YearlyDescription", Duration = 12 }));
                     functionalDb.SaveChanges();
@@ -511,7 +519,8 @@ namespace Abeer.Server
                         PinDigit = "22345678901234567",
                         PinCode = 12345,
                         IsAdmin = true,
-                        IsUnlimited = false, SubscriptionStartDate = DateTime.UtcNow.AddDays(-1),
+                        IsUnlimited = false,
+                        SubscriptionStartDate = DateTime.UtcNow.AddDays(-1),
                         SubscriptionEndDate = DateTime.UtcNow.AddDays(-1).AddDays(5)
                     };
 
