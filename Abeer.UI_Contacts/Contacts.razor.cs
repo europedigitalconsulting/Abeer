@@ -50,6 +50,7 @@ namespace Abeer.UI_Contacts
         public bool ShowContactAddModal { get; set; }
         public bool Showfilter { get; set; }
         public bool ShowfilterExt { get; set; }
+        public bool IsRequestsDisplayed { get; private set; }
 
         private async Task SearchAll()
         { 
@@ -136,6 +137,28 @@ namespace Abeer.UI_Contacts
             FilterSelected = item;
             ShowfilterExt = Showfilter = false;
             await InvokeAsync(StateHasChanged);
+        }
+
+        public async Task ToggleDisplayRequests()
+        {
+            HttpResponseMessage getItems;
+
+            if (!IsRequestsDisplayed)
+            {
+                getItems = await httpClient.GetAsync("/api/Contacts/requests");
+                IsRequestsDisplayed = true;
+            }
+            else
+            {
+                getItems = await httpClient.GetAsync("/api/Contacts");
+                IsRequestsDisplayed = false;
+            }
+
+            getItems.EnsureSuccessStatusCode();
+            var json = await getItems.Content.ReadAsStringAsync();
+            All = JsonConvert.DeserializeObject<List<ViewContact>>(json);
+            
+            await SearchAll();
         }
     }
 }

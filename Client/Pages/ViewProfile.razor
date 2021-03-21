@@ -14,7 +14,7 @@
 
 @if (UserProfile != null)
 {
-    <UserProfileControl User="UserProfile" ReadOnly="true"
+    <UserProfileControl Profile="UserProfile" ReadOnly="true"
                         ProfileUrl="@Navigation.ToAbsoluteUri($"/ViewProfile/{UserProfile.Id}").ToString()" IsAuthenticated="@User.Identity.IsAuthenticated" ProfileId="@ProfileId">
     </UserProfileControl>
 }

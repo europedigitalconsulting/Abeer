@@ -36,16 +36,20 @@ namespace Abeer.Server.Controllers
         private readonly IEmailSenderService _emailSender;
         private readonly IConfiguration _configuration;
         private readonly NotificationService _notificationService;
+        EventTrackingService _eventTrackingService;
+
         public ContactsController(
             UrlShortner urlShortner, NotificationService notificationService,
             IWebHostEnvironment env, IConfiguration configuration,
             IServiceProvider serviceProvider,
-            IEmailSenderService emailSender, FunctionalUnitOfWork onlineWalletUnitOfWork, UserManager<ApplicationUser> userManager)
+            IEmailSenderService emailSender, FunctionalUnitOfWork onlineWalletUnitOfWork, UserManager<ApplicationUser> userManager,
+            EventTrackingService eventTrackingService)
         {
             _notificationService = notificationService;
             _serviceProvider = serviceProvider;
             _UnitOfWork = onlineWalletUnitOfWork;
             _userManager = userManager;
+            _eventTrackingService = eventTrackingService;
             _emailSender = emailSender;
             _urlShortner = urlShortner;
             _env = env;
@@ -67,6 +71,40 @@ namespace Abeer.Server.Controllers
                 foreach(var contact in contacts)
                 {
                     var uContact = await _userManager.FindByIdAsync(contact.UserId);
+                    ViewContact item = new(user, uContact, contact);
+
+                    user.NubmerOfView += 1;
+                    await _userManager.UpdateAsync(user);
+
+                    item.Contact.NumberOfView = user.NubmerOfView;
+                    item.Contact.SocialNetworkConnected = await _UnitOfWork.SocialNetworkRepository.GetSocialNetworkLinks(item.UserId) ??
+                        new List<SocialNetwork>();
+
+                    item.Contact.CustomLinks = await _UnitOfWork.CustomLinkRepository.GetCustomLinkLinks(item.UserId) ?? new List<CustomLink>();
+
+                    item.Contact.NumberOfContacts = (await _UnitOfWork.ContactRepository.GetContacts(item.Contact.Id)).Count;
+
+                    viewContacts.Add(item);
+                }
+            }
+
+            return Ok(viewContacts);
+        }
+
+        [HttpGet("requests")]
+        public async Task<ActionResult<IEnumerable<ViewContact>>> GetContactRequests()
+        {
+            List<ViewContact> viewContacts = new List<ViewContact>();
+
+            var user = await _userManager.FindByIdAsync(User.NameIdentifier());
+
+            var contacts = (await _UnitOfWork.ContactRepository.GetContactRequests(user.Id))?.ToList();
+
+            if (contacts.Any())
+            {
+                foreach (var contact in contacts)
+                {
+                    var uContact = await _userManager.FindByIdAsync(contact.OwnerId);
                     ViewContact item = new(user, uContact, contact);
 
                     user.NubmerOfView += 1;
@@ -145,6 +183,90 @@ namespace Abeer.Server.Controllers
 
             await _notificationService.Create(contact.UserId, "Suppression de contact", "contact/list", "reminder", "reminder", "reminder", "remove-contact");
             return Ok();
+        }
+
+        [HttpPut("accept/{contactId}")]
+        public async Task<ActionResult<Contact>> AcceptInvitation(Guid contactId, Contact link)
+        {
+            if (contactId == Guid.Empty)
+                return BadRequest();
+
+            if (contactId != link.Id)
+                return BadRequest();
+
+            var contact = await _UnitOfWork.ContactRepository.GetContact(contactId);
+
+            if (contact == null)
+                return NotFound();
+
+            contact.DateAccepted = DateTime.Now;
+            contact.UserAccepted = EnumUserAccepted.ACCEPTED;
+
+            await _UnitOfWork.ContactRepository.Update(contact);
+
+            var invitation = await _UnitOfWork.InvitationRepository.GetInvitation(contact.OwnerId, contact.UserId);
+
+            await _eventTrackingService.Create(new Shared.Functional.EventTrackingItem
+            {
+                Id = Guid.NewGuid(),
+                CreatedDate = DateTime.UtcNow,
+                Category = "contact",
+                Key = "confirmContact",
+                UserId = contact.OwnerId
+            });
+
+            if (invitation != null)
+            {
+                invitation.InvitationStat = (int)EnumUserAccepted.ACCEPTED;
+                await _UnitOfWork.InvitationRepository.Update(invitation);
+            }
+
+            var contact2 = await _UnitOfWork.ContactRepository.GetContact(contact.UserId, contact.OwnerId);
+
+            if (contact2 == null)
+            {
+                contact2 = new Contact
+                {
+                    OwnerId = contact.UserId,
+                    UserId = contact.OwnerId,
+                    DateAccepted = DateTime.Now,
+                    UserAccepted = EnumUserAccepted.ACCEPTED
+                };
+
+                await _UnitOfWork.ContactRepository.Add(contact2);
+
+                var invitation2 = await _UnitOfWork.InvitationRepository.GetInvitation(contact.UserId, contact.OwnerId);
+
+                if (invitation2 != null)
+                {
+                    invitation.InvitationStat = (int)EnumUserAccepted.ACCEPTED;
+                    await _UnitOfWork.InvitationRepository.Update(invitation);
+                }
+                else
+                {
+                    invitation2 = new Shared.Functional.Invitation
+                    {
+                        OwnedId = contact.UserId,
+                        ContactId = contact.OwnerId,
+                        CreatedDate = DateTime.UtcNow,
+                        InvitationStat = (int)EnumUserAccepted.ACCEPTED,
+                        Id = Guid.NewGuid()
+                    };
+
+                    await _UnitOfWork.InvitationRepository.Add(invitation2);
+
+                    await _eventTrackingService.Create(new Shared.Functional.EventTrackingItem
+                    {
+                        Id = Guid.NewGuid(),
+                        CreatedDate = DateTime.UtcNow,
+                        Category = "contact",
+                        Key = "confirmContact",
+                        UserId = contact2.OwnerId
+                    });
+                }
+            }
+
+            return Ok(contact);
         }
 
         private async Task SendEmailTemplate(ApplicationUser user)
@@ -238,6 +360,24 @@ namespace Abeer.Server.Controllers
                 return BadRequest();
 
             var contact = await _UnitOfWork.ContactRepository.GetContact(ucontact.Id, user.Id);
+
+            if (contact == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(contact);
+        }
+
+        [HttpGet("link/{contactId}")]
+        public async Task<ActionResult<Contact>> GetLinkForProfile(string contactId)
+        {
+            if (string.IsNullOrEmpty(contactId))
+                return BadRequest();
+
+            var userId = User.NameIdentifier();
+
+            var contact = await _UnitOfWork.ContactRepository.FirstOrDefault(p=>(p.OwnerId == contactId && p.UserId == userId) || (p.OwnerId == userId && p.UserId == contactId));
 
             if (contact == null)
             {

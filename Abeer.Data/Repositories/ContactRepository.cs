@@ -68,5 +68,10 @@ namespace Abeer.Data.Repositories
         {
             return Task.Run(() => _context.Contacts.Remove(id));
         }
+
+        public Task<IList<Contact>> GetContactRequests(string userId)
+        {
+            return Task.Run(() => _context.Contacts.Where(c => c.UserId == userId && (c.UserAccepted == EnumUserAccepted.PENDING)));
+        }
     }
 }

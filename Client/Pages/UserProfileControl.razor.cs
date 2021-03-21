@@ -22,7 +22,7 @@ namespace Abeer.Client.Pages
         [Parameter]
         public string ProfileUrl { get; set; }
         [Parameter]
-        public ViewApplicationUser User { get; set; } = new ViewApplicationUser();
+        public ViewApplicationUser Profile { get; set; } = new ViewApplicationUser();
         [Parameter]
         public List<SocialNetwork> AvailableSocialNetworks { get; set; } = new List<SocialNetwork>();
         [Parameter]
@@ -93,17 +93,17 @@ namespace Abeer.Client.Pages
                         
             AvailableSocialNetworks.ForEach(a =>
             {
-                if (!User.SocialNetworkConnected.ToList().Exists(c => a.Name.Equals(c.Name, StringComparison.OrdinalIgnoreCase)))
+                if (!Profile.SocialNetworkConnected.ToList().Exists(c => a.Name.Equals(c.Name, StringComparison.OrdinalIgnoreCase)))
                 {
                     AvailableSocialNetworksToAdd.Add(a); 
                 }
             });
 
-            if (CurrentUser.Identity?.IsAuthenticated == true && !string.IsNullOrEmpty(User?.Id))
+            if (CurrentUser.Identity?.IsAuthenticated == true && !string.IsNullOrEmpty(Profile?.Id))
             {
-                if (CurrentUserId != User.Id)
+                if (CurrentUserId != Profile.Id)
                 { 
-                    var getLink = await HttpClient.GetAsync($"api/contacts/getbycontactid/{User.Id}");
+                    var getLink = await HttpClient.GetAsync($"api/contacts/link/{Profile.Id}");
 
                     if (getLink.IsSuccessStatusCode)
                     {
@@ -119,9 +119,9 @@ namespace Abeer.Client.Pages
         {
             await base.OnParametersSetAsync();
 
-            if (string.IsNullOrEmpty(User.PhotoUrl))
+            if (string.IsNullOrEmpty(Profile.PhotoUrl))
             {
-                User.PhotoUrl = "https://www.gravatar.com/avatar.php?gravatar_id=e511eeb916b3fa2202f38abfa29532b0&amp;rating=PG&amp;size=1600";
+                Profile.PhotoUrl = "https://www.gravatar.com/avatar.php?gravatar_id=e511eeb916b3fa2202f38abfa29532b0&amp;rating=PG&amp;size=1600";
             }
 
             await InvokeAsync(StateHasChanged);
@@ -130,16 +130,21 @@ namespace Abeer.Client.Pages
 
         public async Task LinkContact()
         {
-            var response = await HttpClient.GetAsync($"/api/contacts/{User.Id}");
+            var response = await HttpClient.GetAsync($"/api/contacts/{Profile.Id}");
             response.EnsureSuccessStatusCode();
 
-            var getLink = await HttpClient.GetAsync($"api/contacts/getbycontactid/{User.Id}");
+            var getLink = await HttpClient.GetAsync($"api/contacts/link/{Profile.Id}");
 
             if (getLink.IsSuccessStatusCode)
             {
                 var jLink = await getLink.Content.ReadAsStringAsync();
                 Link = JsonConvert.DeserializeObject<Contact>(jLink);
             }
+        }
+
+        public void ToggleOpenList()
+        {
+            OpenList = !OpenList;
         }
 
         public async Task Unlink()
@@ -165,7 +170,7 @@ namespace Abeer.Client.Pages
                 ChangePasswordHasError = false;
                 var response = await HttpClient.PutAsJsonAsync($"/api/Profile/ChangePassword", new ChangePasswordViewModel
                 {
-                    UserId = User.Id,
+                    UserId = Profile.Id,
                     OldPassword = OldPassword,
                     NewPassword = NewPassword
                 });
@@ -204,12 +209,12 @@ namespace Abeer.Client.Pages
         }
         private async Task ChangePhoto()
         {
-            User.PhotoUrl = User.PhotoUrl;
-            var response = await HttpClient.PutAsJsonAsync("/api/Profile", User);
+            Profile.PhotoUrl = Profile.PhotoUrl;
+            var response = await HttpClient.PutAsJsonAsync("/api/Profile", Profile);
             response.EnsureSuccessStatusCode();
 
             var json = await response.Content.ReadAsStringAsync();
-            User = JsonConvert.DeserializeObject<ViewApplicationUser>(json);
+            Profile = JsonConvert.DeserializeObject<ViewApplicationUser>(json);
             ModalChangePhoto = false;
         }
         private async Task ChangeMail()
@@ -224,8 +229,8 @@ namespace Abeer.Client.Pages
                 ChangeChangeMailHasError = false;
                 var response = await HttpClient.PutAsJsonAsync($"/api/Profile/ChangeEmail", new ChangeMailViewModel
                 {
-                    UserId = User.Id,
-                    OldMail = User.Email,
+                    UserId = Profile.Id,
+                    OldMail = Profile.Email,
                     NewMail = NewMail
                 });
                 if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
@@ -246,8 +251,8 @@ namespace Abeer.Client.Pages
         }
         private void OpenModalChangePinCode()
         {
-            PinCode = User.PinCode;
-            DigitCode = User.DigitCode;
+            PinCode = Profile.PinCode;
+            DigitCode = Profile.DigitCode;
 
             ModalChangePinCode = true;
             ToggleMenu = false;
@@ -271,14 +276,14 @@ namespace Abeer.Client.Pages
 
         private void OpenModalSocialNetwork()
         {
-            NewSocialLink = new SocialNetwork { OwnerId = User.Id };
+            NewSocialLink = new SocialNetwork { OwnerId = Profile.Id };
             ModalSocialNetwork = true;
             OpenList = false;
             ToggleMenu = false;
         }
         private void OpenModalCustomLink()
         {
-            NewCustomLink = new CustomLink { OwnerId = User.Id };
+            NewCustomLink = new CustomLink { OwnerId = Profile.Id };
             ModalCustomLink = true;
             ToggleMenu = false;
         }
@@ -288,8 +293,8 @@ namespace Abeer.Client.Pages
             {
                 var response = await HttpClient.PostAsJsonAsync<SocialNetwork>($"/api/SocialNetwork", NewSocialLink);
                 response.EnsureSuccessStatusCode();
-                User.SocialNetworkConnected.Add(NewSocialLink);
-                NewSocialLink = new SocialNetwork { OwnerId = User.Id };
+                Profile.SocialNetworkConnected.Add(NewSocialLink);
+                NewSocialLink = new SocialNetwork { OwnerId = Profile.Id };
                 await InvokeAsync(StateHasChanged); 
             }
         }
@@ -297,8 +302,8 @@ namespace Abeer.Client.Pages
         {
             var response = await HttpClient.PostAsJsonAsync<CustomLink>($"/api/CustomLink", NewCustomLink);
             response.EnsureSuccessStatusCode();
-            User.CustomLinks.Add(NewCustomLink);
-            NewCustomLink = new CustomLink { OwnerId = User.Id };
+            Profile.CustomLinks.Add(NewCustomLink);
+            NewCustomLink = new CustomLink { OwnerId = Profile.Id };
             await InvokeAsync(StateHasChanged);
             ModalCustomLink = false;
         }
@@ -311,16 +316,25 @@ namespace Abeer.Client.Pages
         }
         private async Task UpdateProfil(ViewApplicationUser user)
         {
-            User = user;
+            Profile = user;
             ModalEditProfil = false;
             StateHasChanged();
         } 
         private async Task DeleteSocialNetwork(SocialNetwork socialNetwork)
         {
-            var response = await HttpClient.DeleteAsync($"/api/SocialNetwork/{User.Id}/{socialNetwork.Name}");
+            var response = await HttpClient.DeleteAsync($"/api/SocialNetwork/{Profile.Id}/{socialNetwork.Name}");
             response.EnsureSuccessStatusCode();
             AvailableSocialNetworks.Remove(socialNetwork);
-            User.SocialNetworkConnected.Remove(socialNetwork);
+            Profile.SocialNetworkConnected.Remove(socialNetwork);
+            await InvokeAsync(StateHasChanged);
+        }
+
+        public async Task AcceptInvitation()
+        {
+            var response = await HttpClient.PutAsJsonAsync<Contact>($"/api/Contacts/Accept/{Link.Id}", Link);
+            response.EnsureSuccessStatusCode();
+            var json = await response.Content.ReadAsStringAsync();
+            Link = JsonConvert.DeserializeObject<Contact>(json);
             await InvokeAsync(StateHasChanged);
         }
     }

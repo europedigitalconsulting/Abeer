@@ -3,5 +3,5 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<EditProfile> Loc
 @inject Abeer.Client.UISdk.NavigationUrlService NavigationUrlService
 
-<UserProfileControl AvailableSocialNetworks="AvailableSocialNetworks" User="UserProfile" ProfileUrl="@NavigationManager.ToAbsoluteUri($"/ViewProfile/{UserProfile.Id}").ToString()"  ReadOnly="@UserProfile.IsReadOnly" IsAuthenticated="User.Identity.IsAuthenticated" ProfileId="@UserProfile.DigitCode">
+<UserProfileControl AvailableSocialNetworks="AvailableSocialNetworks" Profile="UserProfile" ProfileUrl="@NavigationManager.ToAbsoluteUri($"/ViewProfile/{UserProfile.Id}").ToString()"  ReadOnly="@UserProfile.IsReadOnly" IsAuthenticated="User.Identity.IsAuthenticated" ProfileId="@UserProfile.DigitCode">
 </UserProfileControl>

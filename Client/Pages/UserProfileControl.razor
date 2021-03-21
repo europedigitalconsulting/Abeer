@@ -12,7 +12,7 @@
                     }
                     <div style="position:relative; width:100%;">
                         <img src="/assets/img/profilphoto.png" />
-                        <UserPhotoControl User="User" Loc="@Loc"></UserPhotoControl>
+                        <UserPhotoControl User="Profile" Loc="@Loc"></UserPhotoControl>
                     </div>
                 </div>
                 <div class="mt-4 pt-lg-6" @ontouchstart="() => ToggleMenu = false">
@@ -20,12 +20,12 @@
                         <div class="d-flex justify-content-between mb-3">
                             <div class="p-2 mr-auto">
                                 <div>
-                                    <span class="text-dark pb-2">@User.DisplayName</span> <br>
-                                    <span class="author-box-job">@User.Title</span>
+                                    <span class="text-dark pb-2">@Profile.DisplayName</span> <br>
+                                    <span class="author-box-job">@Profile.Title</span>
                                 </div>
                             </div>
                             <div class="p-2 cursor-pointer">
-                                <a href="https://www.google.fr/maps/place/@User.Country,@User.City" target="_blank" style="color:black; font-weight:400;">
+                                <a href="https://www.google.fr/maps/place/@Profile.Country,@Profile.City" target="_blank" style="color:black; font-weight:400;">
                                     <div class="pr-2 text-center">
                                         <div><i style="font-size: 20px;" class="fa fa-map-marker-alt"></i></div>
                                         <span style="font-size:12px;">@Loc["Map"]</span>
@@ -56,58 +56,58 @@
                         @if (!TabMap)
                         {
                             <div class="col-md-6 col-sm-12">
-                                @if (!string.IsNullOrEmpty(User.Description))
+                                @if (!string.IsNullOrEmpty(Profile.Description))
                                 {
                                     <div class="" style="text-align:left;">
                                         <p>
-                                            @User.Description
+                                            @Profile.Description
                                         </p>
                                     </div>
                                 }
-                                @if (!string.IsNullOrEmpty(User.DescriptionVideo))
+                                @if (!string.IsNullOrEmpty(Profile.DescriptionVideo))
                                 {
-                                    if (!string.IsNullOrEmpty(User.DescriptionVideoCover))
+                                    if (!string.IsNullOrEmpty(Profile.DescriptionVideoCover))
                                     {
-                                        <video controls poster="@User.DescriptionVideoCover" class="col-12">
-                                            <source src="@User.DescriptionVideo" type="video/mp4" />
+                                        <video controls poster="@Profile.DescriptionVideoCover" class="col-12">
+                                            <source src="@Profile.DescriptionVideo" type="video/mp4" />
                                         </video>
                                     }
                                 }
                                 <div class="mt-4">
                                     <ul style="list-style: none;font-weight: 500;" class="pl-0">
-                                        @if (!string.IsNullOrWhiteSpace(User.City))
+                                        @if (!string.IsNullOrWhiteSpace(Profile.City))
                                         {
                                             <li class="pb-2">
                                                 <span class="p-2 w-100">
                                                     <i class="fa fa-map-marker text-dark pr-2" aria-hidden="true"></i>
-                                                    @User.City, @User.Country
+                                                    @Profile.City, @Profile.Country
                                                 </span>
                                             </li>
                                         }
-                                        @if (!string.IsNullOrWhiteSpace(User.Email))
+                                        @if (!string.IsNullOrWhiteSpace(Profile.Email))
                                         {
                                             <li class="pb-2">
-                                                <a href="mailto:@User.Email" class="p-2 w-100">
+                                                <a href="mailto:@Profile.Email" class="p-2 w-100">
                                                     <i class="fa fa-envelope text-dark pr-2" aria-hidden="true"></i>
-                                                    @User.Email
+                                                    @Profile.Email
                                                 </a>
                                             </li>
                                         }
-                                        @if (!string.IsNullOrWhiteSpace(User.PhoneNumber))
+                                        @if (!string.IsNullOrWhiteSpace(Profile.PhoneNumber))
                                         {
                                             <li class="pb-2">
                                                 <span class="p-2 w-100">
                                                     <i class="fa fa-phone text-dark pr-2" aria-hidden="true"></i>
-                                                    @User.PhoneNumber
+                                                    @Profile.PhoneNumber
                                                 </span>
                                             </li>
                                         }
                                     </ul>
                                 </div>
-                                @if (User.SocialNetworkConnected != null)
+                                @if (Profile.SocialNetworkConnected != null)
                                 {
                                     <div class="row col-12">
-                                        <Virtualize Items="@User.SocialNetworkConnected" Context="socialNetwork">
+                                        <Virtualize Items="@Profile.SocialNetworkConnected" Context="socialNetwork">
                                             <div class="card text-white mb-3 mr-1">
                                                 <a href="@socialNetwork.Url" target="_blank">
                                                     <img alt="image" src="assets/img/social/@(socialNetwork.Name).svg" style="  width:40px;text-align:center">
@@ -116,9 +116,9 @@
                                         </Virtualize>
                                     </div>
                                 }
-                                @if (User.CustomLinks != null)
+                                @if (Profile.CustomLinks != null)
                                 {
-                                    <Virtualize Items="@User.CustomLinks" Context="customLink">
+                                    <Virtualize Items="@Profile.CustomLinks" Context="customLink">
                                         <div class="card text-white mb-3 mr-1">
                                             <a href="@customLink.Url" target="_blank">
                                                 @if (!string.IsNullOrEmpty(customLink.Logo))
@@ -135,14 +135,14 @@
                                 }
                                 @if (CurrentUser.Identity?.IsAuthenticated == true)
                                 {
-                                    @if (!string.IsNullOrEmpty(User?.DisplayName))
+                                    @if (!string.IsNullOrEmpty(Profile?.DisplayName))
                                     {
-                                        <Abeer.Client.UISdk.SocialShareLinks Text="@Loc["ShareText", User.DisplayName]" Content="@User.Description" Source="@Loc["ShareSource"]" TargetUrl="@NavigationManager.ToAbsoluteUri($"/ViewProfile/{User.Id}").ToString()" Title="@Loc["ShareTitle", User.DisplayName]" Loc="Loc"></Abeer.Client.UISdk.SocialShareLinks>
+                                        <Abeer.Client.UISdk.SocialShareLinks Text="@Loc["ShareText", Profile.DisplayName]" Content="@Profile.Description" Source="@Loc["ShareSource"]" TargetUrl="@NavigationManager.ToAbsoluteUri($"/ViewProfile/{Profile.Id}").ToString()" Title="@Loc["ShareTitle", Profile.DisplayName]" Loc="Loc"></Abeer.Client.UISdk.SocialShareLinks>
                                     }
 
                                     @if (Link == null)
                                     {
-                                        if (User.Id != CurrentUserId)
+                                        if (Profile.Id != CurrentUserId)
                                         {
                                             <button class="btn btn-primary" @onclick="LinkContact"><i class="fas fa-link"></i>&nbsp;@Loc["LinkContact"]</button>
                                         }
@@ -153,7 +153,14 @@
                                     }
                                     else if (Link.UserAccepted == Abeer.Shared.ReferentielTable.EnumUserAccepted.PENDING)
                                     {
-                                        <span class="badge badge-secondary">@Loc["Pending"]</span>
+                                        if (Link.UserId == CurrentUserId)
+                                        {
+                                            <button class="btn btn-primary" @onclick="AcceptInvitation"><i class="fas fa-user-check"></i>&nbsp;@Loc["AcceptInvitation"]</button>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-secondary">@Loc["Pending"]</span>
+                                        }
                                     }
                                 }
                             </div>
@@ -208,7 +215,7 @@
                         </span>
                     </div>
                     <div class="p-2">
-                        <a href="https://www.google.fr/maps/place/@User.Country,@User.City" target="_blank">
+                        <a href="https://www.google.fr/maps/place/@Profile.Country,@Profile.City" target="_blank">
                             <div class="pr-2 text-center text-light">
                                 <div>
                                     <i style="font-size: 25px; color: black;" class="fa fa-map-marker-alt" aria-hidden="true"></i>
@@ -222,8 +229,8 @@
                             <a href="/contact/list" class="pr-2 text-center text-light">
                                 <div>
                                     <i style="font-size: 16px; color: black;" class="fa fa-users" aria-hidden="true"></i>
-                                </div> 
-                                <span style="font-size: 12px; color: black; font-weight: 400;">@Loc["Contacts"]</span> 
+                                </div>
+                                <span style="font-size: 12px; color: black; font-weight: 400;">@Loc["Contacts"]</span>
                             </a>
                         }
                     </div>
@@ -306,7 +313,7 @@
             {
                 <div class="form-group">
                     @Loc["UseCustomPhoto"]
-                    <MediaUploader ImgUrl="@User.PhotoUrl" OnChange="@((fileUrl)=>User.PhotoUrl = fileUrl)"></MediaUploader>
+                    <MediaUploader ImgUrl="@Profile.PhotoUrl" OnChange="@((fileUrl)=>Profile.PhotoUrl = fileUrl)"></MediaUploader>
                 </div>
             }
             @if (PhotoType == "Video")
@@ -314,14 +321,14 @@
                 <div class="form-row">
                     <div class="form-group col-sm-12">
                         @Loc["Video"]
-                        <MediaUploader ImgUrl="@User.VideoProfileUrl" OnChange="@((fileUrl) => User.VideoProfileUrl = fileUrl)" IsVideo="true"></MediaUploader>
+                        <MediaUploader ImgUrl="@Profile.VideoProfileUrl" OnChange="@((fileUrl) => Profile.VideoProfileUrl = fileUrl)" IsVideo="true"></MediaUploader>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group col-sm-12">
                         @Loc["Cover"]
-                        <MediaUploader ImgUrl="@User.VideProfileCoverUrl" OnChange="@((fileUrl) => User.VideProfileCoverUrl = fileUrl)" IsVideo="false"></MediaUploader>
+                        <MediaUploader ImgUrl="@Profile.VideProfileCoverUrl" OnChange="@((fileUrl) => Profile.VideProfileCoverUrl = fileUrl)" IsVideo="false"></MediaUploader>
                     </div>
                 </div>
 
@@ -432,9 +439,9 @@
                                 <img alt="qrcode" src="/api/QrCodeGenerator?link=@ProfileUrl" width="160" />
                             </div>
                             <div>
-                                <span class="pb-2" style="font-size:18px">@User.DisplayName</span>
+                                <span class="pb-2" style="font-size:18px">@Profile.DisplayName</span>
                                 <br />
-                                <span class="author-box-job" style="font-size:11px">@User.Title</span>
+                                <span class="author-box-job" style="font-size:11px">@Profile.Title</span>
                             </div>
                         </div>
                     </div>
@@ -446,11 +453,11 @@
 }
 @if (ModalSocialNetwork)
 {
-    <ModalDefault Title="@Loc["AddASocialNetwork"]" ModalCancelClicked="@(() => ModalSocialNetwork = false)">
+    <ModalDefault Title="@Loc["AddASocialNetwork"]" ModalCancelClicked="ToggleOpenList">
         <Body>
-            <Virtualize Items="@User.SocialNetworkConnected" Context="socialNetwork">
+            <Virtualize Items="@Profile.SocialNetworkConnected" Context="socialNetwork">
                 <div class="input-group mb-3">
-                    <div class="input-group-prepend" @onclick="() => OpenList = true">
+                    <div class="input-group-prepend" @onclick="ToggleOpenList">
                         <span class="input-group-text pl-0" style="border-right:1px solid grey;">
                             <img src="/assets/img/social/@(socialNetwork.Name + ".svg")" alt="@socialNetwork.Name" style="width: 30px; margin-left: 10px;" />
                         </span>
@@ -464,7 +471,7 @@
             <div class="col-sm-12" style="background:#F5F8FA;height:50px;position:relative;">
                 @if (string.IsNullOrEmpty(NewSocialLink.Logo))
                 {
-                    <div class="cursor-pointer " @onclick="() => OpenList = !OpenList">
+                    <div class="cursor-pointer " @onclick="ToggleOpenList">
                         <i class="far fa-plus-square" style="font-size:25px;padding-top: 12px;"></i>
                         <span>Ajouter un réseau social</span>
                     </div>
@@ -472,7 +479,7 @@
                 else
                 {
                     <div class="input-group mb-3 ">
-                        <div class="input-group-prepend" @onclick="() => OpenList = true">
+                        <div class="input-group-prepend" @onclick="ToggleOpenList">
                             <span class="input-group-text pl-0" id="basic-addon1" style="border-right:1px solid grey;">
                                 <img src="/assets/img/social/@(NewSocialLink.Name + ".svg")" alt="@NewSocialLink.Name" style="width: 30px; margin-left: 10px;" />
                             </span>
@@ -488,7 +495,7 @@
                 {
                     <ul class="slide-in-blurred-top" style="background: #F5F8FA; position: absolute; left: 0; top: 50px; z-index: 99999999; list-style: none; max-height: 340px; overflow-y: auto; padding-left: 10px; padding-right: 0px;">
                         <Virtualize Items="@AvailableSocialNetworks" Context="item">
-                            <li @onclick="() => OpenList = false">
+                            <li @onclick="ToggleOpenList">
                                 <a href="javascript:void(0)" @onclick="@(()=>SetSocialNetwork(item.Name, item.BackgroundColor, item.Logo))">
                                     <img src="/assets/img/social/@(item.Name + ".svg")" alt="@item.Name" style="width:30px" class="pb-1" />
                                 </a>
