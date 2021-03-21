@@ -1,7 +1,7 @@
 using Abeer.Data.UnitOfworks;
 using Abeer.Services;
 using Abeer.Shared;
-
+using Abeer.Shared.Security;
 using IdentityModel;
 
 using Microsoft.AspNetCore.Authentication;
@@ -136,59 +136,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
 
                     var identity = new ClaimsIdentity("Identity.Application");
 
-                    identity.AddClaim(new Claim(JwtClaimTypes.Subject, user.Id));
-
-                    identity.AddClaim(new Claim(JwtClaimTypes.Name, user.UserName));
-
-                    identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id));
-                    identity.AddClaim(new Claim(ClaimTypes.Name, user.Email));
-
-                    if (!string.IsNullOrWhiteSpace(user.FirstName))
-                        identity.AddClaim(new Claim(ClaimTypes.GivenName, user.FirstName));
-
-                    if (!string.IsNullOrWhiteSpace(user.LastName))
-                        identity.AddClaim(new Claim(ClaimTypes.Surname, user.LastName));
-
-                    identity.AddClaim(new Claim("displayname", GetDisplayName(user)));
-
-                    identity.AddClaim(new Claim("isonline", user.IsOnline.ToString()));
-                    identity.AddClaim(new Claim("lastlogin", user.LastLogin.ToString("s")));
-
-                    if (!string.IsNullOrWhiteSpace(user.Title))
-                        identity.AddClaim(new Claim("title", user.Title));
-
-                    if (!string.IsNullOrWhiteSpace(user.Description))
-                        identity.AddClaim(new Claim("description", user.Description));
-
-                    if (!string.IsNullOrWhiteSpace(user.Country))
-                        identity.AddClaim(new Claim("country", user.Country));
-
-                    if (!string.IsNullOrWhiteSpace(user.City))
-                        identity.AddClaim(new Claim("city", user.City));
-
-                    if (!string.IsNullOrWhiteSpace(user.PhotoUrl))
-                        identity.AddClaim(new Claim("photourl", user.PhotoUrl));
-
-                    identity.AddClaim(new Claim("numberofview", user.NubmerOfView.ToString()));
-
-                    if (!string.IsNullOrWhiteSpace(user.Address))
-                        identity.AddClaim(new Claim("address", user.Address));
-
-                    identity.AddClaim(new Claim("IsUnlimited", user.IsUnlimited.ToString()));
-
-                    if (user.IsAdmin)
-                        identity.AddClaim(new Claim(ClaimTypes.Role, "admin"));
-
-                    if (user.IsManager)
-                        identity.AddClaim(new Claim(ClaimTypes.Role, "manager"));
-
-
-                    identity.AddClaim(new Claim("subscribeStart", (user?.SubscriptionStartDate != null) ? user.SubscriptionStartDate.Value.ToString() : ""));
-                    if (user.SubscriptionEndDate != null)
-                        identity.AddClaim(new Claim("subscribeEnd", (user?.SubscriptionEndDate != null) ? user.SubscriptionEndDate.Value.ToString() : ""));
-
-                    if (user.IsOperator)
-                        identity.AddClaim(new Claim(ClaimTypes.Role, "operator"));
+                    user.WriteClaims(identity);                    
 
                     var principal = new ClaimsPrincipal(identity);
                     await HttpContext.SignInAsync("Identity.Application", principal);

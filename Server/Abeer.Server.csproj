@@ -4,6 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <UserSecretsId>Abeer.Server-7DF7564E-DB63-46FF-8999-B49CA1B62CF4</UserSecretsId>
     <RunAnalyzers>True</RunAnalyzers>
+    <ExcludeFilesFromDeployment>appSettings.json;appSettings.Development.json;appSettings.Product.json</ExcludeFilesFromDeployment>
   </PropertyGroup>
 
   <ItemGroup>
@@ -103,6 +104,10 @@
     </Content>
   </ItemGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties appsettings_1json__JsonSchema="" />
+    </VisualStudio>
+  </ProjectExtensions>
 
 </Project>

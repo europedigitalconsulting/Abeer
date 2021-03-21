@@ -19,7 +19,7 @@
                             <li @onclick="() => OpenChat(ViewContact)">
                                 <div class="d-flex bd-highlight">
                                     <div class="img_cont">
-                                        <img src="@ViewContact.Contact.PhotoUrl" class="rounded-circle user_img">
+                                        <UserPhotoControl User="ViewContact.Contact" Height="36" Width="36"></UserPhotoControl>
                                         <span class="@(ViewContact.Contact.IsOnline || true ? "online_icon" : "offline_icon")"></span>
                                         <span class="@(ViewContact.HasNewMsg ? "new-msg" : "")"></span>
                                     </div>
@@ -49,7 +49,7 @@
                     <div class="card-header msg_head">
                         <div class="d-flex bd-highlight">
                             <div class="img_cont">
-                                <img src="@StateTchatContainer.ContactSelected.Contact.PhotoUrl" class="rounded-circle user_img">
+                                <UserPhotoControl User="@StateTchatContainer.ContactSelected.Contact" Height="36" Width="36"></UserPhotoControl>
                                 <span class="online_icon"></span>
                             </div>
                             <div class="user_info">
@@ -60,24 +60,18 @@
                     </div>
                     <div id="msg_card_body" class="card-body msg_card_body">
                         <Virtualize Context="message" Items="StateTchatContainer.GetListMessage()">
-                            @if (message.UserIdFrom.ToString() == User.FindFirstValue(ClaimTypes.NameIdentifier))
+                            @if (IsMessageFrom(message))
                             {
                                 <div class="d-flex justify-content-end mb-4">
                                     <div class="msg_cotainer_send">
                                         @message.Text
                                         <span class="msg_time_send">@message.DateSent</span>
                                     </div>
-                                    <div class="img_cont_msg">
-                                        <img src="@User.FindFirstValue("photoUrl")" class="rounded-circle user_img_msg">
-                                    </div>
                                 </div>
                             }
                             else
                             {
                                 <div class="d-flex justify-content-start mb-4">
-                                    <div class="img_cont_msg">
-                                        <img src="@StateTchatContainer.ContactSelected.Contact.PhotoUrl" class="rounded-circle user_img_msg">
-                                    </div>
                                     <div class="msg_cotainer">
                                         @message.Text
                                         <span class="msg_time">@message.DateSent</span>

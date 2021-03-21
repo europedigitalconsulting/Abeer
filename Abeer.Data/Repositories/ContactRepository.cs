@@ -25,16 +25,17 @@ namespace Abeer.Data.Repositories
         }
         public Task<IList<Contact>> GetContacts(string ownerId)
         {
-            return Task.Run(() => _context.Contacts.Where(c => c.OwnerId == ownerId && (c.UserAccepted == EnumUserAccepted.ACCEPTED || c.UserAccepted == EnumUserAccepted.PENDING)));
+            return Task.Run(() => _context.Contacts.Where(c => c.OwnerId == ownerId && c.UserAccepted == EnumUserAccepted.ACCEPTED));
         }
 
         public Task<Contact> GetContact(Guid id)
         {
             return Task.Run(() => _context.Contacts.FirstOrDefault(c => c.Id == id));
         }
-        public Task<Contact> GetContact(string userId, string ownerId)
+
+        public Task<Contact> GetContact(string ownerId, string contactId)
         {
-            return Task.Run(() => _context.Contacts.FirstOrDefault(c => c.UserId == userId && c.OwnerId == ownerId));
+            return Task.Run(() => _context.Contacts.FirstOrDefault(c => c.OwnerId == ownerId && c.UserId == contactId));
         }
 
         public Task Update(Contact contact)

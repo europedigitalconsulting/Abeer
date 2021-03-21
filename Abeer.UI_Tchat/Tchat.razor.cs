@@ -27,8 +27,13 @@ namespace Abeer.UI_Tchat
         private List<ViewContact> ListContact { get; set; }
         private string MsgText { get; set; }
         private string Search { get; set; }
-        private ClaimsPrincipal User;
+        private ViewApplicationUser User;
         [Inject] private IJSRuntime jsRuntime { get; set; }
+        
+        public bool IsMessageFrom(Message message)
+        {
+            return message.UserIdFrom.ToString() == User.Id;
+        }
 
         protected override async Task OnInitializedAsync()
         {

@@ -11,7 +11,6 @@ using System.Linq;
 
 namespace Abeer.Server.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TchatController : ControllerBase
@@ -64,8 +63,9 @@ namespace Abeer.Server.Controllers
 
             Message msg = new Message
             {
+                Id = Guid.NewGuid(),
                 UserIdFrom = Guid.Parse(User.NameIdentifier()),
-                UserIdTo = Guid.Parse(contact.UserId),
+                UserIdTo = Guid.Parse(model.ContactId),
                 DateSent = DateTime.Now,
                 Text = model.Text,
             };

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Abeer.Shared.Security;
+using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 
 namespace Abeer.Shared
 {
@@ -44,7 +46,7 @@ namespace Abeer.Shared
         public DateTime? SubscriptionStart { get; set; }
         public DateTime? SubscriptionEnd { get; set; }
         public int NumberOfContacts { get; set; }
-
+        public bool IsUnlimited { get; private set; }
 
         public static implicit operator ViewApplicationUser(ApplicationUser user)
         {
@@ -80,6 +82,44 @@ namespace Abeer.Shared
                 SubscriptionEnd = user.SubscriptionEndDate,
                 IsReadOnly = user.SubscriptionEndDate.HasValue && user.SubscriptionEndDate <= DateTime.UtcNow
             };
+        }
+
+        public static implicit operator ViewApplicationUser(ClaimsPrincipal claimsPrincipal)
+        {
+            var view = new ViewApplicationUser()
+            {
+                Title = claimsPrincipal.FindFirstValue(ClaimNames.Title),
+                Address = claimsPrincipal.FindFirstValue(ClaimNames.Address),
+                City = claimsPrincipal.FindFirstValue(ClaimNames.City),
+                Country = claimsPrincipal.FindFirstValue(ClaimNames.Country),
+                DisplayDescription = bool.TryParse(claimsPrincipal.FindFirstValue(ClaimNames.DisplayDescription), out var displayDescription) && displayDescription,
+                DescriptionVideo = claimsPrincipal.FindFirstValue(ClaimNames.DescriptionVideo),
+                DescriptionVideoCover = claimsPrincipal.FindFirstValue(ClaimNames.DescriptionVideoCover),
+                VideoProfileUrl = claimsPrincipal.FindFirstValue(ClaimNames.VideoProfileUrl),
+                VideProfileCoverUrl = claimsPrincipal.FindFirstValue(ClaimNames.VideProfileCoverUrl),
+                Description = claimsPrincipal.FindFirstValue(ClaimNames.Description),
+                DigitCode = claimsPrincipal.FindFirstValue(ClaimNames.DigitCode),
+                DisplayName = claimsPrincipal.FindFirstValue(ClaimNames.DisplayName),
+                Email = claimsPrincipal.FindFirstValue(ClaimNames.Email),
+                FirstName = claimsPrincipal.FindFirstValue(ClaimNames.FirstName),
+                Id = claimsPrincipal.FindFirstValue(ClaimNames.Id),
+                PhoneNumber = claimsPrincipal.FindFirstValue(ClaimNames.PhoneNumber),
+                IsAdmin = claimsPrincipal.HasClaim(ClaimTypes.Role, ClaimNames.IsAdmin),
+                IsManager = claimsPrincipal.HasClaim(ClaimTypes.Role, ClaimNames.IsManager),
+                IsOnline = bool.TryParse(claimsPrincipal.FindFirstValue(ClaimNames.IsOnline), out var isOnline) && isOnline,
+                IsOperator = claimsPrincipal.HasClaim(ClaimTypes.Role, ClaimNames.IsOperator),
+                LastLogin = DateTime.TryParse(claimsPrincipal.FindFirstValue(ClaimNames.LastLogin), out var lastLogin ) ? lastLogin : DateTime.Now,
+                LastName = claimsPrincipal.FindFirstValue(ClaimTypes.Surname),
+                NumberOfView = int.TryParse(claimsPrincipal.FindFirstValue(ClaimNames.NumberOfView), out var numberOfView) ? numberOfView : -1,
+                PhotoUrl = claimsPrincipal.FindFirstValue(ClaimNames.PhotoUrl),
+                PinCode = int.TryParse(claimsPrincipal.FindFirstValue(ClaimNames.PinCode), out var pinCode) ? pinCode : -1,
+                SubscriptionStart = DateTime.TryParse(claimsPrincipal.FindFirstValue(ClaimNames.SubscriptionStart), out var subscriptionStart) ? subscriptionStart : null,
+                SubscriptionEnd = DateTime.TryParse(claimsPrincipal.FindFirstValue(ClaimNames.SubscriptionEnd), out var subscriptionEnd) ? subscriptionEnd : null,
+                IsUnlimited = bool.TryParse(claimsPrincipal.FindFirstValue(ClaimNames.IsUnlimited), out var isUnlimited) && isUnlimited
+            };
+
+            view.IsReadOnly = view.SubscriptionStart.HasValue && view.SubscriptionEnd.HasValue && view.SubscriptionEnd.GetValueOrDefault(DateTime.UtcNow) < DateTime.UtcNow;
+            return view;
         }
     }
 }

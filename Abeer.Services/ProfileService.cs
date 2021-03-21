@@ -13,6 +13,8 @@ using Microsoft.Extensions.Configuration;
 using SQLitePCL;
 using Abeer.Services;
 using static Abeer.Services.TemplateRenderManager;
+using Abeer.Shared.Security;
+using System.Security.Claims;
 
 namespace Abeer.Services
 {
@@ -26,8 +28,8 @@ namespace Abeer.Services
         private readonly IWebHostEnvironment _env;
         private readonly IServiceProvider _serviceProvider;
 
-        public ProfileService(UserManager<ApplicationUser> userManager, 
-            NotificationService notificationService, IConfiguration configuration, UrlShortner urlShortner, 
+        public ProfileService(UserManager<ApplicationUser> userManager,
+            NotificationService notificationService, IConfiguration configuration, UrlShortner urlShortner,
             IEmailSenderService emailSenderService, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             _userManager = userManager;
@@ -46,11 +48,11 @@ namespace Abeer.Services
 
             var roleClaims = context.Subject.FindAll(JwtClaimTypes.Role);
             context.IssuedClaims.AddRange(roleClaims);
-            
+
             bool isReadonly = false;
 
             var user = await _userManager.FindByNameAsync(context.Subject.Identity.Name);
-            
+
             if (user != null)
             {
 
@@ -63,7 +65,7 @@ namespace Abeer.Services
                         await _notificationService.Create(user.Id, "daily-reminder", "subscription-pack", "reminder", "reminder", "reminder", "daily-reminder");
                     }
 
-                    if(user.SubscriptionEndDate.HasValue && user.SubscriptionEndDate < DateTime.UtcNow)
+                    if (user.SubscriptionEndDate.HasValue && user.SubscriptionEndDate < DateTime.UtcNow)
                     {
                         notifications = await _notificationService.GetNotifications(user.Id, "expiredprofile");
 
@@ -92,24 +94,70 @@ namespace Abeer.Services
                     user.LastLogin = DateTime.UtcNow;
                     await _userManager.UpdateAsync(user);
                 }
-                foreach (var claim in context.Subject.Claims)
-                {
-                    if (!context.IssuedClaims.Any(c => c.Type == claim.Type))
-                        context.IssuedClaims.Add(claim);
-                }
 
-                if (!context.IssuedClaims.Any(c => c.Type == "subscribeStart") && user.SubscriptionStartDate.HasValue)
-                    context.IssuedClaims.Add(new System.Security.Claims.Claim("subscribeStart", user.SubscriptionStartDate.Value.ToString()));
+                AddClaim(context, ClaimNames.Title, user.Title);
+                AddClaim(context, ClaimNames.Address, user.Address);
+                AddClaim(context, ClaimNames.City, user.City);
+                AddClaim(context, ClaimNames.Country, user.Country);
+                AddClaim(context, ClaimNames.DisplayDescription, user.DisplayDescription);
+                AddClaim(context, ClaimNames.DescriptionVideo, user.DescriptionVideo);
+                AddClaim(context, ClaimNames.DescriptionVideoCover, user.DescriptionVideoCover);
+                AddClaim(context, ClaimNames.VideoProfileUrl, user.VideoProfileUrl);
+                AddClaim(context, ClaimNames.VideProfileCoverUrl, user.VideProfileCoverUrl);
+                AddClaim(context, ClaimNames.Description, user.Description);
+                AddClaim(context, ClaimNames.DigitCode, user.PinCode);
+                AddClaim(context, ClaimNames.DisplayName, GetDisplayName(user));
+                AddClaim(context, ClaimNames.Email, user.Email);
+                AddClaim(context, ClaimNames.FirstName, user.FirstName);
+                AddClaim(context, ClaimNames.Id, user.Id);
+                AddClaim(context, ClaimNames.PhoneNumber, user.PhoneNumber);
 
-                if (!context.IssuedClaims.Any(c => c.Type == "subscribeEnd") && user.SubscriptionEndDate.HasValue)
-                    context.IssuedClaims.Add(new System.Security.Claims.Claim("subscribeEnd", user.SubscriptionEndDate.Value.ToString()));
+                AddRole(context, ClaimNames.IsAdmin, user.IsAdmin);
+                AddRole(context, ClaimNames.IsManager, user.IsManager);
+                AddRole(context, ClaimNames.IsOperator, user.IsOperator);
+                AddRole(context, ClaimNames.IsOnline, user.IsOnline);
 
-                if (!context.IssuedClaims.Any(c => c.Type == "photoUrl"))
-                    context.IssuedClaims.Add(new System.Security.Claims.Claim("photoUrl", (string.IsNullOrWhiteSpace(user.PhotoUrl) ? user.GravatarUrl() : user.PhotoUrl)));
+                AddClaim(context, ClaimNames.LastLogin, user.LastLogin);
+                AddClaim(context, ClaimNames.LastName, user.LastName);
+                AddClaim(context, ClaimNames.NumberOfView, user.NubmerOfView);
+                AddClaim(context, ClaimNames.PhotoUrl, user.PhotoUrl);
+                AddClaim(context, ClaimNames.PinCode, user.PinCode);
+                AddClaim(context, ClaimNames.SubscriptionStart, user.SubscriptionStartDate);
+                AddClaim(context, ClaimNames.SubscriptionEnd, user.SubscriptionEndDate);
 
-                if (!context.IssuedClaims.Any(c => c.Type == "readonly") && isReadonly)
-                    context.IssuedClaims.Add(new System.Security.Claims.Claim("readonly", "true"));
+                AddClaim(context, ClaimNames.IsReadOnly, user.SubscriptionEndDate.HasValue && user.SubscriptionEndDate.Value <= DateTime.UtcNow);
             }
+        }
+
+        private void AddClaim(ProfileDataRequestContext context, string name, object value)
+        {
+            if (value == null)
+                return;
+
+            if (context.IssuedClaims.Any(c => c.Type == name))
+                return;
+
+            context.IssuedClaims.Add(new System.Security.Claims.Claim(name, value.ToString()));
+        }
+
+        private static void AddRole(ProfileDataRequestContext context, string name, bool isAllowed)
+        {
+            if (!isAllowed)
+                return;
+
+            if (context.IssuedClaims.Any(c=>c.Type == ClaimTypes.Role && c.Value == name) == false)
+                context.IssuedClaims.Add(new Claim(ClaimTypes.Role, name));
+        }
+
+
+        private static string GetDisplayName(ApplicationUser user)
+        {
+            if (!string.IsNullOrWhiteSpace(user.DisplayName))
+                return user.DisplayName;
+            else if (!string.IsNullOrWhiteSpace(user.LastName))
+                return user.FirstName + " " + user.LastName;
+            else
+                return user.UserName;
         }
 
         public Task IsActiveAsync(IsActiveContext context)
