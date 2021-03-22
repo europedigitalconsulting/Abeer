@@ -18,14 +18,16 @@
     {
         if (User.Identity.IsAuthenticated == true)
         {
-            var getDailyStat = await HttpClient.GetAsync("api/Profile/daily");
+            var user = (ViewApplicationUser)User;
+
+            var getDailyStat = await HttpClient.GetAsync("api/ProfileStatistics/daily");
             getDailyStat.EnsureSuccessStatusCode();
             var json = await getDailyStat.Content.ReadAsStringAsync();
             var daily = JsonConvert.DeserializeObject<DailyStatisticsViewModel>(json);
             UserStatistics = daily.UserStatistics;
             AdsStatistics = daily.AdsStatistics;
             OwnerStatistics = daily.OwnerStatistics;
-            SubscribeEnd = DateTime.Parse(User.FindFirstValue("subscribeEnd"));
+            SubscribeEnd = user.SubscriptionEnd.GetValueOrDefault(DateTime.UtcNow);
         }
     }
 

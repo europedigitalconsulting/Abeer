@@ -18,7 +18,7 @@
     {
         if (User.Identity.IsAuthenticated == true)
         {
-            var getDailyStat = await HttpClient.GetAsync("api/Profile/daily");
+            var getDailyStat = await HttpClient.GetAsync("api/ProfileStatistics/daily");
             getDailyStat.EnsureSuccessStatusCode();
             var json = await getDailyStat.Content.ReadAsStringAsync();
             var daily = JsonConvert.DeserializeObject<DailyStatisticsViewModel>(json);

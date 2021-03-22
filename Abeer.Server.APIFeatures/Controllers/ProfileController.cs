@@ -99,45 +99,6 @@ namespace Abeer.Server.Controllers
             return Ok(view);
         }
 
-        [HttpGet("daily")]
-        public async Task<ActionResult<DailyStatisticsViewModel>> GetDailyStatistcs()
-        {
-            if (User.Identity.IsAuthenticated == false)
-                return BadRequest();
-
-            var ads = await _functionalUnitOfWork.AdRepository.All();
-            var userId = User.NameIdentifier();
-
-            var contacts = await _functionalUnitOfWork.ContactRepository.GetContacts(userId);
-            var sents = await _functionalUnitOfWork.InvitationRepository.GetInvitationsBy(userId);
-            var received = await _functionalUnitOfWork.InvitationRepository.GetInvitationsFor(userId);
-
-            var daily = new DailyStatisticsViewModel
-            {
-                UserStatistics = new UserStatisticsViewModel
-                {
-                    NbOfUsers = _userManager.Users.Count(),
-                    NbOfUsersOnline = _userManager.Users.Where(u => u.IsOnline).Count()
-                },
-
-                AdsStatistics = new AdsStatisticsViewModel
-                {
-                    AdsCount = ads.Count,
-                    AdsOnline = ads.Count(a => a.StartDisplayTime <= DateTime.UtcNow && a.EndDisplayTime >= DateTime.UtcNow && a.IsValid)
-                },
-
-                OwnerStatistics = new OwnerStatisticsViewModel
-                {
-                    ContactsCount = contacts.Count,
-                    AdsCount = ads.Count(a => a.OwnerId == userId),
-                    InvitationSentCount = sents.Count,
-                    InvitationReceivedCount = received.Count
-                }
-            };
-
-            return Ok(daily);
-        }
-
         [HttpPost("SaveNewCard")]
         public async Task<ActionResult<ApplicationUser>> SaveNewCard(ApplicationUser userForm)
         {
