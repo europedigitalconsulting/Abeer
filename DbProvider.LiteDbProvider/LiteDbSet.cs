@@ -102,5 +102,13 @@ namespace DbProvider.LiteDbProvider
         {
             return ExecuteReader<IQueryable<T>>(col => col.FindAll().AsQueryable());
         }
+        public void RemoveAll(List<Guid> ids)
+        {
+            ExecuteWriter(col =>
+            {
+                foreach (var id in ids)
+                    col.Delete(id);
+            });
+        }
     }
 }

@@ -82,5 +82,11 @@
                 new List<string>() { "Abeer.UI_Admin.dll" });
             lazyLoadedAssemblies.AddRange(assemblies);
         }
+        else if (args.Path.StartsWith("bo/", StringComparison.OrdinalIgnoreCase))
+        {
+            var assemblies = await assemblyLoader.LoadAssembliesAsync(
+                new List<string>() { "Abeer.Ads.dll" });
+            lazyLoadedAssemblies.AddRange(assemblies);
+        }
     }
 }

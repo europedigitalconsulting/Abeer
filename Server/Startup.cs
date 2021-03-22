@@ -33,7 +33,9 @@ using System.Linq;
 using Abeer.Services.Data;
 using Abeer.Server.APIFeatures.Hubs;
 using Microsoft.AspNetCore.ResponseCompression;
-using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.SignalR; 
+using Abeer.Ads.Data;
+using AutoMapper;
 #endregion
 namespace Abeer.Server
 {
@@ -55,22 +57,29 @@ namespace Abeer.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(typeof(Startup));
+
             services.Configure<IISServerOptions>(options =>
             {
                 options.AutomaticAuthentication = false;
             });
 
-            var provider = Configuration["Service:Database:DbProvider"];
+            var provider = Configuration["Service:Database:Core:DbProvider"];
 
             RegisterSecurityDbContext(services);
 
             services.AddTransient(sp =>
             {
-                var provider = Configuration["Service:Database:DbProvider"];
+                var provider = Configuration["Service:Database:Core:DbProvider"];
                 Type instanceType = Type.GetType(provider);
                 return (IDbProvider)ActivatorUtilities.CreateInstance(sp, instanceType, Configuration);
             });
 
+            services.RegisterAdsModule(Configuration);
+
+            services.AddSingleton<IDbProviderFactory>(sp => {
+                return new DbProviderFactory(sp);
+            });
 
             services.AddTransient<FunctionalDbContext>();
             services.AddTransient<FunctionalUnitOfWork>();
@@ -228,6 +237,7 @@ namespace Abeer.Server
             app.UseResponseCompression();
 
             using var scope = app.ApplicationServices.CreateScope();
+            InitializeModuleProvider(scope, env);
 
             SeedAdPrices(scope, env).Wait();
             SeedNetworkSocials(scope, env);
@@ -288,7 +298,11 @@ namespace Abeer.Server
                 endpoints.MapHub<NotificationHub>("/notification");
             });
         }
-
+        private void InitializeModuleProvider(IServiceScope scope, IWebHostEnvironment env)
+        {
+            var x = scope.ServiceProvider.GetRequiredService<IDbProviderFactory>(); 
+            x.InitializeAdsModule(scope.ServiceProvider, Configuration); 
+        }
         /*
         private async Task SeedNotifications(IServiceScope scope, IWebHostEnvironment env)
         {
@@ -314,7 +328,7 @@ namespace Abeer.Server
         */
 
         private async Task SeedAdPrices(IServiceScope scope, IWebHostEnvironment env)
-        {
+        { 
             var db = scope.ServiceProvider.GetRequiredService<FunctionalUnitOfWork>();
             db.EnsureCreated();
             db.SetTimeout(360);

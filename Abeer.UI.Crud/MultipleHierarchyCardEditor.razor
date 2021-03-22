@@ -1,0 +1,60 @@
+﻿@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using System.Drawing
+@typeparam TItem
+@if (_isModalVisible && FormTemplate != null)
+{
+    <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+        <div class="modal-dialog @ModalDialogSize">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">@TitleDialog</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="@(()=>_isModalVisible = false)">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @FormTemplate(Item)
+                </div>
+                <div class="modal-footer">
+                    <hr />
+                    <button class="btn btn-success" @onclick="Save"><i class="@IconDialog"></i>@DialogAction</button>
+                    <button class="btn btn-warning" @onclick="@(()=>_isModalVisible = false)"><i class="fas fa-window-close"></i>@StringLocalizer["Cancel"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div class="main-content">
+    <section class="section">
+        <div class="section-header">
+            <h1>@StringLocalizer["Title"]</h1>
+            <div class="section-header-breadcrumb">
+                <div class="breadcrumb-item"><a href="/">@StringLocalizer["Home"]</a></div>
+                @BreadCrumbTemplate
+            </div>
+        </div>
+        <div class="section-body">
+            <CascadingValue Value="this">
+                @ChildContent
+                @if (IsItemDisplayed())
+                {
+                    <h3>@LabelItem <span class="badge badge-primary">@Count</span> <button class="btn btn-primary" @onclick="AddItem"><i class="@IconDialog"></i>@StringLocalizer["Insert"]</button></h3>
+                    <hr />
+                    @if (Count < 1)
+                    {
+                        if (NotFoundItemTemplate != null)
+                        {
+                            @NotFoundItemTemplate
+                        }
+                    }
+                    else
+                    {
+                        <Virtualize @ref="virtualizeData" Items="Items" Context="item">
+                            @ItemTemplate(item)
+                        </Virtualize>
+                    }
+                }
+            </CascadingValue>
+        </div>
+    </section>
+</div>

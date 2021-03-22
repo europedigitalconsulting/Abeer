@@ -1,0 +1,116 @@
+﻿@page "/bo/ads/Families"  
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Families> Loc
+@inherits CrudComponentBase<AdsFamilyViewModel>
+@namespace Abeer.Ads
+
+<section class="main-content">
+    <section class="section">
+        <div class="section-header">
+            <h1>@Loc["Families"]</h1>
+            <div class="section-header-breadcrumb">
+                <div class="breadcrumb-item active"><a href="#">@Loc["Home"]</a></div>
+                <div class="breadcrumb-item"><a href="#">@Loc["ads"]</a></div>
+                <div class="breadcrumb-item">@Loc["Families"]</div>
+            </div>
+        </div>
+        <div class="section-body">
+            <CardEditor @ref="CardEditor"
+                        TItem="AdsFamilyViewModel" Items="@Items" StringLocalizer="@Loc" ModalDialogSize="modal-lg modal-dialog-scrollable"
+                        Delete="Delete" Insert="Insert" Update="Update" SearchButtonClick="Search" IsAddedAllowed="IsAddedAllowed"
+                        IsEditAllowed="IsEditAllowed" IsDeleteAllowed="IsDeleteAllowed"
+                        ImportPostFileUrl="/api/ProductTypes/import" IsImportEnabled="false">
+                <FormTemplate Context="model">
+                    <div class="simple-form">
+                        <EditForm Model="model">
+                            <DataAnnotationsValidator />
+                            <ValidationSummary />
+                            <fieldset>
+                                <div class="form-group">
+                                    @Loc["UseCustomPhoto"]
+                                    <MediaUploader ImgUrl="@model.PictureUrl" OnChange="@((fileUrl)=>model.PictureUrl = fileUrl)"></MediaUploader>
+                                </div>
+                                <div class="form-group">
+                                    <label>@Loc["LabelCode"]</label>
+                                    <input type="text" @bind="@model.Code" Class="form-control" />
+                                </div>
+                                <div class="form-group">
+                                    <label>@Loc["LabelName"]</label>
+                                    <input type="text" @bind="@model.Label" Class="form-control" />
+                                </div>
+                                <div class="form-group">
+                                    <label>@Loc["LabelSearch"]</label>
+                                    <input type="text" @bind="@model.LabelSearch" Class="form-control" />
+                                </div>
+                                <div class="form-group">
+                                    <label>@Loc["PurchaseLabelRule"]</label>
+                                    <input type="text" @bind="@model.PurchaseLabelRule" Class="form-control" />
+                                    <cite>@Loc["PurchaseLabelRuleHelp"]</cite>
+                                </div>
+                                <div class="form-group">
+                                    <label>@Loc["LabelHeaderAuthorize"]</label>
+                                    <input type="text" @bind="@model.HeaderAuthorize" Class="form-control" />
+                                </div>
+                                <div class="form-group">
+                                    <label>@Loc["LabelUrlApi"]</label>
+                                    <input type="text" @bind="@model.UrlApi" Class="form-control" />
+                                </div>
+                                <div class="form-group">
+                                    <label>@Loc["MetaTitle"]</label>
+                                    <input type="text" @bind="@model.MetaTitle" Class="form-control" />
+                                </div>
+                                <div class="form-group">
+                                    <label>@Loc["MetaKeywords"]</label>
+                                    <input type="text" @bind="@model.MetaKeywords" Class="form-control" />
+                                </div>
+                                <div class="form-group">
+                                    <label>@Loc["MetaDescription"]</label>
+                                    <input type="text" @bind="@model.MetaDescription" Class="form-control" />
+                                </div>
+                                <div>
+                                    <AttributeEditor ListAttributeEdit="GetAttributes(model)"></AttributeEditor>
+                                </div>
+                            </fieldset>
+                        </EditForm>
+                    </div>
+                </FormTemplate>
+                <RepeaterItemTemplate Context="model">
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                            @if (!string.IsNullOrEmpty(model.PictureUrl))
+                            {
+                                <img class="card-img-top" src="@model.PictureUrl" alt="Card image cap">
+                            }
+                            <h5 class="card-title">@model.Label</h5>
+                            <h6>@model.Code</h6>
+                            <CardEditorEditButton TItem="AdsFamilyViewModel" CardEditor="CardEditor" IsEditable="@IsEditAllowed()" Item="model"></CardEditorEditButton>
+                            <CardEditorDeleteButton TItem="AdsFamilyViewModel" CardEditor="CardEditor" IsDeletable="@IsDeleteAllowed()" Item="model"></CardEditorDeleteButton>
+                        </div>
+                    </div>
+                </RepeaterItemTemplate>
+                <EmptyTemplate>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="panel panel-default">
+                                <div class="panel-body p-2">
+                                    <div class="input-group">
+                                        <input type="text" id="example-input1-group2" name="example-input1-group2" class="form-control" placeholder="@Loc["LabelSearch"]" @bind-value="SearchTerm">
+                                        <span class="input-group-btn pl-2">
+                                            <button type="button" class="btn btn-effect-ripple btn-primary" @onclick="() => Search(SearchTerm)"><i class="fa fa-search"></i></button>
+
+                                            @if (IsAddedAllowed() == true)
+                                            {
+                                                <button type="button" class="btn btn-effect-ripple btn-primary" @onclick="CardEditor.ShowInsert" title="@Loc["LabelInsert"]"><i class="fas fa-plus-square"></i></button>
+                                            }
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </EmptyTemplate>
+                <CustomButtonsPart></CustomButtonsPart>
+            </CardEditor>
+        </div>
+    </section>
+</section>

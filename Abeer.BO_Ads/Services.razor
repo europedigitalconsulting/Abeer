@@ -1,0 +1,97 @@
+﻿@page "/Bo/Ads"
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@using System.Security.Claims
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Services> Loc
+
+@namespace Abeer.Ads
+
+@code
+{
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    private AuthenticationState authenticateState { get; set; }
+    public bool IsAdmin { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        authenticateState = await authenticationStateTask;
+
+        if (authenticateState.User?.Identity.IsAuthenticated == true)
+        {
+            IsAdmin = (authenticateState.User.Identity.IsAuthenticated && authenticateState.User.HasClaim(ClaimTypes.Role, "admin"));
+        }
+    } }
+<section class="section">
+    <div class="section-header">
+        <h1>@Loc["Title"]</h1>
+    </div>
+
+    <div class="section-body">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3>@Loc["/bo/ads"]</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-3 col-md-3 col-sm-12">
+                        <a href="/bo/ads/Families">
+                            <div class="card profile-widget border">
+                                <div class="profile-widget-header">
+                                    <i class="fa fa-8x fa-sitemap rounded-circle profile-widget-picture" style="color: blue"></i>
+                                </div>
+                                <div class="profile-widget-description pb-0">
+                                    <div class="profile-widget-name">@Loc["Family"]</div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-12">
+                        <a href="/bo/ads/categories">
+                            <div class="card profile-widget border">
+                                <div class="profile-widget-header">
+                                    <i class="fa fa-8x fa-object-group rounded-circle profile-widget-picture" style="color: blue"></i>
+                                </div>
+                                <div class="profile-widget-description pb-0">
+                                    <div class="profile-widget-name">@Loc["Category"]</div>
+                                </div>
+                            </div>
+                        </a>
+                    </div> 
+                </div>
+            </div>
+        </div>
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3>@Loc["Exchange"]</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-3 col-md-3 col-sm-12">
+                        <a href="/bo/ads/Import">
+                            <div class="card profile-widget border">
+                                <div class="profile-widget-header">
+                                    <i class="fa fa-8x fa-file-import fa-database rounded-circle profile-widget-picture" style="color: blue"></i>
+                                </div>
+                                <div class="profile-widget-description pb-0">
+                                    <div class="profile-widget-name">@Loc["Import"]</div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-12">
+                        <a href="/bo/ads/Export">
+                            <div class="card profile-widget border">
+                                <div class="profile-widget-header">
+                                    <i class="fa fa-8x fa-file-export rounded-circle profile-widget-picture" style="color: blue"></i>
+                                </div>
+                                <div class="profile-widget-description pb-0">
+                                    <div class="profile-widget-name">@Loc["Export"]</div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

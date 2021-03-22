@@ -1,0 +1,90 @@
+﻿@page "/bo/ads/Categories"
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Categories> Loc
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Families> LocFamily
+@inherits HierarchyCrudComponentBase<AdsCategoryViewModel, AdsFamilyViewModel>
+@namespace Abeer.Ads
+
+<HierarchyCardEditor @ref="CardEditor"
+                     TItem="AdsCategoryViewModel" TParent="AdsFamilyViewModel" Parent="Parent"
+                     Items="@Items" StringLocalizer="@Loc" ModalDialogSize="modal-lg modal-dialog-scrollable"
+                     Delete="Delete" Insert="Insert" Update="Update" SearchButtonClick="Search" IsAddedAllowed="IsAddedAllowed"
+                     IsEditAllowed="IsEditAllowed" IsDeleteAllowed="IsDeleteAllowed" HomeUrl="/bo/ads"
+                     ImportPostFileUrl="/api/bo/import" IsImportEnabled="false" Parents="Parents" ParentSelected="ParentSelected">
+    <FormTemplate Context="model">
+        <div class="simple-form">
+            <EditForm Model="model">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <fieldset>
+                    <div class="form-group">
+                        @Loc["UseCustomPhoto"]
+                        <MediaUploader ImgUrl="@model.PictureUrl" OnChange="@((fileUrl)=>model.PictureUrl = fileUrl)"></MediaUploader>
+                    </div>
+                    <div class="form-group">
+                        <label>@Loc["LabelCode"]</label>
+                        <input type="text" @bind="@model.Code" Class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>@Loc["LabelName"]</label>
+                        <input type="text" @bind="@model.Label" Class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>@Loc["MetaTitle"]</label>
+                        <input type="text" @bind="@model.MetaTitle" Class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>@Loc["MetaKeywords"]</label>
+                        <input type="text" @bind="@model.MetaKeywords" Class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>@Loc["MetaDescription"]</label>
+                        <input type="text" @bind="@model.MetaDescription" Class="form-control" />
+                    </div>
+                </fieldset>
+            </EditForm>
+        </div>
+    </FormTemplate>
+    <RepeaterParentItemTemplate Context="family">
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                @if (!string.IsNullOrEmpty(family.PictureUrl))
+                {
+                    <img class="card-img-top" src="@family.PictureUrl" alt="Card image cap">
+                }
+                <h5 class="card-title">@LocFamily[family.Label]</h5>
+                <h6>@LocFamily[family.Code]</h6>
+                <button class="btn btn-primary" @onclick="@(async()=>await CardEditor.SelectParent(family))">@Loc["Select"]</button>
+            </div>
+        </div>
+    </RepeaterParentItemTemplate>
+    <RepeaterItemTemplate Context="model">
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                @if (!string.IsNullOrEmpty(model.PictureUrl))
+                {
+                    <img class="card-img-top" src="@model.PictureUrl" alt="Card image cap">}
+                <h5 class="card-title">@model.Label</h5>
+                <h6>@model.Code</h6>
+                @if (CardEditor.IsEditAllowed())
+                {
+                    <button type="button" class="btn btn-success tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Edit" @onclick="@(()=>CardEditor.ShowEdit(model))">
+                        <i class="fas fa-edit"></i>
+                    </button>}
+                @if (CardEditor.IsDeleteAllowed())
+                {
+                    <button type="button" class="btn btn-warning tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Edit" @onclick="@(() => CardEditor.ShowDelete(model))">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                }
+            </div>
+        </div>
+    </RepeaterItemTemplate>
+    <EmptyTemplate>
+        <div class="alert alert-danger">
+            <i class="fas fa-exclamation-triangle"></i>@Loc["NoItemsFound"]
+            <button class="btn btn-primary" @onclick="@(async ()=>await CardEditor.ShowInsert())"><i class="fas fa-plus-square"></i>@Loc["InsertTitle"]</button>
+        </div>
+    </EmptyTemplate>
+    <CustomButtonsPart></CustomButtonsPart>
+</HierarchyCardEditor>

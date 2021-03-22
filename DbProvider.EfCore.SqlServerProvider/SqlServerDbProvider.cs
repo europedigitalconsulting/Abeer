@@ -10,49 +10,62 @@ namespace DbProvider.EfCore.SqlServerProvider
 {
     public class SqlServerDbProvider : IDbProvider
     {
-        private readonly SqlServerOptions sqlServerOptions;
+        private readonly DbServerOptions dbServerOptions;
         private readonly DbContext _sqlContext;
 
-        public SqlServerDbProvider(IServiceProvider sp, IConfiguration configuration)
+        public SqlServerDbProvider(IServiceProvider sp, IConfiguration configuration) :
+    this(sp, configuration, "Service:Database:Core:ConnectionStrings",
+        "Service:Database:Core:EnableDetailedErrors",
+        "Service:Database:Core:EnableSensitiveDataLogging",
+        "Service:Database:Core:MigrationAssemblyName",
+        "Service:Database:Core:DbContext")
         {
-            this.sqlServerOptions = new SqlServerOptions
-            {
-                ConnectionString = configuration.GetConnectionString(configuration["Service:Database:ConnectionStrings"]),
-                EnableDetailedErrors = bool.TryParse(configuration["Service:Database:EnableDetailedErrors"], out var enableDetailedErrors) ?
-                    enableDetailedErrors : false, 
-                EnableSensitiveDataLogging = bool.TryParse(configuration["Service:Database:EnableSensitiveDataLogging"], out var enableSensitiveDataLogging) ?
-                    enableSensitiveDataLogging : false,
-                MigrationAssemblyName = configuration["Service:Database:MigrationAssemblyName"],
-                DbContextType = configuration["Service:Database:DbContext"]
-            };
-
+        }
+        public SqlServerDbProvider(IServiceProvider sp, DbServerOptions dbServerOptions)
+        {
             var dbContextOptionsBuilder = new DbContextOptionsBuilder();
-            dbContextOptionsBuilder.EnableDetailedErrors(sqlServerOptions.EnableDetailedErrors);
-            dbContextOptionsBuilder.EnableSensitiveDataLogging(sqlServerOptions.EnableSensitiveDataLogging);
+            dbContextOptionsBuilder.EnableDetailedErrors(dbServerOptions.EnableDetailedErrors);
+            dbContextOptionsBuilder.EnableSensitiveDataLogging(dbServerOptions.EnableSensitiveDataLogging);
             dbContextOptionsBuilder.UseSqlServer(
-                sqlServerOptions.ConnectionString, c=>
-            {
-                c.EnableRetryOnFailure();
+                dbServerOptions.ConnectionString, c =>
+                {
+                    c.EnableRetryOnFailure();
 
-                if(sqlServerOptions.MaxBatchSize > 0)
-                    c.MaxBatchSize(sqlServerOptions.MaxBatchSize);
+                    if (dbServerOptions.MaxBatchSize > 0)
+                        c.MaxBatchSize(dbServerOptions.MaxBatchSize);
 
-                c.MigrationsAssembly(sqlServerOptions.MigrationAssemblyName);
-            });
+                    c.MigrationsAssembly(dbServerOptions.MigrationAssemblyName);
+                });
 
             _sqlContext = (DbContext)ActivatorUtilities
-                .CreateInstance(sp, 
-                    Type.GetType(sqlServerOptions.DbContextType), dbContextOptionsBuilder.Options);
+                .CreateInstance(sp,
+                    Type.GetType(dbServerOptions.DbContextType) ?? throw new InvalidOperationException(), dbContextOptionsBuilder.Options);
 
             //_sqlContext.Database.EnsureCreated();
             _sqlContext.Database.Migrate();
         }
-
+        public SqlServerDbProvider(IServiceProvider sp, IConfiguration configuration,
+             string connectionStringKey, string enableDetailedErrorsKey, string enableSensitiveDataLoggingKey,
+             string migrationAssemblyKey, string dbContextKey) :
+             this(sp, new DbServerOptions
+             {
+                 ConnectionString = configuration.GetConnectionString(configuration[connectionStringKey]),
+                 EnableDetailedErrors = bool.TryParse(configuration[enableDetailedErrorsKey], out var enableDetailedErrors) && enableDetailedErrors,
+                 EnableSensitiveDataLogging = bool.TryParse(configuration[enableSensitiveDataLoggingKey], out var enableSensitiveDataLogging) && enableSensitiveDataLogging,
+                 MigrationAssemblyName = configuration[migrationAssemblyKey],
+                 DbContextType = configuration[dbContextKey]
+             })
+        {
+        }
         public void BulkInsert<T>(IList<T> entities) where T : class
         {
             _sqlContext.BulkInsert<T>(entities);
         }
 
+        public void BulkDelete<T>(IList<T> entities) where T : class
+        {
+            _sqlContext.BulkDelete(entities);
+        }
         public void BulkUpdate<T>(IList<T> entities) where T : class
         {
             _sqlContext.BulkUpdate<T>(entities);

@@ -1,0 +1,119 @@
+﻿@page "/bo/ads/Export"
+@using Tewr.Blazor.FileReader
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@namespace Abeer.Ads
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Export> Loc
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Families> LocFamilies
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Categories> LocCategories
+
+@if (ExportResult != null && ShowExportResultDialog)
+{
+    <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">@Loc["ExportRowResult"]</h4>
+                </div>
+                <div class="modal-body">
+                    <dl>
+                        <dt>@Loc["ExportedFamilies"]</dt>
+                        <dd>@ExportResult.FamiliesExported</dd>
+                    </dl>
+                    <dl>
+                        <dt>@Loc["ExportedCategories"]</dt>
+                        <dd>@ExportResult.CategoriesExported</dd>
+                    </dl> 
+                    <dl>
+                        <dd><button class="btn btn-success btn-lg" @onclick="DownloadDocument"><i class="fas fa-cloud-download-alt"></i>@Loc["Download"]</button></dd>
+                    </dl>
+                </div>
+                <div class="modal-footer">
+                    <hr />
+                    <button class="btn btn-success" @onclick="@(()=>ShowExportResultDialog=false)">@Loc["Finish"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="main-content">
+    <section class="section">
+        <div class="section-header">
+            <h1>@Loc["Export"]</h1>
+            <div class="section-header-breadcrumb">
+                <div class="breadcrumb-item active"><a href="#">@Loc["Home"]</a></div>
+                <div class="breadcrumb-item"><a href="/bo/ads">@Loc["Referential"]</a></div>
+                <div class="breadcrumb-item">@Loc["Export"]</div>
+            </div>
+        </div>
+        <div class="section-body">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body p-2">
+                            <div class="panel">
+                                <div class="panel-body">
+                                    <div class="simple-form">
+                                        <EditForm Model="@_options">
+                                            <fieldset>
+                                                <h3>@Loc["Options"]</h3>
+                                                <div class="form-group">
+                                                    <input type="checkbox" @bind="_options.HasHeader" />@Loc["HasHeader"]
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>@Loc["FileType"]</label>
+                                                    <select @bind="_options.FileType">
+                                                        <option>@Loc["Select"]</option>
+                                                        <option value=".xlsx">@Loc["Excel"]</option>
+                                                        <option value=".csv">@Loc["Csv"]</option>
+                                                        <option value=".xml">@Loc["Xml"]</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>@Loc["LimitRows"]</label>
+                                                    <input type="number" class="form-control" @bind="_options.LimitRows" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>@Loc["Scope"]</label>
+                                                    <ul class="list-group">
+                                                        <li class="list-group-item">
+                                                            <input type="checkbox" @bind="_options.IncludeFamily" />@Loc["IncludeFamily"]<button class="btn-primary" @onclick="ShowFilterByFamily"><i class="fas fa-filter"></i></button>
+                                                            @if (FilterByFamily)
+                                                            {
+                                                                <ul class="list-group">
+                                                                    @foreach (var family in Families)
+                                                                    {
+                                                                        <li class="list-group-item"><input type="checkbox" @onchange="e=>SelectFamily(e, family)" checked="@IsFamilySelected(family)" /> @LocFamilies[family.Label]</li>
+                                                                    }
+                                                                </ul>
+                                                            }
+                                                        </li>
+                                                        <li class="list-group-item">
+                                                            <input type="checkbox" @bind="_options.IncludeCategory" />@Loc["IncludeCategory"]<button class="btn-primary" @onclick="ShowFilterByCategory"><i class="fas fa-filter"></i></button>
+                                                            @if (FilterByCategory)
+                                                            {
+                                                                <ul class="list-group">
+                                                                    @foreach (var category in Categories)
+                                                                    {
+                                                                        <li class="list-group-item"><input type="checkbox" @onchange="e=>SelectCategory(e, category)" checked="@IsCategorySelected(category)" /> @LocCategories[category.Label]</li>
+                                                                    }
+                                                                </ul>
+                                                            }
+                                                        </li> 
+                                                    </ul>
+                                                </div>
+                                                <div class="form-group">
+                                                    <button class="btn btn-success" @onclick="GenerateFile"><i class="fas fa-cloud-upload-alt"></i>@Loc["Generate"]</button>
+                                                </div>
+                                            </fieldset>
+                                        </EditForm>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

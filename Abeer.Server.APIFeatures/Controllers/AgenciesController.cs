@@ -37,7 +37,7 @@ namespace Abeer.Server.Controllers
                 new Shared.Functional.Agency
                 {
                     AgencyName = "Tunis", 
-                    DisplayName = "Agence Azed Europe Tunis",
+                    DisplayName = "Agence Abeer Europe Tunis",
                     Address = "Center Town",
                     Country = "Tunisie",
                     City = "Tunis",
