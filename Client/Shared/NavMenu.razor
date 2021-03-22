@@ -29,8 +29,6 @@
     [Parameter]
     public string LabelLogout { get; set; }
 
-    public string PhotoUrl { get; set; }
-
     [Parameter] public EventCallback ModalClicked { get; set; }
 
     [Parameter] public NotificationClient NotifyClient { get; set; }
@@ -41,7 +39,6 @@
 
         var authState = await authenticationStateTask;
         _user = authState.User;
-        PhotoUrl = _user.FindFirstValue("photoUrl") ?? _user.Identity.GravatarUrl();
 
         await InvokeAsync(StateHasChanged);
     }

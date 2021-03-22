@@ -22,13 +22,13 @@ namespace Abeer.UI_Ads
         [CascadingParameter]
         private Task<AuthenticationState> authenticationStateTask { get; set; }
         public AuthenticationState AuthenticateSate { get; set; }
+        [Inject] public HttpClient HttpClient { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
             AuthenticateSate = await authenticationStateTask;
 
-            var httpClient = HttpClientFactory.CreateClient("Abeer.ServerAPI");
-            var getAll = await httpClient.GetAsync("/api/AdPrice/GetFeature");
+            var getAll = await HttpClient.GetAsync("/api/AdPrice/GetFeature");
             
             if (getAll.IsSuccessStatusCode)
             {
@@ -49,8 +49,7 @@ namespace Abeer.UI_Ads
         {
             Step = "Step2";
 
-            var httpClient = HttpClientFactory.CreateClient("Abeer.ServerAPI");
-            var getAll = await httpClient.GetAsync("/api/AdPrice");
+            var getAll = await HttpClient.GetAsync("/api/AdPrice");
             if (getAll.IsSuccessStatusCode)
             {
                 var json = await getAll.Content.ReadAsStringAsync();
@@ -89,8 +88,7 @@ namespace Abeer.UI_Ads
 
         private async Task<HttpResponseMessage> InsertAd(CreateAdRequestViewModel CreateAdRequest)
         {
-            var httpClient = HttpClientFactory.CreateClient("Abeer.ServerAPI");
-            var response = await httpClient.PostAsJsonAsync<CreateAdRequestViewModel>("/api/Ads", CreateAdRequest);
+            var response = await HttpClient.PostAsJsonAsync<CreateAdRequestViewModel>("/api/Ads", CreateAdRequest);
             PublishHasError = !response.IsSuccessStatusCode;
             return response;
         }

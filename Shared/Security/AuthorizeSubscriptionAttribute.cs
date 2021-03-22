@@ -14,23 +14,22 @@ namespace Abeer.Shared.Security
     {
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, OnlySubscribersRequirement requirement)
         {
-            if (context.User.HasClaim(ClaimTypes.Role, "admin") || context.User.HasClaim("IsUnlimited", "True"))
+            if (context.User.Identity.IsAuthenticated)
             {
-                return Task.Run(() => context.Succeed(requirement));
-            }
-            if (!context.User.HasClaim(c => c.Type == "subscribeEnd"))
-            {
-                return Task.Run(() => context.Fail());
+                var user = (ViewApplicationUser)context.User;
+
+                if (user.IsAdmin || user.IsManager || user.IsUnlimited)
+                {
+                    return Task.Run(() => context.Succeed(requirement));
+                }
+
+                else if (user.SubscriptionEnd.GetValueOrDefault(DateTime.UtcNow) >= DateTime.UtcNow)
+                {
+                    return Task.Run(() => context.Succeed(requirement));
+                }
             }
 
-            DateTimeFormatInfo usDtfi = new CultureInfo("fr-FR", false).DateTimeFormat;
-            var subscribeEnd = Convert.ToDateTime(context.User.FindFirst(c => c.Type == "subscribeEnd").Value, usDtfi);
-
-            if (DateTime.UtcNow > subscribeEnd)
-            {
-                return Task.Run(() => context.Fail());
-            }
-            return Task.Run(() => context.Succeed(requirement));
+            return Task.Run(() => context.Fail());
         }
     }
 }
