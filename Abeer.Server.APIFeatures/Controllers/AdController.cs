@@ -60,9 +60,9 @@ namespace Abeer.Server.Controllers
         public async Task<ActionResult<IEnumerable<AdModel>>> GetVisibledFreinds()
         {
             var contacts = await functionalUnitOfWork.ContactRepository.Where(c => c.OwnerId == User.NameIdentifier());
-            
+
             var ads = new ConcurrentDictionary<string, IList<AdModel>>();
-            
+
             Parallel.ForEach(contacts, async contact =>
             {
                 ads.TryAdd(contact.UserId, await functionalUnitOfWork.AdRepository.GetVisibledUser(contact.UserId));
@@ -78,7 +78,7 @@ namespace Abeer.Server.Controllers
         public async Task<ActionResult<AdViewModel>> Get(Guid id)
         {
             var ad = (AdViewModel)(await functionalUnitOfWork.AdRepository.FirstOrDefault(a => a.Id == id));
-           
+
             ad.Owner = await _userManager.FindByIdAsync(ad.OwnerId);
             ad.Owner.PhotoUrl ??= new GravatarUrlExtension.Gravatar().GetImageSource(ad.Owner.Email);
 
@@ -86,50 +86,91 @@ namespace Abeer.Server.Controllers
 
             ad.Owner.AdsCount = authorAds.Count;
 
-            ad.OtherAds = authorAds.Select(a=>new ListAdViewModel{Id = a.Id, ImageUrl1 =  a.ImageUrl1, Title = a.Title, OrderNumber = a.OrderNumber})
-                .OrderBy(a=>a.OrderNumber).ToList();
+            ad.OtherAds = authorAds.Select(a => new ListAdViewModel { Id = a.Id, ImageUrl1 = a.ImageUrl1, Title = a.Title, OrderNumber = a.OrderNumber })
+                .OrderBy(a => a.OrderNumber).ToList();
 
             ad.Owner.SocialNetworkConnected =
                 await functionalUnitOfWork.SocialNetworkRepository.GetSocialNetworkLinks(ad.OwnerId);
-            
+
             ad.Owner.CustomLinks = await functionalUnitOfWork.CustomLinkRepository.GetCustomLinkLinks(ad.OwnerId);
 
             return Ok(ad);
         }
 
-        [HttpPost] 
+        [HttpPost]
         public async Task<ActionResult<AdModel>> Create(CreateAdRequestViewModel createAdRequestViewModel)
-        { 
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-                var ad = createAdRequestViewModel.Ad;
+            var ad = createAdRequestViewModel.Ad;
+            var applicationUser = (ViewApplicationUser)User;
 
-                if (createAdRequestViewModel.Price != null)
+            if (createAdRequestViewModel.Price != null)
+            {
+                ad.OrderNumber = string.Concat(DateTime.UtcNow.ToString("yyyMMddHHmmss"), rdm.Next(100000, 999999));
+
+                Subscription subscription = null;
+                SubscriptionPack pack = null;
+                
+                int delayToDisplay = 0;
+                int displayDuration = 0;
+
+                if (applicationUser.IsAdmin || applicationUser.IsManager)
                 {
-                    ad.OrderNumber = string.Concat(DateTime.UtcNow.ToString("yyyMMddHHmmss"), rdm.Next(100000, 999999));
-                    if (createAdRequestViewModel.Price.Value == 0)
-                    {
-                        ad.StartDisplayTime = DateTime.Now.AddDays(createAdRequestViewModel.Price.DelayToDisplay);
-                        ad.EndDisplayTime = DateTime.Now.AddDays(createAdRequestViewModel.Price.DisplayDuration.GetValueOrDefault(1));
-                    }
-
-                    ad.AdPriceId = createAdRequestViewModel.Price.Id;
+                    delayToDisplay = 0;
+                    ad.IsValid = true;
+                    ad.ValidateDate = DateTime.UtcNow;
+                    displayDuration = 7;
                 }
 
-                ad.OwnerId = User.NameIdentifier();
-                ad.Country = User.Country();
+                else if (!applicationUser.IsUnlimited)
+                {
+                    subscription = await functionalUnitOfWork.SubscriptionRepository.GetLatestSubscriptionForUser(User.NameIdentifier());
+                    
+                    if (subscription != null)
+                        pack = await functionalUnitOfWork.SubscriptionPackRepository.FirstOrDefault(p => p.Id == subscription.SubscriptionPackId);
 
-                await functionalUnitOfWork.AdRepository.Add(ad);
-                var entity = await functionalUnitOfWork.AdRepository.FirstOrDefault(a => a.Id == ad.Id);
-                return Ok(entity); 
+                    if(pack.Label == "Standard")
+                    {
+                        delayToDisplay = 2;
+                        displayDuration = 2;
+                    }
+                    else
+                    {
+                        delayToDisplay = 5;
+                        displayDuration = 5;
+                    }
+                }
+
+                var priceDisplayDuration = createAdRequestViewModel.Price.DisplayDuration.GetValueOrDefault(0);
+                var priceDelayToDisplay = createAdRequestViewModel.Price.DelayToDisplay;
+
+                if (priceDelayToDisplay < delayToDisplay)
+                    delayToDisplay = priceDelayToDisplay;
+
+                if (priceDisplayDuration > displayDuration)
+                    displayDuration = priceDisplayDuration;
+
+                ad.StartDisplayTime = DateTime.UtcNow.AddDays(delayToDisplay);
+                ad.EndDisplayTime = ad.StartDisplayTime.AddDays(displayDuration);
+
+                ad.AdPriceId = createAdRequestViewModel.Price.Id;
+            }
+
+            ad.OwnerId = applicationUser.Id;
+            ad.Country = applicationUser.Country;
+
+            await functionalUnitOfWork.AdRepository.Add(ad);
+            var entity = await functionalUnitOfWork.AdRepository.FirstOrDefault(a => a.Id == ad.Id);
+            return Ok(entity);
         }
-         
+
         [HttpGet("valid/{AdId}")]
-        public async Task<ActionResult<AdModel>> Valid(Guid AdId, [FromServices]FunctionalUnitOfWork functionalUnitOfWork)
+        public async Task<ActionResult<AdModel>> Valid(Guid AdId, [FromServices] FunctionalUnitOfWork functionalUnitOfWork)
         {
             var current = await functionalUnitOfWork.AdRepository.FirstOrDefault(o => o.Id == AdId);
-            
+
             var price = (await functionalUnitOfWork.AdPriceRepository.All()).FirstOrDefault(p => p.Id == current.AdPriceId);
 
             if (price?.Value == 0 || !string.IsNullOrEmpty(current.PaymentInformation))
@@ -144,12 +185,12 @@ namespace Abeer.Server.Controllers
 
             return BadRequest();
         }
-         
+
         [HttpPut]
         public async Task<IActionResult> Update(AdModel ad)
         {
             var model = await functionalUnitOfWork.AdRepository.FirstOrDefault(m => m.Id == ad.Id);
-            
+
             model.Description = ad.Description;
             model.ImageUrl1 = ad.ImageUrl1;
             model.ImageUrl2 = ad.ImageUrl2;
@@ -166,28 +207,28 @@ namespace Abeer.Server.Controllers
             functionalUnitOfWork.SaveChanges();
             return Ok();
         }
-         
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             await functionalUnitOfWork.AdRepository.Delete(id);
             return Ok();
         }
-         
+
         [HttpGet("admin")]
         public async Task<ActionResult<IEnumerable<AdModel>>> GetForAdministration()
         {
             return Ok(await functionalUnitOfWork.AdRepository.All());
         }
-         
+
         [HttpPost("admin")]
         public async Task<ActionResult<AdModel>> CreateByAdmin(AdModel adModel)
         {
-            if(adModel.AdPrice == null)
+            if (adModel.AdPrice == null)
             {
-                var price = (await functionalUnitOfWork.AdPriceRepository.All()).FirstOrDefault(p=>p.PriceName == "free");
+                var price = (await functionalUnitOfWork.AdPriceRepository.All()).FirstOrDefault(p => p.PriceName == "free");
 
-                if(price == null)
+                if (price == null)
                 {
                     price = new AdPrice { Value = 0, DelayToDisplay = 2, DisplayDuration = 2, PriceName = "free" };
                     await functionalUnitOfWork.AdPriceRepository.Add(price);
@@ -199,7 +240,7 @@ namespace Abeer.Server.Controllers
 
             return Ok(await functionalUnitOfWork.AdRepository.Add(adModel));
         }
-         
+
         [HttpPut("admin")]
         public async Task<IActionResult> UpdateByAdmin(AdModel adModel)
         {

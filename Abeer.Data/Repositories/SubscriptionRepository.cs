@@ -47,5 +47,11 @@ namespace Abeer.Data.Repositories
         {
             return Task.Run(() => FunctionalDbContext.Subscriptions.Update(subscription));
         }
+
+        public Task<Subscription> GetLatestSubscriptionForUser(string userId)
+        {
+            return Task.Run(() => FunctionalDbContext.Subscriptions.Where(s=>s.UserId == userId && s.Start <= DateTime.UtcNow && s.End >= DateTime.UtcNow)
+                .OrderBy(s=>s.Start).FirstOrDefault());
+        }
     }
 }
