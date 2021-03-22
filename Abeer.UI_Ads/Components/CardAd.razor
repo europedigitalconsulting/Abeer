@@ -55,7 +55,8 @@
             <button class="btn btn-primary btn-circle btn-xl float-right ml-2" @onclick="@OnEditClicked"><i class="fas fa-pen-square"></i></button>
             <button class="btn btn-danger btn-circle btn-xl float-right ml-2" @onclick="@OnDeleteClicked"><i class="fas fa-trash-alt"></i></button>
         }
-        else if (!Ad.IsValid)
+
+        @if (!Ad.IsValid && User.IsAdmin)
         {
             <a href="/ads/ValidAd/@Ad.Id" class="btn btn-primary"><i class="fas fa-check-square"></i>@Loc["ValidAd"]</a>
         }

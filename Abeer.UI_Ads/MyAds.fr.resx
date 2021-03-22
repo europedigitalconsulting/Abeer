@@ -180,6 +180,9 @@
   <data name="ViewNotValid" xml:space="preserve">
     <value>Afficher les annonces non validés</value>
   </data>
+  <data name="ViewToValidate" xml:space="preserve">
+    <value>Les annonces à valider</value>
+  </data>
   <data name="WillBeOnline" xml:space="preserve">
     <value>L'annonce sera visible à partir du</value>
   </data>

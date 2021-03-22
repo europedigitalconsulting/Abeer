@@ -53,6 +53,11 @@ namespace Abeer.Data.Repositories
             return Task.Run(() => (_context.Ads.ToList())?.OrderByDescending(a => a.CreateDate).ToList());
         }
 
+        public Task<List<AdModel>> GetAll(bool isValidated)
+        {
+            return Task.Run(() => (_context.Ads.Where(a=>a.IsValid == isValidated).ToList())?.OrderByDescending(a => a.CreateDate).ToList());
+        }
+
         public Task<IList<AdModel>> GetVisibledCountry(string country)
         {
             return Task.Run(() => _context.Ads.Where(a => 

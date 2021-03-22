@@ -40,7 +40,12 @@ namespace Abeer.Server.Controllers
         [HttpGet("notvalid")]
         public async Task<ActionResult<IEnumerable<AdModel>>> NotValid()
         {
-            return Ok(await functionalUnitOfWork.AdRepository.GetAllForAUser(User.NameIdentifier(), false));
+            var viewApplicationUser = (ViewApplicationUser)User;
+    
+            if (viewApplicationUser.IsAdmin)
+                return Ok(await functionalUnitOfWork.AdRepository.GetAll(false));
+            else
+                return Ok(await functionalUnitOfWork.AdRepository.GetAllForAUser(User.NameIdentifier(), false));
         }
 
 
@@ -131,15 +136,23 @@ namespace Abeer.Server.Controllers
                     if (subscription != null)
                         pack = await functionalUnitOfWork.SubscriptionPackRepository.FirstOrDefault(p => p.Id == subscription.SubscriptionPackId);
 
-                    if(pack.Label == "Standard")
+                    if (pack != null)
                     {
-                        delayToDisplay = 2;
-                        displayDuration = 2;
+                        if (pack.Label == "Standard")
+                        {
+                            delayToDisplay = 2;
+                            displayDuration = 2;
+                        }
+                        else
+                        {
+                            delayToDisplay = 5;
+                            displayDuration = 5;
+                        }
                     }
                     else
                     {
-                        delayToDisplay = 5;
-                        displayDuration = 5;
+                        delayToDisplay = 2;
+                        displayDuration = 2;
                     }
                 }
 
@@ -178,7 +191,7 @@ namespace Abeer.Server.Controllers
                 current.IsValid = true;
                 current.ValidateDate = DateTime.UtcNow;
                 current.OwnerId = User.NameIdentifier();
-
+                await functionalUnitOfWork.AdRepository.Update(current);
                 functionalUnitOfWork.SaveChanges();
                 return Ok(current);
             }

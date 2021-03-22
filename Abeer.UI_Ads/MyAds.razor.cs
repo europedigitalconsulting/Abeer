@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Abeer.Shared;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Json;
@@ -15,9 +18,18 @@ namespace Abeer.UI_Ads
         private bool UpdateHasError;
         private bool ModalDeleteAdVisible;
         private bool DeleteHasError;
+        
+        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
+        public AuthenticationState AuthenticateSate { get; set; }
+        public ViewApplicationUser User { get; set; } = new ViewApplicationUser();
 
         protected override async Task OnInitializedAsync()
         {
+            AuthenticateSate = await authenticationStateTask;
+    
+            if(AuthenticateSate.User.Identity.IsAuthenticated)
+                User = AuthenticateSate.User;
+
             var getAds = await HttpClient.GetAsync("/api/Ads");
             getAds.EnsureSuccessStatusCode();
             var json = await getAds.Content.ReadAsStringAsync();
