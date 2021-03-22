@@ -2,9 +2,9 @@
 @using Cryptocoin.Payment
 
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
-@inject IHttpClientFactory HttpClientFactory
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Payment> Localizer
 @inject NavigationManager NavigationManager
+@inject HttpClient httpClient
 
 @if (Ad?.AdPrice != null)
 {
@@ -108,6 +108,7 @@
     [Parameter] public string OrderNumber { get; set; }
     [Parameter] public string MethodPayment { get; set; }
     private List<Tuple<string, decimal>> Cart { get; set; } = new List<Tuple<string, decimal>>();
+    
     private AdModel Ad { get; set; } = new AdModel();
     private ClaimsPrincipal User;
     private CryptoPaymentModel cryptoPaymentViewModel;
@@ -116,8 +117,6 @@
         var authenticateSate = await authenticationStateTask;
 
         User = authenticateSate.User;
-
-        var httpClient = HttpClientFactory.CreateClient("Abeer.ServerAPI");
 
         var resultConfig = await httpClient.GetAsync($"/api/Payments/GetConfigCrypto");
 
@@ -153,7 +152,6 @@
 
     private async Task CreatePayment()
     {
-        var httpClient = HttpClientFactory.CreateClient("Abeer.ServerAPI");
         var result = await httpClient.GetAsync($"/api/Payments/create-payment-ad/{Ad.Id}/{OrderNumber}", HttpCompletionOption.ResponseContentRead);
         if (!result.IsSuccessStatusCode)
         {

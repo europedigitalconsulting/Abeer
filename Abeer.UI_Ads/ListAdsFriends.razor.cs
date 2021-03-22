@@ -14,7 +14,7 @@ namespace Abeer.UI_Ads
 
         [CascadingParameter]
         private Task<AuthenticationState> authenticationStateTask { get; set; }
-
+        [Inject]HttpClient httpClient { get; set; }
         public string Term { get; set; }
         public bool IsAdmin { get; set; }
 
@@ -41,8 +41,7 @@ namespace Abeer.UI_Ads
 
         private async Task GetAll()
         {
-            var httpClient = HttpClientFactory.CreateClient("Abeer.ServerAPI");
-            var getAll = await httpClient.GetAsync("/api/Ads/country");
+            var getAll = await httpClient.GetAsync("/api/Ads/freinds");
             if (getAll.IsSuccessStatusCode)
             {
                 var json = await getAll.Content.ReadAsStringAsync();
