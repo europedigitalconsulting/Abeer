@@ -36,6 +36,7 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.SignalR; 
 using Abeer.Ads.Data;
 using AutoMapper;
+using Abeer.Server.APIFeatures.Jobs;
 #endregion
 namespace Abeer.Server
 {
