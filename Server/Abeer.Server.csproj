@@ -27,6 +27,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Abeer-security.db-shm" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Abeer.BO_Ads.ApiFeatures\Abeer.Ads.ApiFeatures.csproj" />
+    <ProjectReference Include="..\Abeer.BO_Ads.Data.SqlServerProvider\Abeer.Ads.Data.SqlServerProvider.csproj" />
+    <ProjectReference Include="..\Abeer.BO_Ads.Data\Abeer.Ads.Data.csproj" />
+    <ProjectReference Include="..\Abeer.BO_Ads.Models\Abeer.Ads.Models.csproj" />
     <ProjectReference Include="..\Abeer.Data.SqlServerProvider\Abeer.Data.SqlServerProvider.csproj" />
     <ProjectReference Include="..\Abeer.Server.APIFeatures\Abeer.Server.APIFeatures.csproj" />
     <ProjectReference Include="..\Client\Abeer.Client.csproj" />
@@ -42,6 +50,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
     <PackageReference Include="BlazorAnimate" Version="3.0.0" />
     <PackageReference Include="LiteDB" Version="5.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="5.0.4" />

@@ -89,5 +89,15 @@ namespace DbProvider.EfCore.SqlServerProvider
         }
 
         public IQueryable<T> AsQuery() => dbSets.AsQueryable();
+        public void RemoveAll(List<Guid> ids)
+        {
+            foreach (var id in ids)
+            {
+                var item = dbSets.Find(id);
+
+                if (item != null)
+                    dbSets.Remove(item);
+            }
+        }
     }
 }

@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Abeer.BO_Ads.Models\Abeer.Ads.Models.csproj" />
+    <ProjectReference Include="..\Abeer.BO_Ads\Abeer.Ads.csproj" />
+    <ProjectReference Include="..\Abeer.Data\Abeer.Data.csproj" />
+    <ProjectReference Include="..\Shared\Abeer.Shared.csproj" />
+  </ItemGroup>
+
+  
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+</Project>

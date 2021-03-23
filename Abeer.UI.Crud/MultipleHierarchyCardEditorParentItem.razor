@@ -1,0 +1,19 @@
+﻿@typeparam TItem
+@typeparam TParent
+@if (IsActive())
+{
+    <h3>@Label <span class="badge badge-primary">@TotalItemCount</span></h3>
+    <hr />
+    <Virtualize Context="item" ItemsProvider="@LoadItems">
+        @Template(item)
+    </Virtualize>
+    @if (EmptyTemplate != null && TotalItemCount == 0)
+    {
+        @EmptyTemplate
+    }
+}
+else
+{
+    <h3>@Label</h3>
+    <hr />
+}

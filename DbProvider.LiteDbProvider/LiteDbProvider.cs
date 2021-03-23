@@ -93,6 +93,10 @@ namespace DbProvider.LiteDbProvider
         public IDbSet<T> Set<T>() where T : class
         {
             return new LiteDbSet<T>(liteDatabase);
+        } 
+        public void BulkDelete<T>(IList<T> entities) where T : class
+        {
+            var col = liteDatabase.GetCollection<T>(typeof(T).Name);
         }
 
         public void SetTimeout(int timeout)

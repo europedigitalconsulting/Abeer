@@ -79,7 +79,7 @@
     return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest();
   }
 
-  function _toConsumableArray(arr) {
+  function _toAdsArray(arr) {
     return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
   }
 
@@ -2363,7 +2363,7 @@
         extra: {
           attributes: attributes,
           styles: styles,
-          classes: ["".concat(config.familyPrefix, "-layers-text")].concat(_toConsumableArray(classes))
+          classes: ["".concat(config.familyPrefix, "-layers-text")].concat(_toAdsArray(classes))
         }
       });
     });
@@ -2389,7 +2389,7 @@
         extra: {
           attributes: attributes,
           styles: styles,
-          classes: ["".concat(config.familyPrefix, "-layers-counter")].concat(_toConsumableArray(classes))
+          classes: ["".concat(config.familyPrefix, "-layers-counter")].concat(_toAdsArray(classes))
         }
       });
     });
@@ -2411,7 +2411,7 @@
       return [{
         tag: 'span',
         attributes: {
-          class: ["".concat(config.familyPrefix, "-layers")].concat(_toConsumableArray(classes)).join(' ')
+          class: ["".concat(config.familyPrefix, "-layers")].concat(_toAdsArray(classes)).join(' ')
         },
         children: children
       }];
@@ -2465,7 +2465,7 @@
       addShims: function addShims(shims) {
         var _namespace$shims;
 
-        (_namespace$shims = namespace.shims).push.apply(_namespace$shims, _toConsumableArray(shims));
+        (_namespace$shims = namespace.shims).push.apply(_namespace$shims, _toAdsArray(shims));
 
         build();
         autoReplace();

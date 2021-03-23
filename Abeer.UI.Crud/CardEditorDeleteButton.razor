@@ -1,0 +1,7 @@
+﻿@typeparam TItem
+@if (IsDeletable)
+{
+    <button type="button" class="btn btn-danger tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Delete" @onclick="DeleteButtonClicked">
+        <i class="fas fa-trash"></i>
+    </button>
+}

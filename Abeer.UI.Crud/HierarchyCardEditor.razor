@@ -1,0 +1,79 @@
+﻿@using Microsoft.AspNetCore.Components.Web.Virtualization
+@typeparam TItem
+@typeparam TParent
+@if (_isModalVisible)
+{
+    <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+        <div class="modal-dialog @ModalDialogSize">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">@TitleDialog</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="Save">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @FormTemplate(Item)
+                </div>
+                <div class="modal-footer">
+                    <hr />
+                    <button class="btn btn-success" @onclick="Save"><i class="@IconDialog"></i>@DialogAction</button>
+                    <button class="btn btn-warning" @onclick="Cancel"><i class="fas fa-window-close"></i>@StringLocalizer["Cancel"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<section class="section">
+    <div class="section-header">
+        <h1>@StringLocalizer["Title"] <span class="badge badge-primary">@Items?.Count</span></h1>
+        <div class="section-header-breadcrumb">
+            <div class="breadcrumb-item"><a href="@HomeUrl">@StringLocalizer["Home"]</a></div>
+            <div class="breadcrumb-item @(Parent == null ? "active" : "")"><a href="@ParentUrl">@StringLocalizer["Title"]</a></div>
+            @if (Parent != null)
+            {
+                <div class="breadcrumb-item active">@ParentLabel</div>
+            }
+        </div>
+    </div>
+    <div class="section-body">
+        <h2 class="section-title">@StringLocalizer["Title"]</h2>
+        <p class="section-lead">@StringLocalizer["CatchPhrase"].</p>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body p-2">
+                        <div class="container-fluid">
+                            @if (Parent == null && Parents != null)
+                            {
+                                <Virtualize Items="Parents" Context="current">
+                                    @RepeaterParentItemTemplate(current)
+                                </Virtualize>
+                            }
+                            else if (Parent != null)
+                            {
+                                <h3>@ParentLabel <span class="badge badge-primary">@Items?.Count</span></h3>
+                                <hr />
+                                @if (Items != null && Items.Count > 0)
+                                {
+                                    <Virtualize Items="Items" Context="item">
+                                        @RepeaterItemTemplate(item)
+                                    </Virtualize>
+                                }
+                                else if (Items != null)
+                                {
+                                    @EmptyTemplate
+                                }
+                            }
+                            else
+                            {
+                                <span>@StringLocalizer["Loading"]</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
