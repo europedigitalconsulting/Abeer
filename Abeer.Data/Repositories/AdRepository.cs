@@ -70,5 +70,10 @@ namespace Abeer.Data.Repositories
             return Task.Run(() => _context.Ads.Where(a => a.StartDisplayTime <= DateTime.UtcNow && a.EndDisplayTime >= DateTime.UtcNow
                 && a.IsValid && a.OwnerId == userId));
         }
+
+        public Task<IList<AdModel>> Where(Expression<Func<AdModel, bool>> filter)
+        {
+            return Task.Run(() => _context.Ads.Where(filter));
+        }
     }
 }

@@ -13,13 +13,13 @@ using System;
 using Abeer.Services;
 using Abeer.Shared.ViewModels;
 using Microsoft.AspNetCore.Http.Extensions;
-using static Abeer.Services.TemplateRenderManager;
 using Microsoft.AspNetCore.Hosting;
 using Abeer.Shared.ReferentielTable;
 using Abeer.Shared.Technical;
 using Microsoft.Extensions.Configuration;
 using Abeer.Shared.Functional;
 using System.Globalization;
+using static Abeer.Services.TemplateRenderManager;
 
 namespace Abeer.Server.Controllers
 {

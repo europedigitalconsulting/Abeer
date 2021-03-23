@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.RenderTree;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -98,6 +99,8 @@ namespace Abeer.Services
             });
         }
 
+        public Task<IList<Notification>> Where(Expression<Func<Notification, bool>> filter) => _UnitOfWork.NotificationRepository.Where(filter);
+
         public async Task<Notification> Create(string userId, string title, string notificationUrl, string cssClass, string imageUrl, string notificationIcon, string notificationType)
         {
             return await Create(new Notification
@@ -112,24 +115,6 @@ namespace Abeer.Services
                 NotificationIcon = notificationIcon,
                 NotificationType = notificationType
             });
-        }
-
-        public async Task<IList<Notification>> GetNotifications() =>
-            (await _UnitOfWork.NotificationRepository.GetNotifications())
-                ?.OrderByDescending(n => n.CreatedDate).ToList();
-
-        public async Task<Notification> GetNotification(string userId, string type)
-        {
-            return (await _UnitOfWork.NotificationRepository.Where(n => n.UserId == userId && n.NotificationType == type))?
-                .OrderByDescending(n => n.CreatedDate)
-                .FirstOrDefault();
-        }
-
-        public async Task<Notification> GetNotification(string userId, string type, bool isDisplayed)
-        {
-            return (await _UnitOfWork.NotificationRepository.Where(n => n.UserId == userId && n.NotificationType == type && n.IsDisplayed == isDisplayed))?
-                .OrderByDescending(n => n.CreatedDate)
-                .FirstOrDefault();
         }
     }
 }

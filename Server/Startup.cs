@@ -34,6 +34,7 @@ using Abeer.Services.Data;
 using Abeer.Server.APIFeatures.Hubs;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.SignalR;
+using Abeer.Server.APIFeatures.Jobs;
 #endregion
 namespace Abeer.Server
 {
@@ -202,6 +203,8 @@ namespace Abeer.Server
                 opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
                     new[] { "application/octet-stream" });
             });
+
+            services.AddHostedService<TrackAdPublishingService>();
         }
 
         private void RegisterSecurityDbContext(IServiceCollection services)

@@ -12,6 +12,11 @@ using Abeer.Shared;
 using Abeer.Shared.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Abeer.Shared.Technical;
+using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Http.Extensions;
+using static Abeer.Services.TemplateRenderManager;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Abeer.Server.Controllers
 {
@@ -22,13 +27,28 @@ namespace Abeer.Server.Controllers
     {
         private readonly FunctionalUnitOfWork functionalUnitOfWork;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly EventTrackingService _eventTrackingService;
+        private readonly NotificationService _notificationService;
+        private readonly IConfiguration _configuration;
+        private readonly UrlShortner _urlShortner;
+        private readonly IServiceProvider _serviceProvider;
+        private readonly IWebHostEnvironment _env;
+        private readonly IEmailSenderService _emailSender;
 
         private readonly Random rdm = new Random();
-
-        public AdsController(FunctionalUnitOfWork functionalUnitOfWork, UserManager<ApplicationUser> userManager)
+        public AdsController(FunctionalUnitOfWork functionalUnitOfWork, UserManager<ApplicationUser> userManager,
+            EventTrackingService eventTrackingService, NotificationService notificationService, 
+            IConfiguration configuration, UrlShortner urlShortner, IServiceProvider serviceProvider, IWebHostEnvironment env, IEmailSenderService emailSender)
         {
             this.functionalUnitOfWork = functionalUnitOfWork;
             _userManager = userManager;
+            _eventTrackingService = eventTrackingService;
+            _notificationService = notificationService;
+            _configuration = configuration;
+            _urlShortner = urlShortner;
+            _serviceProvider = serviceProvider;
+            _env = env;
+            _emailSender = emailSender;
         }
 
         [HttpGet]
@@ -176,6 +196,9 @@ namespace Abeer.Server.Controllers
 
             await functionalUnitOfWork.AdRepository.Add(ad);
             var entity = await functionalUnitOfWork.AdRepository.FirstOrDefault(a => a.Id == ad.Id);
+            
+            await _eventTrackingService.Create(applicationUser.Id, "Ad", "create");
+
             return Ok(entity);
         }
 
@@ -193,10 +216,40 @@ namespace Abeer.Server.Controllers
                 current.OwnerId = User.NameIdentifier();
                 await functionalUnitOfWork.AdRepository.Update(current);
                 functionalUnitOfWork.SaveChanges();
+                await _eventTrackingService.Create(current.OwnerId, "Ad", "validate");
+                await _notificationService.Create(current.OwnerId, "validateAd", "/ad/myads");
+
+                await SendEmailTemplate(current);
+
                 return Ok(current);
             }
 
             return BadRequest();
+        }
+
+        private async Task SendEmailTemplate(AdModel adModel)
+        {
+            var callbackUrl = $"{Request.Scheme}://{Request.Host}/ads/details/{adModel.Id}";
+
+            var frontWebSite = UriHelper.BuildAbsolute(Request.Scheme, Request.Host);
+            var logoUrl = UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/assets/img/logo_full.png");
+            var unSubscribeUrl = await _urlShortner.CreateUrl(Request.Scheme, Request.Host, UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/Account/UnSubscribe"));
+
+            callbackUrl = await _urlShortner.CreateUrl(Request.Scheme, Request.Host, callbackUrl);
+
+            var parameters = new Dictionary<string, string>()
+                        {
+                            {"title", adModel.Title },
+                            {"frontWebSite", frontWebSite },
+                            {"logoUrl", logoUrl },
+                            {"unSubscribeUrl", unSubscribeUrl },
+                            {"callbackUrl", callbackUrl }
+                        };
+
+            var message = GenerateHtmlTemplate(_serviceProvider, _env.WebRootPath, "valid-ad", parameters);
+            var user = await _userManager.FindByIdAsync(adModel.OwnerId);
+            
+            await _emailSender.SendEmailAsync(user.Email, adModel.Title, message);
         }
 
         [HttpPut]
