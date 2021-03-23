@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Abeer.Data.UnitOfworks;
@@ -9,6 +10,7 @@ using Abeer.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Abeer.Server.Controllers
@@ -40,6 +42,14 @@ namespace Abeer.Server.Controllers
 
             if (user == null)
                 return NotFound();
+
+            if (Request.Query.Any())
+            {
+                if (QueryHelpers.ParseQuery(Request.QueryString.Value).TryGetValue("social", out var _social))
+                {
+                    await _eventTrackingService.Create(User.NameIdentifier(), $"ViewProfileFromSocial#{_social}", userId);
+                }
+            }
 
             user.NubmerOfView += 1;
             await _userManager.UpdateAsync(user);

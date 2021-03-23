@@ -2,6 +2,7 @@
 using Abeer.Shared.Functional;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.WebUtilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,7 +66,15 @@ namespace Abeer.Client.Pages
                 });
             }
 
-            var getProfile = await httpClient.GetAsync($"/api/viewProfile/{ProfileId}");
+            var apiUrl = $"/api/viewProfile/{ProfileId}";
+            var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
+
+            if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("social", out var _social))
+            {
+                apiUrl += $"?social={_social}";
+            }
+
+            var getProfile = await httpClient.GetAsync(apiUrl);
 
             if (getProfile.StatusCode == System.Net.HttpStatusCode.NotFound)
                 Navigation.NavigateTo(Navigation.ToAbsoluteUri($"/Identity/Account/Register?PinCode={ProfileId}").ToString(), true);
