@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.RenderTree;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -52,11 +53,10 @@ namespace Abeer.Services
                 ?.OrderByDescending(n => n.CreatedDate).ToList();
 
 
-        public async Task<EventTrackingItem> GetEventTrackingItemByKey(string userId, string key)
+        public async Task<IList<EventTrackingItem>> GetEventTrackingItemByKey(string userId, string key)
         {
             return (await _UnitOfWork.EventTrackingItemRepository.Where(n => n.UserId == userId && n.Key == key))?
-                .OrderByDescending(n => n.CreatedDate)
-                .FirstOrDefault();
+                .OrderByDescending(n => n.CreatedDate).ToList();
         }
 
         public async Task<EventTrackingItem> GetEventTrackingItemByCategory(string userId, string category)
@@ -65,5 +65,9 @@ namespace Abeer.Services
                 .OrderByDescending(n => n.CreatedDate)
                 .FirstOrDefault();
         }
+
+        public async Task<IList<EventTrackingItem>> GetEventTrackingItemsByKey(string key) => await _UnitOfWork.EventTrackingItemRepository.GetEventTrackingItemsByKey(key);
+
+        public async Task<IList<EventTrackingItem>> Where(Expression<Func<EventTrackingItem, bool>> filter) => await _UnitOfWork.EventTrackingItemRepository.Where(filter);
     }
 }

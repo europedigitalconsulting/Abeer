@@ -71,6 +71,9 @@
 
     <!-- chart js-->
     <script src="vendors/moment/moment-with-locales.min.js" type="text/javascript" language="javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+    <!-- This is the glue between Blazor and Chart.js -->
+    <script src="_content/ChartJs.Blazor.Fork/ChartJsBlazorInterop.js"></script>
 
     <!--application-->
     <script src="js/app.js"></script>
@@ -85,9 +88,9 @@
             /*console.info('scrolling to element', elementId);*/
             var element = document.getElementById(elementId);
             if (!element) {
-/*                console.warn('element was not found', elementId);*/
+                /*                console.warn('element was not found', elementId);*/
                 return;
-            } 
+            }
             /*console.info('Height to element', element.scrollHeight);*/
             element.scrollTop = element.scrollHeight;
             //document.getElementById("msg_card_body").scrollTop = 590

@@ -31,6 +31,11 @@ namespace Abeer.Data.Repositories
             .OrderByDescending(n => n.CreatedDate).ToList());
         }
 
+        public Task<IList<EventTrackingItem>> GetEventTrackingItemsByKey(string key)
+        {
+            return Task.Run<IList<EventTrackingItem>>(() => _context.EventTrackingItems.Where(n => n.Key == key).OrderByDescending(n => n.CreatedDate).ToList());
+        }
+
         public Task<EventTrackingItem> GetEventTrackingItem(Guid id)
         {
             return Task.Run(() => _context.EventTrackingItems.FirstOrDefault(c => c.Id == id));

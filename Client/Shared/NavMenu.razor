@@ -64,25 +64,7 @@
         await InvokeAsync(StateHasChanged);
     }
 }
-@if (ShowActivityDialog)
-{
-    <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Activité</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="@(()=>ShowActivityDialog = false)">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <Abeer.Client.Shared.NotificationDialogs.DailyReminderDialog User="_user" Close="@(()=>ShowActivityDialog = false)" Navigate="@Navigate"></Abeer.Client.Shared.NotificationDialogs.DailyReminderDialog>
-                </div>
-            </div>
-        </div>
-    </div>
 
-}
 <div class="logo-menu">
     <a class="text-white" href="profile"><img src="assets/logo.svg" width="80" title="Meetag"></a>
 </div>
@@ -102,7 +84,7 @@
         @if (_user?.Identity.IsAuthenticated == true)
         {
             <div class="p-2 font-size-sm-menu">
-                <a href="javascript:void(0)" class="pr-2 text-center text-white" @onclick="@(()=>ShowActivityDialog=true)">
+                <a href="/activities" class="pr-2 text-center text-white">
                     <div>
                         <img src="/assets/img/menu/satistique_white.svg" width="20">
                     </div>

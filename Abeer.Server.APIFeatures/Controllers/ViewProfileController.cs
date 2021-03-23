@@ -47,7 +47,7 @@ namespace Abeer.Server.Controllers
             {
                 if (QueryHelpers.ParseQuery(Request.QueryString.Value).TryGetValue("social", out var _social))
                 {
-                    await _eventTrackingService.Create(User.NameIdentifier(), $"ViewProfileFromSocial#{_social}", userId);
+                    await _eventTrackingService.Create(User.NameIdentifier(), $"ViewProfileFromSocial#{_social.ToString().ToLower()}", user.Id);
                 }
             }
 
