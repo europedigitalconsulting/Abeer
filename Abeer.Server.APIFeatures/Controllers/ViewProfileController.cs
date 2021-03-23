@@ -20,11 +20,13 @@ namespace Abeer.Server.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly FunctionalUnitOfWork _functionalUnitOfWork;
+        private readonly EventTrackingService _eventTrackingService;
 
-        public ViewProfileController(UserManager<ApplicationUser> userManager, FunctionalUnitOfWork functionalUnitOfWork)
+        public ViewProfileController(UserManager<ApplicationUser> userManager, FunctionalUnitOfWork functionalUnitOfWork, EventTrackingService eventTrackingService)
         {
             _userManager = userManager;
             _functionalUnitOfWork = functionalUnitOfWork;
+            _eventTrackingService = eventTrackingService;
         }
 
         [AllowAnonymous]
@@ -39,7 +41,18 @@ namespace Abeer.Server.Controllers
             if (user == null)
                 return NotFound();
 
+            user.NubmerOfView += 1;
+            await _userManager.UpdateAsync(user);
+
+            if(!User.Identity.IsAuthenticated)
+                await _eventTrackingService.Create(User.NameIdentifier(), "ViewProfile", userId);
+            else
+                await _eventTrackingService.Create(null, "ViewProfile", userId);
+
             var view = (ViewApplicationUser)user;
+
+            view.NumberOfContacts = (await _functionalUnitOfWork.ContactRepository.GetContacts(userId)).Count;
+            view.NumberOfAds = (await _functionalUnitOfWork.AdRepository.GetVisibledUser(userId)).Count;
 
             view.SocialNetworkConnected = await _functionalUnitOfWork
                 .SocialNetworkRepository

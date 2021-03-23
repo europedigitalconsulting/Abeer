@@ -46,6 +46,7 @@ namespace Abeer.Shared
         public DateTime? SubscriptionStart { get; set; }
         public DateTime? SubscriptionEnd { get; set; }
         public int NumberOfContacts { get; set; }
+        public int NumberOfAds { get; set; }
         public bool IsUnlimited { get; private set; }
 
         public static implicit operator ViewApplicationUser(ApplicationUser user)

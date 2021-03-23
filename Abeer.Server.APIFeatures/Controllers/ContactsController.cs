@@ -83,7 +83,8 @@ namespace Abeer.Server.Controllers
                     item.Contact.CustomLinks = await _UnitOfWork.CustomLinkRepository.GetCustomLinkLinks(item.UserId) ?? new List<CustomLink>();
 
                     item.Contact.NumberOfContacts = (await _UnitOfWork.ContactRepository.GetContacts(item.Contact.Id)).Count;
-
+                    item.Contact.NumberOfAds = (await _UnitOfWork.AdRepository.GetVisibledUser(item.Contact.Id)).Count;
+                    
                     viewContacts.Add(item);
                 }
             }
@@ -117,6 +118,7 @@ namespace Abeer.Server.Controllers
                     item.Contact.CustomLinks = await _UnitOfWork.CustomLinkRepository.GetCustomLinkLinks(item.UserId) ?? new List<CustomLink>();
 
                     item.Contact.NumberOfContacts = (await _UnitOfWork.ContactRepository.GetContacts(item.Contact.Id)).Count;
+                    item.Contact.NumberOfAds = (await _UnitOfWork.AdRepository.GetVisibledUser(item.Contact.Id)).Count;
 
                     viewContacts.Add(item);
                 }
@@ -326,6 +328,7 @@ namespace Abeer.Server.Controllers
 
                 var item = new ViewContact(user, suggestion);
                 item.Contact.NumberOfContacts = (await _UnitOfWork.ContactRepository.GetContacts(item.Contact.Id)).Count;
+                item.Contact.NumberOfAds = (await _UnitOfWork.AdRepository.GetVisibledUser(item.Contact.Id)).Count;
                 contacts.Add(item);
             }
 
@@ -462,6 +465,7 @@ namespace Abeer.Server.Controllers
                 item.Contact.NumberOfContacts = (await _UnitOfWork.ContactRepository.GetContacts(item.Contact.Id)).Count;
                 item.Contact.SocialNetworkConnected = await _UnitOfWork.SocialNetworkRepository.GetSocialNetworkLinks(item.Contact.Id);
                 item.Contact.CustomLinks = await _UnitOfWork.CustomLinkRepository.GetCustomLinkLinks(item.Contact.Id);
+                item.Contact.NumberOfAds = (await _UnitOfWork.AdRepository.GetVisibledUser(item.Contact.Id)).Count;
 
                 contacts.Add(item);
             }

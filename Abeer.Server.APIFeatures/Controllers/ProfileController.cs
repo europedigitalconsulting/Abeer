@@ -16,6 +16,7 @@ using System.Text;
 using Microsoft.AspNetCore.Http.Extensions;
 using static Abeer.Services.TemplateRenderManager;
 using System;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace Abeer.Server.Controllers
 {
@@ -32,12 +33,13 @@ namespace Abeer.Server.Controllers
         private readonly IConfiguration _configuration;
         private readonly FunctionalUnitOfWork _functionalUnitOfWork;
         private readonly IServiceProvider _serviceProvider;
+        private readonly EventTrackingService _eventTrackingService;
 
         public ProfileController(UserManager<ApplicationUser> userManager,
             IAuthorizationService authorizationService,
             IServiceProvider serviceProvider,
             IWebHostEnvironment env, UrlShortner urlShortner, IEmailSender emailSender,
-            IConfiguration configuration, FunctionalUnitOfWork functionalUnitOfWork)
+            IConfiguration configuration, FunctionalUnitOfWork functionalUnitOfWork, EventTrackingService eventTrackingService)
         {
             _userManager = userManager;
             _authorizationService = authorizationService;
@@ -47,6 +49,7 @@ namespace Abeer.Server.Controllers
             _configuration = configuration;
             _functionalUnitOfWork = functionalUnitOfWork;
             _serviceProvider = serviceProvider;
+            _eventTrackingService = eventTrackingService;
         }
 
         [AllowAnonymous]
@@ -59,7 +62,19 @@ namespace Abeer.Server.Controllers
             var user = await _userManager
                 .FindByIdAsync(userId);
 
+
+            user.NubmerOfView += 1;
+            await _userManager.UpdateAsync(user);
+
+            if (!User.Identity.IsAuthenticated)
+                await _eventTrackingService.Create(User.NameIdentifier(), "ViewProfile", userId);
+            else
+                await _eventTrackingService.Create(null, "ViewProfile", userId);
+
             var view = (ViewApplicationUser)user;
+
+            view.NumberOfContacts = (await _functionalUnitOfWork.ContactRepository.GetContacts(userId)).Count;
+            view.NumberOfAds = (await _functionalUnitOfWork.AdRepository.GetVisibledUser(userId)).Count;
 
             view.SocialNetworkConnected = await _functionalUnitOfWork
                 .SocialNetworkRepository
@@ -82,7 +97,18 @@ namespace Abeer.Server.Controllers
             var user = await _userManager
                 .FindByIdAsync(userId);
 
+            user.NubmerOfView += 1;
+            await _userManager.UpdateAsync(user);
+
+            if (!User.Identity.IsAuthenticated)
+                await _eventTrackingService.Create(User.NameIdentifier(), "ViewProfile", userId);
+            else
+                await _eventTrackingService.Create(null, "ViewProfile", userId);
+
             var view = (ViewApplicationUser)user;
+
+            view.NumberOfContacts = (await _functionalUnitOfWork.ContactRepository.GetContacts(userId)).Count;
+            view.NumberOfAds = (await _functionalUnitOfWork.AdRepository.GetVisibledUser(userId)).Count;
 
             view.SocialNetworkConnected = await _functionalUnitOfWork
                 .SocialNetworkRepository
@@ -105,6 +131,7 @@ namespace Abeer.Server.Controllers
             var user = await _userManager.FindByIdAsync(User.NameIdentifier());
 
             var card = await _functionalUnitOfWork.CardRepository.FirstOrDefault(c => c.CardNumber == userForm.PinDigit);
+
             if (card == null)
             {
                 return NotFound("card not existed");

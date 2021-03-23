@@ -258,6 +258,15 @@
   <data name="NewPassword" xml:space="preserve">
     <value>Nouveau mot de passe</value>
   </data>
+  <data name="NumberOfAds" xml:space="preserve">
+    <value>Nombre d'offres</value>
+  </data>
+  <data name="NumberOfContact" xml:space="preserve">
+    <value>Nombre de contact</value>
+  </data>
+  <data name="NumberOfView" xml:space="preserve">
+    <value>Nombre de vues</value>
+  </data>
   <data name="OldPassword" xml:space="preserve">
     <value>Ancien mot de passe</value>
   </data>

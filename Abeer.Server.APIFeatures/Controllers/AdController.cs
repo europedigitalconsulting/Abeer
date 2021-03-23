@@ -102,10 +102,24 @@ namespace Abeer.Server.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<AdViewModel>> Get(Guid id)
         {
-            var ad = (AdViewModel)(await functionalUnitOfWork.AdRepository.FirstOrDefault(a => a.Id == id));
+            if (id == Guid.Empty)
+                return BadRequest();
+
+            var model = await functionalUnitOfWork.AdRepository.FirstOrDefault(a => a.Id == id);
+
+            if (model == null)
+                return NotFound();
+
+            var ad = (AdViewModel)(model);
 
             ad.Owner = await _userManager.FindByIdAsync(ad.OwnerId);
             ad.Owner.PhotoUrl ??= new GravatarUrlExtension.Gravatar().GetImageSource(ad.Owner.Email);
+
+            await _eventTrackingService.Create(User.NameIdentifier(), "ViewAd", id.ToString());
+
+            model.ViewCount += 1;
+            await functionalUnitOfWork.AdRepository.Update(model);
+            ad.ViewCount = model.ViewCount;
 
             var authorAds = await functionalUnitOfWork.AdRepository.GetVisibledUser(ad.OwnerId);
 
