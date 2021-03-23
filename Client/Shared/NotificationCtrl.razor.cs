@@ -36,7 +36,9 @@ namespace Abeer.Client.Shared
             { "daily-reminder", typeof(DailyReminderDialog) },
             { "expiredprofile", typeof(ExpiredProfileDialog) },
             { "soonexpireprofile", typeof(SoonExpiredProfileDialog) },
-            { "add-contact", typeof(AddContactDialog) }
+            { "add-contact", typeof(AddContactDialog) },
+            { "ad-startpublishing", typeof(StartPublishingDialog) },
+            { "ad-endpublishing", typeof(EndPublishingDialog) }
         };
 
         public Notification NextNotification
@@ -130,9 +132,15 @@ namespace Abeer.Client.Shared
             }
             StateHasChanged();
         }
-        public void Goto(string url)
+        public async Task Goto(string url)
         {
-            SetDisplayedNotification().ContinueWith(t => NavigationManager.NavigateTo(url, true));
+            _next.IsDisplayed = true;
+            _next.DisplayCount += 1;
+            _next.LastDisplayTime = DateTime.UtcNow;
+            var post = await httpClient.PutAsJsonAsync<Notification>("api/notification", _next);
+            post.EnsureSuccessStatusCode();
+            NotificationClient.Notifications.Remove(_next);
+            NavigationManager.NavigateTo(url, true);
         }
 
         public RenderFragment RenderDialog(string type) => builder =>
@@ -141,6 +149,7 @@ namespace Abeer.Client.Shared
             builder.AddAttribute(1, "User", User);
             builder.AddAttribute(2, "Close", EventCallback.Factory.Create(this, async() => await SetDisplayedNotification()));
             builder.AddAttribute(3, "Navigate", EventCallback.Factory.Create<string>(this, (url) => Goto(url)));
+            builder.AddAttribute(4, "Notification", _next);
             builder.CloseComponent();
         };
     }
