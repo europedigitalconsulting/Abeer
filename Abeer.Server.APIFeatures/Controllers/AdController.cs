@@ -17,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http.Extensions;
 using static Abeer.Services.TemplateRenderManager;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace Abeer.Server.Controllers
 {
@@ -104,6 +105,14 @@ namespace Abeer.Server.Controllers
         {
             if (id == Guid.Empty)
                 return BadRequest();
+
+            if (Request.Query.Any())
+            {
+                if (QueryHelpers.ParseQuery(Request.QueryString.Value).TryGetValue("social", out var _social))
+                {
+                    await _eventTrackingService.Create(User.NameIdentifier(), $"ViewAdFromSocial#{_social}", id.ToString());
+                }
+            }
 
             var model = await functionalUnitOfWork.AdRepository.FirstOrDefault(a => a.Id == id);
 

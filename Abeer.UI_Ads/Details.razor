@@ -88,6 +88,7 @@
                                 </div>
                                 <p class="product-description">@Ad.Description.</p>
                                 <h4 class="price">@Loc["currentprice"]: <span>@Ad.Price @Ad.Currency</span></h4>
+                                <Abeer.Client.UISdk.SocialShareLinks Text="@Loc["ShareText", Ad.Title]" Content="@Ad.Description" Source="@Loc["ShareSource"]" TargetUrl="@NavigationManager.ToAbsoluteUri($"/ad/details/{Ad.Id}").ToString()" Title="@Loc["ShareTitle", Ad.Title]" Loc="Loc"></Abeer.Client.UISdk.SocialShareLinks>
                                 <hr />
                                 <CardAuthor Author="@Ad.Owner" Loc="@Loc"></CardAuthor>
                             </div>
