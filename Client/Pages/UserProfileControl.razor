@@ -485,7 +485,7 @@
 }
 @if (ModalSocialNetwork)
 {
-    <ModalDefault Title="@Loc["AddASocialNetwork"]" ModalCancelClicked="ToggleOpenList">
+    <ModalDefault Title="@Loc["AddASocialNetwork"]" ModalCancelClicked="() => ModalSocialNetwork = false">
         <Body>
             <Virtualize Items="@Profile.SocialNetworkConnected" Context="socialNetwork">
                 <div class="input-group mb-3">

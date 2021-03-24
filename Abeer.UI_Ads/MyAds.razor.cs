@@ -9,16 +9,17 @@ using System.Text;
 using System.Threading.Tasks;
 using Abeer.Shared.Functional;
 using Newtonsoft.Json;
+using Abeer.Shared.ViewModels;
 
 namespace Abeer.UI_Ads
 {
     public partial class MyAds
     {
-        private List<AdModel> Ads = new List<AdModel>();
-        private List<AdModel> AdsTmp = new List<AdModel>();
+        private List<AdViewModel> Ads = new List<AdViewModel>();
+        private List<AdViewModel> AdsTmp = new List<AdViewModel>();
 
         private bool ModalEditAdVisible;
-        private AdModel Current = new AdModel();
+        private AdViewModel Current = new AdViewModel();
         private bool UpdateHasError;
         private bool ModalDeleteAdVisible;
         private bool IsMyAds;
@@ -37,29 +38,21 @@ namespace Abeer.UI_Ads
             var getAds = await HttpClient.GetAsync("/api/Ads");
             getAds.EnsureSuccessStatusCode();
             var json = await getAds.Content.ReadAsStringAsync();
-            Ads = Newtonsoft.Json.JsonConvert.DeserializeObject<List<AdModel>>(json);
+            Ads = Newtonsoft.Json.JsonConvert.DeserializeObject<List<AdViewModel>>(json);
             AdsTmp = Ads.Where(x => x.OwnerId != User.Id).ToList();
             await base.OnInitializedAsync();
         }
 
-        private void OpenEditModal(AdModel ad)
+        private void OpenEditModal(AdViewModel ad)
         {
             Current = ad;
             ModalEditAdVisible = true;
         }
 
-        private void OpenDeleteModal(AdModel adModel)
+        private void OpenDeleteModal(AdViewModel adModel)
         {
             Current = adModel;
             ModalDeleteAdVisible = true;
-        }
-
-        private async Task Update()
-        {
-            var update = await HttpClient.PutAsJsonAsync<AdModel>("/api/Ads", Current);
-            update.EnsureSuccessStatusCode();
-            ModalEditAdVisible = false;
-            await InvokeAsync(StateHasChanged);
         }
 
         private async Task Delete()
@@ -76,7 +69,7 @@ namespace Abeer.UI_Ads
             var getAds = await HttpClient.GetAsync("/api/Ads/notvalid");
             getAds.EnsureSuccessStatusCode();
             var json = await getAds.Content.ReadAsStringAsync();
-            Ads = Newtonsoft.Json.JsonConvert.DeserializeObject<List<AdModel>>(json);
+            Ads = Newtonsoft.Json.JsonConvert.DeserializeObject<List<AdViewModel>>(json);
             await InvokeAsync(StateHasChanged);
         }
 
@@ -86,9 +79,7 @@ namespace Abeer.UI_Ads
             await InvokeAsync(StateHasChanged);
         }
         private async Task FilterMyAds()
-        {
-            Console.WriteLine(User.Id);
-            Console.WriteLine(JsonConvert.SerializeObject(Ads));
+        { 
             IsMyAds = true;
             AdsTmp = Ads.Where(x => x.OwnerId == User.Id).ToList();
             await InvokeAsync(StateHasChanged);

@@ -5,25 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Data\BaseRepository.cs" />
-    <Compile Remove="Data\DbServerOptions.cs" />
-    <Compile Remove="Data\IDbProvider.cs" />
-    <Compile Remove="Data\IDbProviderFactory.cs" />
-    <Compile Remove="Data\IDbSet.cs" />
-    <Compile Remove="Data\Repository.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Shared\Abeer.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Data\" />
   </ItemGroup>
 
 </Project>

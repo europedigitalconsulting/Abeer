@@ -23,7 +23,7 @@ namespace Abeer.Ads.Data
 
         public AdsFamiliesRepository FamiliesRepository => new AdsFamiliesRepository(AdsContext, _mapper);
         public AdsCategoriesRepository CategoriesRepository => new AdsCategoriesRepository(AdsContext, _mapper);
-
         public AdsFamilyAttributesRepository FamilyAttributesRepository => new AdsFamilyAttributesRepository(AdsContext, _mapper);
+        public CategoryAdRepository CategoryAdRepository => new CategoryAdRepository(AdsContext, _mapper);
    }
 }

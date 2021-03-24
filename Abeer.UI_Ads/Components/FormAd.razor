@@ -1,66 +1,103 @@
 ﻿@using Abeer.Client.UISdk.Shared
-<section class="section">
-    <div class="card">
-        <div class="card-body">
-            @if (FormHasError)
-            {
-                <div class="alert alert-danger">
-                    @FormError
-                </div>
-            }
-            <h3>@Loc["Summary"]</h3>
-            <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
-                <label>@Loc["AdTitle"]</label>
-                <input type="text" Class="form-control" @bind="Ad.Title" />
-            </div>
-            <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
-                <label>@Loc["Description"]</label>
-                <textarea type="text" Class="form-control h-100" rows="6" @bind="Ad.Description" cols="6"></textarea>
-            </div>
-            <div class="form-group form-group col-lg-6 col-md-6 col-sm-6">
-                <label>@Loc["Price"]</label>
-                <input type="number" Class="form-control" @bind="Ad.Price" />
-            </div>
-            <div class="form-group form-group col-lg-6 col-md-6 col-sm-6">
-                <label>@Loc["Currency"]</label>
-                <select @bind="Ad.Currency">
-                    <option value="">--</option>
-                    <option value="USD">@Loc["USD"]</option>
-                    <option value="EURO">@Loc["EURO"]</option>
-                </select>
-            </div>
-            <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
-                <label>@Loc["Url1"]</label>
-                <input type="url" Class="form-control" @bind="Ad.Url1" />
-            </div>
-            <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
-                <label>@Loc["Url2"]</label>
-                <input type="url" Class="form-control" @bind="Ad.Url2" />
-            </div>
-            <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
-                <label>@Loc["Url3"]</label>
-                <input type="url" Class="form-control" @bind="Ad.Url3" />
-            </div>
-            <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
-                <label>@Loc["Url4"]</label>
-                <input type="url" Class="form-control" @bind="Ad.Url4" />
-            </div>
-            <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
-                <label>@Loc["Image1"]</label>
-                <MediaUploader Id="AssignImageUrl1" OnChange="AssignImageUrl1"></MediaUploader>
-            </div>
-            <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
-                <label>@Loc["Image2"]</label>
-                <MediaUploader Id="AssignImageUrl2" OnChange="AssignImageUrl2"></MediaUploader>
-            </div>
-            <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
-                <label>@Loc["Image3"]</label>
-                <MediaUploader Id="AssignImageUrl3" OnChange="AssignImageUrl3"></MediaUploader>
-            </div>
-            <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
-                <label>@Loc["Image4"]</label>
-                <MediaUploader Id="AssignImageUrl4" OnChange="AssignImageUrl4"></MediaUploader>
-            </div>
+<section>
+    @if (FormHasError)
+    {
+        <div class="alert alert-danger">
+            @FormError
         </div>
+    }
+    <h3>@Loc["Summary"]</h3>
+    <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
+        <label>@Loc["AdTitle"]</label>
+        <input type="text" Class="form-control" @bind="Ad.Title" />
+    </div>
+    <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
+        <label>@Loc["Description"]</label>
+        <textarea type="text" Class="form-control h-100" rows="6" @bind="Ad.Description" cols="6"></textarea>
+    </div>
+    <div class="form-group form-group col-lg-6 col-md-6 col-sm-6">
+        <label>@Loc["Price"]</label>
+        <input type="number" Class="form-control" @bind="Ad.Price" />
+    </div>
+    <div class="form-group form-group col-lg-6 col-md-6 col-sm-6">
+        <label>@Loc["Currency"]</label>
+        <select @bind="Ad.Currency">
+            <option value="">--</option>
+            <option value="USD">@Loc["USD"]</option>
+            <option value="EURO">@Loc["EURO"]</option>
+        </select>
+    </div>
+    <div class="form-group form-group col-lg-6 col-md-6 col-sm-6">
+        <label>@Loc["Family"]</label>
+        <input class="mb-2" @oninput="TapSearch" @onclick="FocusSearchFamily" type="text" @bind="FamilySearch" placeholder="@(FamilySelected?.Label ?? "Sélectionner")" />
+        @if (ShowFamily)
+        {
+            <div class="multiselect">
+                <div id="checkboxesF">
+                    @foreach (var item in ListFamily)
+                    {
+                        <div>
+                            <label @onclick="() => SelectFamily(item)" for="@item.Code">
+                                @item.Label
+                            </label>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+    <div class="form-group form-group col-lg-6 col-md-6 col-sm-6">
+        <label @onclick="() => ShowCategory = !ShowCategory" class="mb-2">@Loc["Category"]</label>
+        @if (ShowCategory)
+        {
+            <div class="multiselect">
+                <div id="checkboxesC">
+                    @foreach (var item in ListCateg)
+                    {
+                        <div>
+                            <label for="@item.Code">
+                                <input type="checkbox" id="@item.Code" checked="@(item.Selected)" @onchange="@((e) => CheckboxChanged(e, item.Code))" /> @item.Label
+                            </label>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+    <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
+        <label>@Loc["Url1"]</label>
+        <input type="url" Class="form-control" @bind="Ad.Url1" />
+    </div>
+    <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
+        <label>@Loc["Url2"]</label>
+        <input type="url" Class="form-control" @bind="Ad.Url2" />
+    </div>
+    <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
+        <label>@Loc["Url3"]</label>
+        <input type="url" Class="form-control" @bind="Ad.Url3" />
+    </div>
+    <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
+        <label>@Loc["Url4"]</label>
+        <input type="url" Class="form-control" @bind="Ad.Url4" />
+    </div>
+    <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
+        <label>@Loc["Image1"]</label>
+        <MediaUploader Id="AssignImageUrl1" OnChange="AssignImageUrl1"></MediaUploader>
+    </div>
+    <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
+        <label>@Loc["Image2"]</label>
+        <MediaUploader Id="AssignImageUrl2" OnChange="AssignImageUrl2"></MediaUploader>
+    </div>
+    <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
+        <label>@Loc["Image3"]</label>
+        <MediaUploader Id="AssignImageUrl3" OnChange="AssignImageUrl3"></MediaUploader>
+    </div>
+    <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
+        <label>@Loc["Image4"]</label>
+        <MediaUploader Id="AssignImageUrl4" OnChange="AssignImageUrl4"></MediaUploader>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning" @onclick="@Close">@Loc["Cancel"]</button>
+        <button type="button" class="btn btn-success" @onclick="Update">@Loc["Update"]</button>
     </div>
 </section>

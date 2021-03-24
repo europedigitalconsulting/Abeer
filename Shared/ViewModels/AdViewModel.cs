@@ -44,6 +44,7 @@ namespace Abeer.Shared.ViewModels
         public string Country { get; set; }
         public  ViewApplicationUser Owner { get; set; }
         public  List<ListAdViewModel> OtherAds { get; set; }
+        public  List<Guid> ListIdCategory{ get; set; }
 
         public static implicit operator AdViewModel(AdModel model)
         {

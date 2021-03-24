@@ -15,7 +15,7 @@ namespace Abeer.UI_Ads
     public partial class CreateAd
     {
         public string Step { get; set; } = "Step1";
-        private AdModel Ad { get; set; } = new AdModel();
+        private AdViewModel Ad { get; set; } = new AdViewModel();
         private AdPrice CurrentPrice { get; set; } = new AdPrice();
         private List<AdPrice> AdPrices { get; set; } = new List<AdPrice>();
         private List<AdsFamilyViewModel> ListFamily { get; set; } = new List<AdsFamilyViewModel>();
@@ -88,7 +88,7 @@ namespace Abeer.UI_Ads
             if (!PublishHasError)
             {
                 var json = await response.Content.ReadAsStringAsync();
-                var Ad = JsonConvert.DeserializeObject<AdModel>(json);
+                var Ad = JsonConvert.DeserializeObject<AdViewModel>(json);
                 NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri($"/ads/ValidAd/{Ad.Id}").ToString(), true);
             }
 
@@ -114,7 +114,7 @@ namespace Abeer.UI_Ads
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
-                Ad = JsonConvert.DeserializeObject<AdModel>(json);
+                Ad = JsonConvert.DeserializeObject<AdViewModel>(json);
                 NavigationManager.NavigateTo($"/payment/{methodPayment}/{Ad.OrderNumber}");
             }
         }

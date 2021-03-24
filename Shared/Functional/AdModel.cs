@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Abeer.Shared.ViewModels;
+using AutoMapper;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -38,6 +40,6 @@ namespace Abeer.Shared.Functional
         public Guid AdPriceId { get; set; }
         [ForeignKey(nameof(AdPriceId))]
         public AdPrice AdPrice { get; set; }
-        public  string Country { get; set; }
+        public string Country { get; set; } 
     }
 }

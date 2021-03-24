@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 using static Abeer.Services.TemplateRenderManager;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.WebUtilities;
+using AutoMapper;
 
 namespace Abeer.Server.Controllers
 {
@@ -41,7 +42,7 @@ namespace Abeer.Server.Controllers
 
         private readonly Random rdm = new Random();
         public AdsController(AdsUnitOfWork adsUnitOfWork, FunctionalUnitOfWork functionalUnitOfWork, UserManager<ApplicationUser> userManager,
-            EventTrackingService eventTrackingService, NotificationService notificationService, 
+            EventTrackingService eventTrackingService, NotificationService notificationService,
             IConfiguration configuration, UrlShortner urlShortner, IServiceProvider serviceProvider, IWebHostEnvironment env, IEmailSenderService emailSender)
         {
             this.functionalUnitOfWork = functionalUnitOfWork;
@@ -66,7 +67,6 @@ namespace Abeer.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AdModel>>> List()
         {
-            var fff = await functionalUnitOfWork.AdRepository.GetAll(true);
             return Ok(await functionalUnitOfWork.AdRepository.GetAll(true));
         }
 
@@ -74,7 +74,7 @@ namespace Abeer.Server.Controllers
         public async Task<ActionResult<IEnumerable<AdModel>>> NotValid()
         {
             var viewApplicationUser = (ViewApplicationUser)User;
-    
+
             if (viewApplicationUser.IsAdmin)
                 return Ok(await functionalUnitOfWork.AdRepository.GetAll(false));
             else
@@ -163,7 +163,7 @@ namespace Abeer.Server.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var ad = createAdRequestViewModel.Ad;
+            var ad =(AdModel)createAdRequestViewModel.Ad;
             var applicationUser = (ViewApplicationUser)User;
 
             if (createAdRequestViewModel.Price != null)
@@ -172,7 +172,7 @@ namespace Abeer.Server.Controllers
 
                 Subscription subscription = null;
                 SubscriptionPack pack = null;
-                
+
                 int delayToDisplay = 0;
                 int displayDuration = 0;
 
@@ -187,7 +187,7 @@ namespace Abeer.Server.Controllers
                 else if (!applicationUser.IsUnlimited)
                 {
                     subscription = await functionalUnitOfWork.SubscriptionRepository.GetLatestSubscriptionForUser(User.NameIdentifier());
-                    
+
                     if (subscription != null)
                         pack = await functionalUnitOfWork.SubscriptionPackRepository.FirstOrDefault(p => p.Id == subscription.SubscriptionPackId);
 
@@ -231,7 +231,7 @@ namespace Abeer.Server.Controllers
 
             await functionalUnitOfWork.AdRepository.Add(ad);
             var entity = await functionalUnitOfWork.AdRepository.FirstOrDefault(a => a.Id == ad.Id);
-            
+
             await _eventTrackingService.Create(applicationUser.Id, "Ad", "create");
 
             return Ok(entity);
@@ -283,12 +283,12 @@ namespace Abeer.Server.Controllers
 
             var message = GenerateHtmlTemplate(_serviceProvider, _env.WebRootPath, "valid-ad", parameters);
             var user = await _userManager.FindByIdAsync(adModel.OwnerId);
-            
+
             await _emailSender.SendEmailAsync(user.Email, adModel.Title, message);
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(AdModel ad)
+        public async Task<IActionResult> Update(AdViewModel ad)
         {
             var model = await functionalUnitOfWork.AdRepository.FirstOrDefault(m => m.Id == ad.Id);
 
@@ -305,7 +305,10 @@ namespace Abeer.Server.Controllers
             model.Url3 = ad.Url3;
             model.Url4 = ad.Url4;
 
-            functionalUnitOfWork.SaveChanges();
+            await functionalUnitOfWork.AdRepository.Update(model);
+
+            await _adsUnitOfWork.CategoryAdRepository.Add(ad.ListIdCategory, ad.Id);
+
             return Ok();
         }
 
@@ -313,6 +316,7 @@ namespace Abeer.Server.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             await functionalUnitOfWork.AdRepository.Delete(id);
+            await _adsUnitOfWork.CategoryAdRepository.Remove(id);
             return Ok();
         }
 
@@ -359,7 +363,7 @@ namespace Abeer.Server.Controllers
                 return BadRequest();
 
             var userId = User.NameIdentifier();
-            var eventTrackings = (await _eventTrackingService.Where(e=>e.Category == "ViewAd" && e.Key == id)).ToList();
+            var eventTrackings = (await _eventTrackingService.Where(e => e.Category == "ViewAd" && e.Key == id)).ToList();
 
             var groups = eventTrackings.GroupBy(info => info.CreatedDate.Date)
                     .Select(group => new
@@ -382,7 +386,7 @@ namespace Abeer.Server.Controllers
             var userId = User.NameIdentifier();
             var socialNetworks = await functionalUnitOfWork.SocialNetworkRepository.GetSocialNetworkLinks(userId);
 
-            var eventTrackings = (await _eventTrackingService.Where(e=>e.Category == "ViewAd" && e.Key == id)).ToList();
+            var eventTrackings = (await _eventTrackingService.Where(e => e.Category == "ViewAd" && e.Key == id)).ToList();
 
             var groups = eventTrackings.GroupBy(info => info.CreatedDate.Date)
                     .Select(group => new
