@@ -1,0 +1,136 @@
+﻿@page
+@model Abeer.Server.Pages._HostModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no" />
+    <title>@(!string.IsNullOrEmpty(Model.PageTitle) ? Model.PageTitle : "::MEETAG.CO::")</title>
+    <base href="/" />
+    @if (Model.IsPageIndexed)
+    {
+        <meta property="og:type" content="@Model.PageType" />
+        <meta property="og:title" content="@Model.PageTitle" />
+        <meta property="og:url" content="@Model.FullUrl" />
+
+        @if (!string.IsNullOrEmpty(Model.PageImage))
+        {
+            <meta property="og:image" content="@Model.PageImage">
+            <meta property="og:image:height" content="384" />
+            <meta property="og:image:width" content="384" />
+        }
+
+        <meta property="og:site_name" content="@Model.SiteName" />
+        <meta property="og:description" content="@Model.PageDescription" />
+        <meta name="twitter:site" content="@Model.SiteName" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:description" content="@Model.PageDescription" />
+        <meta name="twitter:title" content="@Model.PageTitle" />
+
+        if (!string.IsNullOrEmpty(Model.CreateBy))
+        {
+            <meta name="twitter:label1" content="Created by">
+            <meta name="twitter:data1" content="@Model.CreateBy">
+        }
+        <meta name="description" content="@Model.PageDescription" />
+    }
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/bootstrap-social/bootstrap-social.css">
+    <link href="css/fontawesome/css/all.css" rel="stylesheet" />
+    <link href="vendors/jquery-ui-dist/jquery-ui.min.css" rel="stylesheet" />
+    <link href="vendors/jqvmap/dist/jqvmap.min.css" rel="stylesheet" />
+    <link href="vendors/owl.carousel/dist/assets/owl.carousel.min.css" rel="stylesheet" />
+    <link href="vendors/owl.carousel/dist/assets/owl.theme.default.min.css" rel="stylesheet" />
+    <link href="vendors/summernote/dist/summernote-bs4.css" rel="stylesheet" />
+    <link href="vendors/chocolat/dist/css/chocolat.css" rel="stylesheet" />
+
+    <link href="css/app.css" rel="stylesheet" />
+    <link href="css/components.css" rel="stylesheet" />
+    <link href="css/custom.css" rel="stylesheet" />
+    <link href="css/Message.css" rel="stylesheet" />
+    <link href="manifest.json" rel="manifest" />
+    <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
+</head>
+
+<body>
+    <app>
+        <div class="loader">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <link href="css/loading.css" rel="stylesheet" />
+    </app>
+
+    <div id="blazor-error-ui">
+        An unhandled error has occurred.
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+    <!--package nuget-->
+    <script src="_content/BlazorAnimate/blazorAnimateInterop.js"></script>
+    <script src="_content/BlazorInputFile/inputfile.js"></script>
+
+    <!--blazor scripts-->
+    <script src="_content/Microsoft.AspNetCore.Components.WebAssembly.Authentication/AuthenticationService.js"></script>
+    <script src="_framework/blazor.webassembly.js"></script>
+
+    <!--blazor analytics-->
+    <script src="_content/Blazor-Analytics/blazor-analytics.js"></script>
+
+    <!-- General JS Scripts -->
+    <script src="vendors/jquery/dist/jquery.min.js"></script>
+    <script src="vendors/jquery-ui-dist/jquery-ui.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="vendors/jquery.nicescroll/dist/jquery.nicescroll.min.js"></script>
+
+    <!-- JS Libraies -->
+    <script src="vendors/jquery-sparkline/jquery.sparkline.min.js"></script>
+    <script src="vendors/jqvmap/dist/jquery.vmap.min.js"></script>
+    <script src="vendors/owl.carousel/dist/owl.carousel.min.js"></script>
+    <script src="vendors/summernote/dist/summernote-bs4.min.js"></script>
+    <script src="vendors/chocolat/dist/js/jquery.chocolat.min.js"></script>
+
+    <!-- chart js-->
+    <script src="vendors/moment/moment-with-locales.min.js" type="text/javascript" language="javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+    <!-- This is the glue between Blazor and Chart.js -->
+    <script src="_content/ChartJs.Blazor.Fork/ChartJsBlazorInterop.js"></script>
+
+    <!--application-->
+    <script src="js/app.js"></script>
+    <script src="js/scripts.js"></script>
+    <script src="js/custom.js"></script>
+    <script src="js/helper.js"></script>
+
+    <!--service-worker-->
+    <script>navigator.serviceWorker.register('service-worker.js');</script>
+
+    <script>
+        window.scrollToElementId = (elementId) => {
+            /*console.info('scrolling to element', elementId);*/
+            var element = document.getElementById(elementId);
+            if (!element) {
+                /*                console.warn('element was not found', elementId);*/
+                return;
+            }
+            /*console.info('Height to element', element.scrollHeight);*/
+            element.scrollTop = element.scrollHeight;
+            //document.getElementById("msg_card_body").scrollTop = 590
+        }
+    </script>
+</body>
+
+</html>
+

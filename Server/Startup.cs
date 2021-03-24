@@ -296,11 +296,12 @@ namespace Abeer.Server
             {
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
-                endpoints.MapFallbackToFile("index.html");
                 endpoints.MapHub<SynchroHub>("/synchro");
                 endpoints.MapHub<NotificationHub>("/notification");
+                endpoints.MapFallbackToPage("/_Host");
             });
         }
+
         private void InitializeModuleProvider(IServiceScope scope, IWebHostEnvironment env)
         {
             var x = scope.ServiceProvider.GetRequiredService<IDbProviderFactory>(); 
