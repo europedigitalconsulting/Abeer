@@ -30,7 +30,12 @@ namespace Abeer.Client.Pages
 
             if (User.Identity.IsAuthenticated)
             {
-                var response = await httpClient.GetAsync($"api/Profile/GetUserProfileNoDetail?userId={User.FindFirstValue(ClaimTypes.NameIdentifier)}");
+                var profile = (ViewApplicationUser)User;
+                
+                var url = $"api/Profile/GetUserProfileNoDetail/{profile.Id}";
+                Console.WriteLine($"get profile {url}");
+
+                var response = await httpClient.GetAsync($"api/Profile/GetUserProfileNoDetail/{profile.Id}");
 
                 if (response.IsSuccessStatusCode)
                 {

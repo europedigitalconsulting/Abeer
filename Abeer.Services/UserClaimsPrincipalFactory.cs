@@ -28,10 +28,14 @@ namespace Abeer.Services
             if (!user.IsAdmin && !user.IsUnlimited)
             {
                 var subscription = await _functionalUnitOfWork.SubscriptionRepository.GetLatestSubscriptionForUser(user.Id);
-                var pack = await _functionalUnitOfWork.SubscriptionPackRepository.FirstOrDefault(s => s.Id == subscription.SubscriptionPackId);
 
-                if (subscription != null)
-                    identity.AddClaim(ClaimNames.Subscription, pack.Label.ToLower());
+                if (subscription != null && subscription.SubscriptionPackId != Guid.Empty)
+                {
+                    var pack = await _functionalUnitOfWork.SubscriptionPackRepository.FirstOrDefault(s => s.Id == subscription.SubscriptionPackId);
+
+                    if (subscription != null)
+                        identity.AddClaim(ClaimNames.Subscription, pack.Label.ToLower());
+                }
             }
 
 

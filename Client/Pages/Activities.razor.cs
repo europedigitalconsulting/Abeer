@@ -111,7 +111,7 @@ namespace Abeer.Client.Pages
 
             if (User.Identity.IsAuthenticated)
             {
-                var response = await httpClient.GetAsync($"api/Profile/GetUserProfileNoDetail?userId={User.FindFirstValue(ClaimTypes.NameIdentifier)}");
+                var response = await httpClient.GetAsync($"api/Profile/GetUserProfileNoDetail/{User.FindFirstValue(ClaimTypes.NameIdentifier)}");
 
                 if (response.IsSuccessStatusCode)
                 {

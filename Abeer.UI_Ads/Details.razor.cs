@@ -22,23 +22,22 @@ namespace Abeer.UI_Ads
         public  string Id { get; set; }
         [Inject] private HttpClient HttpClient { get; set; }
         [Inject] NavigationManager Navigation { get; set; }
+        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
+        public AuthenticationState AuthenticateSate { get; set; }
+        public ViewApplicationUser User { get; set; } = new ViewApplicationUser();
 
         private AdViewModel Ad { get; set; }
 
         public int CurrentImageIndex { get; set; } = 0;
         public ViewApplicationUser Author { get; set; }
-        public ViewApplicationUser User { get; set; }
-
-        [CascadingParameter]
-        private Task<AuthenticationState> authenticationStateTask { get; set; }
         private bool DisplayModalQrCode;
 
         protected override async Task OnInitializedAsync()
         {
-            var authState = await authenticationStateTask;
-    
-            if(authState.User.Identity.IsAuthenticated)
-                User = authState.User;
+            AuthenticateSate = await authenticationStateTask;
+
+            if (AuthenticateSate.User.Identity.IsAuthenticated)
+                User = AuthenticateSate.User;
 
             var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
 
@@ -57,6 +56,10 @@ namespace Abeer.UI_Ads
             Author = Ad.Owner;
 
             await base.OnInitializedAsync();
+        }
+        public async Task GoToProfilAd()
+        {
+            NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri($"/viewprofile/{Ad.OwnerId}").ToString(), true);
         }
     }
 }

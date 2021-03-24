@@ -20,12 +20,12 @@ namespace Abeer.Ads.ApiFeatures
         }
 
         [HttpGet("data")]
-        public async Task<ActionResult<string>> EchoWithData([FromServices] AdsUnitOfWork consumableUnitOfWork)
+        public async Task<ActionResult<string>> EchoWithData([FromServices] AdsUnitOfWork adsUnitOfWork)
         {
             var watcher = new Stopwatch();
             watcher.Start();
 
-            var families = await consumableUnitOfWork.FamiliesRepository.GetAll();
+            var families = await adsUnitOfWork.FamiliesRepository.GetAll();
             
             return Ok(
                 $"echo from module Ads with data - Date {DateTime.UtcNow} - nb of families {families.Count} getted in {watcher.Elapsed}");

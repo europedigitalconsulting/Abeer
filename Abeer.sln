@@ -64,6 +64,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abeer.Ads.Data", "Abeer.BO_
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abeer.DataFileReader", "Abeer.DataFileReader\Abeer.DataFileReader.csproj", "{986679A9-CEFD-4344-B460-430A9B9FCA51}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abeer.Ads.Shared", "Abeer.BO_Ads.Shared\Abeer.Ads.Shared.csproj", "{2AF89170-7594-41DA-8508-A3BE9CCE6A40}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -215,6 +217,12 @@ Global
 		{986679A9-CEFD-4344-B460-430A9B9FCA51}.Ghpages|Any CPU.Build.0 = Debug|Any CPU
 		{986679A9-CEFD-4344-B460-430A9B9FCA51}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{986679A9-CEFD-4344-B460-430A9B9FCA51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2AF89170-7594-41DA-8508-A3BE9CCE6A40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AF89170-7594-41DA-8508-A3BE9CCE6A40}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AF89170-7594-41DA-8508-A3BE9CCE6A40}.Ghpages|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AF89170-7594-41DA-8508-A3BE9CCE6A40}.Ghpages|Any CPU.Build.0 = Debug|Any CPU
+		{2AF89170-7594-41DA-8508-A3BE9CCE6A40}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AF89170-7594-41DA-8508-A3BE9CCE6A40}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -246,6 +254,7 @@ Global
 		{90C52614-6133-40F2-AF07-E06C4523F04A} = {DC83932F-DB48-4FE1-8C7E-7DD98B6ED383}
 		{A2A2A4C0-F2D4-4DBB-9E90-271AD79C2F35} = {DC83932F-DB48-4FE1-8C7E-7DD98B6ED383}
 		{986679A9-CEFD-4344-B460-430A9B9FCA51} = {85412552-6211-4957-AD24-9CCF55A0C988}
+		{2AF89170-7594-41DA-8508-A3BE9CCE6A40} = {DC83932F-DB48-4FE1-8C7E-7DD98B6ED383}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {53E6A249-9A9D-4939-B752-5470E5B85C7E}

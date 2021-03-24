@@ -353,3 +353,11 @@
     -webkit-animation: slide-in-elliptic-top-fwd 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
     animation: slide-in-elliptic-top-fwd 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
 }
+#ads .card { 
+    box-shadow: 0px 5px 5px 1px lightgrey;
+    background-color: #FAFAFA;
+    border-radius: 15px;
+    border: none;
+    position: relative;
+    margin-bottom: 30px; 
+}

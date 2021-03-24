@@ -20,7 +20,6 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace Abeer.Server.Controllers
 {
-    [Authorize(Policy = "OnlySubscribers")]
     [Route("api/[controller]")]
     [ApiController]
     public class ProfileController : ControllerBase
@@ -53,8 +52,8 @@ namespace Abeer.Server.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("GetUserProfileNoDetail")]
-        public async Task<ActionResult<ApplicationUser>> GetUserProfileNoDetail([FromQuery]string userId)
+        [HttpGet("GetUserProfileNoDetail/{userId}")]
+        public async Task<ActionResult<ApplicationUser>> GetUserProfileNoDetail(string userId)
         {
             if (string.IsNullOrEmpty(userId))
                 userId = User.NameIdentifier();

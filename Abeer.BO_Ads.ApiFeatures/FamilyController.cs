@@ -14,17 +14,17 @@ namespace Abeer.Ads.ApiFeatures
     [ApiController]
     public class FamiliesController : ControllerBase
     {
-        private readonly AdsUnitOfWork _consumableUnitOfWork;
+        private readonly AdsUnitOfWork _adsUnitOfWork;
 
-        public FamiliesController(AdsUnitOfWork consumableUnitOfWork)
+        public FamiliesController(AdsUnitOfWork adsUnitOfWork)
         {
-            _consumableUnitOfWork = consumableUnitOfWork;
+            _adsUnitOfWork = adsUnitOfWork;
         }
 
         [HttpGet]
         public async Task<ActionResult<IList<AdsFamilyViewModel>>> GetAll()
         {
-            var familyViewModels = await _consumableUnitOfWork.FamiliesRepository.GetAll();
+            var familyViewModels = await _adsUnitOfWork.FamiliesRepository.GetAll();
             return Ok(familyViewModels);
         }
 
@@ -48,7 +48,7 @@ namespace Abeer.Ads.ApiFeatures
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var entity = await _consumableUnitOfWork.FamiliesRepository.Add(familyView);
+            var entity = await _adsUnitOfWork.FamiliesRepository.Add(familyView);
 
             return Created($"{familyView.FamilyId}", familyView);
         }
@@ -71,28 +71,28 @@ namespace Abeer.Ads.ApiFeatures
                 }
             }
 
-            var vm = await _consumableUnitOfWork.FamiliesRepository.Update(familyView);
+            var vm = await _adsUnitOfWork.FamiliesRepository.Update(familyView);
 
             foreach (var attribute in familyView.Attributes)
             {
                 if (vm.Attributes.Any(a => a.FamilyAttributeId == attribute.FamilyAttributeId))
                 {
-                    await _consumableUnitOfWork.FamilyAttributesRepository.Update(attribute);
+                    await _adsUnitOfWork.FamilyAttributesRepository.Update(attribute);
                 }
                 else
                 {
-                    await _consumableUnitOfWork.FamilyAttributesRepository.Add(attribute);
+                    await _adsUnitOfWork.FamilyAttributesRepository.Add(attribute);
                 }
             }
 
-            var attributes = await _consumableUnitOfWork.FamilyAttributesRepository.GetByFamily(familyView.FamilyId);
+            var attributes = await _adsUnitOfWork.FamilyAttributesRepository.GetByFamily(familyView.FamilyId);
 
             foreach (var attribute in attributes.Except(familyView.Attributes, model => model.FamilyAttributeId))
             {
-                await _consumableUnitOfWork.FamilyAttributesRepository.Remove(attribute.FamilyAttributeId);
+                await _adsUnitOfWork.FamilyAttributesRepository.Remove(attribute.FamilyAttributeId);
             }
 
-            var result = await _consumableUnitOfWork.FamiliesRepository.Get(familyView.FamilyId);
+            var result = await _adsUnitOfWork.FamiliesRepository.Get(familyView.FamilyId);
 
             return Ok(result);
         }
@@ -100,21 +100,21 @@ namespace Abeer.Ads.ApiFeatures
         [HttpDelete("{id}")]
         public async Task<ActionResult<bool>> Delete(Guid id)
         {
-            await _consumableUnitOfWork.FamiliesRepository.Remove(id);
+            await _adsUnitOfWork.FamiliesRepository.Remove(id);
             return Ok();
         }
 
         [HttpDelete("RemoveAttributes/{id}")]
         public async Task<ActionResult<bool>> RemoveAttributes(Guid id)
         {
-            await _consumableUnitOfWork.FamilyAttributesRepository.Remove(id);
+            await _adsUnitOfWork.FamilyAttributesRepository.Remove(id);
             return Ok();
         }
 
         [HttpPost("AddAttributes")]
         public async Task<ActionResult<bool>> AddAttributes(AdsFamilyAttributeViewModel model)
         {
-            model = await _consumableUnitOfWork.FamilyAttributesRepository.Add(model);
+            model = await _adsUnitOfWork.FamilyAttributesRepository.Add(model);
             return Ok(model);
         }
     }

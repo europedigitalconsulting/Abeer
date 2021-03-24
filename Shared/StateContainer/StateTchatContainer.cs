@@ -45,8 +45,11 @@ namespace Abeer.Shared.StateContainer
         }
         public void SetMyContacts(List<ViewContact> value)
         {
-            MyContacts.AddRange(value);
-            NotifyStateChanged();
+            if (value != null && value.Count > 0)
+            {
+                MyContacts.AddRange(value);
+                NotifyStateChanged();
+            }
         }
         public List<Message> GetListMessage()
         {

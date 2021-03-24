@@ -13,9 +13,9 @@ namespace Abeer.Ads.Data
                     cfg.AddProfile<AutoMapping>();
                 }).CreateMapper();
 
-        public AdsUnitOfWork(AdsContext consumableContext)
+        public AdsUnitOfWork(AdsContext adsContext)
         {
-            AdsContext = consumableContext;
+            AdsContext = adsContext;
         }
 
         private IServiceProvider ServiceProvider { get; }

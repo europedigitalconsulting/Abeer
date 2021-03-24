@@ -17,24 +17,24 @@ namespace Abeer.Ads.ApiFeatures
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly AdsUnitOfWork _consumableUnitOfWork;
+        private readonly AdsUnitOfWork _adsUnitOfWork;
 
-        public CategoriesController(AdsUnitOfWork consumableUnitOfWork)
+        public CategoriesController(AdsUnitOfWork adsUnitOfWork)
         {
-            _consumableUnitOfWork = consumableUnitOfWork;
+            _adsUnitOfWork = adsUnitOfWork;
         }
         
         [HttpGet]
         public async Task<ActionResult<IList<AdsCategoryViewModel>>> Getall()
         {
-            var list = await _consumableUnitOfWork.CategoriesRepository.GetAll();
+            var list = await _adsUnitOfWork.CategoriesRepository.GetAll();
             return Ok(list.OrderBy(x => x.FamilyId));
         }
 
         [HttpGet("byfamily/{familyId}")]
         public async Task<ActionResult<IList<AdsCategoryViewModel>>> GetByFamily(Guid familyId)
         {
-            var list = await _consumableUnitOfWork.CategoriesRepository.GetByFamily(familyId);
+            var list = await _adsUnitOfWork.CategoriesRepository.GetByFamily(familyId);
             return Ok(list.OrderBy(x => x.FamilyId));
         }
 
@@ -43,7 +43,7 @@ namespace Abeer.Ads.ApiFeatures
         public async Task<ActionResult<IList<AdsCategoryViewModel>>> FilterByFamily(string familyId)
         {
             var familiesId = familyId.Split(';').Select(i => Guid.Parse(i)).ToList();
-            var list = await _consumableUnitOfWork.CategoriesRepository.FilterByFamilies(familiesId);
+            var list = await _adsUnitOfWork.CategoriesRepository.FilterByFamilies(familiesId);
             return Ok(list.OrderBy(x => x.FamilyId));
         }
 
@@ -53,7 +53,7 @@ namespace Abeer.Ads.ApiFeatures
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var inserted = await _consumableUnitOfWork.CategoriesRepository.Add(categoryView);
+            var inserted = await _adsUnitOfWork.CategoriesRepository.Add(categoryView);
             return Created($"{inserted.CategoryId}", inserted);
         }
 
@@ -66,7 +66,7 @@ namespace Abeer.Ads.ApiFeatures
             if (categoryView.CategoryId != id)
                 return BadRequest();
 
-            var entity = await _consumableUnitOfWork.CategoriesRepository.Update(categoryView);
+            var entity = await _adsUnitOfWork.CategoriesRepository.Update(categoryView);
 
             return Ok(categoryView);
         }
@@ -74,7 +74,7 @@ namespace Abeer.Ads.ApiFeatures
         [HttpDelete("{id}")]
         public async Task<ActionResult<bool>> Delete(Guid id)
         {
-            await _consumableUnitOfWork.CategoriesRepository.Remove(id);
+            await _adsUnitOfWork.CategoriesRepository.Remove(id);
             return Ok();
         }
 
@@ -98,8 +98,8 @@ namespace Abeer.Ads.ApiFeatures
                 ImportSubCategories(models, xmlReader);
             }
 
-            // await _consumableUnitOfWork.CategoriesRepository.Clear();
-            // await _consumableUnitOfWork.CategoriesRepository.BulkInsertAsync(models);
+            // await _adsUnitOfWork.CategoriesRepository.Clear();
+            // await _adsUnitOfWork.CategoriesRepository.BulkInsertAsync(models);
         }
 
         private void ImportSubCategories(IList<AdsCategoryViewModel> models, XmlReader<AdsCategoryViewModel> xmlReader)

@@ -18,13 +18,13 @@ namespace Abeer.Ads.ApiFeatures
     [ApiController]
     public class ImportController : ControllerBase
     {
-        private readonly AdsUnitOfWork _consumableUnitOfWork;
+        private readonly AdsUnitOfWork _adsUnitOfWork;
         private readonly ILogger<ImportController> _logger;
         private readonly IServiceProvider _serviceProvider;
 
         public ImportController(AdsUnitOfWork referentialUnitOfWork, ILogger<ImportController> logger, IServiceProvider serviceProvider)
         {
-            _consumableUnitOfWork = referentialUnitOfWork;
+            _adsUnitOfWork = referentialUnitOfWork;
             _logger = logger;
             _serviceProvider = serviceProvider;
         }
@@ -125,7 +125,7 @@ namespace Abeer.Ads.ApiFeatures
 
             var family = await ImportFamily(item, importResult);
 
-            var current = await _consumableUnitOfWork.
+            var current = await _adsUnitOfWork.
                 CategoriesRepository.Get(categoryId);
 
             if (current == null)
@@ -145,7 +145,7 @@ namespace Abeer.Ads.ApiFeatures
                 };
 
                 importResult.CategoriesAdded += 1;
-                await _consumableUnitOfWork.CategoriesRepository.Add(current);
+                await _adsUnitOfWork.CategoriesRepository.Add(current);
             }
             else if (item.Type.Equals("category", StringComparison.OrdinalIgnoreCase))
             {
@@ -161,7 +161,7 @@ namespace Abeer.Ads.ApiFeatures
                 current.PictureUrl = item.PictureUrl;
 
                 importResult.CategoriesUpdated += 1;
-                await _consumableUnitOfWork.CategoriesRepository.Update(current);
+                await _adsUnitOfWork.CategoriesRepository.Update(current);
             }
 
             return current;
@@ -175,7 +175,7 @@ namespace Abeer.Ads.ApiFeatures
             if (!Guid.TryParse(item.FamilyId, out var familyId))
                 _logger.LogWarning($"ParentId:{item.FamilyId} is not a guid");
 
-            var attributes = await _consumableUnitOfWork
+            var attributes = await _adsUnitOfWork
                 .FamilyAttributesRepository
                 .GetByFamily(familyId);
 
@@ -196,7 +196,7 @@ namespace Abeer.Ads.ApiFeatures
                     Type = item.AttributeType
                 };
 
-                await _consumableUnitOfWork.FamilyAttributesRepository.Add(current);
+                await _adsUnitOfWork.FamilyAttributesRepository.Add(current);
             }
             else if (item.Type.Equals("category", StringComparison.OrdinalIgnoreCase))
             {
@@ -208,7 +208,7 @@ namespace Abeer.Ads.ApiFeatures
                 current.IsSearchable = bool.Parse(item.IsSearchable);
                 current.Type = item.AttributeType;
 
-                await _consumableUnitOfWork.FamilyAttributesRepository.Update(current);
+                await _adsUnitOfWork.FamilyAttributesRepository.Update(current);
             }
         }
 
@@ -217,7 +217,7 @@ namespace Abeer.Ads.ApiFeatures
             if (!Guid.TryParse(item.FamilyId, out var familyId))
                 _logger.LogWarning($"ParentId:{item.FamilyId} is not a guid");
 
-            var current = await _consumableUnitOfWork.FamiliesRepository.Get(familyId);
+            var current = await _adsUnitOfWork.FamiliesRepository.Get(familyId);
 
             if (current == null)
             {
@@ -239,7 +239,7 @@ namespace Abeer.Ads.ApiFeatures
                 };
 
                 importResult.FamiliesAdded += 1;
-                await _consumableUnitOfWork.FamiliesRepository.Add(current);
+                await _adsUnitOfWork.FamiliesRepository.Add(current);
             }
             else if (item.Type.Equals("family", StringComparison.OrdinalIgnoreCase))
             {
@@ -310,7 +310,7 @@ namespace Abeer.Ads.ApiFeatures
                 if (hasChanged)
                 {
                     importResult.FamiliesUpdated += 1;
-                    await _consumableUnitOfWork.FamiliesRepository.Update(current);
+                    await _adsUnitOfWork.FamiliesRepository.Update(current);
                 }
             }
 

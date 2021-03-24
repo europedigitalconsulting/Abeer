@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using Abeer.Ads.Shared;
 using Abeer.Shared.Functional;
 using Abeer.Shared.ViewModels;
 using Microsoft.AspNetCore.Components;
@@ -16,6 +18,7 @@ namespace Abeer.UI_Ads
         private AdModel Ad { get; set; } = new AdModel();
         private AdPrice CurrentPrice { get; set; } = new AdPrice();
         private List<AdPrice> AdPrices { get; set; } = new List<AdPrice>();
+        private List<AdsFamilyViewModel> ListFamily { get; set; } = new List<AdsFamilyViewModel>();
         private bool PublishHasError { get; set; }
         private AdPaymentOption AdPaymentOption { get; set; }
 
@@ -28,14 +31,20 @@ namespace Abeer.UI_Ads
         {
             AuthenticateSate = await authenticationStateTask;
 
+            var getListFamily = await HttpClient.GetAsync("/api/ads/ListFamily");
+            getListFamily.EnsureSuccessStatusCode();
+            var json = await getListFamily.Content.ReadAsStringAsync();
+            ListFamily = JsonConvert.DeserializeObject<List<AdsFamilyViewModel>>(json);
+
             var getAll = await HttpClient.GetAsync("/api/AdPrice/GetFeature");
             
             if (getAll.IsSuccessStatusCode)
             {
-                var json = await getAll.Content.ReadAsStringAsync();
+                 json = await getAll.Content.ReadAsStringAsync();
                 AdPaymentOption = JsonConvert.DeserializeObject<AdPaymentOption>(json);
             }
 
+            await InvokeAsync(StateHasChanged);
             await base.OnInitializedAsync();
         }
 

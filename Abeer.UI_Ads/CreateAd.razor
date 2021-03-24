@@ -37,6 +37,14 @@
                             <option value="EURO">@Loc["EURO"]</option>
                         </select>
                     </div>
+                    @*<div class="form-group form-group col-lg-6 col-md-6 col-sm-6">
+                        <label>@Loc["Family"]</label>
+                        <select >
+                            <Virtualize Context="Family" Items="ListFamily">
+                                <option value="@Family.FamilyId">@Family.Label</option>
+                            </Virtualize>
+                        </select>
+                    </div>*@
                     <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
                         <label>@Loc["Url1"]</label>
                         <input type="url" Class="form-control" @bind="Ad.Url1" />

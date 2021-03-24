@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <PackageReference Include="ChartJs.Blazor.Fork" Version="2.0.2" />
+    <PackageReference Include="BlazorStrap" Version="1.5.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="5.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
@@ -24,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Abeer.BO_Ads.Shared\Abeer.Ads.Shared.csproj" />
     <ProjectReference Include="..\Abeer.Client.UISdk\Abeer.Client.UISdk.csproj" />
     <ProjectReference Include="..\Features\CryptoCoinPayment\Cryptocoin.Payment.csproj" />
     <ProjectReference Include="..\Shared\Abeer.Shared.csproj" />

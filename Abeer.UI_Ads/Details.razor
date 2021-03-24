@@ -1,7 +1,5 @@
 ﻿@page "/ads/details/{id}"
-@using Abeer.Shared.Functional
-@using Abeer.Client.UISdk.Shared
-@using Microsoft.AspNetCore.Components.Web
+
 @using Abeer.UI_Ads.Components
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Details> Loc
@@ -29,84 +27,92 @@
 
 @if (Ad != null)
 {
-    <section class="section">
-        <div class="section-header">
-            <h1>@Ad.Title</h1>
-            <button class="btn btn-outline-success" @onclick="@(()=>NavigationManager.NavigateTo("/ads/list", true))">@Loc["ReturnList"]</button>
-        </div>
-        <div class="section-header">
-            @if (Ad.OtherAds != null)
-            {
-                <div class="input-group">
-                    @foreach (var ad in Ad.OtherAds)
-                    {
-                        <div class="col-3">
-                            <a href="@($"/ads/details/{ad.Id}")" target="_blank">
-                                <div class="card">
-                                    <div class="card-header"><h5>@ad.Title</h5></div>
-                                    <div class="card-body">
-                                        <img class="card-img" src="@ad.ImageUrl1" />
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    }
-                </div>
-            }
-        </div>
-        <div class="section-body">
-            <div class="container">
-                <div class="card">
-                    <div class="container-fliud">
-                        <div class="wrapper row">
-                            <div class="preview col-md-6">
-                                @if (list.Any())
-                                {
-                                    <div class="preview-pic tab-content">
-                                        @for (var i = 0; i < list.Count; i++)
-                                        {
-                                            <div class="tab-pane @(CurrentImageIndex == i ? "active" : "")" id="pic-@(i + 1)"><img src="@list[i]" style="max-width: 350px; max-height: 180px" /></div>
-                                        }
-                                    </div>
-                                    <ul class="preview-thumbnail nav nav-tabs">
-                                        @for (var i = 0; i < list.Count; i++)
-                                        {
-                                            <li class="@(CurrentImageIndex == i ? "active" : "")">
-                                                <a data-target="#pic-@(i + 1)" data-toggle="tab" @onclick="@(()=>CurrentImageIndex = i)">
-                                                    <img src="@list[i]" style="max-width: 90px; max-height:90px" />
-                                                </a>
-                                            </li>
-                                        }
-                                    </ul>
-                                }
+    <div class="card col-12">
+        <span class="pt-5" @onclick="@(()=>NavigationManager.NavigateTo("/ads/MyAds"))">
+            <i style="font-size:25px" class="fas fa-arrow-left"></i>
+        </span>
+        <div style="line-height: 60px;" class="row p-3 pt-0">
+            <div class="col-8 pt-2">
+                <h4 style="color:black;font-size:18px;font-weight:600;">
+                    @Ad.Title <span class="badge badge-primary">@Ad.ViewCount</span>
+                </h4>
+            </div>
+            <div class="col-4 m-0 p-0 text-right">
 
-                            </div>
-                            <div class="details col-md-6">
-                                <h3 class="product-title">@Ad.Title</h3>
-                                <div class="rating">
-                                    <span class="review-no">@Ad.ViewCount @Loc["reviews"]</span>
-                                </div>
-                                <p class="product-description">@Ad.Description.</p>
-                                <h4 class="price">@Loc["currentprice"]: <span>@Ad.Price @Ad.Currency</span></h4>
-                                <Abeer.Client.UISdk.SocialShareLinks Text="@Loc["ShareText", Ad.Title]" Content="@Ad.Description" Source="@Loc["ShareSource"]" TargetUrl="@NavigationManager.ToAbsoluteUri($"/ad/details/{Ad.Id}").ToString()" Title="@Loc["ShareTitle", Ad.Title]" Loc="Loc"></Abeer.Client.UISdk.SocialShareLinks>
-                                @if (Author != null && Author.Id == User?.Id)
-                                {
-                                    <button class="btn btn-primary" @onclick="@(()=>NavigationManager.NavigateTo($"/ads/activities/{Ad.Id}", true))"><i class="fas fa-chart-line"></i></button>
-
-                                    if (Author.IsUtlimate || Author.IsAdmin || Author.IsUnlimited)
-                                    {
-                                        <button class="btn btn-secondary" @onclick="@(()=>DisplayModalQrCode=true)"><i class="fas fa-qrcode"></i></button>
-                                    }
-                                }
-                                <hr />
-                                <CardAuthor Author="@Ad.Owner" Loc="@Loc"></CardAuthor>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <span style="color:lightgray">Il y'a @((int)((DateTime.Now- Ad.ValidateDate).TotalDays)) jour(s)</span>
             </div>
         </div>
-    </section>
+        <div class="card-body">
+            <div class="col-12 mb-2">
+                <div class="gallery gallery-md">
+                    @if (!string.IsNullOrEmpty(Ad.ImageUrl1))
+                    {
+                        <img class="col-12" src="@Ad.ImageUrl1" />
+                    }
+                    @if (!string.IsNullOrEmpty(Ad.ImageUrl2))
+                    {
+                        <img class="col-12" src="@Ad.ImageUrl2" />
+                    }
+                    @if (!string.IsNullOrEmpty(Ad.ImageUrl3))
+                    {
+                        <img class="col-12" src="@Ad.ImageUrl3" />
+                    }
+                    @if (!string.IsNullOrEmpty(Ad.ImageUrl4))
+                    {
+                        <img class="col-12" src="@Ad.ImageUrl4" />
+                    }
+                </div>
+            </div>
+            <div class="row pt-3 mb-2">
+                <div class="col-6 text-dark"><h6>@User.DisplayName</h6></div>
+                <div style="color:#F27F63" class="col-6 text-right"><h6>@Ad.Price @Ad.Currency</h6></div>
+            </div>
+            <p class="mb-2 " style="font-weight: 300;">
+                @Ad.Description
+            </p>
+            <div class="row col-12">
+                @if (!string.IsNullOrEmpty(Ad.Url1))
+                {
+                    <a href="@Ad.Url1" class="mr-2">@Ad.Url1</a>
+                }
+                @if (!string.IsNullOrEmpty(Ad.Url2))
+                {
+                    <a href="@Ad.Url2" class="mr-2">@Ad.Url2</a>
+                }
+                @if (!string.IsNullOrEmpty(Ad.Url3))
+                {
+                    <a href="@Ad.Url3" class="mr-2">@Ad.Url3</a>
+                }
+                @if (!string.IsNullOrEmpty(Ad.Url4))
+                {
+                    <a href="@Ad.Url4" class="mr-2">@Ad.Url4</a>
+                }
+            </div>
+
+            @if (!Ad.IsValid && User.IsAdmin)
+            {
+                <a href="/ads/ValidAd/@Ad.Id" class="btn btn-primary"><i class="fas fa-check-square"></i>@Loc["ValidAd"]</a>
+            }
+
+            <div class="row ">
+                <button style="background:#F28064;color:white;font-weight:300; font-size: 15px;" class="py-2 btn btn-xl col-12 mb-2">Prendre Contact</button>
+            </div>
+            <div class="row">
+                <button style="background:#1478D9;color:white;font-weight:300;" class="py-2 btn btn-xl col-6">Ses Annonces</button>
+                <button style="background:#1FBF8A;color:white;font-weight:300;" class="py-2 btn btn-xl col-6" @onclick="GoToProfilAd">Afficher son profil</button>
+                <Abeer.Client.UISdk.SocialShareLinks Text="@Loc["ShareText", Ad.Title]" Content="@Ad.Description" Source="@Loc["ShareSource"]" TargetUrl="@NavigationManager.ToAbsoluteUri($"/ad/details/{Ad.Id}").ToString()" Title="@Loc["ShareTitle", Ad.Title]" Loc="Loc"></Abeer.Client.UISdk.SocialShareLinks>
+                @if (Author != null && Author.Id == User?.Id)
+                {
+                    <button class="btn btn-primary" @onclick="@(()=>NavigationManager.NavigateTo($"/ads/activities/{Ad.Id}", true))"><i class="fas fa-chart-line"></i></button>
+
+                    if (Author.IsUtlimate || Author.IsAdmin || Author.IsUnlimited)
+                    {
+                        <button class="btn btn-secondary" @onclick="@(()=>DisplayModalQrCode=true)"><i class="fas fa-qrcode"></i></button>
+                    }
+                }
+            </div>
+        </div>
+    </div>
 }
 @if (DisplayModalQrCode)
 {
@@ -115,13 +121,18 @@
             <div class="modal-content" style="border-radius: 0px !important; height: 120%;border-radius:500px;">
                 <div id="background" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: white; filter: blur(3px); z-index: 99; "></div>
                 <div class="modal-body" style="display: flex;justify-content: center; align-items: center;">
-                    <div class="text-center" style="background-color: #1FBF8A; color: white; width: calc(80vw); height: calc(80vw); margin-left: auto; margin-right: auto; border-radius: 50%;  display: flex;justify-content: center; align-items: center;z-index: 999">
+                    <div class="text-center" style="background-color: #1FBF8A; color: white; width: calc(80vw); height: calc(80vw); margin-left: auto; margin-right: auto; border-radius: 50%;  display: flex;justify-content: center;
+  align-items: center;z-index: 999">
                         <div>
                             <div class="pb-3">
-                                <img alt="qrcode" src="/api/QrCodeGenerator?link=@Navigation.ToAbsoluteUri(Navigation.Uri).ToString()" width="160" />
+                                <img alt="qrcode" src="/api/QrCodeGenerator?link=@(Navigation.ToAbsoluteUri(Navigation.Uri))" width="160" />
+                            </div>
+                            <div>
+                                <span class="pb-2" style="font-size:18px">@Ad.Title</span>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>

@@ -120,6 +120,9 @@
   <data name="AdTitle" xml:space="preserve">
     <value>Titre</value>
   </data>
+  <data name="AreYouSureDelete" xml:space="preserve">
+    <value>Etes-vous sûr de vouloir supprimer cette annonce ?</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Annuler</value>
   </data>
@@ -154,7 +157,7 @@
     <value>Résumé</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Mes annonces</value>
+    <value>Annonces</value>
   </data>
   <data name="Update" xml:space="preserve">
     <value>Modifier</value>

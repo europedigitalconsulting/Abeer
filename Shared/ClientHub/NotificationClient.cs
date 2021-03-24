@@ -117,7 +117,7 @@ namespace Abeer.Shared.ClientHub
                         break;
                     case "add-contact":
                         await _hubConnection.SendAsync("InvokeAddContact", item, userId);
-                        break;
+                        break; 
                     default:
                         break;
                 }
