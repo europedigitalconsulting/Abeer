@@ -108,6 +108,8 @@
                     if (Author.IsUtlimate || Author.IsAdmin || Author.IsUnlimited)
                     {
                         <button class="btn btn-secondary" @onclick="@(()=>DisplayModalQrCode=true)"><i class="fas fa-qrcode"></i></button>
+                        <a href="@($"/api/sitemap/{Author.Id}")" target="_blank"><i class="fas fa-sitemap"></i></a>
+                        <a href="@($"/api/rss/{Author.Id}")" target="_blank"><i class="fas fa-rss-square"></i></a>
                     }
                 }
             </div>

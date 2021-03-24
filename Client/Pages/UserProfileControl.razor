@@ -210,6 +210,19 @@
                                                 @Loc["TitleOpenQrCode"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-qrcode"></i></span>
                                             </li>
                                         }
+                                        @if (Profile.IsUtlimate || Profile.IsAdmin || Profile.IsUnlimited)
+                                        {
+                                            <li class="menu-profile">
+                                                <a href="@($"/api/sitemap/{Profile.Id}")" target="_blank">
+                                                    @Loc["SiteMap"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-sitemap"></i></span>
+                                                </a>
+                                            </li>
+                                            <li class="menu-profile">
+                                                <a href="@($"/api/rss/{Profile.Id}")" target="_blank">
+                                                    @Loc["Rss"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-rss-square"></i></span>
+                                                </a>
+                                            </li>
+}
                                     </ul>
                                 </div>
                             }
