@@ -75,5 +75,15 @@ namespace Abeer.Data.Repositories
         {
             return Task.Run(() => _context.Ads.Where(filter));
         }
+
+        public Task<int> CountVisibled()
+        {
+            return CountVisibled(DateTime.UtcNow);
+        }
+
+        public Task<int> CountVisibled(DateTime day)
+        {
+            return Task.Run(() => _context.Ads.Where(a => a.StartDisplayTime <= day && a.EndDisplayTime >= day && a.IsValid).Count);
+        }
     }
 }

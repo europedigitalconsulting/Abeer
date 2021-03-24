@@ -120,7 +120,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
                     Id = Guid.NewGuid(),
                     CreatedDate = DateTime.UtcNow,
                     Category = "Login",
-                    Key = "Logged", 
+                    Key = "PinCode", 
                     UserId = user.Id
                 });
 

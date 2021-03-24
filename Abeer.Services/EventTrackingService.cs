@@ -69,5 +69,7 @@ namespace Abeer.Services
         public async Task<IList<EventTrackingItem>> GetEventTrackingItemsByKey(string key) => await _UnitOfWork.EventTrackingItemRepository.GetEventTrackingItemsByKey(key);
 
         public async Task<IList<EventTrackingItem>> Where(Expression<Func<EventTrackingItem, bool>> filter) => await _UnitOfWork.EventTrackingItemRepository.Where(filter);
+
+        public async Task<int> Count(Expression<Func<EventTrackingItem, bool>> filter) => await _UnitOfWork.EventTrackingItemRepository.Count(filter);
     }
 }

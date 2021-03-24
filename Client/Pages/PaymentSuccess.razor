@@ -124,7 +124,7 @@
         await httpClient.PostAsJsonAsync<EventTrackingItem>("api/EventTracker", new EventTrackingItem
         {
             Category = "Subscription",
-            Key = "success",
+            Key = "Success",
             CreatedDate = DateTime.UtcNow,
             Id = Guid.NewGuid(),
             UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)

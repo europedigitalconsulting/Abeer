@@ -98,7 +98,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
             {
                 Id = Guid.NewGuid(),
                 CreatedDate = DateTime.UtcNow,
-                Category = "navigation",
+                Category = "Navigation",
                 Key = "login"
             });
 
@@ -127,8 +127,8 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
                     {
                         Id = Guid.NewGuid(),
                         CreatedDate = DateTime.UtcNow,
-                        Category = "navigation",
-                        Key = "logged", 
+                        Category = "Login",
+                        Key = "Form", 
                         UserId = user.Id
                     });
 

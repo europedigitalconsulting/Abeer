@@ -1,0 +1,180 @@
+﻿@page "/admin/dashboard"
+@using System.Net.Http
+@attribute [Authorize]
+@inject NavigationManager Navigation
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Dashboard> Loc
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+
+<section class="section">
+    <div class="mt-4">
+        <label style="font-size: 30px; font-weight: 600; color: black;" class="">@Loc["Title"]</label>
+    </div>
+    <div class="section-header p-0">
+        @Loc["CatchPhrase"]
+    </div>
+    <div class="section-body">
+        @if (DashboardInfo != null)
+        {
+            <div class="row">
+
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        @Loc["NbVisits"]
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">@DashboardInfo.NbVisits</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="far fa-user fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                        @Loc["NbRegistar"]
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">@DashboardInfo.NbRegistar</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-user-plus fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                        @Loc["NbLogin"]
+                                    </div>
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col-auto">
+                                            <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">@DashboardInfo.NbLogin</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-user-shield fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        @Loc["NbRequestSubscription"]
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">@DashboardInfo.NbRequestSubscription</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="far fa-user-tag fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                        @Loc["NbFinishSubscription"]
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">@DashboardInfo.NbFinishSubscription</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-user-check fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                        @Loc["NbAds"]
+                                    </div>
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col-auto">
+                                            <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">@DashboardInfo.NbAds</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-bullhorn fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                    @Loc["Historic"]
+                                </div>
+                                <div class="row no-gutters align-items-center">
+                                    <Chart @ref="_chartEvolution" Config="_configEvolution" Width="ChartLargeWidth"></Chart>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                @foreach (var key in DashboardInfo.CommingFromSocialNetworks.Select(s=>s.Name))
+                {
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-primary shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                            @key
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">@DashboardInfo.CommingFromSocialNetworks.First(k=>k.Name == key).Value</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fab fa-@(key.ToLower()) fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</section>

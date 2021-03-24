@@ -67,6 +67,11 @@ namespace Abeer.Data.Repositories
             return Task.Run(() => _context.EventTrackingItems.Where(p));
         }
 
+        public Task<int> Count(Expression<Func<EventTrackingItem, bool>> filter)
+        {
+            return Task.Run(() => _context.EventTrackingItems.Count(filter));
+        }
+
         public void Remove(EventTrackingItem EventTrackingItem)
         {
             _context.EventTrackingItems.Remove(EventTrackingItem.Id);

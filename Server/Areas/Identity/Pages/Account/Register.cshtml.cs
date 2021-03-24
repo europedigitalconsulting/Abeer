@@ -191,6 +191,15 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
 
             if (result.Succeeded)
             {
+                await _eventTrackingService.Create(new Shared.Functional.EventTrackingItem
+                {
+                    Id = Guid.NewGuid(),
+                    CreatedDate = DateTime.UtcNow,
+                    Category = "Register",
+                    Key = "Finished",
+                    UserId = user.Id
+                });
+
                 _logger.LogInformation("User created a new account with password.");
 
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -219,16 +228,6 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
                             {"unSubscribeUrl", unSubscribeUrl },
                             {"callbackUrl", callbackUrl }
                         });
-
-                await _eventTrackingService.Create(new Shared.Functional.EventTrackingItem
-                {
-                    Id = Guid.NewGuid(),
-                    CreatedDate = DateTime.UtcNow,
-                    Category = "Register",
-                    Key = "Created",
-                    UserId = user.Id
-                });
-
 
                 _logger.LogInformation("set card is used");
 
