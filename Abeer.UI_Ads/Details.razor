@@ -2,7 +2,7 @@
 @using Abeer.Shared.Functional
 @using Abeer.Client.UISdk.Shared
 @using Microsoft.AspNetCore.Components.Web
-@using Abeer.UI_Ads.Components 
+@using Abeer.UI_Ads.Components
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Details> Loc
 @inject IHttpClientFactory HttpClientFactory
@@ -41,13 +41,13 @@
                     @foreach (var ad in Ad.OtherAds)
                     {
                         <div class="col-3">
-                        <a href="@($"/ads/details/{ad.Id}")" target="_blank">
-                            <div class="card">
-                                <div class="card-header"><h5>@ad.Title</h5></div>
-                                <div class="card-body">
-                                    <img class="card-img" src="@ad.ImageUrl1"/>
+                            <a href="@($"/ads/details/{ad.Id}")" target="_blank">
+                                <div class="card">
+                                    <div class="card-header"><h5>@ad.Title</h5></div>
+                                    <div class="card-body">
+                                        <img class="card-img" src="@ad.ImageUrl1" />
+                                    </div>
                                 </div>
-                            </div>
                             </a>
                         </div>
                     }
@@ -89,6 +89,15 @@
                                 <p class="product-description">@Ad.Description.</p>
                                 <h4 class="price">@Loc["currentprice"]: <span>@Ad.Price @Ad.Currency</span></h4>
                                 <Abeer.Client.UISdk.SocialShareLinks Text="@Loc["ShareText", Ad.Title]" Content="@Ad.Description" Source="@Loc["ShareSource"]" TargetUrl="@NavigationManager.ToAbsoluteUri($"/ad/details/{Ad.Id}").ToString()" Title="@Loc["ShareTitle", Ad.Title]" Loc="Loc"></Abeer.Client.UISdk.SocialShareLinks>
+                                @if (Author != null && Author.Id == User?.Id)
+                                {
+                                    <button class="btn btn-primary" @onclick="@(()=>NavigationManager.NavigateTo($"/ads/activities/{Ad.Id}", true))"><i class="fas fa-chart-line"></i></button>
+
+                                    if (Author.IsUtlimate || Author.IsAdmin || Author.IsUnlimited)
+                                    {
+                                        <button class="btn btn-secondary" @onclick="@(()=>DisplayModalQrCode=true)"><i class="fas fa-qrcode"></i></button>
+                                    }
+                                }
                                 <hr />
                                 <CardAuthor Author="@Ad.Owner" Loc="@Loc"></CardAuthor>
                             </div>
@@ -97,4 +106,24 @@
                 </div>
             </div>
         </div>
-    </section>}
+    </section>
+}
+@if (DisplayModalQrCode)
+{
+    <div @onclick="@(() => DisplayModalQrCode = false)" class="modal fade show effect-open" id="modal-confirm" data-backdrop="static" data-keyboard="false" tabindex="-1" style="display: block;top:0;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius: 0px !important; height: 120%;border-radius:500px;">
+                <div id="background" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: white; filter: blur(3px); z-index: 99; "></div>
+                <div class="modal-body" style="display: flex;justify-content: center; align-items: center;">
+                    <div class="text-center" style="background-color: #1FBF8A; color: white; width: calc(80vw); height: calc(80vw); margin-left: auto; margin-right: auto; border-radius: 50%;  display: flex;justify-content: center; align-items: center;z-index: 999">
+                        <div>
+                            <div class="pb-3">
+                                <img alt="qrcode" src="/api/QrCodeGenerator?link=@Navigation.ToAbsoluteUri(Navigation.Uri).ToString()" width="160" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

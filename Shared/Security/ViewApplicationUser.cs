@@ -47,7 +47,8 @@ namespace Abeer.Shared
         public DateTime? SubscriptionEnd { get; set; }
         public int NumberOfContacts { get; set; }
         public int NumberOfAds { get; set; }
-        public bool IsUnlimited { get; private set; }
+        public bool IsUnlimited { get; set; }
+        public bool IsUtlimate { get; set; }
 
         public static implicit operator ViewApplicationUser(ApplicationUser user)
         {
@@ -116,7 +117,8 @@ namespace Abeer.Shared
                 PinCode = int.TryParse(claimsPrincipal.FindFirstValue(ClaimNames.PinCode), out var pinCode) ? pinCode : -1,
                 SubscriptionStart = DateTime.TryParse(claimsPrincipal.FindFirstValue(ClaimNames.SubscriptionStart), out var subscriptionStart) ? subscriptionStart : null,
                 SubscriptionEnd = DateTime.TryParse(claimsPrincipal.FindFirstValue(ClaimNames.SubscriptionEnd), out var subscriptionEnd) ? subscriptionEnd : null,
-                IsUnlimited = bool.TryParse(claimsPrincipal.FindFirstValue(ClaimNames.IsUnlimited), out var isUnlimited) && isUnlimited
+                IsUnlimited = bool.TryParse(claimsPrincipal.FindFirstValue(ClaimNames.IsUnlimited), out var isUnlimited) && isUnlimited,
+                IsUtlimate = claimsPrincipal.HasClaim(c=>c.Type == ClaimNames.Subscription && c.Value.Contains(ClaimNames.Ultimate))
             };
 
             view.IsReadOnly = view.SubscriptionStart.HasValue && view.SubscriptionEnd.HasValue && view.SubscriptionEnd.GetValueOrDefault(DateTime.UtcNow) < DateTime.UtcNow;

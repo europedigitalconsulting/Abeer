@@ -110,7 +110,7 @@ namespace Abeer.Server.Controllers
             {
                 if (QueryHelpers.ParseQuery(Request.QueryString.Value).TryGetValue("social", out var _social))
                 {
-                    await _eventTrackingService.Create(User.NameIdentifier(), $"ViewAdFromSocial#{_social}", id.ToString());
+                    await _eventTrackingService.Create(User.NameIdentifier(), $"ViewAdFromSocial#{_social.ToString().ToLower()}", id.ToString());
                 }
             }
 
@@ -333,8 +333,98 @@ namespace Abeer.Server.Controllers
         [HttpPut("admin")]
         public async Task<IActionResult> UpdateByAdmin(AdModel adModel)
         {
+            if (((ViewApplicationUser)User).IsAdmin == false)
+                return BadRequest();
+
             await functionalUnitOfWork.AdRepository.Update(adModel);
             return Ok();
         }
+
+        [HttpGet("evolution/{id}")]
+        public async Task<ActionResult<IList<StatisticDatePoint>>> GetEvolution(string id)
+        {
+            if (User.Identity.IsAuthenticated == false)
+                return BadRequest();
+
+            var userId = User.NameIdentifier();
+            var eventTrackings = (await _eventTrackingService.Where(e=>e.Category == "ViewAd" && e.Key == id)).ToList();
+
+            var groups = eventTrackings.GroupBy(info => info.CreatedDate.Date)
+                    .Select(group => new
+                    {
+                        Date = group.Key,
+                        Count = group.Count()
+                    }).OrderBy(x => x.Date);
+
+            var result = groups.Select(g => new StatisticDatePoint { Date = g.Date, Value = g.Count }).ToArray();
+
+            return Ok(result);
+        }
+
+        [HttpGet("repartition/{id}")]
+        public async Task<ActionResult<IList<StatisticDatePoint>>> GetRepartition(string id)
+        {
+            if (User.Identity.IsAuthenticated == false)
+                return BadRequest();
+
+            var userId = User.NameIdentifier();
+            var socialNetworks = await functionalUnitOfWork.SocialNetworkRepository.GetSocialNetworkLinks(userId);
+
+            var eventTrackings = (await _eventTrackingService.Where(e=>e.Category == "ViewAd" && e.Key == id)).ToList();
+
+            var groups = eventTrackings.GroupBy(info => info.CreatedDate.Date)
+                    .Select(group => new
+                    {
+                        Date = group.Key,
+                        Count = group.Count()
+                    }).OrderBy(x => x.Date);
+
+            var result = groups.Select(g => new StatisticDatePoint { Date = g.Date, Value = g.Count }).ToArray();
+
+            List<StatisticKeyPoint> repartitions = new List<StatisticKeyPoint>();
+            repartitions.AddRange(result.Select(r => new StatisticKeyPoint { Date = r.Date, Key = "Total", Value = r.Value }));
+
+            var dates = repartitions.Where(r => r.Key == "Total").Select(r => r.Date).ToArray();
+
+            foreach (var socialNetwork in socialNetworks)
+            {
+                var category = $"ViewAdFromSocial#{socialNetwork.Name.ToLower()}";
+
+                var eventTrackingsSocialNetwork = await _eventTrackingService.Where(c => c.Category == category && c.Key == userId);
+
+                if (eventTrackingsSocialNetwork.Any() == false)
+                    continue;
+
+                var geventTrackingSocialNetwork = eventTrackingsSocialNetwork.GroupBy(info => info.CreatedDate.Date)
+                        .Select(group => new
+                        {
+                            Date = group.Key,
+                            Count = group.Count()
+                        }).OrderBy(x => x.Date);
+
+                var resultSocialNetwork = groups.Select(g => new StatisticDatePoint { Date = g.Date, Value = g.Count }).ToArray();
+
+                foreach (var date in dates)
+                {
+                    repartitions.Add(new StatisticKeyPoint
+                    {
+                        Key = socialNetwork.Name,
+                        Date = date,
+                        Value = resultSocialNetwork.Where(r => r.Date == date).Sum(r => r.Value)
+                    });
+                }
+            }
+
+            foreach (var date in dates)
+            {
+                var total = repartitions.First(d => d.Date == date).Value;
+                var other = repartitions.Where(d => d.Date == date && d.Key != "Total").Sum(d => d.Value);
+                var direct = total - other;
+                repartitions.Add(new StatisticKeyPoint { Date = date, Key = "Direct", Value = direct });
+            }
+
+            return Ok(repartitions);
+        }
+
     }
 }

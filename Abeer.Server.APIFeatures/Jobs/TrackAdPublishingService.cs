@@ -138,6 +138,12 @@ namespace Abeer.Server.APIFeatures.Jobs
                             {"callbackUrl", callbackUrl }
                         };
 
+            if(emailType == "ad-endpublishing")
+            {
+                parameters.Add("EndPublishingDate", ad.EndDisplayTime.Value.ToLongDateString());
+                parameters.Add("ViewCount", ad.ViewCount.ToString());
+            }
+
             var message = GenerateHtmlTemplate(_serviceProvider, _env.WebRootPath, emailType, parameters);
             var user = await _userManager.FindByIdAsync(ad.OwnerId);
 

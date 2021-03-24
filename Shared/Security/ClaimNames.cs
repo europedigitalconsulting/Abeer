@@ -31,9 +31,10 @@ namespace Abeer.Shared.Security
         public static string NumberOfView = "numberOfView";
         public static string PhotoUrl => "photoUrl";
         public static string IsReadOnly => "isreadonly";
-
         public static string PinCode => "pinCode";
         public static string SubscriptionStart => "subscriptionStart";
         public static string SubscriptionEnd => "subscriptionEnd";
+        public static string Subscription => "subscription";
+        public static string Ultimate => "ultimate";
     }
 }

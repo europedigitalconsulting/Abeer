@@ -140,6 +140,7 @@ namespace Abeer.Client.Shared
             var post = await httpClient.PutAsJsonAsync<Notification>("api/notification", _next);
             post.EnsureSuccessStatusCode();
             NotificationClient.Notifications.Remove(_next);
+            _next = null;
             NavigationManager.NavigateTo(url, true);
         }
 

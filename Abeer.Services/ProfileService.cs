@@ -15,6 +15,7 @@ using Abeer.Services;
 using static Abeer.Services.TemplateRenderManager;
 using Abeer.Shared.Security;
 using System.Security.Claims;
+using Abeer.Data.UnitOfworks;
 
 namespace Abeer.Services
 {
@@ -27,10 +28,11 @@ namespace Abeer.Services
         private readonly IEmailSenderService _emailSenderService;
         private readonly IWebHostEnvironment _env;
         private readonly IServiceProvider _serviceProvider;
+        private readonly FunctionalUnitOfWork _functionalUnitOfWork;
 
         public ProfileService(UserManager<ApplicationUser> userManager,
             NotificationService notificationService, IConfiguration configuration, UrlShortner urlShortner,
-            IEmailSenderService emailSenderService, IWebHostEnvironment env, IServiceProvider serviceProvider)
+            IEmailSenderService emailSenderService, IWebHostEnvironment env, IServiceProvider serviceProvider, FunctionalUnitOfWork functionalUnitOfWork)
         {
             _userManager = userManager;
             _notificationService = notificationService;
@@ -39,6 +41,7 @@ namespace Abeer.Services
             _emailSenderService = emailSenderService;
             _env = env;
             _serviceProvider = serviceProvider;
+            _functionalUnitOfWork = functionalUnitOfWork;
         }
 
         public async Task GetProfileDataAsync(ProfileDataRequestContext context)
@@ -124,6 +127,15 @@ namespace Abeer.Services
                 AddClaim(context, ClaimNames.PinCode, user.PinCode);
                 AddClaim(context, ClaimNames.SubscriptionStart, user.SubscriptionStartDate);
                 AddClaim(context, ClaimNames.SubscriptionEnd, user.SubscriptionEndDate);
+
+                if(!user.IsAdmin && !user.IsUnlimited)
+                {
+                    var subscription = await _functionalUnitOfWork.SubscriptionRepository.GetLatestSubscriptionForUser(user.Id);
+                    var pack = await _functionalUnitOfWork.SubscriptionPackRepository.FirstOrDefault(s => s.Id == subscription.SubscriptionPackId);
+
+                    if (subscription != null)
+                        AddClaim(context, ClaimNames.Subscription, pack.Label.ToLower());
+                }
 
                 AddClaim(context, ClaimNames.IsReadOnly, user.SubscriptionEndDate.HasValue && user.SubscriptionEndDate.Value <= DateTime.UtcNow);
             }

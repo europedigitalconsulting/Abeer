@@ -13,13 +13,14 @@
 
     [Parameter]
     public Notification Notification { get; set; }
+    [Inject]private HttpClient HttpClient { get; set; }
 }
 
 <div class="card">
     <div class="card-body text-center">
         <img src="assets/img/trophy.png">
         <h4>@Loc["Title"]</h4>
-        <p>@Loc["CatchPhrase", Notification.MessageTitle ?? Notification.NotificationUrl]</p> 
+        <p>@Loc["CatchPhrase", Notification.MessageTitle ?? Notification.NotificationUrl]</p>
         <button @onclick="@(()=>Navigate.InvokeAsync(Notification.NotificationUrl))">@Loc["Continue"]</button>
     </div>
 </div>

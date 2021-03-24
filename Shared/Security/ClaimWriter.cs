@@ -44,7 +44,7 @@ namespace Abeer.Shared.Security
             AddClaim(identity, ClaimNames.IsReadOnly, user.SubscriptionEndDate.HasValue && user.SubscriptionEndDate.Value <= DateTime.UtcNow);
         }
 
-        private static void AddRole(ClaimsIdentity identity, string name, bool isAllowed)
+        public static void AddRole(ClaimsIdentity identity, string name, bool isAllowed)
         {
             if (!isAllowed)
                 return;
@@ -53,7 +53,7 @@ namespace Abeer.Shared.Security
                 identity.AddClaim(new Claim(ClaimTypes.Role, name));
         }
 
-        private static void AddClaim(ClaimsIdentity identity, string name, object value)
+        public static void AddClaim(this ClaimsIdentity identity, string name, object value)
         {
             if (!identity.HasClaim(c => c.Type == name) && value != null)
                 identity.AddClaim(new Claim(name, value.ToString()));

@@ -136,7 +136,16 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
 
                     var identity = new ClaimsIdentity("Identity.Application");
 
-                    user.WriteClaims(identity);                    
+                    user.WriteClaims(identity);
+
+                    if (!user.IsAdmin && !user.IsUnlimited)
+                    {
+                        var subscription = await _functionalUnitOfWork.SubscriptionRepository.GetLatestSubscriptionForUser(user.Id);
+                        var pack = await _functionalUnitOfWork.SubscriptionPackRepository.FirstOrDefault(s => s.Id == subscription.SubscriptionPackId);
+
+                        if (subscription != null)
+                            identity.AddClaim(ClaimNames.Subscription, pack.Label.ToLower());
+                    }
 
                     var principal = new ClaimsPrincipal(identity);
                     await HttpContext.SignInAsync("Identity.Application", principal);

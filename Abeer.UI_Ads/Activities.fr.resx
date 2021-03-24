@@ -117,40 +117,43 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="currentprice" xml:space="preserve">
-    <value>Prix de l'annonce</value>
+  <data name="CatchPhrase" xml:space="preserve">
+    <value>Mes compteurs de performance</value>
   </data>
-  <data name="ReturnList" xml:space="preserve">
-    <value>Retour à la liste</value>
+  <data name="Detail" xml:space="preserve">
+    <value>Détail</value>
   </data>
-  <data name="reviews" xml:space="preserve">
-    <value>vues</value>
+  <data name="Engaged" xml:space="preserve">
+    <value>Engagement</value>
   </data>
-  <data name="ShareIt" xml:space="preserve">
-    <value>Partager</value>
+  <data name="EngagedInfo" xml:space="preserve">
+    <value>Vous trouvez ici les informations d'engagement (nombre de partage par réseau)</value>
   </data>
-  <data name="ShareOnEmail" xml:space="preserve">
-    <value>Partager par email</value>
+  <data name="General" xml:space="preserve">
+    <value>Générale</value>
   </data>
-  <data name="ShareOnFacebook" xml:space="preserve">
-    <value>Partager sur Facebook</value>
+  <data name="GeneralInfo" xml:space="preserve">
+    <value>Vous trouvez ici vos informations générales (nombre de vue, de posts)</value>
   </data>
-  <data name="ShareOnPintereset" xml:space="preserve">
-    <value>Partager sur Pinterest</value>
+  <data name="Historic" xml:space="preserve">
+    <value>Evolution</value>
   </data>
-  <data name="ShareOnTumblr" xml:space="preserve">
-    <value>Partager sur Tumblr</value>
+  <data name="NumberOfAds" xml:space="preserve">
+    <value>Offres</value>
   </data>
-  <data name="ShareOnTwitter" xml:space="preserve">
-    <value>Partager sur twitter</value>
+  <data name="NumberOfContacts" xml:space="preserve">
+    <value>Contacts</value>
   </data>
-  <data name="ShareSource" xml:space="preserve">
-    <value>meetag.co::premier réseau des affaires</value>
+  <data name="NumberOfViews" xml:space="preserve">
+    <value>Vues</value>
   </data>
-  <data name="ShareText" xml:space="preserve">
-    <value>meetag.co::{0}</value>
+  <data name="Statistics" xml:space="preserve">
+    <value>Statistique</value>
   </data>
-  <data name="ShareTitle" xml:space="preserve">
-    <value>meetag.co&amp;eactue;&amp;eacute;{0}</value>
+  <data name="Title" xml:space="preserve">
+    <value>Mon activité</value>
+  </data>
+  <data name="Top10Ads" xml:space="preserve">
+    <value>Top 10 annonces</value>
   </data>
 </root>
