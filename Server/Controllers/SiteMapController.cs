@@ -34,7 +34,16 @@ namespace Abeer.Server.Controllers
         {
             var users = await userManager.Users.Where(u => u.IsUnlimited || u.SubscriptionEndDate > DateTime.UtcNow).ToListAsync();
 
-            var sitemap = new Sitemap();
+            var sitemap = new Sitemap
+            {
+                new X.Web.Sitemap.Url
+                {
+                    ChangeFrequency = ChangeFrequency.Hourly,
+                    Location = $"{configuration["Service:FrontOffice:Url"].TrimEnd('/')}/api/rss",
+                    Priority = 1,
+                    LastMod = DateTime.UtcNow.Date.ToString("dd/MM/yyy")
+                }
+            };
 
             foreach (var user in users)
             {
@@ -84,7 +93,16 @@ namespace Abeer.Server.Controllers
             if (user.SubscriptionEndDate.HasValue && user.SubscriptionEndDate.Value < DateTime.UtcNow)
                 return BadRequest();
 
-            var sitemap = new Sitemap();
+            var sitemap = new Sitemap
+            {
+                new X.Web.Sitemap.Url
+                {
+                    ChangeFrequency = ChangeFrequency.Hourly,
+                    Location = $"{configuration["Service:FrontOffice:Url"].TrimEnd('/')}/api/rss/{user.Id}",
+                    Priority = 1,
+                    LastMod = DateTime.UtcNow.Date.ToString("dd/MM/yyy")
+                }
+            };
 
             var articles = await functionalUnitOfWork.AdRepository.GetVisibledUser(user.Id);
 
