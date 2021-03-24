@@ -11,6 +11,9 @@
     [Parameter]
     public EventCallback<string> Navigate { get; set; }
 
+    [Parameter]
+    public Notification Notification { get; set; }
+
     async Task GotoSubscribe()
     {
         await Navigate.InvokeAsync("subscription-pack");

@@ -14,6 +14,9 @@
     [Parameter]
     public EventCallback<string> Navigate { get; set; }
 
+    [Parameter]
+    public Notification Notification { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         if (User.Identity.IsAuthenticated == true)
