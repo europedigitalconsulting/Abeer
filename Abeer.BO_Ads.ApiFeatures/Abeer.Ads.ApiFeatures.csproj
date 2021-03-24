@@ -50,7 +50,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Abeer.BO_Ads.Data\Abeer.Ads.Data.csproj" />
-    <ProjectReference Include="..\Abeer.BO_Ads\Abeer.Ads.csproj" />
+    <ProjectReference Include="..\Abeer.BO_Ads.Shared\Abeer.Ads.Shared.csproj" />
     <ProjectReference Include="..\Abeer.DataFileReader\Abeer.DataFileReader.csproj" />
   </ItemGroup>
 

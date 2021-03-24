@@ -12,7 +12,7 @@ using Tewr.Blazor.FileReader;
 using Abeer.Shared.Security;
 using Blazor.Analytics;
 using BlazorPro.BlazorSize;
-using Abeer.Shared.StateContainer;
+using Abeer.Shared.StateContainer; 
 
 namespace Abeer.Client
 {
@@ -44,7 +44,7 @@ namespace Abeer.Client
             {
                 options.Animation = Animations.FadeDown;
                 options.Duration = TimeSpan.FromMilliseconds(1000);
-            });
+            }); 
             builder.Services.AddScoped<IAdPhotoRepository, AdHttpPhotoRepository>();
             builder.Services.AddFileReaderService(o => o.UseWasmSharedBuffer = true);
             builder.Services.AddAuthorizationCore(options => options.AddPolicy("OnlySubscribers",

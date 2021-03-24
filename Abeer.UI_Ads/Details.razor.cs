@@ -9,6 +9,7 @@ using Abeer.Shared;
 using Abeer.Shared.Functional;
 using Abeer.Shared.ViewModels;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
 
@@ -20,6 +21,9 @@ namespace Abeer.UI_Ads
         public  string Id { get; set; }
         [Inject] private HttpClient HttpClient { get; set; }
         [Inject] NavigationManager Navigation { get; set; }
+        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
+        public AuthenticationState AuthenticateSate { get; set; }
+        public ViewApplicationUser User { get; set; } = new ViewApplicationUser();
 
         private AdViewModel Ad { get; set; }
 
@@ -27,6 +31,11 @@ namespace Abeer.UI_Ads
 
         protected override async Task OnInitializedAsync()
         {
+            AuthenticateSate = await authenticationStateTask;
+
+            if (AuthenticateSate.User.Identity.IsAuthenticated)
+                User = AuthenticateSate.User;
+
             var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
 
             var apiUrl = $"/api/ads/{Id}";
@@ -41,6 +50,10 @@ namespace Abeer.UI_Ads
             var json = await getDetail.Content.ReadAsStringAsync();
             Ad = JsonConvert.DeserializeObject<AdViewModel>(json);
             await base.OnInitializedAsync();
+        }
+        public async Task GoToProfilAd()
+        {
+            NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri($"/viewprofile/{Ad.OwnerId}").ToString(), true);
         }
     }
 }

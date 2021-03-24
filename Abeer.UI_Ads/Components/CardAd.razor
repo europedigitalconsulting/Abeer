@@ -1,37 +1,35 @@
 ﻿@inject NavigationManager NavigationManager
-<div class="card">
-    <div class="card-header">
-        <h4>
-            @Ad.Title
-        </h4>
-        <div class="card-header-action">
-            <span class="btn btn-icon btn-primary" href="#">@Ad.Price @Ad.Currency</span>
+<div  class="card mx-3 col-lg-4 col-sm-12" >
+    <div class="row p-3">
+        <div class="col-8 pt-2">
+            <h4 style="color:black;font-size:18px;font-weight:600;">
+                @Ad.Title
+            </h4>
+        </div>
+        <div class="col-4 m-0 p-0 text-right">
+            @if (Editable)
+            {
+                <div @onclick="Delete" class="my-2"><i style="font-size:26px" class="fas fa-trash-alt"></i></div>
+            }
+            <span style="color:lightgray">Il y'a @((int)((DateTime.Now- Ad.ValidateDate).TotalDays)) jour(s)</span>
         </div>
     </div>
     <div class="card-body">
-        <p class="mb-2">
-            @Ad.Description
-        </p>
-        <div class="row col-12 mb-2">
+        <div class="col-12 mb-2">
             <div class="gallery gallery-md">
                 @if (!string.IsNullOrEmpty(Ad.ImageUrl1))
                 {
-                    <img class="gallery-item" src="@Ad.ImageUrl1" />
-                }
-                @if (!string.IsNullOrEmpty(Ad.ImageUrl2))
-                {
-                    <img class="gallery-item" src="@Ad.ImageUrl2" />
-                }
-                @if (!string.IsNullOrEmpty(Ad.ImageUrl3))
-                {
-                    <img class="gallery-item" src="@Ad.ImageUrl3" />
-                }
-                @if (!string.IsNullOrEmpty(Ad.ImageUrl4))
-                {
-                    <img class="gallery-item" src="@Ad.ImageUrl4" />
+                    <img class="col-12" src="@Ad.ImageUrl1" />
                 }
             </div>
         </div>
+        <div class="row pt-3 mb-2">
+            <div class="col-6 text-dark"><h6>@User.DisplayName</h6></div>
+            <div style="color:#F27F63" class="col-6 text-right"><h6>@Ad.Price @Ad.Currency</h6></div>
+        </div> 
+        <p class="mb-2 " style="font-weight: 300;">
+            @Ad.Description
+        </p>
         <div class="row col-12">
             @if (!string.IsNullOrEmpty(Ad.Url1))
             {
@@ -49,39 +47,48 @@
             {
                 <a href="@Ad.Url4" class="mr-2">@Ad.Url4</a>
             }
-        </div>
-        @if (Editable)
-        {
-            <button class="btn btn-primary btn-circle btn-xl float-right ml-2" @onclick="@OnEditClicked"><i class="fas fa-pen-square"></i></button>
-            <button class="btn btn-danger btn-circle btn-xl float-right ml-2" @onclick="@OnDeleteClicked"><i class="fas fa-trash-alt"></i></button>
-        }
+        </div> 
 
         @if (!Ad.IsValid && User.IsAdmin)
         {
             <a href="/ads/ValidAd/@Ad.Id" class="btn btn-primary"><i class="fas fa-check-square"></i>@Loc["ValidAd"]</a>
         }
-        <button class="btn btn-pinterest btn-circle btn-xl float-right ml-2" @onclick="DisplayDetail"><i class="fas fa-eye"></i></button>
-    </div>
-    <div class="card-footer">
-        <p>
-            @Loc["ViewCount"] <span class="badge badge-primary">@Ad.ViewCount</span>
-        </p>
-        <p>
-            @if (Ad.StartDisplayTime <= DateTime.UtcNow)
+
+        <div class="row ">
+            <button style="background:#F28064;color:white;font-weight:300; font-size: 15px;" class="py-2 btn btn-xl col-12 mb-2" @onclick="DisplayDetail">Voir l'annonce</button>
+        </div>
+        <div class="row">
+            @if (Editable)
             {
-                if (Ad.EndDisplayTime >= DateTime.UtcNow)
-                {
-                    <i>@Loc["OnlineBetween"] @Ad.StartDisplayTime / @Ad.EndDisplayTime</i>
-                }
-                else
-                {
-                    <i>@Loc["NotOnlineSince"] @Ad.EndDisplayTime</i>
-                }
+                <button style="background:#989898;color:white;font-weight:300;" class="py-2 btn btn-xl col-12" @onclick="Update">Modifier l'annonce</button>
             }
             else
             {
-                <i>@Loc["WillBeOnline"] @Ad.StartDisplayTime</i>
+                <button style="background:#1478D9;color:white;font-weight:300;" class="py-2 btn btn-xl col-6" @onclick="DisplayDetail">Ses Annonces</button>
+                <button style="background:#1FBF8A;color:white;font-weight:300;" class="py-2 btn btn-xl col-6" @onclick="GoToProfilAd">Afficher son profil</button>
             }
-        </p>
+        </div>
     </div>
+    @*<div class="card-footer">
+            <p>
+                @Loc["ViewCount"] <span class="badge badge-primary">@Ad.ViewCount</span>
+            </p>
+            <p>
+                @if (Ad.StartDisplayTime <= DateTime.UtcNow)
+                {
+                    if (Ad.EndDisplayTime >= DateTime.UtcNow)
+                    {
+                        <i>@Loc["OnlineBetween"] @Ad.StartDisplayTime / @Ad.EndDisplayTime</i>
+                    }
+                    else
+                    {
+                        <i>@Loc["NotOnlineSince"] @Ad.EndDisplayTime</i>
+                    }
+                }
+                else
+                {
+                    <i>@Loc["WillBeOnline"] @Ad.StartDisplayTime</i>
+                }
+            </p>
+        </div>*@
 </div>

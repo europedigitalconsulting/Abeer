@@ -19,13 +19,13 @@ namespace Abeer.Ads.ApiFeatures
     [ApiController]
     public class ExportController : ControllerBase
     {
-        private readonly AdsUnitOfWork _consumableUnitOfWork;
+        private readonly AdsUnitOfWork _adsUnitOfWork;
         private readonly ILogger<ExportController> _logger;
         private readonly IServiceProvider _serviceProvider;
 
         public ExportController(AdsUnitOfWork referentialUnitOfWork, ILogger<ExportController> logger, IServiceProvider serviceProvider)
         {
-            _consumableUnitOfWork = referentialUnitOfWork;
+            _adsUnitOfWork = referentialUnitOfWork;
             _logger = logger;
             _serviceProvider = serviceProvider;
         }
@@ -83,14 +83,14 @@ namespace Abeer.Ads.ApiFeatures
 
             if (!string.IsNullOrEmpty(options.Category))
             {
-                categories.AddRange(await _consumableUnitOfWork.CategoriesRepository.FilterByIds(options.Category.Split(';').Select(i => Guid.Parse(i)).ToList()));
+                categories.AddRange(await _adsUnitOfWork.CategoriesRepository.FilterByIds(options.Category.Split(';').Select(i => Guid.Parse(i)).ToList()));
             }
             else
             {
                 if (!string.IsNullOrEmpty(options.Family))
-                    categories.AddRange(await _consumableUnitOfWork.CategoriesRepository.GetByFamily(Guid.Parse(options.Family)));
+                    categories.AddRange(await _adsUnitOfWork.CategoriesRepository.GetByFamily(Guid.Parse(options.Family)));
                 else
-                    categories.AddRange(await _consumableUnitOfWork.CategoriesRepository.GetAll());
+                    categories.AddRange(await _adsUnitOfWork.CategoriesRepository.GetAll());
             }
 
             exportResult.CategoriesExported = categories.Count;
@@ -105,12 +105,12 @@ namespace Abeer.Ads.ApiFeatures
 
             if (!string.IsNullOrEmpty(options.Family))
             {
-                var family = await _consumableUnitOfWork.FamiliesRepository.Get(Guid.Parse(options.Family));
+                var family = await _adsUnitOfWork.FamiliesRepository.Get(Guid.Parse(options.Family));
                 families.Add(family);
             }
             else
             {
-                families.AddRange(await _consumableUnitOfWork.FamiliesRepository.GetAll());
+                families.AddRange(await _adsUnitOfWork.FamiliesRepository.GetAll());
             }
 
             exportResult.FamiliesExported = families.Count;
@@ -150,7 +150,7 @@ namespace Abeer.Ads.ApiFeatures
                 PurchaseLabelRule = family.PurchaseLabelRule
             });
 
-            var attributes = await _consumableUnitOfWork.FamilyAttributesRepository.GetByFamily(family.FamilyId);
+            var attributes = await _adsUnitOfWork.FamilyAttributesRepository.GetByFamily(family.FamilyId);
 
             if (attributes != null && attributes.Any())
             {

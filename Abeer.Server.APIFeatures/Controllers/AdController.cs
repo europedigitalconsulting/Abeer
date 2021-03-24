@@ -12,6 +12,8 @@ using Abeer.Shared;
 using Abeer.Shared.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Abeer.Ads.Shared;
+using Abeer.Ads.Data;
 using Abeer.Shared.Technical;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http.Extensions;
@@ -26,6 +28,7 @@ namespace Abeer.Server.Controllers
     [ApiController]
     public class AdsController : ControllerBase
     {
+        private readonly AdsUnitOfWork _adsUnitOfWork;
         private readonly FunctionalUnitOfWork functionalUnitOfWork;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly EventTrackingService _eventTrackingService;
@@ -37,7 +40,7 @@ namespace Abeer.Server.Controllers
         private readonly IEmailSenderService _emailSender;
 
         private readonly Random rdm = new Random();
-        public AdsController(FunctionalUnitOfWork functionalUnitOfWork, UserManager<ApplicationUser> userManager,
+        public AdsController(AdsUnitOfWork adsUnitOfWork, FunctionalUnitOfWork functionalUnitOfWork, UserManager<ApplicationUser> userManager,
             EventTrackingService eventTrackingService, NotificationService notificationService, 
             IConfiguration configuration, UrlShortner urlShortner, IServiceProvider serviceProvider, IWebHostEnvironment env, IEmailSenderService emailSender)
         {
@@ -50,12 +53,21 @@ namespace Abeer.Server.Controllers
             _serviceProvider = serviceProvider;
             _env = env;
             _emailSender = emailSender;
+            _adsUnitOfWork = adsUnitOfWork;
+        }
+
+        [HttpGet("ListFamily")]
+        public async Task<ActionResult<IEnumerable<AdsFamilyViewModel>>> ListFamily()
+        {
+            var ListFamily = await _adsUnitOfWork.FamiliesRepository.GetAll();
+            return Ok(ListFamily);
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AdModel>>> List()
         {
-            return Ok(await functionalUnitOfWork.AdRepository.GetAllForAUser(User.NameIdentifier()));
+            var fff = await functionalUnitOfWork.AdRepository.GetAll(true);
+            return Ok(await functionalUnitOfWork.AdRepository.GetAll(true));
         }
 
         [HttpGet("notvalid")]

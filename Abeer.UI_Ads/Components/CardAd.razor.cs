@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Abeer.Shared;
 using Microsoft.AspNetCore.Components;
@@ -14,7 +15,7 @@ namespace Abeer.UI_Ads.Components
         [Parameter]
         public Abeer.Shared.Functional.AdModel Ad { get; set; }
         [Parameter]
-        public Boolean Editable { get; set; }
+        public bool Editable { get; set; }
         [Parameter]
         public EventCallback<MouseEventArgs> OnEditClicked { get; set; }
         [Parameter]
@@ -22,6 +23,7 @@ namespace Abeer.UI_Ads.Components
         [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
         public AuthenticationState AuthenticateSate { get; set; }
         public ViewApplicationUser User { get; set; } = new ViewApplicationUser();
+        [Inject] private HttpClient HttpClient { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -33,10 +35,22 @@ namespace Abeer.UI_Ads.Components
             await base.OnInitializedAsync();
         }
 
-        public async  Task DisplayDetail()
+        public async Task DisplayDetail()
         {
             NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri($"/ads/details/{Ad.Id}").ToString(), true);
             await InvokeAsync(StateHasChanged);
+        }
+        public async Task Delete()
+        { 
+            await OnDeleteClicked.InvokeAsync();
+        }
+        public async Task Update()
+        { 
+            await OnEditClicked.InvokeAsync();
+        }
+        public async Task GoToProfilAd()
+        {
+            NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri($"/viewprofile/{Ad.OwnerId}").ToString(), true);
         }
     }
 }
