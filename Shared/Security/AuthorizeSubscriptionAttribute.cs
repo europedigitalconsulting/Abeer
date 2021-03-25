@@ -18,12 +18,17 @@ namespace Abeer.Shared.Security
             {
                 var user = (ViewApplicationUser)context.User;
 
-                if (user.IsAdmin || user.IsManager || user.IsUnlimited)
+                if (user.IsAdmin || user.IsManager || user.IsUnlimited || user.IsUltimate)
                 {
                     return Task.Run(() => context.Succeed(requirement));
                 }
 
-                else if (user.SubscriptionEnd.GetValueOrDefault(DateTime.UtcNow) >= DateTime.UtcNow)
+                else if (user.HasSubscriptionValid)
+                {
+                    return Task.Run(() => context.Succeed(requirement));
+                }
+
+                else if(user.SubscriptionEnd.HasValue && user.SubscriptionEnd.Value > DateTime.UtcNow)
                 {
                     return Task.Run(() => context.Succeed(requirement));
                 }

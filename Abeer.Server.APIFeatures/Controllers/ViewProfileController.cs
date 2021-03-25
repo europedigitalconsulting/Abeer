@@ -55,14 +55,14 @@ namespace Abeer.Server.Controllers
             await _userManager.UpdateAsync(user);
 
             if(!User.Identity.IsAuthenticated)
-                await _eventTrackingService.Create(User.NameIdentifier(), "ViewProfile", userId);
+                await _eventTrackingService.Create(User.NameIdentifier(), "ViewProfile", user.Id);
             else
-                await _eventTrackingService.Create(null, "ViewProfile", userId);
+                await _eventTrackingService.Create(null, "ViewProfile", user.Id);
 
             var view = (ViewApplicationUser)user;
 
-            view.NumberOfContacts = (await _functionalUnitOfWork.ContactRepository.GetContacts(userId)).Count;
-            view.NumberOfAds = (await _functionalUnitOfWork.AdRepository.GetVisibledUser(userId)).Count;
+            view.NumberOfContacts = (await _functionalUnitOfWork.ContactRepository.GetContacts(user.Id)).Count;
+            view.NumberOfAds = (await _functionalUnitOfWork.AdRepository.GetVisibledUser(user.Id)).Count;
 
             view.SocialNetworkConnected = await _functionalUnitOfWork
                 .SocialNetworkRepository

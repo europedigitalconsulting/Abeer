@@ -31,7 +31,9 @@
                                                 <i class="fas fa-user-friends" title="@Loc["NumberOfContact"]"></i><p>@Profile.NumberOfContacts</p>
                                             </div>
                                             <div class="col-4">
-                                                <i class="fas fa-bullhorn" title="@Loc["NumberOfAds"]"></i><p>@Profile.NumberOfAds</p>
+                                                <a href="/ads/author/@Profile.Id" target="_blank">
+                                                    <i class="fas fa-bullhorn" title="@Loc["NumberOfAds"]"></i><p>@Profile.NumberOfAds</p>
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
@@ -210,7 +212,7 @@
                                                 @Loc["TitleOpenQrCode"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-qrcode"></i></span>
                                             </li>
                                         }
-                                        @if (Profile.IsUtlimate || Profile.IsAdmin || Profile.IsUnlimited)
+                                        @if (Profile.IsUltimate || Profile.IsAdmin || Profile.IsUnlimited)
                                         {
                                             <li class="menu-profile">
                                                 <a href="@($"/api/sitemap/{Profile.Id}")" target="_blank">

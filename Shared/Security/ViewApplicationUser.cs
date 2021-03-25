@@ -41,6 +41,7 @@ namespace Abeer.Shared
         public int AdsCount { get; set; }
         public IList<SocialNetwork> SocialNetworkConnected { get; set; }
         public IList<CustomLink> CustomLinks { get; set; }
+        public bool HasSubscriptionValid { get; set; }
         public bool IsReadOnly { get; set; }
 
         public DateTime? SubscriptionStart { get; set; }
@@ -48,7 +49,7 @@ namespace Abeer.Shared
         public int NumberOfContacts { get; set; }
         public int NumberOfAds { get; set; }
         public bool IsUnlimited { get; set; }
-        public bool IsUtlimate { get; set; }
+        public bool IsUltimate { get; set; }
 
         public static implicit operator ViewApplicationUser(ApplicationUser user)
         {
@@ -118,8 +119,11 @@ namespace Abeer.Shared
                 SubscriptionStart = DateTime.TryParse(claimsPrincipal.FindFirstValue(ClaimNames.SubscriptionStart), out var subscriptionStart) ? subscriptionStart : null,
                 SubscriptionEnd = DateTime.TryParse(claimsPrincipal.FindFirstValue(ClaimNames.SubscriptionEnd), out var subscriptionEnd) ? subscriptionEnd : null,
                 IsUnlimited = bool.TryParse(claimsPrincipal.FindFirstValue(ClaimNames.IsUnlimited), out var isUnlimited) && isUnlimited,
-                IsUtlimate = claimsPrincipal.HasClaim(c=>c.Type == ClaimNames.Subscription && c.Value.Contains(ClaimNames.Ultimate))
+                IsUltimate = claimsPrincipal.HasClaim(c=>c.Type == ClaimNames.Subscription && c.Value.Contains(ClaimNames.Ultimate))
             };
+
+            view.HasSubscriptionValid = view.IsAdmin || view.IsManager || view.IsUnlimited || view.IsUltimate || (claimsPrincipal.HasClaim(c => c.Type == ClaimNames.Subscription)
+                && view.SubscriptionEnd.GetValueOrDefault() > DateTime.UtcNow);
 
             view.IsReadOnly = view.SubscriptionStart.HasValue && view.SubscriptionEnd.HasValue && view.SubscriptionEnd.GetValueOrDefault(DateTime.UtcNow) < DateTime.UtcNow;
             return view;

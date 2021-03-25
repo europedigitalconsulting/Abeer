@@ -94,6 +94,12 @@ namespace Abeer.Server.Controllers
             return Ok(await functionalUnitOfWork.AdRepository.GetVisibledCountry(User.Country()));
         }
 
+        [HttpGet("author/{authorId}")]
+        public async Task<ActionResult<IEnumerable<AdModel>>> GetVisibledAuthor(string authorId)
+        {
+            return Ok(await functionalUnitOfWork.AdRepository.GetVisibledUser(authorId));
+        }
+
         [HttpGet("freinds")]
         public async Task<ActionResult<IEnumerable<AdModel>>> GetVisibledFreinds()
         {
