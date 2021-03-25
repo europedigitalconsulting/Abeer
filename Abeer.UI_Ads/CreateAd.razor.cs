@@ -79,7 +79,8 @@ namespace Abeer.UI_Ads
                 AdPrices = JsonConvert.DeserializeObject<List<AdPrice>>(json);
             }
 
-            await InvokeAsync(StateHasChanged);
+            var adPrice = AdPrices.FirstOrDefault(p => p.Value == 0);
+            await SelectPrice(adPrice);
         }
 
         private async Task SelectPrice(AdPrice currentPrice)

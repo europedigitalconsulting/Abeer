@@ -27,7 +27,6 @@ using Microsoft.EntityFrameworkCore;
 namespace Abeer.Server.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(Policy = "OnlySubscribers")]
     [ApiController]
     public class AdsController : ControllerBase
     {
@@ -233,38 +232,24 @@ namespace Abeer.Server.Controllers
                 int delayToDisplay = 0;
                 int displayDuration = 0;
 
-                if (applicationUser.IsAdmin || applicationUser.IsManager)
+                if (applicationUser.IsAdmin || applicationUser.IsManager || applicationUser.IsUnlimited || applicationUser.IsUltimate)
                 {
                     delayToDisplay = 0;
                     ad.IsValid = true;
                     ad.ValidateDate = DateTime.UtcNow;
-                    displayDuration = 7;
+                    displayDuration = 15;
                 }
-
-                else if (!applicationUser.IsUnlimited)
+                else
                 {
-                    subscription = await functionalUnitOfWork.SubscriptionRepository.GetLatestSubscriptionForUser(User.NameIdentifier());
-
-                    if (subscription != null)
-                        pack = await functionalUnitOfWork.SubscriptionPackRepository.FirstOrDefault(p => p.Id == subscription.SubscriptionPackId);
-
-                    if (pack != null)
-                    {
-                        if (pack.Label == "Standard")
-                        {
-                            delayToDisplay = 2;
-                            displayDuration = 2;
-                        }
-                        else
-                        {
-                            delayToDisplay = 5;
-                            displayDuration = 5;
-                        }
-                    }
-                    else
+                    if (!applicationUser.HasSubscriptionValid)
                     {
                         delayToDisplay = 2;
                         displayDuration = 2;
+                    }
+                    else
+                    {
+                        delayToDisplay = 0;
+                        displayDuration = 5;
                     }
                 }
 

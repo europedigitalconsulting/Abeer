@@ -117,46 +117,6 @@
         </div>
     </section>
 }
-else if (Step == "Step2")
-{
-    <section class="section">
-        <div class="section-header">
-            <h1>@Loc["SelectYourOffer"]</h1>
-        </div>
-        <div class="section-body">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <Virtualize Items="AdPrices" Context="price">
-                            <div class="col-lg-3 col-md-3 col-sm-12">
-                                <div class="card profile-widget border p-4">
-                                    <div class="profile-widget-header">
-                                        @if (price.Value > 0)
-                                        {
-                                            <div class="float-right">
-                                                <span class="badge badge-info">@price.Value @price.Currency</span>
-                                            </div>
-                                        }
-                                        <h4>@Loc[price.PriceName]</h4>
-                                    </div>
-                                    <div class="profile-widget-description pb-0">
-                                        <div class="profile-widget-name">@Loc[price.PriceDescription]</div>
-                                    </div>
-                                    <div class="text-center">
-                                        <button class="btn btn-info btn-lg" @onclick="@(async () => await SelectPrice(price))">@Loc["Select"]</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </Virtualize>
-                    </div>
-                    <div class="text-center">
-                        <button class="btn btn-lg btn-warning" title="@Loc["Back"]" @onclick="Step1"><i class="fa fa-2x fa-arrow-left"></i>@Loc["Step1Title"]</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-}
 else if (Step == "Step3")
 {
     <section class="section">
@@ -221,22 +181,6 @@ else if (Step == "Step3")
                     <div class="form-group col-6 col-sm-12">
                         <MediaUploader OnChange="AssignImageUrl4" ImgUrl="@Ad.ImageUrl4"></MediaUploader>
                         @Ad.ImageUrl4
-                    </div>
-                    <div class="col-lg-3 col-md-3 col-sm-12">
-                        <div class="card profile-widget border p-4">
-                            <div class="profile-widget-header">
-                                @if (CurrentPrice.Value > 0)
-                                {
-                                    <div class="float-right">
-                                        <span class="badge badge-info">@CurrentPrice.Value @CurrentPrice.Currency</span>
-                                    </div>
-                                }
-                                <h4>@Loc[CurrentPrice.PriceName]</h4>
-                            </div>
-                            <div class="profile-widget-description pb-0">
-                                <div class="profile-widget-name">@Loc[CurrentPrice.PriceDescription]</div>
-                            </div>
-                        </div>
                     </div>
                     <div class="form-group">
                         <div class="text-center">
