@@ -254,8 +254,24 @@ namespace Abeer.Server.Controllers
 
         private async Task<PayPal.v1.Payments.Payment> ProcessPayment(PaymentModel model)
         {
-            var environment = new SandboxEnvironment(_configuration["Service:Paypal:ClientId"], _configuration["Service:Paypal:ClientSecret"]);
-            var client = new PayPalHttpClient(environment);
+            var mode = _configuration["Service:Paypal:Mode"];
+            PayPalHttpClient client = null;
+
+            switch (mode)
+            {
+                case "production":
+                    {
+                        var environment = new LiveEnvironment(_configuration["Service:Paypal:ClientId"], _configuration["Service:Paypal:ClientSecret"]);
+                        client = new PayPalHttpClient(environment);
+                        break;
+                    }
+                case "sandbox":
+                    {
+                        var environment = new SandboxEnvironment(_configuration["Service:Paypal:ClientId"], _configuration["Service:Paypal:ClientSecret"]);
+                        client = new PayPalHttpClient(environment);
+                        break;
+                    }
+            }
 
             var payment = new PayPal.v1.Payments.Payment()
             {
