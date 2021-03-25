@@ -22,21 +22,6 @@
                                 <div>
                                     <span class="text-dark pb-2">@Profile.DisplayName</span><br>
                                     <span class="author-box-job">@Profile.Title</span><br />
-                                    <div class="alert alert-primary counter-block m-t-10 p-20">
-                                        <div class="row">
-                                            <div class="col-4">
-                                                <i class="fas fa-eye" title="@Loc["NumberOfView"]"></i><p>@Profile.NumberOfView</p>
-                                            </div>
-                                            <div class="col-4">
-                                                <i class="fas fa-user-friends" title="@Loc["NumberOfContact"]"></i><p>@Profile.NumberOfContacts</p>
-                                            </div>
-                                            <div class="col-4">
-                                                <a href="/ads/author/@Profile.Id" target="_blank">
-                                                    <i class="fas fa-bullhorn" title="@Loc["NumberOfAds"]"></i><p>@Profile.NumberOfAds</p>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                             <div class="p-2 cursor-pointer">
@@ -67,6 +52,29 @@
                             }
                         </div>
                     </div>
+                    <div class="alert alert-primary counter-block m-t-10 p-20 col-4">
+                        <div class="row">
+                            <div class="col-4">
+                                <i class="fas fa-eye" title="@Loc["NumberOfView"]"></i><p>@Profile.NumberOfView</p>
+                            </div>
+                            <div class="col-4">
+                                <i class="fas fa-user-friends" title="@Loc["NumberOfContact"]"></i><p>@Profile.NumberOfContacts</p>
+                            </div>
+                            <div class="col-4">
+                                <a href="/ads/author/@Profile.Id" target="_blank">
+                                    <i class="fas fa-bullhorn" title="@Loc["NumberOfAds"]"></i><p>@Profile.NumberOfAds</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    @if (Profile.SubscriptionStart.HasValue && Profile.SubscriptionEnd.HasValue && Profile.Id == CurrentUserId)
+                    {<div class="col-4 alert-primary">
+                            @Loc["YourSubscription"] - @Loc["StartSubscription", Profile.SubscriptionStart.Value.ToShortDateString()] - @Loc["EndSubscription", Profile.SubscriptionEnd.Value.ToShortDateString()]
+                            @if (Profile.SubscriptionEnd.Value.Subtract(DateTime.UtcNow).Days <= 3)
+                            {
+                                <a class="btn btn-primary" href="/subscription-pack">@Loc["RenewSubscription"]</a>
+                            }
+                        </div>}
                     <div class="row mt-lg-5" style=" border-top: 1px solid black; padding-top: 21px;">
                         @if (!TabMap)
                         {
@@ -224,7 +232,7 @@
                                                     @Loc["Rss"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-rss-square"></i></span>
                                                 </a>
                                             </li>
-}
+                                        }
                                     </ul>
                                 </div>
                             }

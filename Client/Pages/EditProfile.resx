@@ -198,6 +198,9 @@
   <data name="Email" xml:space="preserve">
     <value>Email</value>
   </data>
+  <data name="EndSubscription" xml:space="preserve">
+    <value>Se terminera le {0}</value>
+  </data>
   <data name="FirstName" xml:space="preserve">
     <value>First Name</value>
   </data>
@@ -267,6 +270,9 @@
   <data name="PinDigit" xml:space="preserve">
     <value>Current number</value>
   </data>
+  <data name="RenewSubscription" xml:space="preserve">
+    <value>Modifier votre abonnement</value>
+  </data>
   <data name="Save" xml:space="preserve">
     <value>Save</value>
   </data>
@@ -306,6 +312,9 @@
   <data name="SocialUrl" xml:space="preserve">
     <value>Social Profile Url</value>
   </data>
+  <data name="StartSubscription" xml:space="preserve">
+    <value>A démarré le {0}</value>
+  </data>
   <data name="Title" xml:space="preserve">
     <value>User Profile</value>
   </data>
@@ -341,5 +350,8 @@
   </data>
   <data name="ViewQrCode" xml:space="preserve">
     <value>View and share qr code</value>
+  </data>
+  <data name="YourSubscription" xml:space="preserve">
+    <value>Votre abonnement</value>
   </data>
 </root>

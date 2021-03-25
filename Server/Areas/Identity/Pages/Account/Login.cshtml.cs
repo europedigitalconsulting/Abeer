@@ -151,6 +151,8 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
                         }
                     }
 
+
+
                     var principal = new ClaimsPrincipal(identity);
                     await HttpContext.SignInAsync("Identity.Application", principal);
 
