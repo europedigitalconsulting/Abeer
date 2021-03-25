@@ -6,14 +6,11 @@
 @inject NavigationManager NavigationManager
 
 @if (ModalEditAdVisible)
-{<ModalDefault Title="@Loc["DeleteAdTitle"]" ModalCancelClicked="() => ModalEditAdVisible = false">
+{
+    <ModalDefault Title="@Loc["EditAd"]" ModalCancelClicked="() => ModalEditAdVisible = false">
         <Body>
             <div class="modal-body">
-                <FormAd Ad="Current" Disabled="false" FormHasError="UpdateHasError" FormError="@Loc["UpdateFailedError"]" Loc="Loc"></FormAd>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-warning" @onclick="@(() => ModalEditAdVisible = false)">@Loc["Cancel"]</button>
-                <button type="button" class="btn btn-success" @onclick="Update">@Loc["Update"]</button>
+                <FormAd Cancel="() => ModalEditAdVisible = false" Ad="Current" Disabled="false" FormHasError="UpdateHasError" FormError="@Loc["UpdateFailedError"]" Loc="Loc"></FormAd>
             </div>
         </Body>
     </ModalDefault> 

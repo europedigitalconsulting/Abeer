@@ -4,14 +4,16 @@ using Abeer.Ads.Data.SqlServerProvider;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Abeer.Ads.Data.SqlServerProvider.Migrations
 {
     [DbContext(typeof(AdsContext))]
-    partial class AdsContextModelSnapshot : ModelSnapshot
+    [Migration("20210324210512_add table relation ad category")]
+    partial class addtablerelationadcategory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

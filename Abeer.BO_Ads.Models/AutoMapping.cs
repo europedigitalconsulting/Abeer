@@ -17,6 +17,7 @@ namespace Abeer.Ads.Models
             CreateMap<AdsFamily, AdsFamilyViewModel>().ReverseMap();
             CreateMap<AdsFamilyAttribute, AdsFamilyAttributeViewModel>().ReverseMap();
             CreateMap<AdsCategory, AdsCategoryViewModel>().ReverseMap();
+            CreateMap<CategoryAd, CategoryAdViewModel>().ReverseMap();
         }
     }
 }

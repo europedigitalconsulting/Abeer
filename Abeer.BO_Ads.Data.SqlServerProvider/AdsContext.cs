@@ -31,5 +31,6 @@ namespace Abeer.Ads.Data.SqlServerProvider
         public DbSet<AdsCategory> AdsCategories { get; set; }
         public DbSet<AdsFamily> AdsFamilies { get; set; }
         public DbSet<AdsFamilyAttribute> AdsFamilyAttributes { get; set; }
+        public DbSet<CategoryAd> CategoryAds { get; set; }
     }
 }

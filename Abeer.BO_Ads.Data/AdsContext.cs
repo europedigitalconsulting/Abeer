@@ -16,6 +16,7 @@ namespace Abeer.Ads.Data
         public IDbSet<AdsFamily> Families => _dbProvider.Set<AdsFamily>();
         public IDbSet<AdsCategory> Categories => _dbProvider.Set<AdsCategory>();
       public IDbSet<AdsFamilyAttribute> FamilyAttributes => _dbProvider.Set<AdsFamilyAttribute>();
+      public IDbSet<CategoryAd> CategoryAds => _dbProvider.Set<CategoryAd>();
 
         public int SaveChange()
         {

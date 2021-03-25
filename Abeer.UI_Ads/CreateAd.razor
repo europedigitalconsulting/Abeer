@@ -37,14 +37,43 @@
                             <option value="EURO">@Loc["EURO"]</option>
                         </select>
                     </div>
-                    @*<div class="form-group form-group col-lg-6 col-md-6 col-sm-6">
+                    <div class="form-group form-group col-lg-6 col-md-6 col-sm-6">
                         <label>@Loc["Family"]</label>
-                        <select >
-                            <Virtualize Context="Family" Items="ListFamily">
-                                <option value="@Family.FamilyId">@Family.Label</option>
-                            </Virtualize>
-                        </select>
-                    </div>*@
+                        <input class="mb-2" @oninput="TapSearch" @onclick="FocusSearchFamily" type="text" @bind="FamilySearch" placeholder="@(FamilySelected?.Label ?? "Sélectionner")" />
+                        @if (ShowFamily)
+                        {
+                            <div class="multiselect">
+                                <div id="checkboxesF">
+                                    @foreach (var item in ListFamily)
+                                    {
+                                        <div>
+                                            <label @onclick="() => SelectFamily(item)" for="@item.Code">
+                                                @item.Label
+                                            </label>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="form-group form-group col-lg-6 col-md-6 col-sm-6">
+                        <label @onclick="() => ShowCategory = !ShowCategory" class="mb-2">@Loc["Category"]</label>
+                        @if (ShowCategory)
+                        {
+                            <div class="multiselect">
+                                <div id="checkboxesC">
+                                    @foreach (var item in ListCateg)
+                                    {
+                                        <div>
+                                            <label for="@item.Code">
+                                                <input type="checkbox" id="@item.Code" checked="@(item.Selected)" @onchange="@((e) => CheckboxChanged(e, item.Code))" /> @item.Label
+                                            </label>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
                     <div class="form-group form-group col-lg-12 col-md-12 col-sm-12">
                         <label>@Loc["Url1"]</label>
                         <input type="url" Class="form-control" @bind="Ad.Url1" />

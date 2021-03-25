@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using Abeer.Shared;
+using Abeer.Shared.ViewModels;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
@@ -13,7 +14,7 @@ namespace Abeer.UI_Ads.Components
         [Parameter]
         public Microsoft.Extensions.Localization.IStringLocalizer Loc { get; set; }
         [Parameter]
-        public Abeer.Shared.Functional.AdModel Ad { get; set; }
+        public AdViewModel Ad { get; set; }
         [Parameter]
         public bool Editable { get; set; }
         [Parameter]

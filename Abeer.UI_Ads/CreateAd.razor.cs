@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -15,26 +16,39 @@ namespace Abeer.UI_Ads
     public partial class CreateAd
     {
         public string Step { get; set; } = "Step1";
-        private AdModel Ad { get; set; } = new AdModel();
+        private AdViewModel Ad { get; set; } = new AdViewModel();
         private AdPrice CurrentPrice { get; set; } = new AdPrice();
-        private List<AdPrice> AdPrices { get; set; } = new List<AdPrice>();
-        private List<AdsFamilyViewModel> ListFamily { get; set; } = new List<AdsFamilyViewModel>();
+        private List<AdPrice> AdPrices { get; set; } = new List<AdPrice>(); 
         private bool PublishHasError { get; set; }
         private AdPaymentOption AdPaymentOption { get; set; }
 
         [CascadingParameter]
         private Task<AuthenticationState> authenticationStateTask { get; set; }
-        public AuthenticationState AuthenticateSate { get; set; }
-        [Inject] public HttpClient HttpClient { get; set; }
-
+        public AuthenticationState AuthenticateSate { get; set; } 
+        public bool ShowCategory { get; set; } = false;
+        public bool ShowFamily { get; set; } = false;
+        public string FamilySearch { get; set; }
+        public AdsFamilyViewModel FamilySelected { get; set; }
+        [Inject] private HttpClient HttpClient { get; set; }
+        protected List<AdsFamilyViewModel> ListFamily { get; set; } = new List<AdsFamilyViewModel>();
+        protected List<AdsFamilyViewModel> ListFamilyTmp { get; set; } = new List<AdsFamilyViewModel>();
+        protected List<AdsCategoryViewModel> ListCateg { get; set; } = new List<AdsCategoryViewModel>();
         protected override async Task OnInitializedAsync()
         {
             AuthenticateSate = await authenticationStateTask;
 
-            var getListFamily = await HttpClient.GetAsync("/api/ads/ListFamily");
+            var getListFamily = await HttpClient.GetAsync($"/api/bo/Families/FamiliesBy/{Ad.Id}");
             getListFamily.EnsureSuccessStatusCode();
             var json = await getListFamily.Content.ReadAsStringAsync();
-            ListFamily = JsonConvert.DeserializeObject<List<AdsFamilyViewModel>>(json);
+            ListFamilyTmp = ListFamily = JsonConvert.DeserializeObject<List<AdsFamilyViewModel>>(json);
+            FamilySelected = ListFamilyTmp.FirstOrDefault(x => x.Categories.Any(c => c.Selected));
+            if (FamilySelected != null)
+            {
+                FamilySearch = FamilySelected.Label;
+                ListCateg = FamilySelected.Categories;
+                ShowCategory = true;
+            }
+            await InvokeAsync(StateHasChanged);
 
             var getAll = await HttpClient.GetAsync("/api/AdPrice/GetFeature");
             
@@ -88,7 +102,7 @@ namespace Abeer.UI_Ads
             if (!PublishHasError)
             {
                 var json = await response.Content.ReadAsStringAsync();
-                var Ad = JsonConvert.DeserializeObject<AdModel>(json);
+                var Ad = JsonConvert.DeserializeObject<AdViewModel>(json);
                 NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri($"/ads/ValidAd/{Ad.Id}").ToString(), true);
             }
 
@@ -114,11 +128,39 @@ namespace Abeer.UI_Ads
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
-                Ad = JsonConvert.DeserializeObject<AdModel>(json);
+                Ad = JsonConvert.DeserializeObject<AdViewModel>(json);
                 NavigationManager.NavigateTo($"/payment/{methodPayment}/{Ad.OrderNumber}");
             }
         }
-
+        private void CheckboxChanged(ChangeEventArgs e, string key)
+        {
+            var i = ListCateg.FirstOrDefault(i => i.Code == key);
+            if (i != null)
+            {
+                i.Selected = (bool)e.Value;
+            }
+            Ad.ListIdCategory = ListCateg.Where(c => c.Selected).Select(x => x.CategoryId).ToList(); ;
+        }
+        private void SelectFamily(AdsFamilyViewModel family)
+        {
+            family.Categories.ForEach(x => x.Selected = false);
+            FamilySelected = family;
+            FamilySearch = FamilySelected.Label;
+            ListCateg = family.Categories;
+            ShowFamily = false;
+            ShowCategory = true;
+            StateHasChanged();
+        }
+        void TapSearch(ChangeEventArgs e)
+        {
+            FamilySearch = e.Value.ToString();
+            ListFamily = ListFamilyTmp.Where(x => x.Label.StartsWith(FamilySearch, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+        void FocusSearchFamily()
+        {
+            ShowFamily = !ShowFamily;
+            ShowCategory = false;
+        }
         private void AssignImageUrl1(string imgUrl) => Ad.ImageUrl1 = imgUrl;
         private void AssignImageUrl2(string imgUrl) => Ad.ImageUrl2 = imgUrl;
         private void AssignImageUrl3(string imgUrl) => Ad.ImageUrl3 = imgUrl;

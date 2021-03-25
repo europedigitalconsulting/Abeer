@@ -28,6 +28,18 @@ namespace Abeer.Ads.ApiFeatures
             return Ok(familyViewModels);
         }
 
+        [HttpGet("FamiliesBy/{AdId}")]
+        public async Task<ActionResult<IList<AdsFamilyViewModel>>> FamiliesBy(Guid AdId)
+        {
+            var familyViewModels = await _adsUnitOfWork.FamiliesRepository.GetAll();
+            var listIdCateg = await _adsUnitOfWork.CategoryAdRepository.GetAllIdCatByAdId(AdId);
+            familyViewModels.ToList().ForEach(x => {
+               x.Categories.ForEach(v => v.Selected = listIdCateg.Contains(v.CategoryId));
+            });
+
+            return Ok(familyViewModels);
+        }
+
         [HttpPost]
         public async Task<ActionResult<AdsFamilyViewModel>> Create(AdsFamilyViewModel familyView)
         {

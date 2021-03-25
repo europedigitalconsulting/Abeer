@@ -26,7 +26,7 @@ namespace Abeer.Ads.Data.Repositories
         {
             return GetAll<AdsFamilyViewModel, AdsFamily>(() =>
             {
-                var data = _dbSet.AsQuery().Include(f => f.Attributes).ToList();
+                var data = _dbSet.AsQuery().Include(f => f.Attributes).Include(f => f.Categories).ToList();
                 return data;
             });
         }

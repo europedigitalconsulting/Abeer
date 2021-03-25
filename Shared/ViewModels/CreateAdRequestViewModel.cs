@@ -6,7 +6,7 @@ namespace Abeer.Shared.ViewModels
 {
     public class CreateAdRequestViewModel
     {
-        public AdModel Ad { get; set; }
+        public AdViewModel Ad { get; set; }
         public AdPrice Price { get; set; }
         public List<FileData> Files { get; set; }
     }
