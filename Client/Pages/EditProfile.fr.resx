@@ -294,6 +294,27 @@
   <data name="Save" xml:space="preserve">
     <value>Enregistrer</value>
   </data>
+  <data name="ShareOnEmail" xml:space="preserve">
+    <value>Partager par email</value>
+  </data>
+  <data name="ShareOnFacebook" xml:space="preserve">
+    <value>Partager sur Facebook</value>
+  </data>
+  <data name="ShareOnLinkedIn" xml:space="preserve">
+    <value>Partager sur LinkedIn</value>
+  </data>
+  <data name="ShareOnPintereset" xml:space="preserve">
+    <value>Partager sur Pinterest</value>
+  </data>
+  <data name="ShareOnTumblr" xml:space="preserve">
+    <value>Partager sur Tumblr</value>
+  </data>
+  <data name="ShareOnTwitter" xml:space="preserve">
+    <value>Partager sur twitter</value>
+  </data>
+  <data name="ShareOnWhatsApp" xml:space="preserve">
+    <value>Partager par whatsapp</value>
+  </data>
   <data name="ShareSource" xml:space="preserve">
     <value>Meetage.co</value>
   </data>
