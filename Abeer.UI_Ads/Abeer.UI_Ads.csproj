@@ -31,5 +31,11 @@
     <ProjectReference Include="..\Shared\Abeer.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Update="Components\AdFamiliesCategories.resx">
+      <Generator></Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
 
 </Project>

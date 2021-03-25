@@ -117,8 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Category" xml:space="preserve">
+    <value>Catégorie(s)</value>
+  </data>
+  <data name="Currency" xml:space="preserve">
+    <value>Monnaie</value>
+  </data>
   <data name="currentprice" xml:space="preserve">
     <value>Prix de l'annonce</value>
+  </data>
+  <data name="Familly" xml:space="preserve">
+    <value>Famille</value>
   </data>
   <data name="ReturnList" xml:space="preserve">
     <value>Retour à la liste</value>

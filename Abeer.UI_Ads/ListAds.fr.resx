@@ -120,6 +120,15 @@
   <data name="All" xml:space="preserve">
     <value>Toutes les annonces</value>
   </data>
+  <data name="Category" xml:space="preserve">
+    <value>Catégorie(s)</value>
+  </data>
+  <data name="Currency" xml:space="preserve">
+    <value>Monnaie</value>
+  </data>
+  <data name="Familly" xml:space="preserve">
+    <value>Famille</value>
+  </data>
   <data name="ManageAds" xml:space="preserve">
     <value>Gérer les annonces et les offres</value>
   </data>

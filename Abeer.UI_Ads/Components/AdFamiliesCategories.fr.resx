@@ -117,85 +117,151 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AdTitle" xml:space="preserve">
-    <value>Titre</value>
+  <data name="accessoires" xml:space="preserve">
+    <value>Accessoires</value>
   </data>
-  <data name="AreYouSureDelete" xml:space="preserve">
-    <value>Etes-vous sûr de vouloir supprimer cette annonce ?</value>
+  <data name="Agricole" xml:space="preserve">
+    <value>Matériel agricole</value>
   </data>
-  <data name="Cancel" xml:space="preserve">
-    <value>Annuler</value>
+  <data name="animal" xml:space="preserve">
+    <value>Animaux</value>
   </data>
-  <data name="Category" xml:space="preserve">
-    <value>Catégorie(s)</value>
+  <data name="bagages" xml:space="preserve">
+    <value>Accessoires &amp; Bagages</value>
   </data>
-  <data name="Currency" xml:space="preserve">
-    <value>Monnaie</value>
+  <data name="billetterie" xml:space="preserve">
+    <value>Billetterie</value>
   </data>
-  <data name="DeleteAdTitle" xml:space="preserve">
-    <value>Supprimer une annonce</value>
+  <data name="BTP" xml:space="preserve">
+    <value>Matériel pour BTP &amp; chantier</value>
   </data>
-  <data name="DeleteFailedError" xml:space="preserve">
-    <value>Impossible de supprimer votre annonce veuillez réessayer plus tard</value>
+  <data name="car" xml:space="preserve">
+    <value>Véhicules</value>
   </data>
-  <data name="Description" xml:space="preserve">
-    <value>Description</value>
+  <data name="carAccessories" xml:space="preserve">
+    <value>Equipement pour voiture</value>
   </data>
-  <data name="EditAdTitle" xml:space="preserve">
-    <value>Modifier l'annonce</value>
+  <data name="caraving" xml:space="preserve">
+    <value>Caraving</value>
   </data>
-  <data name="Family" xml:space="preserve">
-    <value>Famille</value>
+  <data name="chaus" xml:space="preserve">
+    <value>Chaussure</value>
   </data>
-  <data name="ListAds" xml:space="preserve">
-    <value>Afficher toutes les annonces</value>
+  <data name="cours" xml:space="preserve">
+    <value>Cours</value>
   </data>
-  <data name="NoAdsFound" xml:space="preserve">
-    <value>Aucune annonce trouvée. Vous n'avez encore publiée aucune annonce</value>
+  <data name="covoiturage" xml:space="preserve">
+    <value>Covoiturage</value>
   </data>
-  <data name="NotOnlineSince" xml:space="preserve">
-    <value>L'anonce n'est plus en ligne depuis</value>
+  <data name="equipementBebes" xml:space="preserve">
+    <value>Equipement pour bébé</value>
   </data>
-  <data name="OnlineBetween" xml:space="preserve">
-    <value>L'annonce est en ligne entre</value>
+  <data name="EquipementIndustriels" xml:space="preserve">
+    <value>Equipement industriel</value>
   </data>
-  <data name="Price" xml:space="preserve">
-    <value>Prix</value>
+  <data name="evenement" xml:space="preserve">
+    <value>Evénements</value>
   </data>
-  <data name="Summary" xml:space="preserve">
-    <value>Résumé</value>
+  <data name="freelance" xml:space="preserve">
+    <value>Travail indépendant</value>
   </data>
-  <data name="Title" xml:space="preserve">
-    <value>Annonces</value>
+  <data name="fulltimejob" xml:space="preserve">
+    <value>Plein temps (CDI, CDD)</value>
   </data>
-  <data name="Update" xml:space="preserve">
-    <value>Modifier</value>
+  <data name="game" xml:space="preserve">
+    <value>Jeux vidéos</value>
   </data>
-  <data name="UpdateFailedError" xml:space="preserve">
-    <value>Impossible d'enregistrer votre modification, une erreur a été rencontrée, veuillez modifier le formulaire et réessayer</value>
+  <data name="Health" xml:space="preserve">
+    <value>Matériel pour santé</value>
   </data>
-  <data name="Url1" xml:space="preserve">
-    <value>Url 1</value>
+  <data name="homework" xml:space="preserve">
+    <value>Travail à domicile</value>
   </data>
-  <data name="Url2" xml:space="preserve">
-    <value>Url 2</value>
+  <data name="house" xml:space="preserve">
+    <value>Immobilier</value>
   </data>
-  <data name="Url3" xml:space="preserve">
-    <value>Url 3</value>
+  <data name="image" xml:space="preserve">
+    <value>Image &amp; son</value>
   </data>
-  <data name="Url4" xml:space="preserve">
-    <value>Url 4</value>
+  <data name="informatique" xml:space="preserve">
+    <value>Informatique</value>
   </data>
-  <data name="ValidAd" xml:space="preserve">
-    <value>Valider l'annonce</value>
+  <data name="Luxes" xml:space="preserve">
+    <value>Luxes et Mode</value>
   </data>
-  <data name="ViewNotValid" xml:space="preserve">
-    <value>Afficher les annonces non validés</value>
+  <data name="Market" xml:space="preserve">
+    <value>Equipement pour commerce &amp; marché</value>
   </data>
-  <data name="ViewToValidate" xml:space="preserve">
-    <value>Les annonces à valider</value>
+  <data name="mode" xml:space="preserve">
+    <value>Mode</value>
   </data>
-  <data name="WillBeOnline" xml:space="preserve">
-    <value>L'annonce sera visible à partir du</value>
+  <data name="montresbijoux" xml:space="preserve">
+    <value>Montres &amp; Bijoux</value>
+  </data>
+  <data name="moto" xml:space="preserve">
+    <value>Moto</value>
+  </data>
+  <data name="multimedia" xml:space="preserve">
+    <value>Multimédia</value>
+  </data>
+  <data name="newHouse" xml:space="preserve">
+    <value>Nouvelle construction</value>
+  </data>
+  <data name="Office" xml:space="preserve">
+    <value>Bureau &amp; Commerce</value>
+  </data>
+  <data name="OfficeHouse" xml:space="preserve">
+    <value>Bureau &amp; Commerces</value>
+  </data>
+  <data name="oldHouse" xml:space="preserve">
+    <value>Ancienne maison</value>
+  </data>
+  <data name="Outilage" xml:space="preserve">
+    <value>Outilage</value>
+  </data>
+  <data name="particularwork" xml:space="preserve">
+    <value>Travail pour un particulier</value>
+  </data>
+  <data name="PetAccessories" xml:space="preserve">
+    <value>Accessoire pour animaux</value>
+  </data>
+  <data name="PetFood" xml:space="preserve">
+    <value>Nourriture pour animaux</value>
+  </data>
+  <data name="Pets" xml:space="preserve">
+    <value>Animaux</value>
+  </data>
+  <data name="prestation" xml:space="preserve">
+    <value>Préstation de services</value>
+  </data>
+  <data name="rentHouse" xml:space="preserve">
+    <value>Location maison / appartement</value>
+  </data>
+  <data name="RestaurationHotellerie" xml:space="preserve">
+    <value>Restauration &amp; Hotellerie</value>
+  </data>
+  <data name="service" xml:space="preserve">
+    <value>Services</value>
+  </data>
+  <data name="String1" xml:space="preserve">
+    <value>Voiture</value>
+  </data>
+  <data name="Telephonie" xml:space="preserve">
+    <value>Téléphonie</value>
+  </data>
+  <data name="tools" xml:space="preserve">
+    <value>Outilage &amp; Matériel Professionnel</value>
+  </data>
+  <data name="Transport" xml:space="preserve">
+    <value>Transport</value>
+  </data>
+  <data name="truck" xml:space="preserve">
+    <value>Camion</value>
+  </data>
+  <data name="vetementsBebes" xml:space="preserve">
+    <value>Vétements pour bébés</value>
+  </data>
+  <data name="work" xml:space="preserve">
+    <value>Emploi &amp; Travail</value>
   </data>
 </root>

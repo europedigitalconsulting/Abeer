@@ -312,6 +312,9 @@
   <data name="TitleChangeMail" xml:space="preserve">
     <value>Adresse email</value>
   </data>
+  <data name="TitleOpenQrCode" xml:space="preserve">
+    <value>Ouvrir le QR Code</value>
+  </data>
   <data name="TxtDesc1" xml:space="preserve">
     <value>Après avoir changé votre adresse mail vous serez automatiquement déconnecté.</value>
   </data>

@@ -62,5 +62,12 @@ namespace Abeer.Ads.Data.Repositories
         {
             _context.SaveChange();
         }
+
+        public Task<AdsFamilyViewModel> GetByCode(string familyCode)
+        {
+            return Task.Run(() => _mapper.Map<AdsFamily, AdsFamilyViewModel>(_dbSet.AsQuery()
+                .Include(f => f.Attributes)
+                .FirstOrDefault(f => EF.Functions.Like(f.Code, familyCode))));
+        }
     }
 }

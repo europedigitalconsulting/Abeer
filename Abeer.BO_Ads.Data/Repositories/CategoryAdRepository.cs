@@ -65,6 +65,14 @@ namespace Abeer.Ads.Data.Repositories
             _context.BulkDelete(list); 
         }
 
+        public Task<IList<CategoryAd>> GetAllByCategoriesId(IEnumerable<Guid> categoriesId)
+        {
+            return Task.Run(() =>
+            {
+                return _context.CategoryAds.Where(c => categoriesId.Contains(c.CategoryId));
+            });
+        }
+
         //public Task<IList<CategoryAdViewModel>> FilterByFamilies(List<Guid> familiesId) =>
         //    GetAll<CategoryAdViewModel, AdsCategory>(() => _context.Categories.Where(f => familiesId.Contains(f.FamilyId)).ToList());
 

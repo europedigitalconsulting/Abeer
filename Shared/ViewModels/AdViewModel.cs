@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using Abeer.Shared.Functional;
@@ -45,6 +46,8 @@ namespace Abeer.Shared.ViewModels
         public  ViewApplicationUser Owner { get; set; }
         public  List<ListAdViewModel> OtherAds { get; set; }
         public  List<Guid> ListIdCategory{ get; set; }
+        public string Family { get; set; }
+        public List<string> Categories { get; set; }
 
         public static implicit operator AdViewModel(AdModel model)
         {

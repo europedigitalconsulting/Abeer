@@ -33,7 +33,7 @@ using System.Linq;
 using Abeer.Services.Data;
 using Abeer.Server.APIFeatures.Hubs;
 using Microsoft.AspNetCore.ResponseCompression;
-using Microsoft.AspNetCore.SignalR; 
+using Microsoft.AspNetCore.SignalR;
 using Abeer.Ads.Data;
 using AutoMapper;
 using Abeer.Server.APIFeatures.Jobs;
@@ -78,7 +78,8 @@ namespace Abeer.Server
 
             services.RegisterAdsModule(Configuration);
 
-            services.AddSingleton<IDbProviderFactory>(sp => {
+            services.AddSingleton<IDbProviderFactory>(sp =>
+            {
                 return new DbProviderFactory(sp);
             });
 
@@ -246,6 +247,7 @@ namespace Abeer.Server
             SeedNetworkSocials(scope, env);
             SeedUserData(scope, env).Wait();
             SeedCountries(scope, env);
+            SeedArticles(scope, env);
             //SeedNotifications(scope, env).Wait();
 
             app.UseMiddleware<UrlShortnerRewriter>();
@@ -302,10 +304,668 @@ namespace Abeer.Server
             });
         }
 
+        private void SeedArticles(IServiceScope scope, IWebHostEnvironment env)
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AdsContext>();
+
+            db.EnsureCreated();
+            db.SetTimeout(360);
+
+            seedWorkFamily(db);
+            SeedMode(db);
+            seedCar(db);
+            seedHouse(db);
+            seedAnimal(db);
+            seedMultimedia(db);
+            seedServices(db);
+            seedTools(db);
+            seedOthers(db);
+        }
+
+        private void SeedMode(AdsContext db)
+        {
+            if(!db.Families.Any(f=>f.Code == "mode"))
+            {
+                var family = db.Families.Add(new Ads.Models.AdsFamily
+                {
+                    Code = "mode",
+                    FamilyId = Guid.NewGuid(),
+                    Label = "mode",
+                    LabelSearch = "mode",
+                    MetaDescription = "mode",
+                    MetaKeywords = "mode",
+                    MetaTitle = "mode"
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    CategoryId = Guid.NewGuid(),
+                    Code = "chaus",
+                    Label = "chaus",
+                    MetaDescription = "chaus",
+                    MetaKeywords = "chaus",
+                    MetaTitle = "chaus",
+                    Family = family
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    CategoryId = Guid.NewGuid(),
+                    Code = "accessoires",
+                    Label = "accessoires",
+                    MetaDescription = "accessoires",
+                    MetaKeywords = "accessoires",
+                    MetaTitle = "accessoires",
+                    Family = family
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    CategoryId = Guid.NewGuid(),
+                    Code = "bagages",
+                    Label = "bagages",
+                    MetaDescription = "bagages",
+                    MetaKeywords = "bagages",
+                    MetaTitle = "bagages",
+                    Family = family
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    CategoryId = Guid.NewGuid(),
+                    Code = "montresbijoux",
+                    Label = "montresbijoux",
+                    MetaDescription = "montresbijoux",
+                    MetaKeywords = "montresbijoux",
+                    MetaTitle = "montresbijoux",
+                    Family = family
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    CategoryId = Guid.NewGuid(),
+                    Code = "equipementBebes",
+                    Label = "equipementBebes",
+                    MetaDescription = "equipementBebes",
+                    MetaKeywords = "equipementBebes",
+                    MetaTitle = "equipementBebes",
+                    Family = family
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    CategoryId = Guid.NewGuid(),
+                    Code = "vetementsBebes",
+                    Label = "vetementsBebes",
+                    MetaDescription = "vetementsBebes",
+                    MetaKeywords = "vetementsBebes",
+                    MetaTitle = "vetementsBebes",
+                    Family = family
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    CategoryId = Guid.NewGuid(),
+                    Code = "Luxes",
+                    Label = "Luxes",
+                    MetaDescription = "Luxes",
+                    MetaKeywords = "Luxes",
+                    MetaTitle = "Luxes",
+                    Family = family
+                });
+
+                db.SaveChange();
+            }
+        }
+
+        private static void seedOthers(AdsContext db)
+        {
+            if (db.Families.Any(f => f.Code == "other"))
+            {
+                var family = db.Families.Add(new Ads.Models.AdsFamily
+                {
+                    Code = "other",
+                    FamilyId = Guid.NewGuid(),
+                    Label = "other",
+                    LabelSearch = "other",
+                    MetaDescription = "other",
+                    MetaKeywords = "other",
+                    MetaTitle = "other"
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    Code = "other",
+                    CategoryId = Guid.NewGuid(),
+                    FamilyId = family.FamilyId,
+                    Label = "other",
+                    MetaDescription = "other",
+                    MetaKeywords = "other",
+                    MetaTitle = "other"
+                });
+
+                db.SaveChange();
+            }
+        }
+
+        private static void seedTools(AdsContext db)
+        {
+            if (!db.Families.Any(f => f.Code == "tools"))
+            {
+                var family = db.Families.Add(new Ads.Models.AdsFamily
+                {
+                    Code = "tools",
+                    FamilyId = Guid.NewGuid(),
+                    Label = "tools",
+                    LabelSearch = "tools",
+                    MetaDescription = "tools",
+                    MetaKeywords = "tools",
+                    MetaTitle = "tools"
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    Code = "Agricole",
+                    CategoryId = Guid.NewGuid(),
+                    FamilyId = family.FamilyId,
+                    Label = "Agricole",
+                    MetaDescription = "Agricole",
+                    MetaKeywords = "Agricole",
+                    MetaTitle = "Agricole"
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    Code = "Transport",
+                    CategoryId = Guid.NewGuid(),
+                    FamilyId = family.FamilyId,
+                    Label = "Transport",
+                    MetaDescription = "Transport",
+                    MetaKeywords = "Transport",
+                    MetaTitle = "Transport"
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    Code = "BTP",
+                    CategoryId = Guid.NewGuid(),
+                    FamilyId = family.FamilyId,
+                    Label = "BTP",
+                    MetaDescription = "BTP",
+                    MetaKeywords = "BTP",
+                    MetaTitle = "BTP"
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    Code = "Outilage",
+                    CategoryId = Guid.NewGuid(),
+                    FamilyId = family.FamilyId,
+                    Label = "Outilage",
+                    MetaDescription = "Outilage",
+                    MetaKeywords = "Outilage",
+                    MetaTitle = "Outilage"
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    Code = "EquipementIndustriels",
+                    CategoryId = Guid.NewGuid(),
+                    FamilyId = family.FamilyId,
+                    Label = "EquipementIndustriels",
+                    MetaDescription = "EquipementIndustriels",
+                    MetaKeywords = "EquipementIndustriels",
+                    MetaTitle = "EquipementIndustriels"
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    Code = "RestaurationHotellerie",
+                    CategoryId = Guid.NewGuid(),
+                    FamilyId = family.FamilyId,
+                    Label = "RestaurationHotellerie",
+                    MetaDescription = "RestaurationHotellerie",
+                    MetaKeywords = "RestaurationHotellerie",
+                    MetaTitle = "RestaurationHotellerie"
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    Code = "Office",
+                    CategoryId = Guid.NewGuid(),
+                    FamilyId = family.FamilyId,
+                    Label = "Office",
+                    MetaDescription = "Office",
+                    MetaKeywords = "Office",
+                    MetaTitle = "Office"
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    Code = "Market",
+                    CategoryId = Guid.NewGuid(),
+                    FamilyId = family.FamilyId,
+                    Label = "Market",
+                    MetaDescription = "Market",
+                    MetaKeywords = "Market",
+                    MetaTitle = "Market"
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    Code = "Health",
+                    CategoryId = Guid.NewGuid(),
+                    FamilyId = family.FamilyId,
+                    Label = "Health",
+                    MetaDescription = "Health",
+                    MetaKeywords = "Health",
+                    MetaTitle = "Health"
+                });
+
+                db.SaveChange();
+            }
+        }
+
+        private static void seedServices(AdsContext db)
+        {
+            if (!db.Families.Any(f => f.Code == "service"))
+            {
+                var family = db.Families.Add(new Ads.Models.AdsFamily
+                {
+                    Code = "service",
+                    FamilyId = Guid.NewGuid(),
+                    Label = "services",
+                    LabelSearch = "services",
+                    MetaDescription = "services",
+                    MetaKeywords = "services",
+                    MetaTitle = "services"
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    CategoryId = Guid.NewGuid(),
+                    Code = "prestation",
+                    FamilyId = family.FamilyId,
+                    Label = "prestation",
+                    MetaDescription = "prestation",
+                    MetaKeywords = "prestation",
+                    MetaTitle = "prestation"
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    CategoryId = Guid.NewGuid(),
+                    Code = "billetterie",
+                    FamilyId = family.FamilyId,
+                    Label = "billetterie",
+                    MetaDescription = "billetterie",
+                    MetaKeywords = "billetterie",
+                    MetaTitle = "billetterie"
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    CategoryId = Guid.NewGuid(),
+                    Code = "evenement",
+                    FamilyId = family.FamilyId,
+                    Label = "evenement",
+                    MetaDescription = "evenement",
+                    MetaKeywords = "evenement",
+                    MetaTitle = "evenement"
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    CategoryId = Guid.NewGuid(),
+                    Code = "cours",
+                    FamilyId = family.FamilyId,
+                    Label = "cours",
+                    MetaDescription = "cours",
+                    MetaKeywords = "cours",
+                    MetaTitle = "cours"
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    CategoryId = Guid.NewGuid(),
+                    Code = "covoiturage",
+                    FamilyId = family.FamilyId,
+                    Label = "covoiturage",
+                    MetaDescription = "covoiturage",
+                    MetaKeywords = "covoiturage",
+                    MetaTitle = "covoiturage"
+                });
+
+                db.SaveChange();
+
+            }
+        }
+
+        private static void seedMultimedia(AdsContext db)
+        {
+            if (!db.Families.Any(f => f.Code == "multimedia"))
+            {
+                var family = db.Families.Add(new Ads.Models.AdsFamily
+                {
+                    Code = "multimedia",
+                    FamilyId = Guid.NewGuid(),
+                    Label = "multimedia",
+                    LabelSearch = "multimedia",
+                    MetaDescription = "multimedia",
+                    MetaKeywords = "multimedia",
+                    MetaTitle = "multimedia"
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    CategoryId = Guid.NewGuid(),
+                    Code = "informatique",
+                    Family = family,
+                    Label = "informatique",
+                    MetaDescription = "informatique",
+                    MetaKeywords = "informatique",
+                    MetaTitle = "informatique"
+                });
+
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    CategoryId = Guid.NewGuid(),
+                    Code = "game",
+                    Family = family,
+                    Label = "game",
+                    MetaDescription = "game",
+                    MetaKeywords = "game",
+                    MetaTitle = "game"
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    CategoryId = Guid.NewGuid(),
+                    Code = "image",
+                    Family = family,
+                    Label = "image",
+                    MetaDescription = "image",
+                    MetaKeywords = "image",
+                    MetaTitle = "image"
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    CategoryId = Guid.NewGuid(),
+                    Code = "Telephonie",
+                    Family = family,
+                    Label = "Telephonie",
+                    MetaDescription = "Telephonie",
+                    MetaKeywords = "Telephonie",
+                    MetaTitle = "Telephonie"
+                });
+
+                db.SaveChange();
+
+            }
+        }
+
+        private static void seedAnimal(AdsContext db)
+        {
+            if (!db.Families.Any(f => f.Code == "animal"))
+            {
+                var family = db.Families.Add(new Ads.Models.AdsFamily
+                {
+                    Code = "animal",
+                    FamilyId = Guid.NewGuid(),
+                    Label = "animals",
+                    LabelSearch = "animals",
+                    MetaDescription = "animals",
+                    MetaKeywords = "animals",
+                    MetaTitle = "animals"
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    Family = family,
+                    CategoryId = Guid.NewGuid(),
+                    Code = "PetFood",
+                    Label = "PetFood",
+                    MetaDescription = "PetFood",
+                    MetaKeywords = "PetFood",
+                    MetaTitle = "PetFood"
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    Family = family,
+                    CategoryId = Guid.NewGuid(),
+                    Code = "PetAccessories",
+                    Label = "PetAccessories",
+                    MetaDescription = "PetAccessories",
+                    MetaKeywords = "PetAccessories",
+                    MetaTitle = "PetAccessories"
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    Family = family,
+                    CategoryId = Guid.NewGuid(),
+                    Code = "Pets",
+                    Label = "Pets",
+                    MetaDescription = "Pets",
+                    MetaKeywords = "Pets",
+                    MetaTitle = "Pets"
+                });
+
+                db.SaveChange();
+
+            }
+        }
+
+        private static void seedHouse(AdsContext db)
+        {
+            if (!db.Families.Any(f => f.Code == "house"))
+            {
+                var family = db.Families.Add(new Ads.Models.AdsFamily
+                {
+                    Code = "house",
+                    FamilyId = Guid.NewGuid(),
+                    Label = "house",
+                    LabelSearch = "house",
+                    MetaDescription = "house",
+                    MetaKeywords = "house",
+                    MetaTitle = "house"
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    Family = family,
+                    CategoryId = Guid.NewGuid(),
+                    Label = "rentHouse",
+                    Code = "rentHouse",
+                    MetaDescription = "rentHouse",
+                    MetaKeywords = "rentHouse",
+                    MetaTitle = "rentHouse"
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    Family = family,
+                    CategoryId = Guid.NewGuid(),
+                    Label = "newHouse",
+                    Code = "newHouse",
+                    MetaDescription = "newHouse",
+                    MetaKeywords = "newHouse",
+                    MetaTitle = "newHouse"
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    Family = family,
+                    CategoryId = Guid.NewGuid(),
+                    Label = "oldHouse",
+                    Code = "oldHouse",
+                    MetaDescription = "oldHouse",
+                    MetaKeywords = "oldHouse",
+                    MetaTitle = "oldHouse"
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    Family = family,
+                    CategoryId = Guid.NewGuid(),
+                    Label = "OfficeHouse",
+                    Code = "OfficeHouse",
+                    MetaDescription = "OfficeHouse",
+                    MetaKeywords = "OfficeHouse",
+                    MetaTitle = "OfficeHouse"
+                });
+
+                db.SaveChange();
+            }
+        }
+
+        private static void seedCar(AdsContext db)
+        {
+            if (!db.Families.Any(f => f.Code == "car"))
+            {
+                var family = db.Families.Add(new Ads.Models.AdsFamily
+                {
+                    Code = "car",
+                    FamilyId = Guid.NewGuid(),
+                    Label = "car",
+                    LabelSearch = "car",
+                    MetaDescription = "car",
+                    MetaKeywords = "car",
+                    MetaTitle = "car"
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    Family = family,
+                    Code = "car",
+                    Label = "car",
+                    MetaDescription = "car",
+                    MetaKeywords = "car",
+                    MetaTitle = "car",
+                    CategoryId = Guid.NewGuid()
+                });
+
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    Family = family,
+                    Code = "moto",
+                    Label = "moto",
+                    MetaDescription = "moto",
+                    MetaKeywords = "moto",
+                    MetaTitle = "moto",
+                    CategoryId = Guid.NewGuid()
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    Family = family,
+                    Code = "caraving",
+                    Label = "caraving",
+                    MetaDescription = "caraving",
+                    MetaKeywords = "caraving",
+                    MetaTitle = "caraving",
+                    CategoryId = Guid.NewGuid()
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    Family = family,
+                    Code = "truck",
+                    Label = "truck",
+                    MetaDescription = "truck",
+                    MetaKeywords = "truck",
+                    MetaTitle = "truck",
+                    CategoryId = Guid.NewGuid()
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    Family = family,
+                    Code = "carAccessories",
+                    Label = "carAccessories",
+                    MetaDescription = "carAccessories",
+                    MetaKeywords = "carAccessories",
+                    MetaTitle = "carAccessories",
+                    CategoryId = Guid.NewGuid()
+                });
+
+                db.SaveChange();
+
+            }
+        }
+
+        private static void seedWorkFamily(AdsContext db)
+        {
+            if (!db.Families.Any(f => f.Code == "work"))
+            {
+                var family = db.Families.Add(new Ads.Models.AdsFamily
+                {
+                    Code = "work",
+                    FamilyId = Guid.NewGuid(),
+                    Label = "work",
+                    LabelSearch = "Job",
+                    MetaDescription = "work",
+                    MetaKeywords = "work",
+                    MetaTitle = "work"
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    CategoryId = Guid.NewGuid(),
+                    Code = "fulltimejob",
+                    Family = family,
+                    Label = "fulltimejob",
+                    MetaDescription = "fulltimejob",
+                    MetaKeywords = "fulltimejob",
+                    MetaTitle = "fulltimejob"
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    CategoryId = Guid.NewGuid(),
+                    Code = "freelance",
+                    Family = family,
+                    Label = "freelance",
+                    MetaDescription = "freelance",
+                    MetaKeywords = "freelance",
+                    MetaTitle = "freelance"
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    CategoryId = Guid.NewGuid(),
+                    Code = "homework",
+                    Family = family,
+                    Label = "homework",
+                    MetaDescription = "homework",
+                    MetaKeywords = "homework",
+                    MetaTitle = "homework"
+                });
+
+                db.Categories.Add(new Ads.Models.AdsCategory
+                {
+                    CategoryId = Guid.NewGuid(),
+                    Code = "particularwork",
+                    Family = family,
+                    Label = "particularwork",
+                    MetaDescription = "particularwork",
+                    MetaKeywords = "particularwork",
+                    MetaTitle = "particularwork"
+                });
+
+                db.SaveChange();
+
+            }
+        }
+
         private void InitializeModuleProvider(IServiceScope scope, IWebHostEnvironment env)
         {
-            var x = scope.ServiceProvider.GetRequiredService<IDbProviderFactory>(); 
-            x.InitializeAdsModule(scope.ServiceProvider, Configuration); 
+            var x = scope.ServiceProvider.GetRequiredService<IDbProviderFactory>();
+            x.InitializeAdsModule(scope.ServiceProvider, Configuration);
         }
         /*
         private async Task SeedNotifications(IServiceScope scope, IWebHostEnvironment env)
@@ -332,7 +992,7 @@ namespace Abeer.Server
         */
 
         private async Task SeedAdPrices(IServiceScope scope, IWebHostEnvironment env)
-        { 
+        {
             var db = scope.ServiceProvider.GetRequiredService<FunctionalUnitOfWork>();
             db.EnsureCreated();
             db.SetTimeout(360);

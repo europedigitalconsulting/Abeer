@@ -2,7 +2,9 @@
 
 @using Abeer.UI_Ads.Components
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
+
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Details> Loc
+@inject Microsoft.Extensions.Localization.IStringLocalizer<AdFamiliesCategories> LocFamilies
 @inject IHttpClientFactory HttpClientFactory
 @inject NavigationManager NavigationManager
 @inject IJSRuntime jsRuntime
@@ -38,11 +40,38 @@
                 </h4>
             </div>
             <div class="col-4 m-0 p-0 text-right">
-
                 <span style="color:lightgray">Il y'a @((int)((DateTime.Now- Ad.ValidateDate).TotalDays)) jour(s)</span>
             </div>
         </div>
         <div class="card-body">
+            @if (!string.IsNullOrEmpty(Ad.Family))
+            {
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="/ads/list">
+                                @Loc["Home"]
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="/ads/listbyfamily/@Ad.Family">
+                                @LocFamilies[Ad.Family]
+                            </a>
+                        </li>
+                        @if (Ad.Categories != null)
+                        {
+                            foreach (var category in Ad.Categories)
+                            {
+                            <li class="breadcrumb-item">
+                                <a href="/ads/listByCategory/@category">
+                                    @LocFamilies[category]
+                                </a>
+                            </li>
+                            }
+                        }
+                    </ol>
+                </nav>
+            }
             <div class="col-12 mb-2">
                 <div class="gallery gallery-md">
                     @if (!string.IsNullOrEmpty(Ad.ImageUrl1))

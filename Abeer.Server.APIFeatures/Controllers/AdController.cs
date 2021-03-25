@@ -21,6 +21,7 @@ using static Abeer.Services.TemplateRenderManager;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.WebUtilities;
 using AutoMapper;
+using Abeer.Ads.Models;
 
 namespace Abeer.Server.Controllers
 {
@@ -87,6 +88,27 @@ namespace Abeer.Server.Controllers
             return Ok(await functionalUnitOfWork.AdRepository.GetVisibledCountry(User.Country()));
         }
 
+        [HttpGet("family/{familyCode}")]
+        public async Task<ActionResult<IEnumerable<AdModel>>> GetVisibledFamily(string familyCode)
+        {
+            var visibled = await functionalUnitOfWork.AdRepository.GetVisibled();
+            
+            var family = await _adsUnitOfWork.FamiliesRepository.GetByCode(familyCode);
+            var categories = await _adsUnitOfWork.CategoriesRepository.FilterByFamilies(new List<Guid> { family.FamilyId });
+            var adCategories = await _adsUnitOfWork.CategoryAdRepository.GetAllByCategoriesId(categories.Select(c => c.CategoryId));
+
+            var result = visibled.Where(a => adCategories.Any(ac => ac.AdId == a.Id)).ToList();
+
+            return Ok(result);
+        }
+
+        [HttpGet("category/{categoryCode}")]
+        public async Task<ActionResult<IEnumerable<AdModel>>> GetVisibledCategoryCode(string categoryCode)
+        {
+            return Ok(await functionalUnitOfWork.AdRepository.GetVisibledCountry(User.Country()));
+        }
+
+
         [HttpGet("author/{authorId}")]
         public async Task<ActionResult<IEnumerable<AdModel>>> GetVisibledAuthor(string authorId)
         {
@@ -152,6 +174,29 @@ namespace Abeer.Server.Controllers
                 await functionalUnitOfWork.SocialNetworkRepository.GetSocialNetworkLinks(ad.OwnerId);
 
             ad.Owner.CustomLinks = await functionalUnitOfWork.CustomLinkRepository.GetCustomLinkLinks(ad.OwnerId);
+
+            var categorieIds = await _adsUnitOfWork.CategoryAdRepository.GetAllIdCatByAdId(ad.Id);
+            
+            List<string> categories = new();
+            string family = string.Empty;
+
+            foreach(Guid categoryId in categorieIds)
+            {
+                var category = await _adsUnitOfWork.CategoriesRepository.Get(categoryId);
+
+                if (string.IsNullOrEmpty(family))
+                {
+                    var familyId = category.FamilyId;
+                    var f = await _adsUnitOfWork.FamiliesRepository.Get(familyId);
+                    family = f.Code;
+                }
+
+                categories.Add(category.Code);
+            }
+
+            ad.Family = family;
+            ad.Categories = categories;
+            ad.ListIdCategory = categorieIds;
 
             return Ok(ad);
         }

@@ -1,4 +1,5 @@
 ﻿@using Abeer.Client.UISdk.Shared
+@inject Microsoft.Extensions.Localization.IStringLocalizer<AdFamiliesCategories> LocFamilies
 <section>
     @if (FormHasError)
     {
@@ -38,7 +39,7 @@
                     {
                         <div>
                             <label @onclick="() => SelectFamily(item)" for="@item.Code">
-                                @item.Label
+                                @LocFamilies[item.Label]
                             </label>
                         </div>
                     }
@@ -56,7 +57,7 @@
                     {
                         <div>
                             <label for="@item.Code">
-                                <input type="checkbox" id="@item.Code" checked="@(item.Selected)" @onchange="@((e) => CheckboxChanged(e, item.Code))" /> @item.Label
+                                <input type="checkbox" id="@item.Code" checked="@(item.Selected)" @onchange="@((e) => CheckboxChanged(e, item.Code))" /> @LocFamilies[item.Label]
                             </label>
                         </div>
                     }
