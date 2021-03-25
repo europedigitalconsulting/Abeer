@@ -56,14 +56,7 @@ namespace Abeer.Server.Controllers
             _emailSender = emailSender;
             _adsUnitOfWork = adsUnitOfWork;
         }
-
-        [HttpGet("ListFamily")]
-        public async Task<ActionResult<IEnumerable<AdsFamilyViewModel>>> ListFamily()
-        {
-            var ListFamily = await _adsUnitOfWork.FamiliesRepository.GetAll();
-            return Ok(ListFamily);
-        }
-
+         
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AdModel>>> List()
         {
@@ -232,6 +225,7 @@ namespace Abeer.Server.Controllers
             await functionalUnitOfWork.AdRepository.Add(ad);
             var entity = await functionalUnitOfWork.AdRepository.FirstOrDefault(a => a.Id == ad.Id);
 
+            await _adsUnitOfWork.CategoryAdRepository.Add(createAdRequestViewModel.Ad.ListIdCategory, ad.Id);
             await _eventTrackingService.Create(applicationUser.Id, "Ad", "create");
 
             return Ok(entity);
@@ -316,7 +310,7 @@ namespace Abeer.Server.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             await functionalUnitOfWork.AdRepository.Delete(id);
-            await _adsUnitOfWork.CategoryAdRepository.Remove(id);
+              _adsUnitOfWork.CategoryAdRepository.RemoveListCategAd(id);
             return Ok();
         }
 

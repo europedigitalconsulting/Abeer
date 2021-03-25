@@ -29,7 +29,7 @@ namespace Abeer.Ads.Data.Repositories
         }
         public Task Add(List<Guid> listCategoryId, Guid adId)
         {
-            Remove(adId);
+            RemoveListCategAd(adId);
 
             List<CategoryAd> list = new List<CategoryAd>();
             foreach (var item in listCategoryId)
@@ -59,11 +59,10 @@ namespace Abeer.Ads.Data.Repositories
                 return _mapper.Map<CategoryAdViewModel>(model);
             });
         }
-        public override Task Remove(Guid id)
+        public  void RemoveListCategAd(Guid id)
         {
             var list = _context.CategoryAds.Where(x => x.AdId == id);
-
-            return Task.Run(() => _dbSet.Remove(list.Select(c => c.Id)));
+            _context.BulkDelete(list); 
         }
 
         //public Task<IList<CategoryAdViewModel>> FilterByFamilies(List<Guid> familiesId) =>

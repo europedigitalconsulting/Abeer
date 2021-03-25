@@ -38,7 +38,7 @@ namespace Abeer.UI_Ads
             var getAds = await HttpClient.GetAsync("/api/Ads");
             getAds.EnsureSuccessStatusCode();
             var json = await getAds.Content.ReadAsStringAsync();
-            Ads = Newtonsoft.Json.JsonConvert.DeserializeObject<List<AdViewModel>>(json);
+            Ads =  JsonConvert.DeserializeObject<List<AdViewModel>>(json);
             AdsTmp = Ads.Where(x => x.OwnerId != User.Id).ToList();
             await base.OnInitializedAsync();
         }
@@ -61,6 +61,7 @@ namespace Abeer.UI_Ads
             update.EnsureSuccessStatusCode();
             ModalDeleteAdVisible = false;
             Ads.Remove(Current);
+            AdsTmp = Ads;
             await InvokeAsync(StateHasChanged);
         }
 
