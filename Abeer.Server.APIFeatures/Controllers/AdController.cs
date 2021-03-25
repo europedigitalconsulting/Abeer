@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.WebUtilities;
 using AutoMapper;
 using Abeer.Ads.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Abeer.Server.Controllers
 {
@@ -197,6 +198,18 @@ namespace Abeer.Server.Controllers
             ad.Family = family;
             ad.Categories = categories;
             ad.ListIdCategory = categorieIds;
+
+            var events = await _eventTrackingService.Where(c => c.Category == "ViewAd" && c.Key == id.ToString());
+            
+            if (events.Any())
+            {
+                var contactIds = events.OrderByDescending(e => e.CreatedDate).Select(e => e.UserId).Distinct().Take(10).ToArray();
+                ad.LastViewers = await _userManager.Users.Where(u => contactIds.Contains(u.Id)).Select(u => (ViewApplicationUser)u).ToListAsync();
+            }
+            else
+            {
+                ad.LastViewers = new List<ViewApplicationUser> { User };
+            }
 
             return Ok(ad);
         }

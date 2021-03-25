@@ -48,6 +48,7 @@ namespace Abeer.Shared.ViewModels
         public  List<Guid> ListIdCategory{ get; set; }
         public string Family { get; set; }
         public List<string> Categories { get; set; }
+        public List<ViewApplicationUser> LastViewers { get; set; }
 
         public static implicit operator AdViewModel(AdModel model)
         {

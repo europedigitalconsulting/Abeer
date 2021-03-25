@@ -11,6 +11,7 @@
 
 @{
     var list = new List<string>();
+
     @if (Ad != null)
     {
         if (!string.IsNullOrEmpty(Ad.ImageUrl1))
@@ -62,15 +63,24 @@
                         {
                             foreach (var category in Ad.Categories)
                             {
-                            <li class="breadcrumb-item">
-                                <a href="/ads/listByCategory/@category">
-                                    @LocFamilies[category]
-                                </a>
-                            </li>
+                                <li class="breadcrumb-item">
+                                    <a href="/ads/listByCategory/@category">
+                                        @LocFamilies[category]
+                                    </a>
+                                </li>
                             }
                         }
                     </ol>
                 </nav>
+            }
+            @if (Ad.LastViewers != null)
+            {
+                <div class="col d-flex align-items-start">
+                    @foreach (var viewer in Ad.LastViewers)
+                    {
+                        <UserPhotoControl Loc="Loc" Height="35" Width="35" User="viewer"></UserPhotoControl>
+                    }
+                </div>
             }
             <div class="col-12 mb-2">
                 <div class="gallery gallery-md">
