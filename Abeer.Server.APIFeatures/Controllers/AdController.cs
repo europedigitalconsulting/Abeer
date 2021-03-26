@@ -40,10 +40,11 @@ namespace Abeer.Server.Controllers
         private readonly IServiceProvider _serviceProvider;
         private readonly IWebHostEnvironment _env;
         private readonly IEmailSenderService _emailSender;
+        private readonly IMapper _mapper;
 
         private readonly Random rdm = new Random();
         public AdsController(AdsUnitOfWork adsUnitOfWork, FunctionalUnitOfWork functionalUnitOfWork, UserManager<ApplicationUser> userManager,
-            EventTrackingService eventTrackingService, NotificationService notificationService,
+            EventTrackingService eventTrackingService, NotificationService notificationService, IMapper mapper,
             IConfiguration configuration, UrlShortner urlShortner, IServiceProvider serviceProvider, IWebHostEnvironment env, IEmailSenderService emailSender)
         {
             this.functionalUnitOfWork = functionalUnitOfWork;
@@ -56,12 +57,42 @@ namespace Abeer.Server.Controllers
             _env = env;
             _emailSender = emailSender;
             _adsUnitOfWork = adsUnitOfWork;
+            _mapper = mapper;
         }
-         
+
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AdModel>>> List()
+        public async Task<ActionResult<MyAdsViewModel>> List()
         {
-            return Ok(await functionalUnitOfWork.AdRepository.GetAll(true));
+            MyAdsViewModel vm = new MyAdsViewModel();
+            vm.Families = (await _adsUnitOfWork.FamiliesRepository.GetAll()).ToList();
+            var countryTmp = (await functionalUnitOfWork.CountriesRepository.GetCountries("fr")).ToList();
+            vm.Countries = _mapper.Map<List<Country>, List<CountryViewModel>>(countryTmp);
+            var adtmp = (await functionalUnitOfWork.AdRepository.GetAll(true)).ToList();
+            vm.Ads = _mapper.Map<List<AdModel>, List<AdViewModel>>(adtmp);
+
+            return Ok(vm);
+        }
+
+        [HttpPost("search")]
+        public async Task<ActionResult> search(MyAdsViewModel model)
+        {
+            try
+            {
+                var listIdsUsers = _userManager.Users.Where(x => (model.ListCodeCountrySelected.Contains(x.Country) || model.ListCodeCountrySelected.Count == 0) && x.EmailConfirmed).Select(c => c.Id).ToList();
+                var listAd = await functionalUnitOfWork.AdRepository.Where(x => listIdsUsers.Contains(x.OwnerId) && x.Title.Contains(model.searchTxt));
+                var listFiltered = await _adsUnitOfWork.CategoryAdRepository.Where(x => listAd.Select(c => c.Id).Contains(x.AdId) 
+                                                                                        && (model.ListIdCategorySelected.Contains(x.CategoryId) || model.ListIdCategorySelected.Count == 0));
+                listAd = listAd.Where(x => listFiltered.Select(c => c.AdId).Contains(x.Id)).ToList();
+
+                return Ok(listAd);
+            }
+            catch (Exception ex )
+            {
+
+                throw;
+            }
+            
+            return Ok();
         }
 
         [HttpGet("notvalid")]
@@ -92,7 +123,7 @@ namespace Abeer.Server.Controllers
         public async Task<ActionResult<IEnumerable<AdModel>>> GetVisibledFamily(string familyCode)
         {
             var visibled = await functionalUnitOfWork.AdRepository.GetVisibled();
-            
+
             var family = await _adsUnitOfWork.FamiliesRepository.GetByCode(familyCode);
             var categories = await _adsUnitOfWork.CategoriesRepository.FilterByFamilies(new List<Guid> { family.FamilyId });
             var adCategories = await _adsUnitOfWork.CategoryAdRepository.GetAllByCategoriesId(categories.Select(c => c.CategoryId));
@@ -176,11 +207,11 @@ namespace Abeer.Server.Controllers
             ad.Owner.CustomLinks = await functionalUnitOfWork.CustomLinkRepository.GetCustomLinkLinks(ad.OwnerId);
 
             var categorieIds = await _adsUnitOfWork.CategoryAdRepository.GetAllIdCatByAdId(ad.Id);
-            
+
             List<string> categories = new();
             string family = string.Empty;
 
-            foreach(Guid categoryId in categorieIds)
+            foreach (Guid categoryId in categorieIds)
             {
                 var category = await _adsUnitOfWork.CategoriesRepository.Get(categoryId);
 
@@ -199,7 +230,7 @@ namespace Abeer.Server.Controllers
             ad.ListIdCategory = categorieIds;
 
             var events = await _eventTrackingService.Where(c => c.Category == "ViewAd" && c.Key == id.ToString());
-            
+
             if (events.Any())
             {
                 var contactIds = events.OrderByDescending(e => e.CreatedDate).Select(e => e.UserId).Distinct().Take(10).ToArray();
@@ -219,7 +250,7 @@ namespace Abeer.Server.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var ad =(AdModel)createAdRequestViewModel.Ad;
+            var ad = (AdModel)createAdRequestViewModel.Ad;
             var applicationUser = (ViewApplicationUser)User;
 
             if (createAdRequestViewModel.Price != null)
@@ -359,7 +390,7 @@ namespace Abeer.Server.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             await functionalUnitOfWork.AdRepository.Delete(id);
-              _adsUnitOfWork.CategoryAdRepository.RemoveListCategAd(id);
+            _adsUnitOfWork.CategoryAdRepository.RemoveListCategAd(id);
             return Ok();
         }
 

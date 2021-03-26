@@ -10,19 +10,27 @@ using System.Threading.Tasks;
 using Abeer.Shared.Functional;
 using Newtonsoft.Json;
 using Abeer.Shared.ViewModels;
+using Microsoft.JSInterop;
+using Abeer.Ads.Shared;
 
 namespace Abeer.UI_Ads
 {
     public partial class MyAds
     {
-        private List<AdViewModel> Ads = new List<AdViewModel>();
         private List<AdViewModel> AdsTmp = new List<AdViewModel>();
 
         private bool ModalEditAdVisible;
-        private AdViewModel Current = new AdViewModel();
-        private bool UpdateHasError;
         private bool ModalDeleteAdVisible;
+        private bool UpdateHasError;
+        private AdViewModel Current = new AdViewModel();
+        private AdsFamilyViewModel FamilySelected;
+        private MyAdsViewModel RefAds = new MyAdsViewModel();
         private bool IsMyAds;
+        private bool ShowFilter;
+        private bool ShowFilter2;
+        private bool ShowFilterCountry;
+        private bool ShowFilterCategory;
+        private string searchTxt;
 
         [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
         public AuthenticationState AuthenticateSate { get; set; }
@@ -30,6 +38,7 @@ namespace Abeer.UI_Ads
 
         protected override async Task OnInitializedAsync()
         {
+            await jSRuntime.InvokeVoidAsync("outsideClickHandler", "dropdownmenu", DotNetObjectReference.Create(this));
             AuthenticateSate = await authenticationStateTask;
 
             if (AuthenticateSate.User.Identity.IsAuthenticated)
@@ -38,11 +47,26 @@ namespace Abeer.UI_Ads
             var getAds = await HttpClient.GetAsync("/api/Ads");
             getAds.EnsureSuccessStatusCode();
             var json = await getAds.Content.ReadAsStringAsync();
-            Ads =  JsonConvert.DeserializeObject<List<AdViewModel>>(json);
-            AdsTmp = Ads.Where(x => x.OwnerId != User.Id).ToList();
+            RefAds = JsonConvert.DeserializeObject<MyAdsViewModel>(json);
+            AdsTmp = RefAds.Ads.Where(x => x.OwnerId != User.Id).ToList();
             await base.OnInitializedAsync();
         }
-
+        [JSInvokable]
+        public void InvokeClickOutside()
+        {
+            if (ShowFilter2 && ShowFilter)
+            {
+                ShowFilter = ShowFilter2 = false;
+            }
+            else
+                ShowFilter = true;
+            StateHasChanged();
+        }
+        public void OpenFilter()
+        {
+            ShowFilter2 = true;
+            StateHasChanged();
+        }
         private void OpenEditModal(AdViewModel ad)
         {
             Current = ad;
@@ -60,36 +84,68 @@ namespace Abeer.UI_Ads
             var update = await HttpClient.DeleteAsync($"/api/Ads/{Current.Id}");
             update.EnsureSuccessStatusCode();
             ModalDeleteAdVisible = false;
-            Ads.Remove(Current);
-            AdsTmp = Ads;
+            RefAds.Ads.Remove(Current);
+            AdsTmp = RefAds.Ads;
             await InvokeAsync(StateHasChanged);
         }
 
-        private async Task ViewNotValid()
-        {
-            var getAds = await HttpClient.GetAsync("/api/Ads/notvalid");
-            getAds.EnsureSuccessStatusCode();
-            var json = await getAds.Content.ReadAsStringAsync();
-            Ads = Newtonsoft.Json.JsonConvert.DeserializeObject<List<AdViewModel>>(json);
-            await InvokeAsync(StateHasChanged);
-        }
-
-        private async Task GotoAll()
-        {
-            NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri("ads/list").ToString(), true);
-            await InvokeAsync(StateHasChanged);
-        }
         private async Task FilterMyAds()
-        { 
+        {
             IsMyAds = true;
-            AdsTmp = Ads.Where(x => x.OwnerId == User.Id).ToList();
+            AdsTmp = RefAds.Ads.Where(x => x.OwnerId == User.Id).ToList();
             await InvokeAsync(StateHasChanged);
         }
         private async Task ResetListAds()
         {
             IsMyAds = false;
-            AdsTmp = Ads;
+            AdsTmp = RefAds.Ads;
             await InvokeAsync(StateHasChanged);
+        }
+        private async Task OpenFilterCountry()
+        {
+            ShowFilterCountry = true;
+            ShowFilterCategory = false;
+            await InvokeAsync(StateHasChanged);
+        }
+        private async Task OpenFilterCategory(AdsFamilyViewModel model)
+        {
+            RefAds.Families.ForEach(x => x.Categories.ForEach(f => f.Selected = false));
+            FamilySelected = model;
+            ShowFilterCountry = false;
+            ShowFilterCategory = true;
+            await InvokeAsync(StateHasChanged);
+        }
+        private async Task SelectCategory(AdsCategoryViewModel category)
+        {
+            category.Selected = !category.Selected;
+            await RefeshResultFilter();
+        }
+        private async Task RefeshResultFilter()
+        {
+            MyAdsViewModel x = new MyAdsViewModel();
+
+            x.ListCodeCountrySelected = RefAds?.Countries?.Where(x => x.Selected).Select(c => c.Eeacode).ToList() ?? new List<string>();
+            x.ListIdCategorySelected = FamilySelected?.Categories.Where(x => x.Selected).Select(c => c.CategoryId).ToList() ?? new List<Guid>();
+            x.searchTxt = searchTxt ?? "";
+
+            var getFamily = await HttpClient.PostAsJsonAsync($"/api/Ads/search", x);
+            getFamily.EnsureSuccessStatusCode();
+            var json = await getFamily.Content.ReadAsStringAsync();
+
+            AdsTmp = RefAds.Ads = JsonConvert.DeserializeObject<List<AdViewModel>>(json);
+
+            await InvokeAsync(StateHasChanged);
+        }
+        private async Task SelectCountry(CountryViewModel country)
+        {
+            country.Selected = !country.Selected;
+            await RefeshResultFilter();
+        }
+        private async Task TapSearch(ChangeEventArgs e)
+        {
+            Console.WriteLine(e.Value.ToString());
+            searchTxt = e.Value.ToString();
+            await RefeshResultFilter();
         }
     }
 }

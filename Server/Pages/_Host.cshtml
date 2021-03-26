@@ -118,6 +118,13 @@
     <script>navigator.serviceWorker.register('service-worker.js');</script>
 
     <script>
+        window.outsideClickHandler = (elementId, dotnetHelper) => {
+            window.addEventListener("click", (e) => {
+                if (!document.getElementById(elementId).contains(e.target)) {
+                    dotnetHelper.invokeMethodAsync("InvokeClickOutside");
+                }
+            });
+        }
         window.scrollToElementId = (elementId) => {
             /*console.info('scrolling to element', elementId);*/
             var element = document.getElementById(elementId);

@@ -9,6 +9,7 @@ using AutoMapper;
 using Abeer.Ads.Models;
 using Abeer.Shared.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Abeer.Ads.Data.Repositories
 {
@@ -76,8 +77,13 @@ namespace Abeer.Ads.Data.Repositories
         //public Task<IList<CategoryAdViewModel>> FilterByFamilies(List<Guid> familiesId) =>
         //    GetAll<CategoryAdViewModel, AdsCategory>(() => _context.Categories.Where(f => familiesId.Contains(f.FamilyId)).ToList());
 
-        //public Task<IList<CategoryAdViewModel>> FilterByIds(List<Guid> ids) =>
-        //    GetAll<CategoryAdViewModel, AdsCategory>(() => _context.Categories.Where(f => ids.Contains(f.CategoryId)).ToList());
+        public Task<IList<CategoryAdViewModel>> FilterByIds(List<Guid> ids) =>
+            GetAll<CategoryAdViewModel, CategoryAd>(() => _context.CategoryAds.Where(f => ids.Contains(f.CategoryId)).ToList());
+
+        public Task<IList<CategoryAd>> Where(Expression<Func<CategoryAd, bool>> filter)
+        {
+            return Task.Run(() => _context.CategoryAds.Where(filter));
+        }
 
         //public Task<IList<CategoryAdViewModel>> GetByFamily(Guid familyId) =>
         //    GetAll<CategoryAdViewModel, AdsCategory>(() => _context.Categories.Where(f => f.FamilyId == familyId).ToList());

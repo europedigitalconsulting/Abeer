@@ -4,6 +4,7 @@
 @inject HttpClient HttpClient
 @inject Microsoft.Extensions.Localization.IStringLocalizer<MyAds> Loc
 @inject NavigationManager NavigationManager
+@inject IJSRuntime jSRuntime
 
 @if (ModalEditAdVisible)
 {
@@ -13,7 +14,7 @@
                 <FormAd Cancel="() => ModalEditAdVisible = false" Ad="Current" Disabled="false" FormHasError="UpdateHasError" FormError="@Loc["UpdateFailedError"]" Loc="Loc"></FormAd>
             </div>
         </Body>
-    </ModalDefault> 
+    </ModalDefault>
 }
 @if (ModalDeleteAdVisible)
 {
@@ -36,15 +37,52 @@
         <label @onclick="ResetListAds" style="font-size: 30px; font-weight: 600; color: black;" class="col-6 cursor-pointer">Annonces</label>
         <label @onclick="FilterMyAds" class="col-6 text-right cursor-pointer" style="width:100%">Voir mes annonces</label>
     </div>
-    <div class="section-header p-0">
-        <div class="input-group">
-            <input type="search" placeholder="@Loc["Search"]" class="col-10 form-control">
-            <span class="input-group-btn" style="position:relative;background: #F5F8FA; line-height: 50px;">
-                <button type="button" class="btn" style="border-radius: 0; border-left: 1px solid grey;border-right:1px solid grey;font-size: 15px; font-weight: 400">Filter<i class="pl-1 fas fa-caret-down"></i></button>
-            </span>
+    <div class="input-group">
+        <input type="text" @oninput="TapSearch" @bind="searchTxt" class="form-control" aria-label="Text input with dropdown button">
+        <div class="input-group-append">
+            <button @onclick="OpenFilter" style="position:relative;" class="btn btn-outline-secondary dropdown-toggle" type="button">Filtre</button>
+            <div id="dropdownmenu" class="dropdownmenu" style=" position: absolute; right: 0px; background: #F5F8FA; border-radius: 5px; top: 70px; width: 100%; z-index: 99; height:auto">
+                @if (ShowFilter2)
+                {
+                    <div class="row">
+                        <div class="col-xs-5 col-md-4">
+                            <div class="cursor-pointer " role="tablist">
+                                <span @onclick="OpenFilterCountry" class="list-group-item list-group-item-action">Pays <i style=" line-height: 24px;" class="float-right fas fa-angle-right"></i></span>
+                            </div> 
+                            <span class="dropdown-item">Toutes les familles</span>
+                            <div class="cursor-pointer " role="tablist">
+                                <Virtualize Items="RefAds.Families" Context="family">
+                                    <span class="list-group-item list-group-item-action" @onclick="() => OpenFilterCategory(family)">@family.Label <i  style=" line-height: 24px;" class="float-right fas fa-angle-right"></i></span>
+                                </Virtualize>
+                            </div> 
+                        </div>
+
+                        @if (ShowFilterCountry)
+                        {
+                            <div class=" col-xs-7 col-md-8  py-3">
+                                <div class="row">
+                                    <Virtualize Items="RefAds.Countries" Context="country">
+                                        <div @onclick="() => SelectCountry(country)" style="background: @(country.Selected ? "lightgray" : " white")" class="cursor-pointer list-group-item list-group-item-action col-3">@country.Name</div>
+                                    </Virtualize>
+                                </div>
+                            </div>
+                        }
+                        else if (ShowFilterCategory)
+                        {
+                            <div  class="col-xs-7  col-md-8 py-3"> 
+                                    <Virtualize Items="FamilySelected.Categories" Context="category">
+                                        <div @onclick="() => SelectCategory(category)" style="background: @(category.Selected ? "lightgray" : " white")"  class="cursor-pointer list-group-item list-group-item-action">@category.Label</div>
+                                    </Virtualize> 
+                            </div>
+                        }
+                    </div>
+                    <div class="row justify-content-center mt-2">
+                        <button @onclick="() => ShowFilter2 = false" class="btn btn-success ">Résultat (@RefAds?.Ads?.Count())</button>
+                    </div>
+                }
+            </div>
         </div>
     </div>
-
     <div id="ads" class="row section-body mt-3">
         @*<button class="btn btn-primary" @onclick="ViewNotValid">@Loc["ViewNotValid"]</button>
             <button class="btn btn-warning" @onclick="GotoAll">@Loc["ListAds"]</button>*@

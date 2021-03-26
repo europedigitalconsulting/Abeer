@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Abeer.Ads.Shared;
+using Abeer.Shared;
+using Abeer.Shared.ViewModels;
 using AutoMapper;
 
 namespace Abeer.Ads.Models
@@ -18,6 +20,8 @@ namespace Abeer.Ads.Models
             CreateMap<AdsFamilyAttribute, AdsFamilyAttributeViewModel>().ReverseMap();
             CreateMap<AdsCategory, AdsCategoryViewModel>().ReverseMap();
             CreateMap<CategoryAd, CategoryAdViewModel>().ReverseMap();
+            CreateMap<Country, CountryViewModel>().ReverseMap();
+            CreateMap<List<Country>, List<CountryViewModel>>().ReverseMap();
         }
     }
 }
