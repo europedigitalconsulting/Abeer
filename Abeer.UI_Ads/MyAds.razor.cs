@@ -142,8 +142,7 @@ namespace Abeer.UI_Ads
             await RefeshResultFilter();
         }
         private async Task TapSearch(ChangeEventArgs e)
-        {
-            Console.WriteLine(e.Value.ToString());
+        { 
             searchTxt = e.Value.ToString();
             await RefeshResultFilter();
         }
