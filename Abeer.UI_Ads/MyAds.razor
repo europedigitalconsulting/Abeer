@@ -40,7 +40,7 @@
     <div class="input-group">
         <input type="text" @oninput="TapSearch" @bind="searchTxt" class="form-control" aria-label="Text input with dropdown button">
         <div class="input-group-append">
-            <button @onclick="OpenFilter" style="position:relative;" class="btn btn-outline-secondary dropdown-toggle" type="button">Filtre</button>
+            <button @onclick="OpenFilter" style="position: relative; border-left: 1px solid grey;" class="form-control dropdown-toggle" type="button">&nbsp;&nbsp;&nbsp;Filtre&nbsp;&nbsp;&nbsp;</button>
             <div id="dropdownmenu" class="dropdownmenu" style=" position: absolute; right: 0px; background: #F5F8FA; border-radius: 5px; top: 70px; width: 100%; z-index: 99; height:auto">
                 @if (ShowFilter2)
                 {
@@ -49,7 +49,7 @@
                             <div class="cursor-pointer " role="tablist">
                                 <span @onclick="OpenFilterCountry" class="list-group-item list-group-item-action">Pays <i style=" line-height: 24px;" class="float-right fas fa-angle-right"></i></span>
                             </div> 
-                            <span class="dropdown-item">Toutes les familles</span>
+                            <span class="my-3 dropdown-item">Toutes les familles</span>
                             <div class="cursor-pointer " role="tablist">
                                 <Virtualize Items="RefAds.Families" Context="family">
                                     <span class="list-group-item list-group-item-action" @onclick="() => OpenFilterCategory(family)">@family.Label <i  style=" line-height: 24px;" class="float-right fas fa-angle-right"></i></span>
