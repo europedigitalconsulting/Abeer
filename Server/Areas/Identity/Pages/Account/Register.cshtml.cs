@@ -159,7 +159,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
                 City = Input.City,
                 Country = Input.Country,
                 SubscriptionStartDate = DateTime.Now,
-                SubscriptionEndDate = DateTime.Now.AddDays(5)
+                SubscriptionEndDate = DateTime.Now.AddDays(15)
             };
 
             _logger.LogInformation($"start get card {Input.PinCode}");
