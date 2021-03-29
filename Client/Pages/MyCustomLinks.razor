@@ -1,0 +1,97 @@
+﻿@code
+{
+    [Parameter]
+    public ViewApplicationUser Profile { get; set; }
+    [Parameter]
+    public EventCallback OnAddLinkClicked { get; set; }
+    [Inject] public HttpClient HttpClient { get; set; }
+
+    CustomLink _current = null;
+
+    string OldValue = "";
+
+    async Task DeleteCustomLink(CustomLink customLink)
+    {
+
+    }
+
+    async Task StartEdit(CustomLink customLink)
+    {
+        _current = customLink;
+        OldValue = _current.Url;
+    }
+
+    private bool IsEditable(CustomLink link)
+    {
+        if (_current == null)
+            return false;
+
+        return link.Id == _current.Id;
+    }
+
+    async Task Save(CustomLink customLink)
+    {
+        var response = await HttpClient.PutAsJsonAsync<CustomLink>($"/api/CustomLink", customLink);
+        response.EnsureSuccessStatusCode();
+        _current = null;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    async Task Delete(CustomLink customLink)
+    {
+        var response = await HttpClient.DeleteAsync($"/api/CustomLink/{customLink.Id}");
+        response.EnsureSuccessStatusCode();
+        _current = null;
+        Profile.CustomLinks.Remove(customLink);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    void Cancel(CustomLink customLink)
+    {
+        customLink.Url = OldValue;
+        _current = null;
+    }
+}
+<a @onclick="OnAddLinkClicked" class="btn btn-success"><i class="far fa-plus-square"></i></a>
+@if (Profile.CustomLinks != null)
+{
+    <Virtualize Items="@Profile.CustomLinks" Context="customLink">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                @if (!string.IsNullOrEmpty(customLink.Logo))
+                {
+                    <img alt="@customLink.Name" src="@customLink.Logo" style="width:80px;text-align:center" />
+                }
+                else
+                {
+                    <i title="@customLink.Name" class="fas fa-photo-video"></i>
+                }
+            </div>
+            @if (IsEditable(customLink))
+            {
+                <input type="text" class="form-control" @bind="customLink.Url">
+            }
+            else
+            {
+                <input readonly="@(IsEditable(customLink))" type="text" class="form-control" value="@customLink.Url">
+            }
+            <div class="input-group-append">
+                <span class="input-group-text cursor-pointer">
+                    @if (!IsEditable(customLink))
+                    {
+                        <a @onclick="@(() => StartEdit(customLink))"><i class="fas fa-pen" style="font-size:20px"></i></a>
+                    }
+                    else
+                    {
+                        <a @onclick="@(async()=>await Save(customLink))"><i class="fas fa-save" style="font-size:20px"></i></a>
+                        <a @onclick="@(() => Cancel(customLink))"><i class="fas fa-window-close" style="font-size:20px"></i></a>
+                    }
+                    <text>|</text>
+                    <a @onclick="@(async()=>await Delete(customLink))">
+                        <i class="fas fa-trash-alt" style="font-size:20px"></i>
+                    </a>
+                </span>
+            </div>
+        </div>
+    </Virtualize>
+}

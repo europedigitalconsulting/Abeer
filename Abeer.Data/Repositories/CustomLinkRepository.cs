@@ -36,5 +36,14 @@ namespace Abeer.Data.Repositories
         {
             return Task.Run(() => FunctionalDbContext.CustomLinks.Remove(link.Id));
         }
+
+        public Task Update(CustomLink network)
+        {
+           return Task.Run(() =>
+            {
+                FunctionalDbContext.CustomLinks.Update(network);
+                FunctionalDbContext.SaveChange();
+            });
+        }
     }
 }

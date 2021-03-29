@@ -68,13 +68,15 @@
                         </div>
                     </div>
                     @if (Profile.SubscriptionStart.HasValue && Profile.SubscriptionEnd.HasValue && Profile.Id == CurrentUserId)
-                    {<div class="col-4 alert-primary">
+                    {
+                        <div class="col-4 alert-primary">
                             @Loc["YourSubscription"] - @Loc["StartSubscription", Profile.SubscriptionStart.Value.ToShortDateString()] - @Loc["EndSubscription", Profile.SubscriptionEnd.Value.ToShortDateString()]
                             @if (Profile.SubscriptionEnd.Value.Subtract(DateTime.UtcNow).Days <= 3)
                             {
                                 <a class="btn btn-primary" href="/subscription-pack">@Loc["RenewSubscription"]</a>
                             }
-                        </div>}
+                        </div>
+                    }
                     <div class="row mt-lg-5" style=" border-top: 1px solid black; padding-top: 21px;">
                         @if (!TabMap)
                         {
@@ -239,8 +241,9 @@
                         }
                         else
                         {
-                            <div @onclick="() => TabMap = false" class="col-12 pb-4 cursor-pointer" style="color:black;">
-                                <i class="fas fa-long-arrow-alt-left" style="font-size: 18px">&nbsp;&nbsp; @Loc["Back"]</i>
+                            <div class="col-12 pb-4 cursor-pointer" style="color:black;">
+                                <MyCustomLinks Profile="Profile" OnAddLinkClicked="OpenModalCustomLink"></MyCustomLinks>
+                                <a @onclick="@(()=>TabMap = false)"><i class="fas fa-long-arrow-alt-left" style="font-size: 18px">&nbsp;&nbsp; @Loc["Back"]</i></a>
                             </div>
                         }
                     </div>

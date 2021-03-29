@@ -44,5 +44,36 @@ namespace Abeer.Server.Controllers
             await _functionalUnitOfWork.CustomLinkRepository.AddCustomLink(network);
             return Ok();
         }
+
+        [HttpPut]
+        public async Task<IActionResult> PutAsync(CustomLink network)
+        {
+            if (network == null)
+                return BadRequest();
+
+            if (network.OwnerId != User.NameIdentifier())
+                return BadRequest();
+
+            await _functionalUnitOfWork.CustomLinkRepository.Update(network);
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAsync(Guid id)
+        {
+            if (id == Guid.Empty)
+                return BadRequest();
+
+            var network = await _functionalUnitOfWork.CustomLinkRepository.FirstOrDefault(c => c.Id == id);
+
+            if (network == null)
+                return NotFound();
+
+            if (network.OwnerId != User.NameIdentifier())
+                return BadRequest();
+
+            await _functionalUnitOfWork.CustomLinkRepository.Remove(network);
+            return Ok();
+        }
     }
 }

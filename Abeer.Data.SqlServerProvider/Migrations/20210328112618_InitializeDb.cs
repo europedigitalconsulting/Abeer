@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Abeer.Data.SqlServerProvider.Migrations
 {
-    public partial class InitFunctionalContext : Migration
+    public partial class InitializeDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -121,6 +121,22 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Invitations", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Messages",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserIdFrom = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserIdTo = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateSent = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateReceived = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Messages", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -422,6 +438,9 @@ namespace Abeer.Data.SqlServerProvider.Migrations
 
             migrationBuilder.DropTable(
                 name: "Invitations");
+
+            migrationBuilder.DropTable(
+                name: "Messages");
 
             migrationBuilder.DropTable(
                 name: "Notifications");
