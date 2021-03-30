@@ -117,28 +117,58 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="All" xml:space="preserve">
-    <value>All ads</value>
+  <data name="CancelOrder" xml:space="preserve">
+    <value>Cancel</value>
   </data>
-  <data name="ManageAds" xml:space="preserve">
-    <value>Manage ads and offers</value>
+  <data name="CatchPhrase" xml:space="preserve">
+    <value>Thank you for making your payment</value>
   </data>
-  <data name="MyCountry" xml:space="preserve">
-    <value>Ads limited for my country</value>
+  <data name="LabelBilledTo" xml:space="preserve">
+    <value>You</value>
   </data>
-  <data name="MyFreinds" xml:space="preserve">
-    <value>Ads Published by my contacts</value>
+  <data name="LabelInvoice" xml:space="preserve">
+    <value>Confirmation of your subscription</value>
   </data>
-  <data name="NoAds" xml:space="preserve">
-    <value>No Ads is found</value>
+  <data name="LabelItem" xml:space="preserve">
+    <value>Pack</value>
   </data>
-  <data name="PublishYourAd" xml:space="preserve">
-    <value>Publish your ad or offer now</value>
+  <data name="LabelOrderDate" xml:space="preserve">
+    <value>Date</value>
   </data>
-  <data name="Title" xml:space="preserve">
-    <value>Ad and offer</value>
+  <data name="LabelOrderNumber" xml:space="preserve">
+    <value>Numero</value>
   </data>
-  <data name="ViewCount" xml:space="preserve">
-    <value>Number of views</value>
+  <data name="LabelOrderSummary" xml:space="preserve">
+    <value>Summary</value>
+  </data>
+  <data name="LabelPrice" xml:space="preserve">
+    <value>Price</value>
+  </data>
+  <data name="LabelQuantity" xml:space="preserve">
+    <value>Qty</value>
+  </data>
+  <data name="LabelTotal" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="Modify" xml:space="preserve">
+    <value>Change your subscription</value>
+  </data>
+  <data name="OrderSummaryCatchPhrase" xml:space="preserve">
+    <value>Here is your subscription information, if everything is correct, please click on "Pay with Paypal" otherwise click on "Modify".</value>
+  </data>
+  <data name="PayWithCrypto" xml:space="preserve">
+    <value>Paying with crypocoin</value>
+  </data>
+  <data name="PayWithPaypal" xml:space="preserve">
+    <value>Pay with paypal</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>Your payment has been validated!</value>
+  </data>
+  <data name="TTC" xml:space="preserve">
+    <value>TTC</value>
+  </data>
+  <data name="VTA" xml:space="preserve">
+    <value>TVA (20%)</value>
   </data>
 </root>

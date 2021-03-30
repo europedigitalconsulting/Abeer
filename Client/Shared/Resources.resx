@@ -136,7 +136,7 @@
     <value>Cancel</value>
   </data>
   <data name="CardList" xml:space="preserve">
-    <value>Liste des cartes</value>
+    <value>List of cards</value>
   </data>
   <data name="Contact" xml:space="preserve">
     <value>Contact</value>
@@ -283,7 +283,7 @@
     <value>If you haven't yet an account please register to see your own evolution wallet</value>
   </data>
   <data name="Renew" xml:space="preserve">
-    <value>Renouveler votre abonnement</value>
+    <value>Renew your subscription</value>
   </data>
   <data name="Replay" xml:space="preserve">
     <value>Replay the transaction</value>
@@ -321,6 +321,9 @@
   <data name="Status" xml:space="preserve">
     <value>Status</value>
   </data>
+  <data name="String1" xml:space="preserve">
+    <value>Your subscription</value>
+  </data>
   <data name="SubscriptionWillEnd" xml:space="preserve">
     <value>WARNING: Your subscription will end on</value>
   </data>
@@ -337,7 +340,7 @@
     <value>Token Batches</value>
   </data>
   <data name="Top5Partner" xml:space="preserve">
-    <value>Top 5 de vos contacts</value>
+    <value>Top 5 of your contacts</value>
   </data>
   <data name="Track" xml:space="preserve">
     <value>Track a transaction</value>

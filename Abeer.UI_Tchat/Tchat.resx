@@ -117,61 +117,84 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CatchPhrase" xml:space="preserve">
-    <value>Welcome to the Meetag app. Technology has paved the way for new developments, new discoveries, and new ways to share them. With a simple touch, you can now share your business cards, while doubling your efficiency. Ready-to-use, Meetag offers all its technology for your convenience. Test our application is adopt it. Do not wait any longer, thank you to register, you have 5 days free to test us!</value>
+  <data name="AddContact" xml:space="preserve">
+    <value>Add a contact</value>
   </data>
-  <data name="ConfirmationCatchPhrase" xml:space="preserve">
-    <value>An email has sent to you mail box {0} please confirm by clicking on the link</value>
+  <data name="ByFilter" xml:space="preserve">
+    <value>per filter
+Add a contact</value>
   </data>
-  <data name="ConfirmPassword" xml:space="preserve">
-    <value>Confirm your password</value>
+  <data name="ById" xml:space="preserve">
+    <value>If you know the user's ID you can search for their ID</value>
   </data>
-  <data name="DisplayName" xml:space="preserve">
-    <value>Display Name</value>
+  <data name="ByName" xml:space="preserve">
+    <value>If you know his name you can search by his name</value>
   </data>
-  <data name="Email" xml:space="preserve">
-    <value>Email</value>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
   </data>
-  <data name="FirstName" xml:space="preserve">
-    <value>First Name</value>
+  <data name="ConfirmDelete" xml:space="preserve">
+    <value>Are you sure you want to delete this contact?</value>
   </data>
-  <data name="HasCard" xml:space="preserve">
-    <value>I have a card</value>
+  <data name="ContactDisplayName" xml:space="preserve">
+    <value>Name to be displayed</value>
   </data>
-  <data name="LastName" xml:space="preserve">
-    <value>Last Name</value>
+  <data name="ContactId" xml:space="preserve">
+    <value>User ID</value>
   </data>
-  <data name="Next" xml:space="preserve">
-    <value>Next</value>
+  <data name="Contacts" xml:space="preserve">
+    <value>My contacts</value>
   </data>
-  <data name="Password" xml:space="preserve">
-    <value>Password</value>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
   </data>
-  <data name="PasswordRequirements" xml:space="preserve">
-    <value>The password must contain at least 6 letters, and at least one lowercase letter, one uppercase letter, one number, and at least one special character.</value>
+  <data name="DeleteTitle" xml:space="preserve">
+    <value>Delete contact</value>
   </data>
-  <data name="Register" xml:space="preserve">
-    <value>Register</value>
+  <data name="Home" xml:space="preserve">
+    <value>Home</value>
   </data>
-  <data name="RegisterConfirmationTitle" xml:space="preserve">
-    <value>Register confirmation &amp;mdash; Meetag</value>
+  <data name="Insert" xml:space="preserve">
+    <value>Add</value>
   </data>
-  <data name="RequestCertificate" xml:space="preserve">
-    <value>Depending on your country, you will be asked for a national identity card and a valid identity photo. You Accept this rule before continuing your registration.</value>
+  <data name="InsertTitle" xml:space="preserve">
+    <value>Add a new contact</value>
   </data>
-  <data name="RequestCountry" xml:space="preserve">
-    <value>Depending on your country, a national identity card will be required as well as a passport photo.</value>
+  <data name="MyContactList" xml:space="preserve">
+    <value>List of contacts</value>
   </data>
-  <data name="SendEmail" xml:space="preserve">
-    <value>Un email vous a été envoyé sur</value>
+  <data name="MyContactListCatchPhrase" xml:space="preserve">
+    <value>This page allows you to manage your contact list, you can add, modify or delete contacts</value>
+  </data>
+  <data name="NoContactFound" xml:space="preserve">
+    <value>No contact was found, you can add a new contact</value>
+  </data>
+  <data name="Pending" xml:space="preserve">
+    <value>Waiting...
+No contact was found, you can add a new contact</value>
+  </data>
+  <data name="PublishedAds" xml:space="preserve">
+    <value>Published ads</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="SearchContact" xml:space="preserve">
+    <value>Search contact</value>
+  </data>
+  <data name="SendTo" xml:space="preserve">
+    <value>Send to</value>
+  </data>
+  <data name="SocialLinks" xml:space="preserve">
+    <value>Social links</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Register on Meetag</value>
+    <value>My contacts</value>
   </data>
-  <data name="UseExternal" xml:space="preserve">
-    <value>You have a social account you can use it to connect on Meetag</value>
+  <data name="Update" xml:space="preserve">
+    <value>Edit</value>
   </data>
-  <data name="Validate" xml:space="preserve">
-    <value>Validate</value>
+  <data name="UpdateTitle" xml:space="preserve">
+    <value>Editing contact information</value>
   </data>
 </root>

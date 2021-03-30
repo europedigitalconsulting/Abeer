@@ -121,37 +121,37 @@
     <value>Action</value>
   </data>
   <data name="All" xml:space="preserve">
-    <value>Tous</value>
+    <value>All</value>
   </data>
   <data name="Home" xml:space="preserve">
-    <value>Accueil</value>
+    <value>Home</value>
   </data>
   <data name="MyProfile" xml:space="preserve">
-    <value>Mon profil</value>
+    <value>My profile</value>
   </data>
   <data name="Purchase" xml:space="preserve">
-    <value>Acheté</value>
+    <value>Purchased</value>
   </data>
   <data name="Receive" xml:space="preserve">
-    <value>Reçu</value>
+    <value>Received</value>
   </data>
   <data name="Search" xml:space="preserve">
-    <value>Rechercher</value>
+    <value>Search</value>
   </data>
   <data name="Send" xml:space="preserve">
-    <value>Envoyé</value>
+    <value>Sent</value>
   </data>
   <data name="Status" xml:space="preserve">
-    <value>Etat</value>
+    <value>Status</value>
   </data>
   <data name="TransactionAmount" xml:space="preserve">
-    <value>Montant</value>
+    <value>Amount</value>
   </data>
   <data name="TransactionDate" xml:space="preserve">
-    <value>Date de la transaction</value>
+    <value>Date of the transaction</value>
   </data>
   <data name="TransactionID" xml:space="preserve">
-    <value>Identifiant de transaction</value>
+    <value>Transaction ID</value>
   </data>
   <data name="TransactionType" xml:space="preserve">
     <value>Type</value>

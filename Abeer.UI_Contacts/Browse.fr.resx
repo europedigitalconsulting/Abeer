@@ -118,18 +118,18 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ListOfContacts" xml:space="preserve">
-    <value>Liste des contacts pour le pays {0}</value>
+    <value>List of contacts for country {0}</value>
   </data>
   <data name="SelectCountry" xml:space="preserve">
-    <value>Sélectionner un pays</value>
+    <value>Select a country</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Quelques contacts</value>
+    <value>Some contacts</value>
   </data>
   <data name="ViewYourOwnContacts" xml:space="preserve">
-    <value>Afficher vos propres contacts</value>
+    <value>Display your own contacts</value>
   </data>
   <data name="YourContacts" xml:space="preserve">
-    <value>Liste des contacts</value>
+    <value>List of contacts</value>
   </data>
 </root>

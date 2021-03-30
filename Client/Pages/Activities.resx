@@ -117,28 +117,43 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="All" xml:space="preserve">
-    <value>All ads</value>
+  <data name="CatchPhrase" xml:space="preserve">
+    <value>My performance counters</value>
   </data>
-  <data name="ManageAds" xml:space="preserve">
-    <value>Manage ads and offers</value>
+  <data name="Detail" xml:space="preserve">
+    <value>Detail</value>
   </data>
-  <data name="MyCountry" xml:space="preserve">
-    <value>Ads limited for my country</value>
+  <data name="Engaged" xml:space="preserve">
+    <value>Commitment</value>
   </data>
-  <data name="MyFreinds" xml:space="preserve">
-    <value>Ads Published by my contacts</value>
+  <data name="EngagedInfo" xml:space="preserve">
+    <value>Here you can find the commitment information (number of shares per network)</value>
   </data>
-  <data name="NoAds" xml:space="preserve">
-    <value>No Ads is found</value>
+  <data name="General" xml:space="preserve">
+    <value>General</value>
   </data>
-  <data name="PublishYourAd" xml:space="preserve">
-    <value>Publish your ad or offer now</value>
+  <data name="GeneralInfo" xml:space="preserve">
+    <value>Here you can find your general information (number of views, posts)</value>
+  </data>
+  <data name="Historic" xml:space="preserve">
+    <value>Evolution</value>
+  </data>
+  <data name="NumberOfAds" xml:space="preserve">
+    <value>Online offers</value>
+  </data>
+  <data name="NumberOfContacts" xml:space="preserve">
+    <value>Contacts</value>
+  </data>
+  <data name="NumberOfViews" xml:space="preserve">
+    <value>Views</value>
+  </data>
+  <data name="Statistics" xml:space="preserve">
+    <value>Statistics</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Ad and offer</value>
+    <value>My activity</value>
   </data>
-  <data name="ViewCount" xml:space="preserve">
-    <value>Number of views</value>
+  <data name="Top10Ads" xml:space="preserve">
+    <value>Top 10 ads</value>
   </data>
 </root>

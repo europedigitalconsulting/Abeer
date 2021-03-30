@@ -117,76 +117,61 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Connect" xml:space="preserve">
-    <value>Se connecter</value>
+  <data name="CatchPhrase" xml:space="preserve">
+    <value>Welcome to the Meetag app. Technology has paved the way for new developments, new discoveries, and new ways to share them. With a simple touch, you can now share your business cards, while doubling your efficiency. Ready-to-use, Meetag offers all its technology for your convenience. Test our application is adopt it. Do not wait any longer, thank you to register, you have 5 days free to test us!</value>
   </data>
-  <data name="ConnectMyCard" xml:space="preserve">
-    <value>Connect with my card</value>
+  <data name="ConfirmationCatchPhrase" xml:space="preserve">
+    <value>An email has sent to you mail box {0} please confirm by clicking on the link</value>
   </data>
-  <data name="Copyright" xml:space="preserve">
-    <value>Copyright &amp;copy; Made with 💙 by Meetag</value>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>Confirm your password</value>
   </data>
-  <data name="CreateAccount" xml:space="preserve">
-    <value>Create an account</value>
+  <data name="DisplayName" xml:space="preserve">
+    <value>Display Name</value>
   </data>
   <data name="Email" xml:space="preserve">
     <value>Email</value>
   </data>
-  <data name="ForgotPasswordText" xml:space="preserve">
-    <value>Forgot your password?</value>
+  <data name="FirstName" xml:space="preserve">
+    <value>First Name</value>
   </data>
-  <data name="GoodMorning" xml:space="preserve">
-    <value>Good Morning</value>
+  <data name="HasCard" xml:space="preserve">
+    <value>I have a card</value>
   </data>
-  <data name="LocalLoginCatchPhrase" xml:space="preserve">
-    <value>Use a local account to log in</value>
+  <data name="LastName" xml:space="preserve">
+    <value>Last Name</value>
   </data>
-  <data name="LoginWihPinCode" xml:space="preserve">
-    <value>Signin with pin card</value>
-  </data>
-  <data name="LoginWihPinCodeCatchPhrase" xml:space="preserve">
-    <value>A pin card is a very high secure system which enable you to connect on our platform without enter a login and password</value>
-  </data>
-  <data name="LoginWihPinCodeTitle" xml:space="preserve">
-    <value>If you have a pin card you can use it to sigin</value>
-  </data>
-  <data name="Muted-p1" xml:space="preserve">
-    <value>Meetag allows you to exchange and share your virtual business cards online with thousands of people. A business card may contain your contact information, social media accounts and personalized links. To access the secure area you are asked to log in please enter your login and password. If you don’t have an account yet, you can register and join our community. To allow you to test us, you have 5 days free</value>
-  </data>
-  <data name="Muted-p2" xml:space="preserve">
-    <value>Une carte de visite peut contenir vos coordonnées, vos comptes réseaux sociaux ainsi que des liens personnalisés. Pour accéder à l’espace sécurisé il vous est demandé de vous identifier merci d’entrer votre login et votre mot de passe. Si vous ne disposez pas de compte encore, vous pouvez vous inscrire et rejoindre notre communauté. </value>
-  </data>
-  <data name="Muted-p3" xml:space="preserve">
-    <value>Pour vous permettre de nous tester, vous disposez de 5j gratuits.</value>
+  <data name="Next" xml:space="preserve">
+    <value>Next</value>
   </data>
   <data name="Password" xml:space="preserve">
     <value>Password</value>
   </data>
-  <data name="PinCode" xml:space="preserve">
-    <value>Pin Code</value>
+  <data name="PasswordRequirements" xml:space="preserve">
+    <value>The password must contain at least 6 letters, and at least one lowercase letter, one uppercase letter, one number, and at least one special character.</value>
   </data>
-  <data name="PinDigit" xml:space="preserve">
-    <value>Pin Digit</value>
+  <data name="Register" xml:space="preserve">
+    <value>Register</value>
   </data>
-  <data name="PrivacyLinkText" xml:space="preserve">
-    <value>Privacy Policy</value>
+  <data name="RegisterConfirmationTitle" xml:space="preserve">
+    <value>Register confirmation &amp;mdash; Meetag</value>
   </data>
-  <data name="RegisterText" xml:space="preserve">
-    <value>Register as a new user</value>
+  <data name="RequestCertificate" xml:space="preserve">
+    <value>Depending on your country, you will be asked for a national identity card and a valid identity photo. You Accept this rule before continuing your registration.</value>
   </data>
-  <data name="RememberMe" xml:space="preserve">
-    <value>Remember Me</value>
+  <data name="RequestCountry" xml:space="preserve">
+    <value>Depending on your country, a national identity card will be required as well as a passport photo.</value>
   </data>
-  <data name="SmartClik" xml:space="preserve">
-    <value>Meetag</value>
-  </data>
-  <data name="TermOfServiceText" xml:space="preserve">
-    <value>Terms of Service</value>
+  <data name="SendEmail" xml:space="preserve">
+    <value>An email has been sent to you on</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Login on Meetag</value>
+    <value>Register on Meetag</value>
   </data>
-  <data name="Welcome" xml:space="preserve">
-    <value>Welcome to &lt;span class="font-weight-bold"&gt;Smart Clik&lt;/span&gt;</value>
+  <data name="UseExternal" xml:space="preserve">
+    <value>You have a social account you can use it to connect on Meetag</value>
+  </data>
+  <data name="Validate" xml:space="preserve">
+    <value>Validate</value>
   </data>
 </root>

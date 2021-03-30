@@ -171,20 +171,32 @@
   <data name="ConfirmPassword" xml:space="preserve">
     <value>Confirmer le nouveau mot de passe</value>
   </data>
+  <data name="ConnectDesktop" xml:space="preserve">
+    <value>Associer mon travail</value>
+  </data>
   <data name="Contacts" xml:space="preserve">
     <value>Contacts</value>
   </data>
   <data name="Country" xml:space="preserve">
     <value>Pays</value>
   </data>
+  <data name="Cover" xml:space="preserve">
+    <value>Couverture vidéo</value>
+  </data>
   <data name="CustomLinks" xml:space="preserve">
     <value>Liens personnalisés</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Supprimer</value>
   </data>
   <data name="Description" xml:space="preserve">
     <value>Description</value>
   </data>
   <data name="DigitCode" xml:space="preserve">
     <value>Numéro de la carte</value>
+  </data>
+  <data name="DisplayDescription" xml:space="preserve">
+    <value>Ajouter une description</value>
   </data>
   <data name="DisplayName" xml:space="preserve">
     <value>Nom à afficher</value>
@@ -197,6 +209,9 @@
   </data>
   <data name="Email" xml:space="preserve">
     <value>Email</value>
+  </data>
+  <data name="EndSubscription" xml:space="preserve">
+    <value>Se terminera le</value>
   </data>
   <data name="Find-out" xml:space="preserve">
     <value>Découvrir</value>
