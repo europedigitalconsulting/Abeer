@@ -132,6 +132,9 @@
   <data name="AddCustomLinks" xml:space="preserve">
     <value>Add a custom link</value>
   </data>
+  <data name="AddQrCode" xml:space="preserve">
+    <value>Add Qr code</value>
+  </data>
   <data name="AssociateNewCard" xml:space="preserve">
     <value>Associate a new card</value>
   </data>

@@ -7,7 +7,7 @@
                 <div class="author-box-left" style="position:relative">
                     @if (!ReadOnly && ScreenSize.IsSmall)
                     {
-                        <i style="font-size: 20px; position: absolute; right: -20px; top: 0px; z-index: 9999999999;" class="p-3 fas fa-ellipsis-v p-3" aria-hidden="true" @onclick="() => ToggleMenu = !ToggleMenu"></i>
+                    <i style="font-size: 20px; position: absolute; right: -20px; top: 0px; z-index: 9999999999;" class="p-3 fas fa-ellipsis-v p-3" aria-hidden="true" @onclick="() => ToggleMenu = !ToggleMenu"></i>
 
                     }
                     <div style="position:relative; width:100%;">
@@ -34,26 +34,26 @@
                             </div>
                             @if (!ReadOnly)
                             {
-                                <div class="p-2 cursor-pointer" @onclick="() => { TabBookmark = true;TabQrCode = false; }">
-                                    <div class="pr-2 text-center" style="@(TabBookmark ? "color:#02BF8A;" : "color:black;")">
-                                        <div><i style="font-size: 20px; " class="far fa-bookmark"></i></div>
-                                        <span style="font-size:12px;">@Loc["Bookmarks"]</span>
-                                    </div>
+                            <div class="p-2 cursor-pointer" @onclick="() => { TabBookmark = true;TabQrCode = false; }">
+                                <div class="pr-2 text-center" style="@(TabBookmark ? "color:#02BF8A;" : "color:black;")">
+                                    <div><i style="font-size: 20px; " class="far fa-bookmark"></i></div>
+                                    <span style="font-size:12px;">@Loc["Bookmarks"]</span>
                                 </div>
-                                <div class="p-2 cursor-pointer" @onclick="() => { TabQrCode = true; TabBookmark = false; }">
-                                    <div class="pr-2 text-center" style="@(TabQrCode ? "color:#02BF8A;" : "color:black;")">
-                                        <div><i style="font-size: 20px; " class="fas fa-qrcode"></i></div>
-                                        <span style="font-size:12px;">@Loc["MyQrCode"]</span>
-                                    </div>
+                            </div>
+                            <div class="p-2 cursor-pointer" @onclick="() => { TabQrCode = true; TabBookmark = false; }">
+                                <div class="pr-2 text-center" style="@(TabQrCode ? "color:#02BF8A;" : "color:black;")">
+                                    <div><i style="font-size: 20px; " class="fas fa-qrcode"></i></div>
+                                    <span style="font-size:12px;">@Loc["MyQrCode"]</span>
                                 </div>
-                                @if (!ScreenSize.IsSmall)
+                            </div>
+                            @if (!ScreenSize.IsSmall)
                                 {
-                                    <div class="p-2 cursor-pointer">
-                                        <a href="/contact/list" class="pr-2 text-center" style="color:black; font-weight:400;">
-                                            <div><i style="font-size: 20px;" class="fa fa-users"></i></div>
-                                            <span style="font-size:12px;">@Loc["Contacts"]</span>
-                                        </a>
-                                    </div>
+                            <div class="p-2 cursor-pointer">
+                                <a href="/contact/list" class="pr-2 text-center" style="color:black; font-weight:400;">
+                                    <div><i style="font-size: 20px;" class="fa fa-users"></i></div>
+                                    <span style="font-size:12px;">@Loc["Contacts"]</span>
+                                </a>
+                            </div>
                                 }
                             }
                         </div>
@@ -75,190 +75,192 @@
                     </div>
                     @if (Profile.SubscriptionStart.HasValue && Profile.SubscriptionEnd.HasValue && Profile.Id == CurrentUserId)
                     {
-                        <div class="col-4 alert-primary">
-                            @Loc["YourSubscription"] - @Loc["StartSubscription", Profile.SubscriptionStart.Value.ToShortDateString()] - @Loc["EndSubscription", Profile.SubscriptionEnd.Value.ToShortDateString()]
-                            @if (Profile.SubscriptionEnd.Value.Subtract(DateTime.UtcNow).Days <= 3)
+                    <div class="col-4 alert-primary">
+                        @Loc["YourSubscription"] - @Loc["StartSubscription", Profile.SubscriptionStart.Value.ToShortDateString()] - @Loc["EndSubscription", Profile.SubscriptionEnd.Value.ToShortDateString()]
+                        @if (Profile.SubscriptionEnd.Value.Subtract(DateTime.UtcNow).Days <= 3)
                             {
-                                <a class="btn btn-primary" href="/subscription-pack">@Loc["RenewSubscription"]</a>
+                        <a class="btn btn-primary" href="/subscription-pack">@Loc["RenewSubscription"]</a>
                             }
-                        </div>
+                    </div>
                     }
                     <div class="row mt-lg-5" style=" border-top: 1px solid black; padding-top: 21px;">
                         @if (TabBookmark)
                         {
-                            <div class="col-12 pb-4 " style="color:black;">
-                                <a class="cursor-pointer"  @onclick="@(()=>TabBookmark = false)"><i class="fas fa-long-arrow-alt-left" style="font-size: 18px">&nbsp;&nbsp; @Loc["Back"]</i></a><br />
-                                <MyCustomLinks Profile="Profile" OnAddLinkClicked="OpenModalCustomLink"></MyCustomLinks>
-                            </div>
+                        <div class="col-12 pb-4 " style="color:black;">
+                            <a class="cursor-pointer" @onclick="@(()=>TabBookmark = false)"><i class="fas fa-long-arrow-alt-left" style="font-size: 18px">&nbsp;&nbsp; @Loc["Back"]</i></a><br />
+                            <MyCustomLinks Profile="Profile" OnAddLinkClicked="OpenModalCustomLink"></MyCustomLinks>
+                        </div>
                         }
                         else if (TabQrCode)
                         {
-                            <a class="cursor-pointer" @onclick="@(()=>TabQrCode = false)"><i class="fas fa-long-arrow-alt-left" style="font-size: 18px">&nbsp;&nbsp; @Loc["Back"]</i></a>
-                            <MyCustomQrcode Profile="Profile"></MyCustomQrcode>
+                        <div class="col-12">
+                            <a class="cursor-pointer"><i class="fas fa-long-arrow-alt-left" style="font-size: 18px">&nbsp;&nbsp; Retour</i></a>
+                        </div>
+                        <MyCustomQrcode Profile="Profile"></MyCustomQrcode>
                         }
                         else
                         {
-                            <div class="col-md-6 col-sm-12">
-                                @if (!string.IsNullOrEmpty(Profile.Description))
+                        <div class="col-md-6 col-sm-12">
+                            @if (!string.IsNullOrEmpty(Profile.Description))
                                 {
-                                    <div class="" style="text-align:left;">
-                                        <p>
-                                            @Profile.Description
-                                        </p>
-                                    </div>
+                            <div class="" style="text-align:left;">
+                                <p>
+                                    @Profile.Description
+                                </p>
+                            </div>
                                 }
-                                @if (!string.IsNullOrEmpty(Profile.DescriptionVideo))
+                            @if (!string.IsNullOrEmpty(Profile.DescriptionVideo))
                                 {
                                     if (!string.IsNullOrEmpty(Profile.DescriptionVideoCover))
                                     {
-                                        <video controls poster="@Profile.DescriptionVideoCover" class="col-12">
-                                            <source src="@Profile.DescriptionVideo" type="video/mp4" />
-                                        </video>
+                            <video controls poster="@Profile.DescriptionVideoCover" class="col-12">
+                                <source src="@Profile.DescriptionVideo" type="video/mp4" />
+                            </video>
                                     }
                                 }
-                                <div class="mt-4">
-                                    <ul style="list-style: none;font-weight: 500;" class="pl-0">
-                                        @if (!string.IsNullOrWhiteSpace(Profile.City))
+                            <div class="mt-4">
+                                <ul style="list-style: none;font-weight: 500;" class="pl-0">
+                                    @if (!string.IsNullOrWhiteSpace(Profile.City))
                                         {
-                                            <li class="pb-2">
-                                                <span class="p-2 w-100">
-                                                    <i class="fa fa-map-marker text-dark pr-2" aria-hidden="true"></i>
-                                                    @Profile.City, @Profile.Country
-                                                </span>
-                                            </li>
+                                    <li class="pb-2">
+                                        <span class="p-2 w-100">
+                                            <i class="fa fa-map-marker text-dark pr-2" aria-hidden="true"></i>
+                                            @Profile.City, @Profile.Country
+                                        </span>
+                                    </li>
                                         }
-                                        @if (!string.IsNullOrWhiteSpace(Profile.Email))
+                                    @if (!string.IsNullOrWhiteSpace(Profile.Email))
                                         {
-                                            <li class="pb-2">
-                                                <a href="mailto:@Profile.Email" class="p-2 w-100">
-                                                    <i class="fa fa-envelope text-dark pr-2" aria-hidden="true"></i>
-                                                    @Profile.Email
-                                                </a>
-                                            </li>
+                                    <li class="pb-2">
+                                        <a href="mailto:@Profile.Email" class="p-2 w-100">
+                                            <i class="fa fa-envelope text-dark pr-2" aria-hidden="true"></i>
+                                            @Profile.Email
+                                        </a>
+                                    </li>
                                         }
-                                        @if (!string.IsNullOrWhiteSpace(Profile.PhoneNumber))
+                                    @if (!string.IsNullOrWhiteSpace(Profile.PhoneNumber))
                                         {
-                                            <li class="pb-2">
-                                                <span class="p-2 w-100">
-                                                    <i class="fa fa-phone text-dark pr-2" aria-hidden="true"></i>
-                                                    @Profile.PhoneNumber
-                                                </span>
-                                            </li>
+                                    <li class="pb-2">
+                                        <span class="p-2 w-100">
+                                            <i class="fa fa-phone text-dark pr-2" aria-hidden="true"></i>
+                                            @Profile.PhoneNumber
+                                        </span>
+                                    </li>
                                         }
-                                    </ul>
-                                </div>
-                                @if (Profile.SocialNetworkConnected != null)
+                                </ul>
+                            </div>
+                            @if (Profile.SocialNetworkConnected != null)
                                 {
-                                    <div class="row col-12">
-                                        <Virtualize Items="@Profile.SocialNetworkConnected" Context="socialNetwork">
-                                            <div class="card text-white mb-3 mr-1">
-                                                <a href="@socialNetwork.Url" target="_blank">
-                                                    <img alt="image" src="assets/img/social/@(socialNetwork.Name).svg" style="  width:40px;text-align:center">
-                                                </a>
-                                            </div>
-                                        </Virtualize>
+                            <div class="row col-12">
+                                <Virtualize Items="@Profile.SocialNetworkConnected" Context="socialNetwork">
+                                    <div class="card text-white mb-3 mr-1">
+                                        <a href="@socialNetwork.Url" target="_blank">
+                                            <img alt="image" src="assets/img/social/@(socialNetwork.Name).svg" style="  width:40px;text-align:center">
+                                        </a>
                                     </div>
+                                </Virtualize>
+                            </div>
                                 }
-                                @if (Profile.CustomLinks != null)
+                            @if (Profile.CustomLinks != null)
                                 {
-                                    <Virtualize Items="@Profile.CustomLinks" Context="customLink">
-                                        <div class="card text-white mb-3 mr-1">
-                                            <a href="@customLink.Url" target="_blank">
-                                                @if (!string.IsNullOrEmpty(customLink.Logo))
+                            <Virtualize Items="@Profile.CustomLinks" Context="customLink">
+                                <div class="card text-white mb-3 mr-1">
+                                    <a href="@customLink.Url" target="_blank">
+                                        @if (!string.IsNullOrEmpty(customLink.Logo))
                                                 {
-                                                    <img alt="@customLink.Name" src="@customLink.Logo" style="width:80px;text-align:center" />
+                                        <img alt="@customLink.Name" src="@customLink.Logo" style="width:80px;text-align:center" />
                                                 }
                                                 else
                                                 {
-                                                    <i title="@customLink.Name" class="fas fa-photo-video"></i>
+                                        <i title="@customLink.Name" class="fas fa-photo-video"></i>
                                                 }
-                                            </a>
-                                        </div>
-                                    </Virtualize>
+                                    </a>
+                                </div>
+                            </Virtualize>
                                 }
-                                @if (CurrentUser.Identity?.IsAuthenticated == true)
+                            @if (CurrentUser.Identity?.IsAuthenticated == true)
                                 {
-                                    @if (!string.IsNullOrEmpty(Profile?.DisplayName))
+                            @if (!string.IsNullOrEmpty(Profile?.DisplayName))
                                     {
-                                        <Abeer.Client.UISdk.SocialShareLinks Text="@Loc["ShareText", Profile.DisplayName]" Content="@Profile.Description" Source="@Loc["ShareSource"]" TargetUrl="@NavigationManager.ToAbsoluteUri($"/ViewProfile/{Profile.Id}").ToString()" Title="@Loc["ShareTitle", Profile.DisplayName]" Loc="Loc"></Abeer.Client.UISdk.SocialShareLinks>
-                                        <button class="btn btn-primary" @onclick="DownloadVCard"><i class="fas fa-address-card"></i>&nbsp;@Loc["DownloadProfile"]</button>
+                            <Abeer.Client.UISdk.SocialShareLinks Text="@Loc["ShareText", Profile.DisplayName]" Content="@Profile.Description" Source="@Loc["ShareSource"]" TargetUrl="@NavigationManager.ToAbsoluteUri($"/ViewProfile/{Profile.Id}").ToString()" Title="@Loc["ShareTitle", Profile.DisplayName]" Loc="Loc"></Abeer.Client.UISdk.SocialShareLinks>
+                            <button class="btn btn-primary" @onclick="DownloadVCard"><i class="fas fa-address-card"></i>&nbsp;@Loc["DownloadProfile"]</button>
                                     }
 
-                                    @if (Link == null)
+                            @if (Link == null)
                                     {
                                         if (Profile.Id != CurrentUserId)
                                         {
-                                            <button class="btn btn-primary" @onclick="LinkContact"><i class="fas fa-link"></i>&nbsp;@Loc["LinkContact"]</button>
+                            <button class="btn btn-primary" @onclick="LinkContact"><i class="fas fa-link"></i>&nbsp;@Loc["LinkContact"]</button>
                                         }
                                     }
                                     else if (Link.UserAccepted == Abeer.Shared.ReferentielTable.EnumUserAccepted.ACCEPTED)
                                     {
-                                        <button class="btn btn-warning" @onclick="Unlink"><i class="fas fa-unlink"></i>&nbsp;@Loc["UnLinkContact"]</button>
+                            <button class="btn btn-warning" @onclick="Unlink"><i class="fas fa-unlink"></i>&nbsp;@Loc["UnLinkContact"]</button>
                                     }
                                     else if (Link.UserAccepted == Abeer.Shared.ReferentielTable.EnumUserAccepted.PENDING)
                                     {
                                         if (Link.UserId == CurrentUserId)
                                         {
-                                            <button class="btn btn-primary" @onclick="AcceptInvitation"><i class="fas fa-user-check"></i>&nbsp;@Loc["AcceptInvitation"]</button>
+                            <button class="btn btn-primary" @onclick="AcceptInvitation"><i class="fas fa-user-check"></i>&nbsp;@Loc["AcceptInvitation"]</button>
                                         }
                                         else
                                         {
-                                            <span class="badge badge-secondary">@Loc["Pending"]</span>
+                            <span class="badge badge-secondary">@Loc["Pending"]</span>
                                         }
                                     }
                                 }
-                            </div>
-                            @if (!ReadOnly)
+                        </div>
+                        @if (!ReadOnly)
                             {
 
-                                <div class="hidden-sm offset-md-1 col-md-5">
-                                    <ul style="list-style: none; width:100%; color:#97AABD;" class="p-0 m-0">
-                                        <li> @Loc["UpdateInfo"]</li>
-                                        <li class="menu-profile" @onclick="OpenModalEditProfil">
-                                            @Loc["EditProfile"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-edit"></i></span>
-                                        </li>
-                                        <li class="menu-profile" @onclick="OpenModalCustomLink">
-                                            @Loc["AddCustomLinks"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="far fa-plus-square"></i></span>
-                                        </li>
-                                        <li class="menu-profile" @onclick="OpenModalSocialNetwork">
-                                            @Loc["AddASocialNetwork"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-icons"></i></span>
-                                        </li>
-                                        <li class="menu-profile" @onclick="OpenModalQrcode">
-                                            @Loc["MyQrCode"]<span style="float:right;"><i style="font-size: 23px;color: #02BF8A" class="fas fa-qrcode"></i></span>
-                                        </li>
-                                        <li class="menu-profile" @onclick="OpenModalChangePhoto">
-                                            @Loc["ChangePhoto"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-camera-retro"></i></span>
-                                        </li>
-                                        <li class="menu-profile" @onclick="OpenModalChangePassword">
-                                            @Loc["ChangePassword"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-key"></i></span>
-                                        </li>
-                                        <li class="menu-profile" @onclick="OpenModalChangePinCode">
-                                            @Loc["DisplayPinCode"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-user-secret"></i></span>
-                                        </li>
-                                        <li class="menu-profile" @onclick="OpenModalChangeMail">
-                                            @Loc["TitleChangeMail"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-at"></i></span>
-                                        </li>
-                                        @if (ScreenSize.IsLarge)
+                        <div class="hidden-sm offset-md-1 col-md-5">
+                            <ul style="list-style: none; width:100%; color:#97AABD;" class="p-0 m-0">
+                                <li> @Loc["UpdateInfo"]</li>
+                                <li class="menu-profile" @onclick="OpenModalEditProfil">
+                                    @Loc["EditProfile"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-edit"></i></span>
+                                </li>
+                                <li class="menu-profile" @onclick="OpenModalCustomLink">
+                                    @Loc["AddCustomLinks"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="far fa-plus-square"></i></span>
+                                </li>
+                                <li class="menu-profile" @onclick="OpenModalSocialNetwork">
+                                    @Loc["AddASocialNetwork"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-icons"></i></span>
+                                </li>
+                                <li class="menu-profile" @onclick="OpenModalQrcode">
+                                    @Loc["AddQrCode"]<span style="float:right;"><i style="font-size: 23px;color: #02BF8A" class="fas fa-qrcode"></i></span>
+                                </li>
+                                <li class="menu-profile" @onclick="OpenModalChangePhoto">
+                                    @Loc["ChangePhoto"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-camera-retro"></i></span>
+                                </li>
+                                <li class="menu-profile" @onclick="OpenModalChangePassword">
+                                    @Loc["ChangePassword"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-key"></i></span>
+                                </li>
+                                <li class="menu-profile" @onclick="OpenModalChangePinCode">
+                                    @Loc["DisplayPinCode"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-user-secret"></i></span>
+                                </li>
+                                <li class="menu-profile" @onclick="OpenModalChangeMail">
+                                    @Loc["TitleChangeMail"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-at"></i></span>
+                                </li>
+                                @if (ScreenSize.IsLarge)
                                         {
-                                            <li class="menu-profile" @onclick="@(()=>ModalQrCode = true)">
-                                                @Loc["TitleOpenQrCode"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-qrcode"></i></span>
-                                            </li>
+                                <li class="menu-profile" @onclick="@(()=>ModalQrCode = true)">
+                                    @Loc["TitleOpenQrCode"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-qrcode"></i></span>
+                                </li>
                                         }
-                                        @if (Profile.IsUltimate || Profile.IsAdmin || Profile.IsUnlimited)
+                                @if (Profile.IsUltimate || Profile.IsAdmin || Profile.IsUnlimited)
                                         {
-                                            <li class="menu-profile">
-                                                <a href="@($"/api/sitemap/{Profile.Id}")" target="_blank">
-                                                    @Loc["SiteMap"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-sitemap"></i></span>
-                                                </a>
-                                            </li>
-                                            <li class="menu-profile">
-                                                <a href="@($"/api/rss/{Profile.Id}")" target="_blank">
-                                                    @Loc["Rss"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-rss-square"></i></span>
-                                                </a>
-                                            </li>
+                                <li class="menu-profile">
+                                    <a href="@($"/api/sitemap/{Profile.Id}")" target="_blank">
+                                        @Loc["SiteMap"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-sitemap"></i></span>
+                                    </a>
+                                </li>
+                                <li class="menu-profile">
+                                    <a href="@($"/api/rss/{Profile.Id}")" target="_blank">
+                                        @Loc["Rss"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-rss-square"></i></span>
+                                    </a>
+                                </li>
                                         }
-                                    </ul>
-                                </div>
+                            </ul>
+                        </div>
                             }
                         }
                     </div>
@@ -267,342 +269,342 @@
         </div>
         @if (ScreenSize.IsSmall)
         {
-            <div class="section-footer mt-3" style="height:50px;position:relative; background-color:#F5F8FA;border-radius: 0px 0px 15px 15px;">
-                <div class="d-flex justify-content-between mb-3">
-                    <div>
-                        <span @onclick="() => ModalQrCode = !ModalQrCode" class="pl-0 pt-2 pb-2 text-decoration-none col-3 ">
-                            <img class="pt-2 pb-2" src="/assets/img/services/macarte_sm.svg" style="box-shadow: 0px 5px 35px 0px lightgrey; padding-left: 10px; border-radius: 0px 0px 19px 19px; background: #F5F8FA;">
-                        </span>
-                    </div>
-                    <div class="p-2">
-                        <a href="https://www.google.fr/maps/place/@Profile.Country,@Profile.City" target="_blank">
-                            <div class="pr-2 text-center text-light">
-                                <div>
-                                    <i style="font-size: 25px; color: black;" class="fa fa-map-marker-alt" aria-hidden="true"></i>
-                                </div>
+        <div class="section-footer mt-3" style="height:50px;position:relative; background-color:#F5F8FA;border-radius: 0px 0px 15px 15px;">
+            <div class="d-flex justify-content-between mb-3">
+                <div>
+                    <span @onclick="() => ModalQrCode = !ModalQrCode" class="pl-0 pt-2 pb-2 text-decoration-none col-3 ">
+                        <img class="pt-2 pb-2" src="/assets/img/services/macarte_sm.svg" style="box-shadow: 0px 5px 35px 0px lightgrey; padding-left: 10px; border-radius: 0px 0px 19px 19px; background: #F5F8FA;">
+                    </span>
+                </div>
+                <div class="p-2">
+                    <a href="https://www.google.fr/maps/place/@Profile.Country,@Profile.City" target="_blank">
+                        <div class="pr-2 text-center text-light">
+                            <div>
+                                <i style="font-size: 25px; color: black;" class="fa fa-map-marker-alt" aria-hidden="true"></i>
                             </div>
-                        </a>
-                    </div>
-                    <div class="p-2">
-                        @if (!ReadOnly)
+                        </div>
+                    </a>
+                </div>
+                <div class="p-2">
+                    @if (!ReadOnly)
                         {
-                            <a href="/contact/list" class="pr-2 text-center text-light">
-                                <div>
-                                    <i style="font-size: 16px; color: black;" class="fa fa-users" aria-hidden="true"></i>
-                                </div>
-                                <span style="font-size: 12px; color: black; font-weight: 400;">@Loc["Contacts"]</span>
-                            </a>
+                    <a href="/contact/list" class="pr-2 text-center text-light">
+                        <div>
+                            <i style="font-size: 16px; color: black;" class="fa fa-users" aria-hidden="true"></i>
+                        </div>
+                        <span style="font-size: 12px; color: black; font-weight: 400;">@Loc["Contacts"]</span>
+                    </a>
                         }
-                    </div>
                 </div>
             </div>
+        </div>
         }
     </div>
 </section>
 
 @if (ToggleMenu && !ReadOnly)
 {
-    <div class="modal fade show effect-open" id="modal-confirm" data-backdrop="static" data-keyboard="false" tabindex="-1" style="display: block;top:0;">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content-menu-profile" style="height: 120%;">
-                <div style="position: absolute;top: 0;left: 0;right: 0;bottom: 0;background-color: white;z-index: 99;"></div>
-                <div @onclick="() => ToggleMenu = !ToggleMenu" style="position:fixed;top:60px;right:20px;padding:10px 15px 10px 15px;background:#F5F8FA;border-radius:10px;z-index:999999">
-                    <i style="font-size:22px" class="fas fa-times"></i>
-                </div>
-                <div class="modal-body" style="margin-top: 100px; display: flex; justify-content: center; align-items: center;">
-                    <div class="" style="color: white; width: calc(100vw); margin-left: auto; margin-right: auto; z-index: 999;">
+<div class="modal fade show effect-open" id="modal-confirm" data-backdrop="static" data-keyboard="false" tabindex="-1" style="display: block;top:0;">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content-menu-profile" style="height: 120%;">
+            <div style="position: absolute;top: 0;left: 0;right: 0;bottom: 0;background-color: white;z-index: 99;"></div>
+            <div @onclick="() => ToggleMenu = !ToggleMenu" style="position:fixed;top:60px;right:20px;padding:10px 15px 10px 15px;background:#F5F8FA;border-radius:10px;z-index:999999">
+                <i style="font-size:22px" class="fas fa-times"></i>
+            </div>
+            <div class="modal-body" style="margin-top: 100px; display: flex; justify-content: center; align-items: center;">
+                <div class="" style="color: white; width: calc(100vw); margin-left: auto; margin-right: auto; z-index: 999;">
 
-                        <ul style="list-style: none; width:100%; color:#97AABD;" class="pl-0 pr-0 ml-0 mr-0">
-                            <li> @Loc["UpdateInfo"]</li>
-                            <li class="menu-profile" @onclick="OpenModalEditProfil">
-                                @Loc["EditProfile"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-edit"></i></span>
-                            </li>
-                            <li class="menu-profile" @onclick="OpenModalCustomLink">
-                                @Loc["AddCustomLinks"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="far fa-plus-square"></i></span>
-                            </li>
-                            <li class="menu-profile" @onclick="OpenModalQrcode">
-                                @Loc["MyQrCode"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-qrcode"></i></span>
-                            </li>
-                            <li class="menu-profile" @onclick="OpenModalSocialNetwork">
-                                @Loc["AddASocialNetwork"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-icons"></i></span>
-                            </li>
-                            <li class="menu-profile" @onclick="OpenModalChangePhoto">
-                                @Loc["ChangePhoto"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-camera-retro"></i></span>
-                            </li>
-                            <li class="menu-profile" @onclick="OpenModalChangePassword">
-                                @Loc["ChangePassword"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-key"></i></span>
-                            </li>
-                            <li class="menu-profile" @onclick="OpenModalChangePinCode">
-                                @Loc["DisplayPinCode"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-user-secret"></i></span>
-                            </li>
-                            <li class="menu-profile" @onclick="OpenModalChangeMail">
-                                @Loc["TitleChangeMail"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-at"></i></span>
-                            </li>
-                        </ul>
-                    </div>
+                    <ul style="list-style: none; width:100%; color:#97AABD;" class="pl-0 pr-0 ml-0 mr-0">
+                        <li> @Loc["UpdateInfo"]</li>
+                        <li class="menu-profile" @onclick="OpenModalEditProfil">
+                            @Loc["EditProfile"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-edit"></i></span>
+                        </li>
+                        <li class="menu-profile" @onclick="OpenModalCustomLink">
+                            @Loc["AddCustomLinks"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="far fa-plus-square"></i></span>
+                        </li>
+                        <li class="menu-profile" @onclick="OpenModalQrcode">
+                            @Loc["AddQrCode"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-qrcode"></i></span>
+                        </li>
+                        <li class="menu-profile" @onclick="OpenModalSocialNetwork">
+                            @Loc["AddASocialNetwork"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-icons"></i></span>
+                        </li>
+                        <li class="menu-profile" @onclick="OpenModalChangePhoto">
+                            @Loc["ChangePhoto"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-camera-retro"></i></span>
+                        </li>
+                        <li class="menu-profile" @onclick="OpenModalChangePassword">
+                            @Loc["ChangePassword"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-key"></i></span>
+                        </li>
+                        <li class="menu-profile" @onclick="OpenModalChangePinCode">
+                            @Loc["DisplayPinCode"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-user-secret"></i></span>
+                        </li>
+                        <li class="menu-profile" @onclick="OpenModalChangeMail">
+                            @Loc["TitleChangeMail"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-at"></i></span>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
+</div>
 }
 @if (ModalEditProfil)
 {
-    <ModalDefault Title="@Loc["Title"]" ModalCancelClicked="@(() => ModalEditProfil = false)" MaxWidthModal="800px">
-        <Body>
-            <EditProfile CloseToggle="UpdateProfil"></EditProfile>
-        </Body>
-    </ModalDefault>
+<ModalDefault Title="@Loc["Title"]" ModalCancelClicked="@(() => ModalEditProfil = false)" MaxWidthModal="800px">
+    <Body>
+        <EditProfile CloseToggle="UpdateProfil"></EditProfile>
+    </Body>
+</ModalDefault>
 }
 @if (ModalEditQrcode)
 {
-    <ModalDefault Title="@Loc["MyQrCode"]" ModalValidClicked="AddQrCode" ModalCancelClicked="@(() => ModalEditQrcode = false)" BtnValidLabel="@Loc["Add"]">
-        <Body>
-            <div class="form-group">
-                @Loc["KeyWord"]
-                <input type="text" class="form-control" @bind="KeyWord" />
-            </div>
-        </Body>
-    </ModalDefault>
+<ModalDefault Title="@Loc["MyQrCode"]" ModalValidClicked="AddQrCode" ModalCancelClicked="@(() => ModalEditQrcode = false)" BtnValidLabel="@Loc["Add"]">
+    <Body>
+        <div class="form-group">
+            @Loc["KeyWord"]
+            <input type="text" class="form-control" @bind="KeyWord" />
+        </div>
+    </Body>
+</ModalDefault>
 }
 @if (ModalChangePhoto)
 {
-    <ModalDefault Title="@Loc["ChangePhoto"]" ModalValidClicked="ChangePhoto" BtnValidLabel="@Loc["ChangePhoto"]" ModalCancelClicked="@(() => ModalChangePhoto = false)">
-        <Body>
-            @if (ChangePhotoHasError)
+<ModalDefault Title="@Loc["ChangePhoto"]" ModalValidClicked="ChangePhoto" BtnValidLabel="@Loc["ChangePhoto"]" ModalCancelClicked="@(() => ModalChangePhoto = false)">
+    <Body>
+        @if (ChangePhotoHasError)
             {
-                <div class="alert alert-danger">
-                    @ChangePhotoError
-                </div>
+        <div class="alert alert-danger">
+            @ChangePhotoError
+        </div>
             }
-            <div class="form-group">
+        <div class="form-group">
 
-                @Loc["PhotoType"]
-                <select @bind="PhotoType" class="form-control">
-                    <option value="Gravatar">@Loc["UseGravatarPhoto"]</option>
-                    <option value="Photo">@Loc["UseCustomPhoto"]</option>
-                    <option value="Video">@Loc["UseVideo"]</option>
-                </select>
+            @Loc["PhotoType"]
+            <select @bind="PhotoType" class="form-control">
+                <option value="Gravatar">@Loc["UseGravatarPhoto"]</option>
+                <option value="Photo">@Loc["UseCustomPhoto"]</option>
+                <option value="Video">@Loc["UseVideo"]</option>
+            </select>
+        </div>
+        @if (PhotoType == "Photo")
+            {
+        <div class="form-group">
+            @Loc["UseCustomPhoto"]
+            <MediaUploader ImgUrl="@Profile.PhotoUrl" OnChange="@((fileUrl)=>Profile.PhotoUrl = fileUrl)"></MediaUploader>
+        </div>
+            }
+        @if (PhotoType == "Video")
+            {
+        <div class="form-row">
+            <div class="form-group col-sm-12">
+                @Loc["Video"]
+                <MediaUploader ImgUrl="@Profile.VideoProfileUrl" OnChange="@((fileUrl) => Profile.VideoProfileUrl = fileUrl)" IsVideo="true"></MediaUploader>
             </div>
-            @if (PhotoType == "Photo")
-            {
-                <div class="form-group">
-                    @Loc["UseCustomPhoto"]
-                    <MediaUploader ImgUrl="@Profile.PhotoUrl" OnChange="@((fileUrl)=>Profile.PhotoUrl = fileUrl)"></MediaUploader>
-                </div>
-            }
-            @if (PhotoType == "Video")
-            {
-                <div class="form-row">
-                    <div class="form-group col-sm-12">
-                        @Loc["Video"]
-                        <MediaUploader ImgUrl="@Profile.VideoProfileUrl" OnChange="@((fileUrl) => Profile.VideoProfileUrl = fileUrl)" IsVideo="true"></MediaUploader>
-                    </div>
-                </div>
+        </div>
 
-                <div class="form-row">
-                    <div class="form-group col-sm-12">
-                        @Loc["Cover"]
-                        <MediaUploader ImgUrl="@Profile.VideProfileCoverUrl" OnChange="@((fileUrl) => Profile.VideProfileCoverUrl = fileUrl)" IsVideo="false"></MediaUploader>
-                    </div>
-                </div>
+        <div class="form-row">
+            <div class="form-group col-sm-12">
+                @Loc["Cover"]
+                <MediaUploader ImgUrl="@Profile.VideProfileCoverUrl" OnChange="@((fileUrl) => Profile.VideProfileCoverUrl = fileUrl)" IsVideo="false"></MediaUploader>
+            </div>
+        </div>
 
             }
-        </Body>
-    </ModalDefault>
+    </Body>
+</ModalDefault>
 }
 @if (ModalChangeMail)
 {
-    <ModalDefault Title="@Loc["TitleChangeMail"]" BtnValidLabel="@Loc["Update"]" ModalValidClicked="ChangeMail" ModalCancelClicked="@(() => ModalChangeMail = false)">
-        <Body>
-            <div class="info">
-                <p class="text-danger">
-                    @Loc["TxtDesc1"]<br>
-                    @Loc["TxtDesc2"]<br />
-                </p>
-            </div><br />
-            <div class="form-group">
-                @Loc["NewMail"]
-                <input type="text" class="form-control" @bind="NewMail" />
-            </div>
-            <div class="form-group">
-                @Loc["ConfirmMail"]
-                <input type="text" class="form-control" @bind="ConfirmMail" />
-            </div>
+<ModalDefault Title="@Loc["TitleChangeMail"]" BtnValidLabel="@Loc["Update"]" ModalValidClicked="ChangeMail" ModalCancelClicked="@(() => ModalChangeMail = false)">
+    <Body>
+        <div class="info">
+            <p class="text-danger">
+                @Loc["TxtDesc1"]<br>
+                @Loc["TxtDesc2"]<br />
+            </p>
+        </div><br />
+        <div class="form-group">
+            @Loc["NewMail"]
+            <input type="text" class="form-control" @bind="NewMail" />
+        </div>
+        <div class="form-group">
+            @Loc["ConfirmMail"]
+            <input type="text" class="form-control" @bind="ConfirmMail" />
+        </div>
 
-            @if (ChangeChangeMailHasError)
+        @if (ChangeChangeMailHasError)
             {
-                <div class="alert alert-danger">
-                    @ChangeChangeMaildError
-                </div>
+        <div class="alert alert-danger">
+            @ChangeChangeMaildError
+        </div>
             }
-        </Body>
-    </ModalDefault>
+    </Body>
+</ModalDefault>
 }
 @if (ModalChangePinCode)
 {
-    <ModalDefault Title="@Loc["AddCard"]" ModalCancelClicked="@(() => ModalChangePinCode = false)">
-        <Body>
-            <div class="form-group">
-                @Loc["DigitCode"]
-                <input type="text" class="form-control" @bind="DigitCode" readonly="readonly" />
-            </div>
-            <div class="form-group">
-                @Loc["PinCode"]
-                <input type="text" class="form-control" @bind="PinCode" readonly="readonly" />
-            </div>
-            <div class="text-center">
-                <button type="button" class="btn btn-success" @onclick="@(() => ModalChangePinCode = false)">@Loc["Close"]</button>
-                <button type="button" class="btn btn-primary" @onclick="@(() => DisplayModifyPinCode = true)">@Loc["AssociateNewCard"]</button>
-            </div>
-            @if (DisplayModifyPinCode)
+<ModalDefault Title="@Loc["AddCard"]" ModalCancelClicked="@(() => ModalChangePinCode = false)">
+    <Body>
+        <div class="form-group">
+            @Loc["DigitCode"]
+            <input type="text" class="form-control" @bind="DigitCode" readonly="readonly" />
+        </div>
+        <div class="form-group">
+            @Loc["PinCode"]
+            <input type="text" class="form-control" @bind="PinCode" readonly="readonly" />
+        </div>
+        <div class="text-center">
+            <button type="button" class="btn btn-success" @onclick="@(() => ModalChangePinCode = false)">@Loc["Close"]</button>
+            <button type="button" class="btn btn-primary" @onclick="@(() => DisplayModifyPinCode = true)">@Loc["AssociateNewCard"]</button>
+        </div>
+        @if (DisplayModifyPinCode)
             {
-                <span class="modal-title mt-2 mb-2">@Loc["AssociateNewCard"]</span>
+        <span class="modal-title mt-2 mb-2">@Loc["AssociateNewCard"]</span>
 
-                <div class="form-group">
-                    @Loc["DigitCode"]
-                    <input type="text" class="form-control" @bind="NewDigitCode" />
-                </div>
-                <div class="form-group">
-                    @Loc["PinCode"]
-                    <input type="text" class="form-control" @bind="NewPinCode" />
-                    <span class="text-danger">@Error</span>
-                </div>
-                <div class="text-center">
-                    <button type="button" class="btn btn-success" @onclick="SaveNewCard">@Loc["Save"]</button>
-                </div>
+        <div class="form-group">
+            @Loc["DigitCode"]
+            <input type="text" class="form-control" @bind="NewDigitCode" />
+        </div>
+        <div class="form-group">
+            @Loc["PinCode"]
+            <input type="text" class="form-control" @bind="NewPinCode" />
+            <span class="text-danger">@Error</span>
+        </div>
+        <div class="text-center">
+            <button type="button" class="btn btn-success" @onclick="SaveNewCard">@Loc["Save"]</button>
+        </div>
             }
-        </Body>
-    </ModalDefault>
+    </Body>
+</ModalDefault>
 }
 @if (ModalChangePassword)
 {
-    <ModalDefault Title="@Loc["ChangePassword"]" ModalValidClicked="ChangePassword" BtnValidLabel="@Loc["Update"]" ModalCancelClicked="@(() => ModalChangePassword = false)">
-        <Body>
-            @if (ChangePasswordHasError)
+<ModalDefault Title="@Loc["ChangePassword"]" ModalValidClicked="ChangePassword" BtnValidLabel="@Loc["Update"]" ModalCancelClicked="@(() => ModalChangePassword = false)">
+    <Body>
+        @if (ChangePasswordHasError)
             {
-                <div class="alert alert-danger">
-                    @ChangePasswordError
-                </div>}
-            <div class="form-group">
-                @Loc["OldPassword"]
-                <input type="password" class="form-control" @bind="OldPassword" />
-            </div>
-            <div class="form-group">
-                @Loc["NewPassword"]
-                <input type="password" class="form-control" @bind="NewPassword" />
-                <span style="font-size:11px">@Loc["PasswordRequirements"]</span>
-            </div>
-            <div class="form-group">
-                @Loc["ConfirmPassword"]
-                <input type="password" class="form-control" @bind="ConfirmPassword" />
-            </div>
-        </Body>
-    </ModalDefault>
+        <div class="alert alert-danger">
+            @ChangePasswordError
+        </div>}
+        <div class="form-group">
+            @Loc["OldPassword"]
+            <input type="password" class="form-control" @bind="OldPassword" />
+        </div>
+        <div class="form-group">
+            @Loc["NewPassword"]
+            <input type="password" class="form-control" @bind="NewPassword" />
+            <span style="font-size:11px">@Loc["PasswordRequirements"]</span>
+        </div>
+        <div class="form-group">
+            @Loc["ConfirmPassword"]
+            <input type="password" class="form-control" @bind="ConfirmPassword" />
+        </div>
+    </Body>
+</ModalDefault>
 }
 @if (ModalQrCode)
 {
-    <div @onclick="@(() => ModalQrCode = false)" class="modal fade show effect-open" id="modal-confirm" data-backdrop="static" data-keyboard="false" tabindex="-1" style="display: block;top:0;">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content" style="border-radius: 0px !important; height: 120%;border-radius:500px;">
-                <div id="background" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: white; filter: blur(3px); z-index: 99; "></div>
-                <div class="modal-body" style="display: flex;justify-content: center; align-items: center;">
-                    <div class="text-center" style="background-color: #1FBF8A; color: white; width: calc(80vw); height: calc(80vw); margin-left: auto; margin-right: auto; border-radius: 50%;  display: flex;justify-content: center;
+<div @onclick="@(() => ModalQrCode = false)" class="modal fade show effect-open" id="modal-confirm" data-backdrop="static" data-keyboard="false" tabindex="-1" style="display: block;top:0;">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 0px !important; height: 120%;border-radius:500px;">
+            <div id="background" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: white; filter: blur(3px); z-index: 99; "></div>
+            <div class="modal-body" style="display: flex;justify-content: center; align-items: center;">
+                <div class="text-center" style="background-color: #1FBF8A; color: white; width: calc(80vw); height: calc(80vw); margin-left: auto; margin-right: auto; border-radius: 50%;  display: flex;justify-content: center;
   align-items: center;z-index: 999">
+                    <div>
+                        <div class="pb-3">
+                            <img alt="qrcode" src="/api/QrCodeGenerator?link=@ProfileUrl" width="160" />
+                        </div>
                         <div>
-                            <div class="pb-3">
-                                <img alt="qrcode" src="/api/QrCodeGenerator?link=@ProfileUrl" width="160" />
-                            </div>
-                            <div>
-                                <span class="pb-2" style="font-size:18px">@Profile.DisplayName</span>
-                                <br />
-                                <span class="author-box-job" style="font-size:11px">@Profile.Title</span>
-                            </div>
+                            <span class="pb-2" style="font-size:18px">@Profile.DisplayName</span>
+                            <br />
+                            <span class="author-box-job" style="font-size:11px">@Profile.Title</span>
                         </div>
                     </div>
-
                 </div>
+
             </div>
         </div>
     </div>
+</div>
 }
 @if (ModalSocialNetwork)
 {
-    <ModalDefault Title="@Loc["AddASocialNetwork"]" ModalCancelClicked="() => ModalSocialNetwork = false">
-        <Body>
-            <Virtualize Items="@Profile.SocialNetworkConnected" Context="socialNetwork">
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend" @onclick="ToggleOpenList">
-                        <span class="input-group-text pl-0" style="border-right:1px solid grey;">
-                            <img src="/assets/img/social/@(socialNetwork.Name + ".svg")" alt="@socialNetwork.Name" style="width: 30px; margin-left: 10px;" />
-                        </span>
-                    </div>
-                    <input readonly type="text" class="form-control" value="@socialNetwork.Url">
-                    <div @onclick="() => DeleteSocialNetwork(socialNetwork)" class="input-group-append">
-                        <span class="input-group-text cursor-pointer"><i class="fas fa-trash-alt" style="font-size:20px"></i></span>
-                    </div>
+<ModalDefault Title="@Loc["AddASocialNetwork"]" ModalCancelClicked="() => ModalSocialNetwork = false">
+    <Body>
+        <Virtualize Items="@Profile.SocialNetworkConnected" Context="socialNetwork">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend" @onclick="ToggleOpenList">
+                    <span class="input-group-text pl-0" style="border-right:1px solid grey;">
+                        <img src="/assets/img/social/@(socialNetwork.Name + ".svg")" alt="@socialNetwork.Name" style="width: 30px; margin-left: 10px;" />
+                    </span>
                 </div>
-            </Virtualize>
-            <div class="col-sm-12" style="background:#F5F8FA;height:50px;position:relative;">
-                @if (string.IsNullOrEmpty(NewSocialLink.Logo))
+                <input readonly type="text" class="form-control" value="@socialNetwork.Url">
+                <div @onclick="() => DeleteSocialNetwork(socialNetwork)" class="input-group-append">
+                    <span class="input-group-text cursor-pointer"><i class="fas fa-trash-alt" style="font-size:20px"></i></span>
+                </div>
+            </div>
+        </Virtualize>
+        <div class="col-sm-12" style="background:#F5F8FA;height:50px;position:relative;">
+            @if (string.IsNullOrEmpty(NewSocialLink.Logo))
                 {
-                    <div class="cursor-pointer " @onclick="ToggleOpenList">
-                        <i class="far fa-plus-square" style="font-size:25px;padding-top: 12px;"></i>
-                        <span>Ajouter un réseau social</span>
-                    </div>
+            <div class="cursor-pointer " @onclick="ToggleOpenList">
+                <i class="far fa-plus-square" style="font-size:25px;padding-top: 12px;"></i>
+                <span>Ajouter un réseau social</span>
+            </div>
                 }
                 else
                 {
-                    <div class="input-group mb-3 ">
-                        <div class="input-group-prepend" @onclick="ToggleOpenList">
-                            <span class="input-group-text pl-0" id="basic-addon1" style="border-right:1px solid grey;">
-                                <img src="/assets/img/social/@(NewSocialLink.Name + ".svg")" alt="@NewSocialLink.Name" style="width: 30px; margin-left: 10px;" />
-                            </span>
-                        </div>
-                        <input type="text" class="form-control" @bind="NewSocialLink.Url" placeholder="@Loc["SocialUrl"]">
-                    </div>
-                    <div class="text-center">
-                        <button class="btn btn-success" @onclick="AddSocialNetwork">@Loc["AddASocialNetwork"]</button>
-                    </div>
+            <div class="input-group mb-3 ">
+                <div class="input-group-prepend" @onclick="ToggleOpenList">
+                    <span class="input-group-text pl-0" id="basic-addon1" style="border-right:1px solid grey;">
+                        <img src="/assets/img/social/@(NewSocialLink.Name + ".svg")" alt="@NewSocialLink.Name" style="width: 30px; margin-left: 10px;" />
+                    </span>
+                </div>
+                <input type="text" class="form-control" @bind="NewSocialLink.Url" placeholder="@Loc["SocialUrl"]">
+            </div>
+            <div class="text-center">
+                <button class="btn btn-success" @onclick="AddSocialNetwork">@Loc["AddASocialNetwork"]</button>
+            </div>
                 }
 
-                @if (OpenList)
+            @if (OpenList)
                 {
-                    <ul class="slide-in-blurred-top" style="background: #F5F8FA; position: absolute; left: 0; top: 50px; z-index: 99999999; list-style: none; max-height: 340px; overflow-y: auto; padding-left: 10px; padding-right: 0px;">
-                        <Virtualize Items="@AvailableSocialNetworks" Context="item">
-                            <li @onclick="ToggleOpenList">
-                                <a href="javascript:void(0)" @onclick="@(()=>SetSocialNetwork(item.Name, item.BackgroundColor, item.Logo))">
-                                    <img src="/assets/img/social/@(item.Name + ".svg")" alt="@item.Name" style="width:30px" class="pb-1" />
-                                </a>
-                            </li>
-                        </Virtualize>
-                    </ul>
+            <ul class="slide-in-blurred-top" style="background: #F5F8FA; position: absolute; left: 0; top: 50px; z-index: 99999999; list-style: none; max-height: 340px; overflow-y: auto; padding-left: 10px; padding-right: 0px;">
+                <Virtualize Items="@AvailableSocialNetworks" Context="item">
+                    <li @onclick="ToggleOpenList">
+                        <a href="javascript:void(0)" @onclick="@(()=>SetSocialNetwork(item.Name, item.BackgroundColor, item.Logo))">
+                            <img src="/assets/img/social/@(item.Name + ".svg")" alt="@item.Name" style="width:30px" class="pb-1" />
+                        </a>
+                    </li>
+                </Virtualize>
+            </ul>
                 }
-            </div>
-        </Body>
-    </ModalDefault>
+        </div>
+    </Body>
+</ModalDefault>
 }
 @if (ModalCustomLink)
 {
-    <ModalDefault Title="@Loc["AddCustomLink"]" ModalValidClicked="AddCustomLink" BtnValidLabel="@Loc["AddCustomLink"]" ModalCancelClicked="@(() => ModalCustomLink = false)">
-        <Body>
-            <div class="card m-1">
-                <div class="form-group">
-                    @Loc["Name"]
-                    <input @bind="NewCustomLink.Name" class="form-control" />
-                </div>
-                <div class="form-group">
-                    @Loc["Description"]
-                    <textarea @bind="NewCustomLink.DisplayInfo" class="form-control" />
-                </div>
-                <div class="form-group">
-                    @Loc["Logo"]
-                    <MediaUploader ImgUrl="@NewCustomLink.Logo" OnChange="@((fileUrl)=>NewCustomLink.Logo = fileUrl)"></MediaUploader>
-                </div>
-                <div class="form-group">
-                    @Loc["Url"]
-                    <input type="url" @bind="NewCustomLink.Url" class="form-control" />
-                </div>
+<ModalDefault Title="@Loc["AddCustomLink"]" ModalValidClicked="AddCustomLink" BtnValidLabel="@Loc["AddCustomLink"]" ModalCancelClicked="@(() => ModalCustomLink = false)">
+    <Body>
+        <div class="card m-1">
+            <div class="form-group">
+                @Loc["Name"]
+                <input @bind="NewCustomLink.Name" class="form-control" />
             </div>
-        </Body>
-    </ModalDefault>
+            <div class="form-group">
+                @Loc["Description"]
+                <textarea @bind="NewCustomLink.DisplayInfo" class="form-control" />
+            </div>
+            <div class="form-group">
+                @Loc["Logo"]
+                <MediaUploader ImgUrl="@NewCustomLink.Logo" OnChange="@((fileUrl)=>NewCustomLink.Logo = fileUrl)"></MediaUploader>
+            </div>
+            <div class="form-group">
+                @Loc["Url"]
+                <input type="url" @bind="NewCustomLink.Url" class="form-control" />
+            </div>
+        </div>
+    </Body>
+</ModalDefault>
 }

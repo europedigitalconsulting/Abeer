@@ -51,8 +51,10 @@
         customLink.Url = OldValue;
         _current = null;
     }
-}
-<a @onclick="OnAddLinkClicked" class="btn btn-success"><i class="far fa-plus-square"></i></a>
+} 
+<div class="col-12">
+    <button @onclick="OnAddLinkClicked" class="btn btn-success"><i class="far fa-plus-square"></i></button>
+</div>
 @if (Profile.CustomLinks != null)
 {
     <Virtualize Items="@Profile.CustomLinks" Context="customLink">
