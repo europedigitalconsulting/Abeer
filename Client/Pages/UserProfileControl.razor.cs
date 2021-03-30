@@ -3,6 +3,10 @@ using Abeer.Shared.Functional;
 using Abeer.Shared.ViewModels;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.JSInterop;
+using MixERP.Net.VCards;
+using MixERP.Net.VCards.Models;
+using MixERP.Net.VCards.Serializer;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -10,6 +14,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 
@@ -39,6 +44,8 @@ namespace Abeer.Client.Pages
 
         public List<SocialNetwork> AvailableSocialNetworksToAdd { get; set; } = new List<SocialNetwork>();
 
+        [Inject]
+        IJSRuntime ThisJSRuntime { get; set; }
 
         private bool OpenList { get; set; }
         private bool TabBookmark { get; set; }
@@ -91,21 +98,21 @@ namespace Abeer.Client.Pages
         protected override async Task OnInitializedAsync()
         {
             var authenticateState = await AuthenticationStateTask;
-            
+
             CurrentUser = authenticateState.User;
-                        
+
             AvailableSocialNetworks.ForEach(a =>
             {
                 if (!Profile.SocialNetworkConnected.ToList().Exists(c => a.Name.Equals(c.Name, StringComparison.OrdinalIgnoreCase)))
                 {
-                    AvailableSocialNetworksToAdd.Add(a); 
+                    AvailableSocialNetworksToAdd.Add(a);
                 }
             });
 
             if (CurrentUser.Identity?.IsAuthenticated == true && !string.IsNullOrEmpty(Profile?.Id))
             {
                 if (CurrentUserId != Profile.Id)
-                { 
+                {
                     var getLink = await HttpClient.GetAsync($"api/contacts/link/{Profile.Id}");
 
                     if (getLink.IsSuccessStatusCode)
@@ -129,7 +136,7 @@ namespace Abeer.Client.Pages
 
             await InvokeAsync(StateHasChanged);
         }
-     
+
 
         public async Task LinkContact()
         {
@@ -192,12 +199,12 @@ namespace Abeer.Client.Pages
             user.PinCode = NewPinCode;
 
             var response = await HttpClient.PostAsJsonAsync($"api/Profile/SaveNewCard", user);
-            
+
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
                 var result = JsonConvert.DeserializeObject<ApplicationUser>(json);
-               
+
                 PinCode = result.PinCode;
                 DigitCode = result.PinDigit.ToString();
                 NewDigitCode = "";
@@ -210,6 +217,54 @@ namespace Abeer.Client.Pages
             }
             StateHasChanged();
         }
+
+        async Task DownloadVCard()
+        {
+            var vcard = new VCard
+            {
+                Version = MixERP.Net.VCards.Types.VCardVersion.V4,
+                FormattedName = Profile.DisplayName,
+                FirstName = Profile.FirstName,
+                LastName = Profile.LastName,
+                Classification = MixERP.Net.VCards.Types.ClassificationType.Confidential,
+                Categories = new string[] { "meetag", "Friend", Profile.DisplayName, Profile.City, Profile.Country },
+                Emails = new List<Email> {
+                    new Email
+                    {
+                        EmailAddress = Profile.Email, Type = MixERP.Net.VCards.Types.EmailType.Smtp
+                    }
+                },
+                Addresses = new List<Address>
+                {
+                    new Address
+                    {
+                        Country = Profile.Country, Locality = Profile.City, Street = Profile.Address
+                    }
+                },
+                Telephones = new List<Telephone> {
+                    new Telephone
+                    {
+                        Number = Profile.PhoneNumber, Type = MixERP.Net.VCards.Types.TelephoneType.Preferred
+                    }
+                },
+                Url = NavigationManager.ToAbsoluteUri($"profile/viewprofile/{Profile.Id}"),
+                LastRevision = DateTime.UtcNow,
+                Title = Profile.Title,
+                UniqueIdentifier = Profile.Id
+            };
+
+            var bytes = Encoding.UTF8.GetBytes(vcard.Serialize());
+
+            await ThisJSRuntime.InvokeVoidAsync(
+                "downloadFromByteArray",
+                new
+                {
+                    ByteArray = Convert.ToBase64String(bytes),
+                    FileName = $"vcard_{Profile.DisplayName.Replace(" ", "")}.vcf",
+                    ContentType = "text/vcard"
+                });
+        }
+
         private async Task AddQrCode()
         {
             QrcodeViewModel model = new QrcodeViewModel();
@@ -217,7 +272,7 @@ namespace Abeer.Client.Pages
             model.OwnerId = Guid.Parse(CurrentUserId);
 
             var response = await HttpClient.PostAsJsonAsync($"api/Qrcode", model);
-            
+
             if (response.IsSuccessStatusCode)
             {
                 KeyWord = "";
@@ -260,7 +315,7 @@ namespace Abeer.Client.Pages
                     NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri("Identity/account/logout?returnUrl=/Profile").ToString(), true);
                 }
             }
-        } 
+        }
         private void OpenModalChangePassword()
         {
             ModalChangePassword = true;
@@ -317,7 +372,7 @@ namespace Abeer.Client.Pages
                 response.EnsureSuccessStatusCode();
                 Profile.SocialNetworkConnected.Add(NewSocialLink);
                 NewSocialLink = new SocialNetwork { OwnerId = Profile.Id };
-                await InvokeAsync(StateHasChanged); 
+                await InvokeAsync(StateHasChanged);
             }
         }
         private async Task AddCustomLink()
@@ -341,7 +396,7 @@ namespace Abeer.Client.Pages
             Profile = user;
             ModalEditProfil = false;
             StateHasChanged();
-        } 
+        }
         private async Task DeleteSocialNetwork(SocialNetwork socialNetwork)
         {
             var response = await HttpClient.DeleteAsync($"/api/SocialNetwork/{Profile.Id}/{socialNetwork.Name}");

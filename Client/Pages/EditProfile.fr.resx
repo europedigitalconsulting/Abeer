@@ -204,6 +204,9 @@
   <data name="DisplayPinCode" xml:space="preserve">
     <value>Afficher code pin</value>
   </data>
+  <data name="DownloadProfile" xml:space="preserve">
+    <value>Télécharger le profil</value>
+  </data>
   <data name="EditProfile" xml:space="preserve">
     <value>Modifier profile</value>
   </data>

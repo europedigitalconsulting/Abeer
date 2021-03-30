@@ -181,6 +181,7 @@
                                     @if (!string.IsNullOrEmpty(Profile?.DisplayName))
                                     {
                                         <Abeer.Client.UISdk.SocialShareLinks Text="@Loc["ShareText", Profile.DisplayName]" Content="@Profile.Description" Source="@Loc["ShareSource"]" TargetUrl="@NavigationManager.ToAbsoluteUri($"/ViewProfile/{Profile.Id}").ToString()" Title="@Loc["ShareTitle", Profile.DisplayName]" Loc="Loc"></Abeer.Client.UISdk.SocialShareLinks>
+                                        <button class="btn btn-primary" @onclick="DownloadVCard"><i class="fas fa-address-card"></i>&nbsp;@Loc["DownloadProfile"]</button>
                                     }
 
                                     @if (Link == null)
