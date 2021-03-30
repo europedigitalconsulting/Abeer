@@ -34,10 +34,16 @@
                             </div>
                             @if (!ReadOnly)
                             {
-                                <div class="p-2 cursor-pointer" @onclick="() => TabMap = true">
-                                    <div class="pr-2 text-center" style="@(TabMap ? "color:#02BF8A;" : "color:black;")">
+                                <div class="p-2 cursor-pointer" @onclick="() => { TabBookmark = true;TabQrCode = false; }">
+                                    <div class="pr-2 text-center" style="@(TabBookmark ? "color:#02BF8A;" : "color:black;")">
                                         <div><i style="font-size: 20px; " class="far fa-bookmark"></i></div>
                                         <span style="font-size:12px;">@Loc["Bookmarks"]</span>
+                                    </div>
+                                </div>
+                                <div class="p-2 cursor-pointer" @onclick="() => { TabQrCode = true; TabBookmark = false; }">
+                                    <div class="pr-2 text-center" style="@(TabQrCode ? "color:#02BF8A;" : "color:black;")">
+                                        <div><i style="font-size: 20px; " class="fas fa-qrcode"></i></div>
+                                        <span style="font-size:12px;">@Loc["MyQrCode"]</span>
                                     </div>
                                 </div>
                                 @if (!ScreenSize.IsSmall)
@@ -78,7 +84,19 @@
                         </div>
                     }
                     <div class="row mt-lg-5" style=" border-top: 1px solid black; padding-top: 21px;">
-                        @if (!TabMap)
+                        @if (TabBookmark)
+                        {
+                            <div class="col-12 pb-4 " style="color:black;">
+                                <a class="cursor-pointer"  @onclick="@(()=>TabBookmark = false)"><i class="fas fa-long-arrow-alt-left" style="font-size: 18px">&nbsp;&nbsp; @Loc["Back"]</i></a><br />
+                                <MyCustomLinks Profile="Profile" OnAddLinkClicked="OpenModalCustomLink"></MyCustomLinks>
+                            </div>
+                        }
+                        else if (TabQrCode)
+                        {
+                            <a class="cursor-pointer" @onclick="@(()=>TabQrCode = false)"><i class="fas fa-long-arrow-alt-left" style="font-size: 18px">&nbsp;&nbsp; @Loc["Back"]</i></a>
+                            <MyCustomQrcode Profile="Profile"></MyCustomQrcode>
+                        }
+                        else
                         {
                             <div class="col-md-6 col-sm-12">
                                 @if (!string.IsNullOrEmpty(Profile.Description))
@@ -204,6 +222,9 @@
                                         <li class="menu-profile" @onclick="OpenModalSocialNetwork">
                                             @Loc["AddASocialNetwork"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-icons"></i></span>
                                         </li>
+                                        <li class="menu-profile" @onclick="OpenModalQrcode">
+                                            @Loc["MyQrCode"]<span style="float:right;"><i style="font-size: 23px;color: #02BF8A" class="fas fa-qrcode"></i></span>
+                                        </li>
                                         <li class="menu-profile" @onclick="OpenModalChangePhoto">
                                             @Loc["ChangePhoto"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-camera-retro"></i></span>
                                         </li>
@@ -238,13 +259,6 @@
                                     </ul>
                                 </div>
                             }
-                        }
-                        else
-                        {
-                            <div class="col-12 pb-4 cursor-pointer" style="color:black;">
-                                <MyCustomLinks Profile="Profile" OnAddLinkClicked="OpenModalCustomLink"></MyCustomLinks>
-                                <a @onclick="@(()=>TabMap = false)"><i class="fas fa-long-arrow-alt-left" style="font-size: 18px">&nbsp;&nbsp; @Loc["Back"]</i></a>
-                            </div>
                         }
                     </div>
                 </div>
@@ -305,6 +319,9 @@
                             <li class="menu-profile" @onclick="OpenModalCustomLink">
                                 @Loc["AddCustomLinks"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="far fa-plus-square"></i></span>
                             </li>
+                            <li class="menu-profile" @onclick="OpenModalQrcode">
+                                @Loc["MyQrCode"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-qrcode"></i></span>
+                            </li>
                             <li class="menu-profile" @onclick="OpenModalSocialNetwork">
                                 @Loc["AddASocialNetwork"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-icons"></i></span>
                             </li>
@@ -332,6 +349,17 @@
     <ModalDefault Title="@Loc["Title"]" ModalCancelClicked="@(() => ModalEditProfil = false)" MaxWidthModal="800px">
         <Body>
             <EditProfile CloseToggle="UpdateProfil"></EditProfile>
+        </Body>
+    </ModalDefault>
+}
+@if (ModalEditQrcode)
+{
+    <ModalDefault Title="@Loc["MyQrCode"]" ModalValidClicked="AddQrCode" ModalCancelClicked="@(() => ModalEditQrcode = false)" BtnValidLabel="@Loc["Add"]">
+        <Body>
+            <div class="form-group">
+                @Loc["KeyWord"]
+                <input type="text" class="form-control" @bind="KeyWord" />
+            </div>
         </Body>
     </ModalDefault>
 }

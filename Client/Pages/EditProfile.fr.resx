@@ -228,6 +228,9 @@
   <data name="IsOperator" xml:space="preserve">
     <value>Est un opérateur</value>
   </data>
+  <data name="KeyWord" xml:space="preserve">
+    <value>Mot clé</value>
+  </data>
   <data name="LastName" xml:space="preserve">
     <value>Nom de famille</value>
   </data>
@@ -245,6 +248,9 @@
   </data>
   <data name="MyAccount" xml:space="preserve">
     <value>Mon compte</value>
+  </data>
+  <data name="MyQrCode" xml:space="preserve">
+    <value>Mes QrCode</value>
   </data>
   <data name="MyWallet" xml:space="preserve">
     <value>Mon espace</value>

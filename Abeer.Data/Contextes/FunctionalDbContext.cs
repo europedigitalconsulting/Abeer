@@ -60,5 +60,6 @@ namespace Abeer.Data
         public IDbSet<EventTrackingItem> EventTrackingItems => dbProvider.Set<EventTrackingItem>();
         public IDbSet<Subscription> Subscriptions => dbProvider.Set<Subscription>();
         public IDbSet<Message> Messages => dbProvider.Set<Message>();
+        public IDbSet<QrCode> QrCodes => dbProvider.Set<QrCode>();
     }
 }

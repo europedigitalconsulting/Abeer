@@ -11,7 +11,7 @@ namespace Abeer.Data.UnitOfworks
     public class FunctionalUnitOfWork
     {
         private CardRepository _CardRepository;
-        private ContactRepository _ContactRepository; 
+        private ContactRepository _ContactRepository;
         private CountriesRepository _CountriesRepository;
         private SocialNetworkRepository _SocialNetworkRepository;
         private CustomLinkRepository _CustomLinkRepository;
@@ -25,6 +25,7 @@ namespace Abeer.Data.UnitOfworks
         private EventTrackingItemRepository _EventTrackingItemRepository;
         private SubscriptionRepository _SubscriptionRepository;
         private MessageRepository _MessageRepository;
+        private QrCodeRepository _QrCodeRepository;
 
         private FunctionalDbContext ApplicationDbContext { get; }
         private IServiceProvider ServiceProvider { get; }
@@ -84,7 +85,7 @@ namespace Abeer.Data.UnitOfworks
         {
             get
             {
-                if(_AdRepository == null)
+                if (_AdRepository == null)
                     _AdRepository = ActivatorUtilities.CreateInstance<AdRepository>(ServiceProvider);
 
                 return _AdRepository;
@@ -101,8 +102,8 @@ namespace Abeer.Data.UnitOfworks
 
                 return _AdPriceRepository;
             }
-        } 
-         
+        }
+
         public CountriesRepository CountriesRepository
         {
             get
@@ -197,6 +198,16 @@ namespace Abeer.Data.UnitOfworks
                     _MessageRepository = ActivatorUtilities.CreateInstance<MessageRepository>(ServiceProvider);
 
                 return _MessageRepository;
+            }
+        }
+        public QrCodeRepository QrCodeRepository
+        {
+            get
+            {
+                if (_QrCodeRepository == null)
+                    _QrCodeRepository = ActivatorUtilities.CreateInstance<QrCodeRepository>(ServiceProvider);
+
+                return _QrCodeRepository;
             }
         }
 

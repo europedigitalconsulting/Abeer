@@ -1,0 +1,38 @@
+﻿@inject NavigationManager navigationManager
+@inject Microsoft.Extensions.Localization.IStringLocalizer<EditProfile> Loc
+@code {
+    [Inject] private HttpClient HttpClient { get; set; }
+    [Parameter]
+    public ViewApplicationUser Profile { get; set; }
+    private List<QrcodeViewModel> list = new List<QrcodeViewModel>();
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await HttpClient.GetAsync($"api/qrcode");
+        if (response.IsSuccessStatusCode)
+        {
+            string json = await response.Content.ReadAsStringAsync();
+            list = JsonConvert.DeserializeObject<List<QrcodeViewModel>>(json);
+        }
+
+
+        await base.OnInitializedAsync();
+    }
+    protected async Task Delete(QrcodeViewModel model)
+    {
+        var response = await HttpClient.DeleteAsync($"api/qrcode/{Profile.Id}/{model.Id}");
+        if (response.IsSuccessStatusCode)
+        {
+            list.Remove(model);
+        }
+        await InvokeAsync(StateHasChanged);
+    }
+}
+<div class="row justify-content-center">
+    <Virtualize Context="Qrcode" Items="list">
+        <div class="text-center">
+            <img alt="qrcode" src="/api/QrCodeGenerator?link=@($"{navigationManager.ToAbsoluteUri($"/viewprofile/{Profile.Id}?social={Qrcode.Key}").ToString()}")" width="160" /><br />
+            <span>@Loc["KeyWord"] : @Qrcode.Key</span><br />
+            <button @onclick="() => Delete(Qrcode)" class="btn btn-danger">@Loc["Delete"]</button>
+        </div>
+    </Virtualize>
+</div>

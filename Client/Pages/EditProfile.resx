@@ -228,6 +228,9 @@
   <data name="IsOperator" xml:space="preserve">
     <value>Is operator</value>
   </data>
+  <data name="KeyWord" xml:space="preserve">
+    <value>Key word</value>
+  </data>
   <data name="LastName" xml:space="preserve">
     <value>Last Name</value>
   </data>
@@ -239,6 +242,9 @@
   </data>
   <data name="MyAccount" xml:space="preserve">
     <value>My Account</value>
+  </data>
+  <data name="MyQrCode" xml:space="preserve">
+    <value>My QrCode</value>
   </data>
   <data name="MyWallet" xml:space="preserve">
     <value>My Wallet</value>

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Abeer.Ads.Shared;
 using Abeer.Shared;
+using Abeer.Shared.Functional;
 using Abeer.Shared.ViewModels;
 using AutoMapper;
 

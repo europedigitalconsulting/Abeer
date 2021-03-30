@@ -41,10 +41,12 @@ namespace Abeer.Client.Pages
 
 
         private bool OpenList { get; set; }
-        private bool TabMap { get; set; }
+        private bool TabBookmark { get; set; }
+        private bool TabQrCode { get; set; }
         private bool ModalQrCode { get; set; }
         private bool ToggleMenu { get; set; }
         private bool ModalEditProfil;
+        private bool ModalEditQrcode;
         private bool ModalChangeMail;
         private bool ModalChangePassword;
         private bool ModalChangePinCode;
@@ -69,6 +71,7 @@ namespace Abeer.Client.Pages
         public string ConfirmPassword { get; set; }
         public string NewMail { get; set; }
         public string ConfirmMail { get; set; }
+        public string KeyWord;
         private string Error;
         private bool DisplayModifyPinCode;
 
@@ -207,6 +210,20 @@ namespace Abeer.Client.Pages
             }
             StateHasChanged();
         }
+        private async Task AddQrCode()
+        {
+            QrcodeViewModel model = new QrcodeViewModel();
+            model.Key = KeyWord;
+            model.OwnerId = Guid.Parse(CurrentUserId);
+
+            var response = await HttpClient.PostAsJsonAsync($"api/Qrcode", model);
+            
+            if (response.IsSuccessStatusCode)
+            {
+                KeyWord = "";
+            }
+            StateHasChanged();
+        }
         private async Task ChangePhoto()
         {
             Profile.PhotoUrl = Profile.PhotoUrl;
@@ -270,6 +287,11 @@ namespace Abeer.Client.Pages
         private void OpenModalEditProfil()
         {
             ModalEditProfil = true;
+            ToggleMenu = false;
+        }
+        private void OpenModalQrcode()
+        {
+            ModalEditQrcode = true;
             ToggleMenu = false;
         }
 

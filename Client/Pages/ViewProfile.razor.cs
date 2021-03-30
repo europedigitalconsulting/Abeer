@@ -72,6 +72,14 @@ namespace Abeer.Client.Pages
             if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("social", out var _social))
             {
                 apiUrl += $"?social={_social}";
+                await httpClient.PostAsJsonAsync<EventTrackingItem>("api/EventTracker", new EventTrackingItem
+                {
+                    UserId = UserProfile?.Id,
+                    Category = "Navigation",
+                    Key = $"ViewProfileFromSocial#{_social}",
+                    CreatedDate = DateTime.UtcNow,
+                    Id = Guid.NewGuid()
+                });
             }
 
             var getProfile = await httpClient.GetAsync(apiUrl);
