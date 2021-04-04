@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Abeer.Ads.Data.SqlServerProvider.Migrations
 {
     [DbContext(typeof(AdsContext))]
-    [Migration("20210324210512_add table relation ad category")]
-    partial class addtablerelationadcategory
+    [Migration("20210404093924_InitAdDbSchema")]
+    partial class InitAdDbSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

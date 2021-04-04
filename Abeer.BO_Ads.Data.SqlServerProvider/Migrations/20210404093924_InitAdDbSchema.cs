@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Abeer.Ads.Data.SqlServerProvider.Migrations
 {
-    public partial class Init : Migration
+    public partial class InitAdDbSchema : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -26,6 +26,20 @@ namespace Abeer.Ads.Data.SqlServerProvider.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AdsFamilies", x => x.FamilyId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CategoryAds",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AdId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CategoryAds", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -93,6 +107,9 @@ namespace Abeer.Ads.Data.SqlServerProvider.Migrations
 
             migrationBuilder.DropTable(
                 name: "AdsFamilyAttributes");
+
+            migrationBuilder.DropTable(
+                name: "CategoryAds");
 
             migrationBuilder.DropTable(
                 name: "AdsFamilies");

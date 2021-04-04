@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Abeer.Data.SqlServerProvider.Migrations
 {
     [DbContext(typeof(FunctionalContext))]
-    [Migration("20210329165641_add table qrcode")]
-    partial class addtableqrcode
+    [Migration("20210404093801_InitDbSchema")]
+    partial class InitDbSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
