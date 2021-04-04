@@ -41,10 +41,10 @@ namespace Abeer.Server.Controllers
             if (entity.OwnerId.ToString() != User.NameIdentifier())
                 return BadRequest();
 
-            await _functionalUnitOfWork.QrCodeRepository.Add(entity);
+            entity = await _functionalUnitOfWork.QrCodeRepository.Add(entity);
 
 
-            return Ok();
+            return Ok(entity);
         }
         [HttpDelete("{userId}/{qrcodeId}")]
         public async Task<IActionResult> Delete(string userId, Guid qrcodeId)
