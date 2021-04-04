@@ -208,7 +208,7 @@
     <value>Afficher code pin</value>
   </data>
   <data name="DownloadProfile" xml:space="preserve">
-    <value>Télécharger le profil</value>
+    <value>Télécharger</value>
   </data>
   <data name="EditProfile" xml:space="preserve">
     <value>Modifier profile</value>
