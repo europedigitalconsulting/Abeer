@@ -315,8 +315,14 @@
   <data name="PinDigit" xml:space="preserve">
     <value>Numéro de carte</value>
   </data>
+  <data name="RenewSubscription" xml:space="preserve">
+    <value>Change your subscription</value>
+  </data>
   <data name="Save" xml:space="preserve">
     <value>Enregistrer</value>
+  </data>
+  <data name="ShareIt" xml:space="preserve">
+    <value>Partager le profil</value>
   </data>
   <data name="ShareOnEmail" xml:space="preserve">
     <value>Partager par email</value>
@@ -342,6 +348,12 @@
   <data name="ShareSource" xml:space="preserve">
     <value>Meetage.co</value>
   </data>
+  <data name="ShareText" xml:space="preserve">
+    <value>Je partage ce profil  {0} que j'ai découvert sur meetag.co - le réseau des affaires</value>
+  </data>
+  <data name="ShareTitle" xml:space="preserve">
+    <value>Meetag.co - Profil - {0}</value>
+  </data>
   <data name="SocialNetworkConnected" xml:space="preserve">
     <value>Réseaux sociaux connectés</value>
   </data>
@@ -350,6 +362,9 @@
   </data>
   <data name="SocialUrl" xml:space="preserve">
     <value>Url du profile</value>
+  </data>
+  <data name="StartSubscription" xml:space="preserve">
+    <value>Démarré le {0}</value>
   </data>
   <data name="Title" xml:space="preserve">
     <value>Profile utilisateur</value>
@@ -384,7 +399,16 @@
   <data name="UseGravatarPhoto" xml:space="preserve">
     <value>Utiliser le service gravatar</value>
   </data>
+  <data name="UseVideo" xml:space="preserve">
+    <value>Utiliser une vidéo de profil</value>
+  </data>
+  <data name="Video" xml:space="preserve">
+    <value>Vidéo</value>
+  </data>
   <data name="ViewQrCode" xml:space="preserve">
     <value>Voir et partager mon QR Code</value>
+  </data>
+  <data name="YourSubscription" xml:space="preserve">
+    <value>Votre abonnement</value>
   </data>
 </root>
