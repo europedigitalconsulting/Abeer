@@ -1,10 +1,9 @@
 ﻿using Abeer.Shared;
+using Abeer.Shared.Functional;
 using Abeer.Shared.ReferentielTable;
-using Microsoft.EntityFrameworkCore;
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -73,6 +72,55 @@ namespace Abeer.Data.Repositories
         public Task<IList<Contact>> GetContactRequests(string userId)
         {
             return Task.Run(() => _context.Contacts.Where(c => c.UserId == userId && (c.UserAccepted == EnumUserAccepted.PENDING)));
+        }
+
+        public Task<ProfileOrganizationViewModel> GetOrganization(string contactId)
+        {
+            return Task.Run(() =>
+            {
+
+                var o = _context.ProfileOrganizations.FirstOrDefault(c => c.ContactId == contactId);
+
+                if (o != null)
+                {
+                    var vm = new ProfileOrganizationViewModel(o);
+                    vm.Organization = _context.Organizations.FirstOrDefault(o => o.Id == vm.OrganizationId);
+                    vm.Team = _context.Teams.FirstOrDefault(t => t.Id == vm.TeamId);
+                    return vm;
+                }
+                else
+                    return default;
+            });
+        }
+
+        public Task<IList<ProfileOrganization>> GetProfiles(Guid organizationId, Guid teamId)
+        {
+            return Task.Run(() =>
+            {
+                return _context.ProfileOrganizations.Where(o => o.OrganizationId == organizationId && o.TeamId == teamId);
+            });
+        }
+
+        public Task AddOrganization(ProfileOrganizationViewModel profileOrganizationViewModel)
+        {
+            return Task.Run(() =>
+            {
+                _context.ProfileOrganizations.Add(profileOrganizationViewModel);
+            });
+        }
+
+        public Task UpdateOrganization(ProfileOrganizationViewModel profileOrganizationViewModel)
+        {
+            return Task.Run(() =>
+            {
+                var current = _context.ProfileOrganizations.FirstOrDefault(o => o.Id == profileOrganizationViewModel.Id);
+
+                current.ManagerId = profileOrganizationViewModel.ManagerId;
+                current.OrganizationId = profileOrganizationViewModel.OrganizationId;
+                current.TeamId = profileOrganizationViewModel.TeamId;
+
+                _context.SaveChange();
+            });
         }
     }
 }

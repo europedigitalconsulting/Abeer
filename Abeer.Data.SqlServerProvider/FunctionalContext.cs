@@ -49,5 +49,8 @@ namespace Abeer.Data.SqlServerProvider
         public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<QrCode> QrCodes { get; set; }
+        public DbSet<Organization> Organizations { get; set; }
+        public DbSet<Team> Teams { get; set; }
+        public DbSet<ProfileOrganization> ProfileOrganizations { get; set; }
     }
 }

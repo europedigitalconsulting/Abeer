@@ -3,6 +3,7 @@ using Abeer.Shared.Functional;
 using Abeer.Shared.ViewModels;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 using MixERP.Net.VCards;
 using MixERP.Net.VCards.Models;
@@ -14,7 +15,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Security.Claims;
+using System.Security.Cryptography.Xml;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 
@@ -81,6 +84,65 @@ namespace Abeer.Client.Pages
         public string KeyWord;
         private string Error;
         private bool DisplayModifyPinCode;
+        private bool ModalOrganization;
+        bool DisplayListOrganization;
+        bool DisplayListTeam;
+        bool DisplayListManager;
+        private bool NotFoundTeam;
+        private bool EditTeam;
+        bool NotFoundOrganization;
+        bool EditOrganization = true;
+        bool EditManager = false;
+        Organization Organization = null;
+        Team Team = null;
+        private bool IsNewOrganization;
+        private bool IsNewTeam;
+        ViewApplicationUser Manager;
+        bool NotFoundManager;
+
+        IList<Organization> ListOrganizations { get; set; } = new List<Organization>();
+        ProfileOrganizationViewModel ProfileOrganization { get; set; }
+        IList<Team> ListTeams { get; set; } = new List<Team>();
+        IList<ViewApplicationUser> ListManagers { get; set; } = new List<ViewApplicationUser>();
+
+        string SearchOrganization
+        {
+            get => searchOrganization; set
+            {
+                searchOrganization = value;
+
+                if (!string.IsNullOrEmpty(searchOrganization) && searchOrganization.Length >= 3)
+                {
+                    Task.Run(async () => await StartSearchOrganization());
+                }
+            }
+        }
+
+        string SearchTeam
+        {
+            get => searchTeam; set
+            {
+                searchTeam = value;
+
+                if (!string.IsNullOrEmpty(searchTeam) && searchTeam.Length >= 3)
+                {
+                    Task.Run(async () => await StartSearchTeam());
+                }
+            }
+        }
+
+        string SearchManager
+        {
+            get => searchManager; set
+            {
+                searchManager = value;
+
+                if (!string.IsNullOrEmpty(searchManager) && searchManager.Length >= 5)
+                {
+                    Task.Run(async () => await StartSearchManager());
+                }
+            }
+        }
 
         public string PhotoType
         {
@@ -89,6 +151,22 @@ namespace Abeer.Client.Pages
             {
                 _PhotoType = value;
             }
+        }
+
+        public string GetProfileMapQuery()
+        {
+            var list = new List<string>();
+
+            if (!string.IsNullOrEmpty(Profile.Address))
+                list.Add(Profile.Address.Replace(" ", "+"));
+
+            if (!string.IsNullOrEmpty(Profile.City))
+                list.Add($"+{Profile.City.Replace(" ", "+")}");
+
+            if (!string.IsNullOrEmpty(Profile.Country))
+                list.Add($"+{Profile.Country.Replace(" ", "+")}");
+
+            return string.Join(",", list);
         }
 
         public Contact Link { get; set; }
@@ -167,6 +245,9 @@ namespace Abeer.Client.Pages
 
         private SocialNetwork NewSocialLink = new SocialNetwork();
         private CustomLink NewCustomLink = new CustomLink();
+        private string searchOrganization;
+        private string searchTeam;
+        private string searchManager;
 
         private async Task ChangePassword()
         {
@@ -413,6 +494,188 @@ namespace Abeer.Client.Pages
             var json = await response.Content.ReadAsStringAsync();
             Link = JsonConvert.DeserializeObject<Contact>(json);
             await InvokeAsync(StateHasChanged);
+        }
+
+        async Task SaveProfileOrganization()
+        {
+            var response = await HttpClient.PutAsJsonAsync<ProfileOrganizationViewModel>($"api/contacts/profileOrganization/{Profile.Id}", ProfileOrganization);
+            response.EnsureSuccessStatusCode();
+            ModalOrganization = false;
+        }
+
+        async Task DisplayOrganization()
+        {
+            var getOrganization = await HttpClient.GetAsync($"api/contacts/profileorganization/{Profile.Id}");
+            getOrganization.EnsureSuccessStatusCode();
+            var json = await getOrganization.Content.ReadAsStringAsync();
+            ProfileOrganization = JsonConvert.DeserializeObject<ProfileOrganizationViewModel>(json);
+            Organization = ProfileOrganization.Organization;
+            Team = ProfileOrganization.Team;
+            Manager = ProfileOrganization.Manager;
+            SetOrganization(Organization);
+            SetTeam(Team);
+            SetManager(Manager);
+            ModalOrganization = true;
+        }
+
+        async Task StartSearchOrganization()
+        {
+            var searchOrganizationResult = await HttpClient.GetAsync($"api/contacts/organization?searchTerm={SearchOrganization}");
+            searchOrganizationResult.EnsureSuccessStatusCode();
+            ListOrganizations = JsonConvert.DeserializeObject<List<Organization>>(await searchOrganizationResult.Content.ReadAsStringAsync());
+            DisplayListOrganization = ListOrganizations?.Any() == true;
+            NotFoundOrganization = !DisplayListOrganization;
+        }
+
+        async Task StartSearchTeam()
+        {
+            var searchTeamResult = await HttpClient.GetAsync($"api/contacts/team/{Organization.Id}?searchTerm={SearchTeam}");
+            searchTeamResult.EnsureSuccessStatusCode();
+            ListTeams = JsonConvert.DeserializeObject<List<Team>>(await searchTeamResult.Content.ReadAsStringAsync());
+            DisplayListTeam = ListTeams?.Any() == true;
+            NotFoundTeam = !DisplayListTeam;
+        }
+
+        async Task StartSearchManager()
+        {
+            var searchManagerResult = await HttpClient.GetAsync($"api/contacts/manager/{Organization.Id}/{Team.Id}?searchTerm={SearchManager}");
+            searchManagerResult.EnsureSuccessStatusCode();
+            ListManagers = JsonConvert.DeserializeObject<List<ViewApplicationUser>>(await searchManagerResult.Content.ReadAsStringAsync());
+            DisplayListManager = ListManagers?.Any() == true;
+            NotFoundManager = !DisplayListManager;
+        }
+
+        async Task CreateOrganization()
+        {
+            Organization = new()
+            {
+                CreatorId = Profile.Id,
+                Description = SearchOrganization,
+                Name = SearchOrganization,
+                ManagerId = Profile.Id
+            };
+
+            var createOrganizationResult = await HttpClient.PostAsJsonAsync("api/contacts/organization", Organization);
+
+            createOrganizationResult.EnsureSuccessStatusCode();
+
+            IsNewOrganization = true;
+
+            SetOrganization(Organization);
+
+            NotFoundOrganization = false;
+
+            await InvokeAsync(StateHasChanged);
+        }
+
+        async Task CreateTeam()
+        {
+            Team = new()
+            {
+                OrganizationId = Organization.Id,
+                CreatorId = Profile.Id,
+                Description = SearchTeam,
+                Name = SearchTeam,
+                ManagerId = Profile.Id
+            };
+
+            var createTeamResult = await HttpClient.PostAsJsonAsync($"api/contacts/team/{Organization.Id}", Team);
+
+            createTeamResult.EnsureSuccessStatusCode();
+
+            IsNewTeam = true;
+            SetTeam(Team);
+
+            await InvokeAsync(StateHasChanged);
+        }
+
+        private void SetTeam(Team team)
+        {
+            if (team == null)
+                return;
+
+
+            Team = team;
+ 
+            DisplayListTeam = false;
+            NotFoundTeam = false;
+            EditTeam = false;
+            EditManager = true;
+
+            if (ProfileOrganization == null)
+                ProfileOrganization = new ProfileOrganizationViewModel(new ProfileOrganization
+                {
+                    ContactId = Profile.Id,
+                    TeamId = Team.Id,
+                    OrganizationId = Organization.Id
+                });
+            else
+                ProfileOrganization.SetTeam(Team);
+        }
+
+        void SetOrganization(Organization organization)
+        {
+            if (organization == null)
+                return;
+
+            Organization = organization;
+
+            if (ProfileOrganization == null)
+                ProfileOrganization = new ProfileOrganizationViewModel(new ProfileOrganization
+                {
+                    ContactId = Profile.Id,
+                    OrganizationId = Organization.Id
+                });
+            else
+                ProfileOrganization.SetOrganization(Organization);
+
+            DisplayListOrganization = false;
+            NotFoundOrganization = false;
+            EditOrganization = false;
+            EditTeam = true;
+        }
+
+        void StartEditOrganization()
+        {
+            EditOrganization = true;
+            NotFoundOrganization = false;
+            SearchOrganization = Organization.Name;
+        }
+
+        void StartEditTeam()
+        {
+            EditTeam = true;
+            NotFoundTeam = false;
+            SearchTeam = Team.Name;
+        }
+
+        void StartEditManager()
+        {
+            EditManager = true;
+            NotFoundManager = false;
+            SearchManager = Manager.DisplayName;
+        }
+
+        void SetManager(ViewApplicationUser manager)
+        {
+            if (manager == null)
+                return;
+
+            Manager = manager;
+
+            if (ProfileOrganization == null)
+                ProfileOrganization = new ProfileOrganizationViewModel(new ProfileOrganization
+                {
+                    ContactId = Profile.Id,
+                    OrganizationId = Organization.Id, 
+                    ManagerId = Manager.Id
+                });
+            else
+                ProfileOrganization.SetManager(Manager);
+
+            DisplayListManager = false;
+            NotFoundManager = false;
+            EditManager = false;
         }
     }
 }

@@ -264,6 +264,9 @@
   <data name="MailAlreadyExist" xml:space="preserve">
     <value>Le mail existe déjà</value>
   </data>
+  <data name="Manager" xml:space="preserve">
+    <value>Manageur</value>
+  </data>
   <data name="ModifyPinCode" xml:space="preserve">
     <value>Modifier mon code pin et mon numéro de carte</value>
   </data>
@@ -285,6 +288,12 @@
   <data name="NewPassword" xml:space="preserve">
     <value>Nouveau mot de passe</value>
   </data>
+  <data name="NotFoundOrganizationCreateIt" xml:space="preserve">
+    <value>L'organisation n'a pas été crée, vous pouvez créer une nouvelle organisation</value>
+  </data>
+  <data name="NotFoundTeamCreateIt" xml:space="preserve">
+    <value>L'équipe n'a pas été trouvée, vous pouvez créer une nouvelle équipe</value>
+  </data>
   <data name="NumberOfAds" xml:space="preserve">
     <value>Nombre d'offres</value>
   </data>
@@ -296,6 +305,9 @@
   </data>
   <data name="OldPassword" xml:space="preserve">
     <value>Ancien mot de passe</value>
+  </data>
+  <data name="Organization" xml:space="preserve">
+    <value>Organisation</value>
   </data>
   <data name="PasswordNotConfirmedError" xml:space="preserve">
     <value>Les mots de passe ne sont pas identiques</value>
@@ -322,6 +334,9 @@
     <value>Change your subscription</value>
   </data>
   <data name="Save" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <data name="SaveOrganization" xml:space="preserve">
     <value>Enregistrer</value>
   </data>
   <data name="ShareIt" xml:space="preserve">
@@ -368,6 +383,9 @@
   </data>
   <data name="StartSubscription" xml:space="preserve">
     <value>Démarré le {0}</value>
+  </data>
+  <data name="Team" xml:space="preserve">
+    <value>Equipe</value>
   </data>
   <data name="Title" xml:space="preserve">
     <value>Profile utilisateur</value>

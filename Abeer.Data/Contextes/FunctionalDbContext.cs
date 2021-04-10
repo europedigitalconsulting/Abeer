@@ -44,6 +44,9 @@ namespace Abeer.Data
 
         public IDbSet<UrlShortned> UrlShortneds => dbProvider.Set<UrlShortned>();
         public IDbSet<Contact> Contacts => dbProvider.Set<Contact>();
+        public IDbSet<ProfileOrganization> ProfileOrganizations => dbProvider.Set<ProfileOrganization>();
+        public IDbSet<Organization> Organizations => dbProvider.Set<Organization>();
+        public IDbSet<Team> Teams => dbProvider.Set<Team>();
         public IDbSet<Card> Cards => dbProvider.Set<Card>();
         public IDbSet<Batch> Batches => dbProvider.Set<Batch>();
         public IDbSet<CardStatu> CardStatus => dbProvider.Set<CardStatu>();

@@ -472,5 +472,172 @@ namespace Abeer.Server.Controllers
 
             return Ok(contacts);
         }
+
+        [HttpGet("profileorganization/{contactiD}")]
+        public async Task<ActionResult<ProfileOrganizationViewModel>> GetProfileOrganization(string contactId)
+        {
+            var user = (ViewApplicationUser)await _userManager.FindByIdAsync(User.NameIdentifier());
+            
+            if (user == null)
+                return BadRequest();
+
+            if (!user.IsUltimate && !user.IsAdmin && !user.IsUnlimited)
+                return BadRequest();
+
+            var profileOrganization = await _UnitOfWork.ContactRepository.GetOrganization(contactId);
+    
+            if(profileOrganization != null && !string.IsNullOrEmpty(profileOrganization.ManagerId))
+                profileOrganization.Manager = await _userManager.FindByIdAsync(profileOrganization.ManagerId);
+
+            return Ok(profileOrganization);
+        }
+
+        [HttpGet("organization")]
+        public async Task<ActionResult<IList<Organization>>> SearchOrganization([FromQuery]string searchTerm)
+        {
+            var user = (ViewApplicationUser)await _userManager.FindByIdAsync(User.NameIdentifier());
+
+            if (user == null)
+                return BadRequest();
+
+            if (!user.IsUltimate && !user.IsAdmin && !user.IsUnlimited)
+                return BadRequest();
+
+            var organizations = await _UnitOfWork.OrganizationRepository.Where(o=>o.Name.Contains(searchTerm) || o.Description.Contains(searchTerm));
+
+            return Ok(organizations);
+        }
+
+        [HttpPost("organization")]
+        public async Task<ActionResult<Organization>> CreateOrganization(Organization organization)
+        {
+            var user = (ViewApplicationUser)await _userManager.FindByIdAsync(User.NameIdentifier());
+
+            if (user == null)
+                return BadRequest();
+
+            if (!user.IsUltimate && !user.IsAdmin && !user.IsUnlimited)
+                return BadRequest();
+
+            var found = await _UnitOfWork.OrganizationRepository.FirstOrDefault(o => o.Name.Contains(organization.Name) || o.Description.Contains(organization.Name));
+            
+            if (found != null)
+                return BadRequest();
+
+            await _UnitOfWork.OrganizationRepository.Add(organization);
+            return Ok(organization);
+        }
+
+        [HttpGet("team/{organizationId}")]
+        public async Task<ActionResult<IList<Team>>> SearchTeam(Guid organizationId, [FromQuery] string searchTerm)
+        {
+            var user = (ViewApplicationUser)await _userManager.FindByIdAsync(User.NameIdentifier());
+
+            if (user == null)
+                return BadRequest();
+
+            if (!user.IsUltimate && !user.IsAdmin && !user.IsUnlimited)
+                return BadRequest();
+
+            var teams = await _UnitOfWork.TeamRepository.Where(o => o.OrganizationId == organizationId && (o.Name.Contains(searchTerm) || o.Description.Contains(searchTerm)));
+
+            return Ok(teams);
+        }
+
+        [HttpPost("team/{organizationId}")]
+        public async Task<ActionResult<Team>> CreateTeam(Guid organizationId, Team team)
+        {
+            var user = (ViewApplicationUser)await _userManager.FindByIdAsync(User.NameIdentifier());
+
+            if (user == null)
+                return BadRequest();
+
+            if (!user.IsUltimate && !user.IsAdmin && !user.IsUnlimited)
+                return BadRequest();
+
+            if (organizationId == Guid.Empty)
+                return BadRequest();
+
+            if (team.OrganizationId != organizationId)
+                return BadRequest();
+
+            var organization = await _UnitOfWork.OrganizationRepository.GetOrganization(organizationId);
+
+            if (organization == null)
+                return NotFound();
+
+            var found = await _UnitOfWork.TeamRepository.FirstOrDefault(o => o.OrganizationId == organizationId && (o.Name.Contains(team.Name) || o.Description.Contains(team.Name)));
+
+            if (found != null)
+                return BadRequest();
+
+            await _UnitOfWork.TeamRepository.Add(team);
+            return Ok(team);
+        }
+        [HttpGet("manager/{organizationId}/{teamId}")]
+        public async Task<ActionResult<IList<ViewApplicationUser>>> SearchManager(Guid organizationId, Guid teamId, [FromQuery]string searchTerm)
+        {
+            var user = (ViewApplicationUser)await _userManager.FindByIdAsync(User.NameIdentifier());
+
+            if (user == null)
+                return BadRequest();
+
+            if (!user.IsUltimate && !user.IsAdmin && !user.IsUnlimited)
+                return BadRequest();
+
+
+            if (organizationId == Guid.Empty)
+                return BadRequest();
+
+            if (teamId == Guid.Empty)
+                return BadRequest();
+
+            var organization = await _UnitOfWork.OrganizationRepository.GetOrganization(organizationId);
+
+            if (organization == null)
+                return NotFound();
+
+            var team = await _UnitOfWork.TeamRepository.GetTeam(teamId);
+
+            if (team == null)
+                return NotFound();
+
+            var profiles = await _UnitOfWork.ContactRepository.GetProfiles(organizationId, teamId);
+
+            if (profiles.Any())
+            {
+                var ids = profiles.Select(p => p.ContactId).ToArray();
+
+                var users = await _userManager.Users.Where(u => (u.FirstName.Contains(searchTerm) || u.LastName.Contains(searchTerm) || u.Description.Contains(searchTerm) ||
+                    u.DisplayName.Contains(searchTerm) || u.Email.Contains(searchTerm) || u.Title.Contains(searchTerm)) && ids.Contains(u.Id)).ToListAsync();
+
+                return Ok(users);
+            }
+            else
+                return Ok();
+        }
+
+        [HttpPut("profileOrganization/{contactId}")]
+        public async Task<IActionResult> SetProfileOrganization(string contactId, ProfileOrganizationViewModel profileOrganizationViewModel)
+        {
+            if (contactId == Guid.Empty.ToString())
+                return BadRequest();
+
+            if (contactId != profileOrganizationViewModel.ContactId)
+                return BadRequest();
+
+            var profile = await _UnitOfWork.ContactRepository.GetOrganization(contactId);
+            
+            if(profile == null)
+            {
+                await _UnitOfWork.ContactRepository.AddOrganization(profileOrganizationViewModel);
+            }
+            else 
+            {
+                await _UnitOfWork.ContactRepository.UpdateOrganization(profileOrganizationViewModel);
+            }
+
+            return Ok(profileOrganizationViewModel);
+        }
     }
 }

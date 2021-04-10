@@ -26,6 +26,8 @@ namespace Abeer.Data.UnitOfworks
         private SubscriptionRepository _SubscriptionRepository;
         private MessageRepository _MessageRepository;
         private QrCodeRepository _QrCodeRepository;
+        private OrganizationRepository _OrganizationRepository;
+        private TeamRepository _TeamRepository;
 
         private FunctionalDbContext ApplicationDbContext { get; }
         private IServiceProvider ServiceProvider { get; }
@@ -200,6 +202,7 @@ namespace Abeer.Data.UnitOfworks
                 return _MessageRepository;
             }
         }
+
         public QrCodeRepository QrCodeRepository
         {
             get
@@ -208,6 +211,28 @@ namespace Abeer.Data.UnitOfworks
                     _QrCodeRepository = ActivatorUtilities.CreateInstance<QrCodeRepository>(ServiceProvider);
 
                 return _QrCodeRepository;
+            }
+        }
+
+        public TeamRepository TeamRepository
+        {
+            get
+            {
+                if (_TeamRepository == null)
+                    _TeamRepository = ActivatorUtilities.CreateInstance<TeamRepository>(ServiceProvider);
+
+                return _TeamRepository;
+            }
+        }
+
+        public OrganizationRepository OrganizationRepository
+        {
+            get
+            {
+                if (_OrganizationRepository == null)
+                    _OrganizationRepository = ActivatorUtilities.CreateInstance<OrganizationRepository>(ServiceProvider);
+
+                return _OrganizationRepository;
             }
         }
 

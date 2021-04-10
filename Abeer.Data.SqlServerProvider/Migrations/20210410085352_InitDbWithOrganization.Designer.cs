@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Abeer.Data.SqlServerProvider.Migrations
 {
     [DbContext(typeof(FunctionalContext))]
-    [Migration("20210404093801_InitDbSchema")]
-    partial class InitDbSchema
+    [Migration("20210410085352_InitDbWithOrganization")]
+    partial class InitDbWithOrganization
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -485,6 +485,59 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                     b.ToTable("Notifications");
                 });
 
+            modelBuilder.Entity("Abeer.Shared.Functional.Organization", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatorId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DescriptionVideo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DescriptionVideoCover")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("DisplayDescription")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LogoUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ManagerId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NubmerOfView")
+                        .HasColumnType("int");
+
+                    b.Property<string>("VideProfileCoverUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VideoProfileUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Organizations");
+                });
+
             modelBuilder.Entity("Abeer.Shared.Functional.PaymentModel", b =>
                 {
                     b.Property<Guid>("Id")
@@ -539,6 +592,29 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Payment");
+                });
+
+            modelBuilder.Entity("Abeer.Shared.Functional.ProfileOrganization", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ContactId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ManagerId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TeamId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProfileOrganizations");
                 });
 
             modelBuilder.Entity("Abeer.Shared.Functional.QrCode", b =>
@@ -653,6 +729,62 @@ namespace Abeer.Data.SqlServerProvider.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("SubscriptionPack");
+                });
+
+            modelBuilder.Entity("Abeer.Shared.Functional.Team", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatorId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DescriptionVideo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DescriptionVideoCover")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("DisplayDescription")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LogoUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ManagerId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NubmerOfView")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("VideProfileCoverUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VideoProfileUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Teams");
                 });
 
             modelBuilder.Entity("Abeer.Shared.Message", b =>
