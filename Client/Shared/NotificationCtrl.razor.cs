@@ -82,32 +82,38 @@ namespace Abeer.Client.Shared
 
         public async Task SetDisplayedNotification()
         {
-            //_next.IsDisplayed = true;
-            //_next.DisplayCount += 1;
-            //_next.LastDisplayTime = DateTime.UtcNow;
-            //var post = await httpClient.PutAsJsonAsync<Notification>("api/notification", _next);
-            //post.EnsureSuccessStatusCode();
-            //bool uno = NotificationClient.Notifications.Remove(_next); 
-            _next = null;
+            if (_next != null)
+            {
+                _next.IsDisplayed = true;
+                _next.DisplayCount += 1;
+                _next.LastDisplayTime = DateTime.UtcNow;
+                var post = await httpClient.PutAsJsonAsync<Notification>("api/notification", _next);
+                post.EnsureSuccessStatusCode();
+                Console.WriteLine($"before remove {NotificationClient.Notifications.Count}");
+                NotificationClient.Notifications.Remove(_next);
+                Console.WriteLine($"After remove {NotificationClient.Notifications.Count}");
+                await InvokeAsync(StateHasChanged);
+            }
         }
 
         private async Task NextCard()
         {
-            _next.IsDisplayed = true;
-            _next.DisplayCount += 1;
-            _next.LastDisplayTime = DateTime.UtcNow;
-            var post = await httpClient.PutAsJsonAsync<Notification>("api/notification", _next);
-            post.EnsureSuccessStatusCode();
+
+            await SetDisplayedNotification();
+
+            if (NotificationClient.Notifications.Count < 1)
+                return;
 
             var tmp = NotificationClient.Notifications.IndexOf(_next);
-            NotificationClient.Notifications.Remove(_next);
-
+            
             if (tmp < NotificationClient.Notifications.Count)
             {
                 _next = NotificationClient.Notifications[tmp];
             } 
-            StateHasChanged();
+            
+            await InvokeAsync(StateHasChanged);
         }
+
         private void HandleTouchStart(TouchEventArgs args)
         {
             startPoint.ReferencePoint = args.TargetTouches[0];
@@ -134,13 +140,8 @@ namespace Abeer.Client.Shared
         }
         public async Task Goto(string url)
         {
-            _next.IsDisplayed = true;
-            _next.DisplayCount += 1;
-            _next.LastDisplayTime = DateTime.UtcNow;
-            var post = await httpClient.PutAsJsonAsync<Notification>("api/notification", _next);
-            post.EnsureSuccessStatusCode();
-            NotificationClient.Notifications.Remove(_next);
-            _next = null;
+            await SetDisplayedNotification();
+
             NavigationManager.NavigateTo(url, true);
         }
 

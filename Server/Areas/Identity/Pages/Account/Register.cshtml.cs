@@ -33,7 +33,6 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSenderService _emailSender;
-        private readonly UrlShortner _urlShortner;
         private readonly CountriesService countriesService;
         private readonly FunctionalUnitOfWork _functionalUnitOfWork;
         private readonly IWebHostEnvironment _env;
@@ -46,8 +45,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
             ILogger<RegisterModel> logger,
             IWebHostEnvironment env,
             IEmailSenderService emailSender,
-            IConfiguration configuration,
-            UrlShortner urlShortner, CountriesService countriesService, FunctionalUnitOfWork functionalUnitOfWork, EventTrackingService eventTrackingService)
+            IConfiguration configuration, CountriesService countriesService, FunctionalUnitOfWork functionalUnitOfWork, EventTrackingService eventTrackingService)
         {
             _serviceProvider = serviceProvider;
             _userManager = userManager;
@@ -55,7 +53,6 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             Configuration = configuration;
-            _urlShortner = urlShortner;
             this.countriesService = countriesService;
             _functionalUnitOfWork = functionalUnitOfWork;
             _env = env;
@@ -159,7 +156,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
                 City = Input.City,
                 Country = Input.Country,
                 SubscriptionStartDate = DateTime.Now,
-                SubscriptionEndDate = DateTime.Now.AddDays(15)
+                SubscriptionEndDate = DateTime.Now.AddDays(30)
             };
 
             _logger.LogInformation($"start get card {Input.PinCode}");
@@ -191,6 +188,23 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
 
             if (result.Succeeded)
             {
+                user.SubscriptionStartDate = DateTime.UtcNow;
+                var pack = await _functionalUnitOfWork.SubscriptionPackRepository.FirstOrDefault(p => p.Price == 0);
+                
+                var subscription = await _functionalUnitOfWork.SubscriptionRepository.Add(new Shared.Functional.Subscription
+                {
+                    CreateDate = DateTime.UtcNow,
+                    Enable = true,
+                    End = DateTime.UtcNow.AddMonths(pack.Duration),
+                    IsValidated = true,
+                    Start = DateTime.UtcNow,
+                    SubscriptionPackId = pack.Id,
+                    UserId = user.Id
+                });
+
+                user.SubscriptionEndDate = subscription.End;
+                await _userManager.UpdateAsync(user);
+
                 await _eventTrackingService.Create(new Shared.Functional.EventTrackingItem
                 {
                     Id = Guid.NewGuid(),
@@ -213,10 +227,8 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
 
                 var frontWebSite = UriHelper.BuildAbsolute(Request.Scheme, Request.Host);
                 var logoUrl = UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/assets/img/logo_full.png");
-                var unSubscribeUrl = await _urlShortner.CreateUrl(Request.Scheme, Request.Host, UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/Account/UnSubscribe"));
+                var unSubscribeUrl = UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/Account/UnSubscribe");
                 var login = $"{Input.Email}";
-
-                callbackUrl = await _urlShortner.CreateUrl(Request.Scheme, Request.Host, callbackUrl);
 
                 _logger.LogInformation($"Send Email confirmation to {Input.Email}.");
 

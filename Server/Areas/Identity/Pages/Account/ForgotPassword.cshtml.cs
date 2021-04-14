@@ -22,17 +22,15 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSenderService _emailSender;
-        private readonly UrlShortner _urlShortner;
         private readonly IServiceProvider _serviceProvider;
         private readonly IWebHostEnvironment _env;
         private readonly EventTrackingService _eventTrackingService;
 
         public ForgotPasswordModel(UserManager<ApplicationUser> userManager,
-            IWebHostEnvironment env, IEmailSenderService emailSender, UrlShortner urlShortner, IServiceProvider serviceProvider, EventTrackingService eventTrackingService)
+            IWebHostEnvironment env, IEmailSenderService emailSender, IServiceProvider serviceProvider, EventTrackingService eventTrackingService)
         {
             _userManager = userManager;
             _emailSender = emailSender;
-            _urlShortner = urlShortner;
             _serviceProvider = serviceProvider;
             _env = env;
             _eventTrackingService = eventTrackingService;
@@ -109,7 +107,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
 
                 var frontWebSite = UriHelper.BuildAbsolute(Request.Scheme, Request.Host);
                 var logoUrl = UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/assets/img/logo_full.png");
-                var unSubscribeUrl = await _urlShortner.CreateUrl(Request.Scheme, Request.Host, UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/Account/UnSubscribe"));
+                var unSubscribeUrl = UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/Account/UnSubscribe");
 
                 await SendEmailTemplate("Password-reset", new Dictionary<string, string>()
                     {

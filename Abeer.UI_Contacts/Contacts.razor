@@ -20,6 +20,13 @@
                 <button type="button" class="btn" @onclick="() => Showfilter = !Showfilter" style="border-radius: 0; border-left: 1px solid grey;border-right:1px solid grey;font-size: 15px; font-weight: 400">@(FilterSelected == null ? Loc["ByFilter"] : "par " + FilterSelected.Name)<i class="pl-1 fas fa-caret-down"></i></button>
                 <button type="button" class="btn" @onclick="SearchAll"><i class="fa fa-2x fa-search"></i></button>
                 <button type="button" class="btn @(IsRequestsDisplayed ? "btn-success" : "btn-primary")" title="@Loc["DisplayRequests"]" @onclick="ToggleDisplayRequests"><i class="fas fa-eye"></i></button>
+                
+                @if (User.IsAdmin || User.IsUnlimited || User.IsUltimate)
+                {
+                    <button type="button" title="@Loc["DisplayOrganization"]" class="btn @(IsOrganizationFiltered ? "btn-success" : "btn-primary")" @onclick="ToggleDisplayOrganization"><i class="fa fa-building"></i></button>
+                    <button type="button" title="@Loc["DisplayTeam"]" class="btn @(IsTeamFiltered ? "btn-success" : "btn-primary")" @onclick="ToggleDisplayTeam"><i class="fas fa-users"></i></button>
+                }
+                
                 @if (Showfilter)
                 {
                     <div style="z-index: 999999; background: #F5F8FA; position: absolute; width: 150px; height: 400px; overflow-y: auto;">
@@ -116,8 +123,8 @@
                                                             break;
                                                         }
 
-                                                    }
                                                 }
+                                            }
                                             </div>
 
                                         </div>

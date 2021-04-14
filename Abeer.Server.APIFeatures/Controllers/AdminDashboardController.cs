@@ -35,7 +35,6 @@ namespace Abeer.Server.APIFeatures.Controllers
         private readonly EventTrackingService _eventTrackingService;
         private readonly NotificationService _notificationService;
         private readonly IConfiguration _configuration;
-        private readonly UrlShortner _urlShortner;
         private readonly IServiceProvider _serviceProvider;
         private readonly IWebHostEnvironment _env;
         private readonly IEmailSenderService _emailSender;
@@ -44,14 +43,13 @@ namespace Abeer.Server.APIFeatures.Controllers
 
         public AdminDashboardController(FunctionalUnitOfWork functionalUnitOfWork, UserManager<ApplicationUser> userManager,
             EventTrackingService eventTrackingService, NotificationService notificationService,
-            IConfiguration configuration, UrlShortner urlShortner, IServiceProvider serviceProvider, IWebHostEnvironment env, IEmailSenderService emailSender)
+            IConfiguration configuration, IServiceProvider serviceProvider, IWebHostEnvironment env, IEmailSenderService emailSender)
         {
             this.functionalUnitOfWork = functionalUnitOfWork;
             _userManager = userManager;
             _eventTrackingService = eventTrackingService;
             _notificationService = notificationService;
             _configuration = configuration;
-            _urlShortner = urlShortner;
             _serviceProvider = serviceProvider;
             _env = env;
             _emailSender = emailSender;

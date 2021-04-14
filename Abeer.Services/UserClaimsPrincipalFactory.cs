@@ -23,8 +23,6 @@ namespace Abeer.Services
         {
             var identity = await base.GenerateClaimsAsync(user);
 
-            user.WriteClaims(identity);
-
             if (!user.IsAdmin && !user.IsUnlimited)
             {
                 var subscription = await _functionalUnitOfWork.SubscriptionRepository.GetLatestSubscriptionForUser(user.Id);
@@ -34,7 +32,10 @@ namespace Abeer.Services
                     var pack = await _functionalUnitOfWork.SubscriptionPackRepository.FirstOrDefault(s => s.Id == subscription.SubscriptionPackId);
 
                     if (subscription != null)
+                    {
                         identity.AddClaim(ClaimNames.Subscription, pack.Label.ToLower());
+                        identity.AddClaim(ClaimNames.IsPayable, pack.Price > 0 ? "true" : "false");
+                    }
                 }
             }
 

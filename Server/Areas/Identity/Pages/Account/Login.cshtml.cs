@@ -32,7 +32,6 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
         private readonly EventTrackingService _eventTrackingService;
         private readonly ILogger<LoginModel> _logger;
         private readonly IEmailSender _emailSender;
-        private readonly UrlShortner _urlShortner;
         private readonly IWebHostEnvironment _env;
         private readonly string _webRoot;
         private readonly FunctionalUnitOfWork _functionalUnitOfWork;

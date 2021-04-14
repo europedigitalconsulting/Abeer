@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Newtonsoft.Json;
 using Abeer.Shared.ViewModels;
+using Microsoft.AspNetCore.Components.Authorization;
+using System.Security.Claims;
 
 namespace Abeer.UI_Contacts
 {
@@ -26,8 +28,14 @@ namespace Abeer.UI_Contacts
         [CascadingParameter]
         public ScreenSize ScreenSize { get; set; }
 
+        [CascadingParameter]
+        private Task<AuthenticationState> authenticationStateTask { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
+            var authState = await authenticationStateTask;
+            User = authState.User;
+
             var getMyContacts = await httpClient.GetAsync("/api/Contacts");
             var getCountries = await httpClient.GetAsync("/api/Countries");
 
@@ -51,6 +59,9 @@ namespace Abeer.UI_Contacts
         public bool Showfilter { get; set; }
         public bool ShowfilterExt { get; set; }
         public bool IsRequestsDisplayed { get; private set; }
+        public ViewApplicationUser User { get; private set; }
+        public bool IsOrganizationFiltered { get; private set; }
+        public bool IsTeamFiltered { get; private set; }
 
         private async Task SearchAll()
         { 
@@ -141,23 +152,59 @@ namespace Abeer.UI_Contacts
 
         public async Task ToggleDisplayRequests()
         {
-            HttpResponseMessage getItems;
+            var apiUrl = "/api/Contacts/requests";
 
-            if (!IsRequestsDisplayed)
+            if (IsRequestsDisplayed)
             {
-                getItems = await httpClient.GetAsync("/api/Contacts/requests");
-                IsRequestsDisplayed = true;
+                apiUrl = "/api/Contacts";
             }
-            else
-            {
-                getItems = await httpClient.GetAsync("/api/Contacts");
-                IsRequestsDisplayed = false;
-            }
+
+            var getItems = await httpClient.GetAsync(apiUrl);
+
+            IsRequestsDisplayed = !IsRequestsDisplayed;
 
             getItems.EnsureSuccessStatusCode();
             var json = await getItems.Content.ReadAsStringAsync();
             All = JsonConvert.DeserializeObject<List<ViewContact>>(json);
             
+            await SearchAll();
+        }
+
+        async Task ToggleDisplayOrganization()
+        {
+            var apiUrl = "/api/Contacts/byorganization";
+
+            if (IsOrganizationFiltered)
+            {
+                apiUrl = "/api/Contacts";
+            }
+
+            IsOrganizationFiltered = !IsOrganizationFiltered;
+
+            var getItems = await httpClient.GetAsync(apiUrl);
+            getItems.EnsureSuccessStatusCode();
+            var json = await getItems.Content.ReadAsStringAsync();
+            All = JsonConvert.DeserializeObject<List<ViewContact>>(json);
+
+            await SearchAll();
+        }
+
+        async Task ToggleDisplayTeam()
+        {
+            var apiUrl = "/api/Contacts/byteam";
+
+            if (IsTeamFiltered)
+            {
+                apiUrl = "/api/Contacts";
+            }
+
+            IsTeamFiltered = !IsTeamFiltered;
+
+            var getItems = await httpClient.GetAsync(apiUrl);
+            getItems.EnsureSuccessStatusCode();
+            var json = await getItems.Content.ReadAsStringAsync();
+            All = JsonConvert.DeserializeObject<List<ViewContact>>(json);
+
             await SearchAll();
         }
     }

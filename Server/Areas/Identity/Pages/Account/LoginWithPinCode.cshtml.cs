@@ -31,7 +31,6 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
-        private readonly UrlShortner _urlShortner;
         private readonly IWebHostEnvironment _env;
         private readonly string _webRoot;
         private readonly EventTrackingService _eventTrackingService;
@@ -43,7 +42,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
             ILogger<RegisterModel> logger,
             IWebHostEnvironment env,
             IEmailSender emailSender,
-            IConfiguration configuration, UrlShortner urlShortner, EventTrackingService eventTrackingService, 
+            IConfiguration configuration, EventTrackingService eventTrackingService, 
             FunctionalUnitOfWork functionalUnitOfWork)
         {
             _userManager = userManager;
@@ -51,7 +50,6 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             Configuration = configuration;
-            _urlShortner = urlShortner;
             _env = env;
             _webRoot = _env.WebRootPath;
             _eventTrackingService = eventTrackingService;

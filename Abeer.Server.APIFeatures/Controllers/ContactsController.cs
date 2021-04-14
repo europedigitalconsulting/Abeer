@@ -32,14 +32,12 @@ namespace Abeer.Server.Controllers
         private readonly FunctionalUnitOfWork _UnitOfWork;
         private readonly IWebHostEnvironment _env;
         private readonly IServiceProvider _serviceProvider;
-        private readonly UrlShortner _urlShortner;
         private readonly IEmailSenderService _emailSender;
         private readonly IConfiguration _configuration;
         private readonly NotificationService _notificationService;
         EventTrackingService _eventTrackingService;
 
-        public ContactsController(
-            UrlShortner urlShortner, NotificationService notificationService,
+        public ContactsController(NotificationService notificationService,
             IWebHostEnvironment env, IConfiguration configuration,
             IServiceProvider serviceProvider,
             IEmailSenderService emailSender, FunctionalUnitOfWork onlineWalletUnitOfWork, UserManager<ApplicationUser> userManager,
@@ -51,7 +49,6 @@ namespace Abeer.Server.Controllers
             _userManager = userManager;
             _eventTrackingService = eventTrackingService;
             _emailSender = emailSender;
-            _urlShortner = urlShortner;
             _env = env;
             _configuration = configuration;
         }
@@ -280,10 +277,8 @@ namespace Abeer.Server.Controllers
 
             var frontWebSite = UriHelper.BuildAbsolute(Request.Scheme, Request.Host);
             var logoUrl = UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/assets/img/logo_full.png");
-            var unSubscribeUrl = await _urlShortner.CreateUrl(Request.Scheme, Request.Host, UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/Account/UnSubscribe"));
+            var unSubscribeUrl = UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/Account/UnSubscribe");
             var login = $"{user.DisplayName}";
-
-            callbackUrl = await _urlShortner.CreateUrl(Request.Scheme, Request.Host, callbackUrl);
 
             var parameters = new Dictionary<string, string>()
                         {
@@ -602,7 +597,7 @@ namespace Abeer.Server.Controllers
             if (team == null)
                 return NotFound();
 
-            var profiles = await _UnitOfWork.ContactRepository.GetProfiles(organizationId, teamId);
+            var profiles = await _UnitOfWork.ContactRepository.GetProfilesByTeam(organizationId, teamId);
 
             if (profiles.Any())
             {
@@ -638,6 +633,103 @@ namespace Abeer.Server.Controllers
             }
 
             return Ok(profileOrganizationViewModel);
+        }
+
+        [HttpGet("byorganization")]
+        public async Task<ActionResult<IList<ViewContact>>> GetContactsByOrganization()
+        {
+            var profileOrg = await _UnitOfWork.ContactRepository.GetOrganization(User.NameIdentifier());
+            
+            if (profileOrg == null)
+                return BadRequest();
+
+            var profiles = await _UnitOfWork.ContactRepository.GetProfilesByOrganization(profileOrg.OrganizationId);
+            var userIds = profiles.Select(p => p.ContactId);
+
+            ApplicationUser user = null;
+            IList<Contact> links = new List<Contact>();
+
+            if (User.Identity.IsAuthenticated)
+            {
+                user = await _userManager.FindByIdAsync(User.NameIdentifier());
+                links = await _UnitOfWork.ContactRepository.GetContacts(user.Id);
+            }
+
+            var suggestions = await _userManager?.Users.Where(c => userIds.Contains(c.Id) && c.Id != user.Id).ToListAsync();
+
+            if (suggestions == null)
+                return NotFound();
+
+            var contacts = new List<ViewContact>();
+
+
+            foreach (var suggestion in suggestions)
+            {
+                Contact link = null;
+
+                if (user != null && links != null)
+                {
+                    link = links.FirstOrDefault(l => l.UserId == suggestion.Id && l.OwnerId == user.Id);
+                }
+
+                var item = new ViewContact(user, suggestion, link);
+                item.Contact.NumberOfContacts = (await _UnitOfWork.ContactRepository.GetContacts(item.Contact.Id)).Count;
+                item.Contact.SocialNetworkConnected = await _UnitOfWork.SocialNetworkRepository.GetSocialNetworkLinks(item.Contact.Id);
+                item.Contact.CustomLinks = await _UnitOfWork.CustomLinkRepository.GetCustomLinkLinks(item.Contact.Id);
+                item.Contact.NumberOfAds = (await _UnitOfWork.AdRepository.GetVisibledUser(item.Contact.Id)).Count;
+
+                contacts.Add(item);
+            }
+
+            return Ok(contacts);
+        }
+
+        [HttpGet("byteam")]
+        public async Task<ActionResult<IList<ViewContact>>> GetContactsByTeam()
+        {
+            var profileOrg = await _UnitOfWork.ContactRepository.GetOrganization(User.NameIdentifier());
+
+            if (profileOrg == null)
+                return BadRequest();
+
+            var profiles = await _UnitOfWork.ContactRepository.GetProfilesByTeam(profileOrg.OrganizationId, profileOrg.TeamId);
+            var userIds = profiles.Select(p => p.ContactId);
+
+            ApplicationUser user = null;
+            IList<Contact> links = new List<Contact>();
+
+            if (User.Identity.IsAuthenticated)
+            {
+                user = await _userManager.FindByIdAsync(User.NameIdentifier());
+                links = await _UnitOfWork.ContactRepository.GetContacts(user.Id);
+            }
+
+            var suggestions = await _userManager?.Users.Where(c => userIds.Contains(c.Id) && c.Id != user.Id).ToListAsync();
+
+            if (suggestions == null)
+                return NotFound();
+
+            var contacts = new List<ViewContact>();
+
+            foreach (var suggestion in suggestions)
+            {
+                Contact link = null;
+
+                if (user != null && links != null)
+                {
+                    link = links.FirstOrDefault(l => l.UserId == suggestion.Id && l.OwnerId == user.Id);
+                }
+
+                var item = new ViewContact(user, suggestion, link);
+                item.Contact.NumberOfContacts = (await _UnitOfWork.ContactRepository.GetContacts(item.Contact.Id)).Count;
+                item.Contact.SocialNetworkConnected = await _UnitOfWork.SocialNetworkRepository.GetSocialNetworkLinks(item.Contact.Id);
+                item.Contact.CustomLinks = await _UnitOfWork.CustomLinkRepository.GetCustomLinkLinks(item.Contact.Id);
+                item.Contact.NumberOfAds = (await _UnitOfWork.AdRepository.GetVisibledUser(item.Contact.Id)).Count;
+
+                contacts.Add(item);
+            }
+
+            return Ok(contacts);
         }
     }
 }

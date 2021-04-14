@@ -93,7 +93,7 @@ namespace Abeer.Data.Repositories
             });
         }
 
-        public Task<IList<ProfileOrganization>> GetProfiles(Guid organizationId, Guid teamId)
+        public Task<IList<ProfileOrganization>> GetProfilesByTeam(Guid organizationId, Guid teamId)
         {
             return Task.Run(() =>
             {
@@ -120,6 +120,14 @@ namespace Abeer.Data.Repositories
                 current.TeamId = profileOrganizationViewModel.TeamId;
 
                 _context.SaveChange();
+            });
+        }
+
+        public Task<IList<ProfileOrganization>> GetProfilesByOrganization(Guid organizationId)
+        {
+            return Task.Run(() =>
+            {
+                return _context.ProfileOrganizations.Where(o => o.OrganizationId == organizationId);
             });
         }
     }

@@ -25,7 +25,6 @@ namespace Abeer.Server.APIFeatures.Jobs
         private readonly EventTrackingService _eventTrackingService;
         private readonly NotificationService _notificationService;
         private readonly IConfiguration _configuration;
-        private readonly UrlShortner _urlShortner;
         private readonly IServiceProvider _serviceProvider;
         private readonly IServiceScope _scope;
         private readonly IWebHostEnvironment _env;
@@ -45,7 +44,6 @@ namespace Abeer.Server.APIFeatures.Jobs
             _eventTrackingService = _scope.ServiceProvider.GetRequiredService<EventTrackingService>();
             _notificationService = _scope.ServiceProvider.GetRequiredService<NotificationService>();
             _configuration = configuration;
-            _urlShortner = _scope.ServiceProvider.GetRequiredService<UrlShortner>();
             _env = env;
             _emailSender = _scope.ServiceProvider.GetRequiredService<IEmailSenderService>();
         }

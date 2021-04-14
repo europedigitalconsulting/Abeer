@@ -34,18 +34,21 @@
                             </div>
                             @if (!ReadOnly)
                             {
-                                <div class="p-2 cursor-pointer" @onclick="() => { TabBookmark = true;TabQrCode = false; }">
-                                    <div class="pr-2 text-center" style="@(TabBookmark ? "color:#02BF8A;" : "color:black;")">
-                                        <div><i style="font-size: 20px; " class="far fa-bookmark"></i></div>
-                                        <span style="font-size:12px;">@Loc["Bookmarks"]</span>
+                                @if (Profile.IsAdmin || Profile.IsUnlimited || Profile.IsUltimate || Profile.IsPayable)
+                                {
+                                    <div class="p-2 cursor-pointer" @onclick="() => { TabBookmark = true;TabQrCode = false; }">
+                                        <div class="pr-2 text-center" style="@(TabBookmark ? "color:#02BF8A;" : "color:black;")">
+                                            <div><i style="font-size: 20px; " class="far fa-bookmark"></i></div>
+                                            <span style="font-size:12px;">@Loc["Bookmarks"]</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="p-2 cursor-pointer" @onclick="() => { TabQrCode = true; TabBookmark = false; }">
-                                    <div class="pr-2 text-center" style="@(TabQrCode ? "color:#02BF8A;" : "color:black;")">
-                                        <div><i style="font-size: 20px; " class="fas fa-qrcode"></i></div>
-                                        <span style="font-size:12px;">@Loc["MyQrCode"]</span>
+                                    <div class="p-2 cursor-pointer" @onclick="() => { TabQrCode = true; TabBookmark = false; }">
+                                        <div class="pr-2 text-center" style="@(TabQrCode ? "color:#02BF8A;" : "color:black;")">
+                                            <div><i style="font-size: 20px; " class="fas fa-qrcode"></i></div>
+                                            <span style="font-size:12px;">@Loc["MyQrCode"]</span>
+                                        </div>
                                     </div>
-                                </div>
+                                }
                                 @if (!ScreenSize.IsSmall)
                                 {
                                     <div class="p-2 cursor-pointer">
@@ -217,24 +220,33 @@
                                         <li class="menu-profile" @onclick="OpenModalEditProfil">
                                             @Loc["EditProfile"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-edit"></i></span>
                                         </li>
-                                        <li class="menu-profile" @onclick="OpenModalCustomLink">
-                                            @Loc["AddCustomLinks"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="far fa-plus-square"></i></span>
-                                        </li>
+                                        @if (Profile.IsAdmin || Profile.IsUltimate || Profile.IsUnlimited || Profile.IsPayable)
+                                        {
+                                            <li class="menu-profile" @onclick="OpenModalCustomLink">
+                                                @Loc["AddCustomLinks"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="far fa-plus-square"></i></span>
+                                            </li>
+                                        }
                                         <li class="menu-profile" @onclick="OpenModalSocialNetwork">
                                             @Loc["AddASocialNetwork"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-icons"></i></span>
                                         </li>
-                                        <li class="menu-profile" @onclick="OpenModalQrcode">
-                                            @Loc["MyQrCode"]<span style="float:right;"><i style="font-size: 23px;color: #02BF8A" class="fas fa-qrcode"></i></span>
-                                        </li>
+                                        @if (Profile.IsAdmin || Profile.IsUltimate || Profile.IsUnlimited || Profile.IsPayable)
+                                        {
+                                            <li class="menu-profile" @onclick="OpenModalQrcode">
+                                                @Loc["MyQrCode"]<span style="float:right;"><i style="font-size: 23px;color: #02BF8A" class="fas fa-qrcode"></i></span>
+                                            </li>
+                                        }
                                         <li class="menu-profile" @onclick="OpenModalChangePhoto">
                                             @Loc["ChangePhoto"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-camera-retro"></i></span>
                                         </li>
                                         <li class="menu-profile" @onclick="OpenModalChangePassword">
                                             @Loc["ChangePassword"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-key"></i></span>
                                         </li>
-                                        <li class="menu-profile" @onclick="OpenModalChangePinCode">
-                                            @Loc["DisplayPinCode"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-user-secret"></i></span>
-                                        </li>
+                                        @if (Profile.IsAdmin || Profile.IsUltimate || Profile.IsUnlimited || Profile.IsPayable)
+                                        {
+                                            <li class="menu-profile" @onclick="OpenModalChangePinCode">
+                                                @Loc["DisplayPinCode"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-user-secret"></i></span>
+                                            </li>
+                                        }
                                         <li class="menu-profile" @onclick="OpenModalChangeMail">
                                             @Loc["TitleChangeMail"]<span style="float:right;"><i style="font-size: 20px;color: #02BF8A" class="fas fa-at"></i></span>
                                         </li>

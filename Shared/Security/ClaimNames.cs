@@ -36,5 +36,6 @@ namespace Abeer.Shared.Security
         public static string SubscriptionEnd => "subscriptionEnd";
         public static string Subscription => "subscription";
         public static string Ultimate => "ultimate";
+        public static string IsPayable => "IsPayable";
     }
 }

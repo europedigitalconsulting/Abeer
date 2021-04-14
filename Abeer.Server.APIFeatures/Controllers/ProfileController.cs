@@ -27,7 +27,6 @@ namespace Abeer.Server.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IAuthorizationService _authorizationService;
         private readonly IWebHostEnvironment _env;
-        private readonly UrlShortner _urlShortner;
         private readonly IEmailSender _emailSender;
         private readonly IConfiguration _configuration;
         private readonly FunctionalUnitOfWork _functionalUnitOfWork;
@@ -37,13 +36,12 @@ namespace Abeer.Server.Controllers
         public ProfileController(UserManager<ApplicationUser> userManager,
             IAuthorizationService authorizationService,
             IServiceProvider serviceProvider,
-            IWebHostEnvironment env, UrlShortner urlShortner, IEmailSender emailSender,
+            IWebHostEnvironment env, IEmailSender emailSender,
             IConfiguration configuration, FunctionalUnitOfWork functionalUnitOfWork, EventTrackingService eventTrackingService)
         {
             _userManager = userManager;
             _authorizationService = authorizationService;
             _env = env;
-            _urlShortner = urlShortner;
             _emailSender = emailSender;
             _configuration = configuration;
             _functionalUnitOfWork = functionalUnitOfWork;
@@ -239,9 +237,7 @@ namespace Abeer.Server.Controllers
 
                 var frontWebSite = UriHelper.BuildAbsolute(Request.Scheme, Request.Host);
                 var logoUrl = UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/assets/img/logo_full.png");
-                var unSubscribeUrl = await _urlShortner.CreateUrl(Request.Scheme, Request.Host, UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/Account/UnSubscribe"));
-
-                callbackUrl = await _urlShortner.CreateUrl(Request.Scheme, Request.Host, callbackUrl);
+                var unSubscribeUrl = UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/Account/UnSubscribe");
 
                 await SendEmailTemplate(changeMailViewModel.NewMail, "email-confirmation", new Dictionary<string, string>()
                         {

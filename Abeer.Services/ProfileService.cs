@@ -24,20 +24,18 @@ namespace Abeer.Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly NotificationService _notificationService;
         private readonly IConfiguration _configuration;
-        private readonly UrlShortner _urlShortner;
         private readonly IEmailSenderService _emailSenderService;
         private readonly IWebHostEnvironment _env;
         private readonly IServiceProvider _serviceProvider;
         private readonly FunctionalUnitOfWork _functionalUnitOfWork;
 
         public ProfileService(UserManager<ApplicationUser> userManager,
-            NotificationService notificationService, IConfiguration configuration, UrlShortner urlShortner,
+            NotificationService notificationService, IConfiguration configuration,
             IEmailSenderService emailSenderService, IWebHostEnvironment env, IServiceProvider serviceProvider, FunctionalUnitOfWork functionalUnitOfWork)
         {
             _userManager = userManager;
             _notificationService = notificationService;
             _configuration = configuration;
-            _urlShortner = urlShortner;
             _emailSenderService = emailSenderService;
             _env = env;
             _serviceProvider = serviceProvider;
@@ -189,36 +187,16 @@ namespace Abeer.Services
             var logoUrl = $"{_configuration["Service:FrontOffice:Url"]}/assets/img/logo_full.png";
             var login = $"{user.DisplayName}";
 
-            var code = GenerateCode();
-            var shortedUrl = $"{_configuration["Service:FrontOffice:Url"].TrimEnd('/')}/shortned/{code}";
-
-            var callbackUrl = await _urlShortner.CreateUrl(false, false, shortedUrl, longUrl, null, code);
-
             var parameters = new Dictionary<string, string>()
                         {
                             {"login", login },
                             {"frontWebSite", frontWebSite },
                             {"logoUrl", logoUrl },
-                            {"callbackUrl", callbackUrl }
+                            {"callbackUrl", longUrl }
                         };
 
             var message = GenerateHtmlTemplate(_serviceProvider, _env.WebRootPath, emailTemplate, parameters);
             await _emailSenderService.SendEmailAsync(user.Email, emailSubject, message);
-        }
-
-        private static string GenerateCode()
-        {
-            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            var stringChars = new char[8];
-
-            var random = new Random();
-
-            for (int i = 0; i < stringChars.Length; i++)
-            {
-                stringChars[i] = chars[random.Next(chars.Length)];
-            }
-
-            return new string(stringChars);
         }
     }
 }

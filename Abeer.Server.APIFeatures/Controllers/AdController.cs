@@ -36,7 +36,6 @@ namespace Abeer.Server.Controllers
         private readonly EventTrackingService _eventTrackingService;
         private readonly NotificationService _notificationService;
         private readonly IConfiguration _configuration;
-        private readonly UrlShortner _urlShortner;
         private readonly IServiceProvider _serviceProvider;
         private readonly IWebHostEnvironment _env;
         private readonly IEmailSenderService _emailSender;
@@ -45,14 +44,13 @@ namespace Abeer.Server.Controllers
         private readonly Random rdm = new Random();
         public AdsController(AdsUnitOfWork adsUnitOfWork, FunctionalUnitOfWork functionalUnitOfWork, UserManager<ApplicationUser> userManager,
             EventTrackingService eventTrackingService, NotificationService notificationService, IMapper mapper,
-            IConfiguration configuration, UrlShortner urlShortner, IServiceProvider serviceProvider, IWebHostEnvironment env, IEmailSenderService emailSender)
+            IConfiguration configuration, IServiceProvider serviceProvider, IWebHostEnvironment env, IEmailSenderService emailSender)
         {
             this.functionalUnitOfWork = functionalUnitOfWork;
             _userManager = userManager;
             _eventTrackingService = eventTrackingService;
             _notificationService = notificationService;
             _configuration = configuration;
-            _urlShortner = urlShortner;
             _serviceProvider = serviceProvider;
             _env = env;
             _emailSender = emailSender;
@@ -342,9 +340,7 @@ namespace Abeer.Server.Controllers
 
             var frontWebSite = UriHelper.BuildAbsolute(Request.Scheme, Request.Host);
             var logoUrl = UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/assets/img/logo_full.png");
-            var unSubscribeUrl = await _urlShortner.CreateUrl(Request.Scheme, Request.Host, UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/Account/UnSubscribe"));
-
-            callbackUrl = await _urlShortner.CreateUrl(Request.Scheme, Request.Host, callbackUrl);
+            var unSubscribeUrl = UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/Account/UnSubscribe");
 
             var parameters = new Dictionary<string, string>()
                         {

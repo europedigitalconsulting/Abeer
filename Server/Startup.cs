@@ -117,8 +117,6 @@ namespace Abeer.Server
                 o.SlidingExpiration = true;
             });
 
-            services.AddScoped<UrlShortner>();
-
             var mvcBuilder = services.AddControllersWithViews().AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
                 );
@@ -249,8 +247,6 @@ namespace Abeer.Server
             SeedCountries(scope, env);
             SeedArticles(scope, env);
             //SeedNotifications(scope, env).Wait();
-
-            app.UseMiddleware<UrlShortnerRewriter>();
 
             if (env.IsDevelopment() || env.EnvironmentName.Contains("Azure", StringComparison.OrdinalIgnoreCase))
             {
@@ -1094,9 +1090,9 @@ namespace Abeer.Server
 
                 if (subscriptionPack == null || subscriptionPack.Count == 0)
                 {
-                    subscriptionPack.Add(await functionalDb.SubscriptionPackRepository.AddSubscriptionPack(new SubscriptionPack { Enable = true, Popuplar = true, Label = "Standard", Price = 85, Description = "StandardDescription", Duration = 1 }));
-                    subscriptionPack.Add(await functionalDb.SubscriptionPackRepository.AddSubscriptionPack(new SubscriptionPack { Enable = true, Label = "Premium", Price = 124, Description = "PremiumDescription", Duration = 1 }));
-                    subscriptionPack.Add(await functionalDb.SubscriptionPackRepository.AddSubscriptionPack(new SubscriptionPack { Enable = true, Label = "Yearly", Price = 1240, Description = "YearlyDescription", Duration = 12 }));
+                    subscriptionPack.Add(await functionalDb.SubscriptionPackRepository.AddSubscriptionPack(new SubscriptionPack { Enable = true, Popuplar = true, Label = "Standard", Price = 0, Description = "StandardDescription", Duration = 1 }));
+                    subscriptionPack.Add(await functionalDb.SubscriptionPackRepository.AddSubscriptionPack(new SubscriptionPack { Enable = true, Popuplar = true, Label = "Premium", Price = 150, Description = "PremiumDescription", Duration = 1 }));
+                    subscriptionPack.Add(await functionalDb.SubscriptionPackRepository.AddSubscriptionPack(new SubscriptionPack { Enable = true, Label = "Business", Price = 250, Description = "BusinessDescription", Duration = 1 }));
                     functionalDb.SaveChanges();
                 }
 

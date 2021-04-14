@@ -27,10 +27,12 @@ namespace Abeer.Shared.ClientHub
         {
             if (!_started)
             {
-                List<TimeSpan> x = new List<TimeSpan>();
-                x.Add(new TimeSpan(0, 0, 1000));
-                x.Add(new TimeSpan(0, 0, 5000));
-                x.Add(new TimeSpan(0, 0, 10000));
+                List<TimeSpan> x = new()
+                {
+                    new TimeSpan(0, 0, 1000),
+                    new TimeSpan(0, 0, 5000),
+                    new TimeSpan(0, 0, 10000)
+                };
 
                 _hubConnection = new HubConnectionBuilder()
                     .WithAutomaticReconnect(x.ToArray())
@@ -100,12 +102,25 @@ namespace Abeer.Shared.ClientHub
 
         private async Task SendingNotifications(List<Notification> notifs, string userId = null)
         {
-            if (Notifications.Any())
-                Notifications.AddRange(notifs);
-            else
-                Notifications = notifs;
+            var added = new List<Notification>();
 
-            foreach (Notification item in notifs)
+            if (Notifications.Any())
+            {
+                foreach (var notif in notifs)
+                {
+                    if (!Notifications.Any(n => n.Id == notif.Id))
+                        added.Add(notif);
+                }
+
+                Notifications.AddRange(notifs);
+            }
+            else
+            {
+                added = notifs;
+                Notifications = added;
+            }
+
+            foreach (Notification item in added)
             {
                 switch (item.NotificationType)
                 {

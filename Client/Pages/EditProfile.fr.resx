@@ -217,7 +217,7 @@
     <value>Email</value>
   </data>
   <data name="EndSubscription" xml:space="preserve">
-    <value>Se terminera le</value>
+    <value>Se terminera le {0}</value>
   </data>
   <data name="Find-out" xml:space="preserve">
     <value>Découvrir</value>

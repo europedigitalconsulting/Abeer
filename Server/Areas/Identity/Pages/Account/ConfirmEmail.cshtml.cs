@@ -48,8 +48,6 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
 
             if (Success)
             {
-                await _notificationService.Create(user.Id, "Welcome", "/subscription-pack", "alert-welcome", "alert-welcome", "alert-welcome", "welcome");
-
                 await _eventTrackingService.Create(new Shared.Functional.EventTrackingItem
                 {
                     Id = Guid.NewGuid(),

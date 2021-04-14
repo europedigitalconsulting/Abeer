@@ -29,20 +29,18 @@ namespace Abeer.Server.Controllers
         private readonly IConfiguration _configuration;
         private readonly FunctionalUnitOfWork _functionalUnitOfWork;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly UrlShortner _urlShortner;
         private readonly IEmailSenderService _emailSenderService;
         private readonly IWebHostEnvironment _env;
         private readonly IServiceProvider _serviceProvider;
 
         private readonly Random rnd = new Random();
 
-        public PaypalController(ILogger<PaypalController> logger, IConfiguration configuration, FunctionalUnitOfWork functionalUnitOfWork, UserManager<ApplicationUser> userManager, UrlShortner urlShortner, IEmailSenderService emailSenderService, IWebHostEnvironment env, IServiceProvider serviceProvider)
+        public PaypalController(ILogger<PaypalController> logger, IConfiguration configuration, FunctionalUnitOfWork functionalUnitOfWork, UserManager<ApplicationUser> userManager, IEmailSenderService emailSenderService, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             _logger = logger;
             _configuration = configuration;
             _functionalUnitOfWork = functionalUnitOfWork;
             _userManager = userManager;
-            _urlShortner = urlShortner;
             _emailSenderService = emailSenderService;
             _env = env;
             _serviceProvider = serviceProvider;
@@ -206,14 +204,12 @@ namespace Abeer.Server.Controllers
             var code = GenerateCode();
             var shortedUrl = $"{_configuration["Service:FrontOffice:Url"].TrimEnd('/')}/shortned/{code}";
 
-            var callbackUrl = await _urlShortner.CreateUrl(false, false, shortedUrl, longUrl, null, code);
-
             var parameters = new Dictionary<string, string>()
                         {
                             {"login", login },
                             {"frontWebSite", frontWebSite },
                             {"logoUrl", logoUrl },
-                            {"callbackUrl", callbackUrl }
+                            {"callbackUrl", longUrl }
                         };
 
             var message = GenerateHtmlTemplate(_serviceProvider, _env.WebRootPath, emailTemplate, parameters);

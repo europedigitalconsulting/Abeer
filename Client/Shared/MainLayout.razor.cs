@@ -95,8 +95,11 @@ namespace Abeer.Client.Shared
         }
         public async void ShowNotification(object sender, NotificationEventArgs e)
         {
-            NotificationClient.Notifications.Add(e.Notification);
-            await InvokeAsync(StateHasChanged);
+            if (!NotificationClient.Notifications.Any(n => n.Id == e.Notification.Id))
+            {
+                NotificationClient.Notifications.Add(e.Notification);
+                await InvokeAsync(StateHasChanged);
+            }
         }
         protected override async Task OnParametersSetAsync()
         {

@@ -30,19 +30,17 @@ namespace Abeer.Server.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IAuthorizationService _authorizationService;
         private readonly IWebHostEnvironment _env;
-        private readonly UrlShortner _urlShortner;
         private readonly IEmailSender _emailSender;
         private readonly IConfiguration _configuration;
 
         public UsersController(UserManager<ApplicationUser> userManager,
             IAuthorizationService authorizationService,
-            IWebHostEnvironment env, UrlShortner urlShortner, IEmailSender emailSender,
+            IWebHostEnvironment env, IEmailSender emailSender,
             IConfiguration configuration)
         {
             _userManager = userManager;
             _authorizationService = authorizationService;
             _env = env;
-            _urlShortner = urlShortner;
             _emailSender = emailSender;
             _configuration = configuration;
         }
@@ -194,8 +192,7 @@ namespace Abeer.Server.Controllers
 
             var frontWebSite = UriHelper.BuildAbsolute(Request.Scheme, Request.Host);
             var logoUrl = UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/assets/img/logo_full.png");
-            var unSubscribeUrl = await _urlShortner.CreateUrl(Request.Scheme, Request.Host, UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/Account/UnSubscribe"));
-            callbackUrl = await _urlShortner.CreateUrl(Request.Scheme, Request.Host, callbackUrl);
+            var unSubscribeUrl = UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/Account/UnSubscribe");
 
             var message = htmlBody.Replace("[frontWebSite]", frontWebSite, StringComparison.OrdinalIgnoreCase);
             message = message.Replace("[LogoUrl]", logoUrl, StringComparison.OrdinalIgnoreCase);
@@ -262,8 +259,7 @@ namespace Abeer.Server.Controllers
 
                 var frontWebSite = UriHelper.BuildAbsolute(Request.Scheme, Request.Host);
                 var logoUrl = UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/assets/img/logo_full.png");
-                var unSubscribeUrl = await _urlShortner.CreateUrl(Request.Scheme, Request.Host, UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/Account/UnSubscribe"));
-                callbackUrl = await _urlShortner.CreateUrl(Request.Scheme, Request.Host, callbackUrl);
+                var unSubscribeUrl = UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/Account/UnSubscribe");
 
                 var message = htmlBody.Replace("[frontWebSite]", frontWebSite, StringComparison.OrdinalIgnoreCase);
 

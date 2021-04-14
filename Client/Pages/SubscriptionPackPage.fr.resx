@@ -117,6 +117,30 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Business" xml:space="preserve">
+    <value>Business</value>
+  </data>
+  <data name="BusinessDescription" xml:space="preserve">
+    <value>&lt;ul class="sub"&gt;
+         &lt;li&gt;&lt;span&gt;Authentification par email &amp; mot de passe&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Authentification par PIN code&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Support par email ou en ligne&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Accès à votre profil par URL&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Accès à votre profil par QR Code&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Accès à votre profil par NFC&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;SiteMap personnalisé&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Flux RSS&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Photo de Profil&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Comptes réseaux sociaux&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Liens personnalisés&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Tableau de bord&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Chat&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Liste des utilisateurs de votre pays&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Envoyer un contact à un autre contact&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Envoyer un fichier à un autre contact&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Accès à vos annonces par des URL uniques&lt;/span&gt;&lt;/li&gt;
+&lt;/ul&gt;</value>
+  </data>
   <data name="CatchPhrase" xml:space="preserve">
     <value>vous permet d’échanger et partager avec des milliers de personne vos cartes de visite virtuel en ligne</value>
   </data>
@@ -134,10 +158,18 @@
   </data>
   <data name="PremiumDescription" xml:space="preserve">
     <value>&lt;ul class="sub"&gt;
-         &lt;li&gt;&lt;span&gt;1 Mois d'accès&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Authentification par email &amp; mot de passe&lt;/span&gt;&lt;/li&gt;
          &lt;li&gt;&lt;span&gt;Support par email ou en ligne&lt;/span&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;span&gt;1 QRCode&lt;/span&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;span&gt;Annonces illimitées immédiatement pendant 5j&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Accès à votre profil par URL&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Accès à votre profil par QR Code&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Photo de Profil&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Comptes réseaux sociaux&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Liens personnalisés&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Tableau de bord&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Chat&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Liste des utilisateurs de votre pays&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Envoyer un contact à un autre contact&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Accès à vos annonces par des URL uniques&lt;/span&gt;&lt;/li&gt;
 &lt;/ul&gt;</value>
   </data>
   <data name="PriceTitle" xml:space="preserve">
@@ -147,14 +179,21 @@
     <value>Choisir ce plan</value>
   </data>
   <data name="Standard" xml:space="preserve">
-    <value>Standard</value>
+    <value>Gratuit</value>
   </data>
   <data name="StandardDescription" xml:space="preserve">
     <value>&lt;ul class="sub"&gt;
-         &lt;li&gt;&lt;span&gt;1 Mois d'accès&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Authentification par email &amp; mot de passe&lt;/span&gt;&lt;/li&gt;
          &lt;li&gt;&lt;span&gt;Support par email ou en ligne&lt;/span&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;span&gt;1 QRCode&lt;/span&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;span&gt;Annonces illimitées sous 2j et pendant 2j&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Accès à votre profil par URL&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Accès à votre profil par QR Code&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Photo de Profil&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Comptes réseaux sociaux&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Tableau de bord&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Chat&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Accès à vos annonces par des URL uniques&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Publier une annonce sous 2j&lt;/span&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;span&gt;Annonces illimitées pendant 5j&lt;/span&gt;&lt;/li&gt;
 &lt;/ul&gt;</value>
   </data>
   <data name="Title" xml:space="preserve">
@@ -162,17 +201,5 @@
   </data>
   <data name="Warrenty" xml:space="preserve">
     <value>Nous vous offrons une garantie 100% sastisfaction et un remboursement </value>
-  </data>
-  <data name="Yearly" xml:space="preserve">
-    <value>Offre Annuel (2 mois gratuit)</value>
-  </data>
-  <data name="YearlyDescription" xml:space="preserve">
-    <value>&lt;ul class="sub"&gt;
-         &lt;li&gt;&lt;span&gt;12 Mois d'accès&lt;/span&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;span&gt;2 Mois d'accès gratuits&lt;/span&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;span&gt;Support par email ou en ligne&lt;/span&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;span&gt;1 QRCode&lt;/span&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;span&gt;Annonces illimitées publiées immédiatement et pendant 15j&lt;/span&gt;&lt;/li&gt;
-         &lt;/ul&gt;</value>
   </data>
 </root>

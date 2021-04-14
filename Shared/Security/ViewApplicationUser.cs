@@ -50,6 +50,7 @@ namespace Abeer.Shared
         public int NumberOfAds { get; set; }
         public bool IsUnlimited { get; set; }
         public bool IsUltimate { get; set; }
+        public bool IsPayable { get; set; }
 
         public static implicit operator ViewApplicationUser(ApplicationUser user)
         {
@@ -119,7 +120,8 @@ namespace Abeer.Shared
                 SubscriptionStart = DateTime.TryParse(claimsPrincipal.FindFirstValue(ClaimNames.SubscriptionStart), out var subscriptionStart) ? subscriptionStart : null,
                 SubscriptionEnd = DateTime.TryParse(claimsPrincipal.FindFirstValue(ClaimNames.SubscriptionEnd), out var subscriptionEnd) ? subscriptionEnd : null,
                 IsUnlimited = bool.TryParse(claimsPrincipal.FindFirstValue(ClaimNames.IsUnlimited), out var isUnlimited) && isUnlimited,
-                IsUltimate = claimsPrincipal.HasClaim(c=>c.Type == ClaimNames.Subscription && c.Value.Contains(ClaimNames.Ultimate))
+                IsUltimate = claimsPrincipal.HasClaim(c=>c.Type == ClaimNames.Subscription && c.Value.Contains(ClaimNames.Ultimate)),
+                IsPayable = claimsPrincipal.HasClaim(c=>c.Type == ClaimNames.IsPayable)
             };
 
             view.HasSubscriptionValid = view.IsAdmin || view.IsManager || view.IsUnlimited || view.IsUltimate || (claimsPrincipal.HasClaim(c => c.Type == ClaimNames.Subscription)

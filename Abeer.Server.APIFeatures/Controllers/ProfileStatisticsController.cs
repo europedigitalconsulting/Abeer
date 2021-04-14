@@ -24,7 +24,6 @@ namespace Abeer.Server.APIFeatures.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IAuthorizationService _authorizationService;
         private readonly IWebHostEnvironment _env;
-        private readonly UrlShortner _urlShortner;
         private readonly IEmailSender _emailSender;
         private readonly IConfiguration _configuration;
         private readonly FunctionalUnitOfWork _functionalUnitOfWork;
@@ -34,13 +33,12 @@ namespace Abeer.Server.APIFeatures.Controllers
         public ProfileStatisticsController(UserManager<ApplicationUser> userManager,
             IAuthorizationService authorizationService,
             IServiceProvider serviceProvider,
-            IWebHostEnvironment env, UrlShortner urlShortner, IEmailSender emailSender,
+            IWebHostEnvironment env, IEmailSender emailSender,
             IConfiguration configuration, FunctionalUnitOfWork functionalUnitOfWork, EventTrackingService eventTrackingService)
         {
             _userManager = userManager;
             _authorizationService = authorizationService;
             _env = env;
-            _urlShortner = urlShortner;
             _emailSender = emailSender;
             _configuration = configuration;
             _functionalUnitOfWork = functionalUnitOfWork;
