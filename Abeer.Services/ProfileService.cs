@@ -16,6 +16,7 @@ using static Abeer.Services.TemplateRenderManager;
 using Abeer.Shared.Security;
 using System.Security.Claims;
 using Abeer.Data.UnitOfworks;
+using Abeer.Shared.ViewModels;
 
 namespace Abeer.Services
 {
@@ -56,34 +57,48 @@ namespace Abeer.Services
 
             if (user != null)
             {
+                var notifications = await _notificationService.GetNotifications(user.Id, NotificationTypeEnum.DailyReminder);
 
-                if (user.IsUnlimited == false)
+                if (notifications.Any(n => n.CreatedDate.Date.Equals(DateTime.UtcNow.Date)) == false)
                 {
-                    var notifications = await _notificationService.GetNotifications(user.Id, "daily-reminder");
+                    await _notificationService.Create(user.Id, "daily-reminder", "subscription-pack", "reminder", "reminder", "reminder", Shared.ViewModels.NotificationTypeEnum.DailyReminder);
+                }
 
-                    if (notifications.Any(n => n.CreatedDate.Date.Equals(DateTime.UtcNow.Date)) == false)
+                if (user.IsUnlimited == false && user.IsAdmin == false)
+                {
+                    var subscription = await _functionalUnitOfWork.SubscriptionRepository.GetLatestSubscriptionForUser(user.Id);
+
+                    if (subscription != null && subscription.SubscriptionPackId != Guid.Empty)
                     {
-                        await _notificationService.Create(user.Id, "daily-reminder", "subscription-pack", "reminder", "reminder", "reminder", "daily-reminder");
+                        var pack = await _functionalUnitOfWork.SubscriptionPackRepository.FirstOrDefault(s => s.Id == subscription.SubscriptionPackId);
+
+                        if (subscription != null)
+                            AddClaim(context, ClaimNames.Subscription, pack.Label.ToLower());
+
+                        if (pack.Price > 0)
+                            AddClaim(context, ClaimNames.IsPayable, "true");
+                        else
+                            AddClaim(context, ClaimNames.IsFree, "true");
                     }
 
                     if (user.SubscriptionEndDate.HasValue && user.SubscriptionEndDate < DateTime.UtcNow)
                     {
-                        notifications = await _notificationService.GetNotifications(user.Id, "expiredprofile");
+                        notifications = await _notificationService.GetNotifications(user.Id, NotificationTypeEnum.ExpiredProfile);
 
                         if (notifications.Any(n => n.CreatedDate.Date.Equals(DateTime.UtcNow.Date)) == false)
                         {
-                            await _notificationService.Create(user.Id, "expiredprofile", "subscription-pack", "reminder", "reminder", "reminder", "expiredprofile");
+                            await _notificationService.Create(user.Id, "expiredprofile", "subscription-pack", "reminder", "reminder", "reminder", Shared.ViewModels.NotificationTypeEnum.ExpiredProfile);
                             isReadonly = true;
                             await SendEmailTemplate(user, "expiredprofile", "expiredprofile");
                         }
                     }
                     else if (user.SubscriptionEndDate.HasValue && user.SubscriptionEndDate.Value.Subtract(DateTime.UtcNow).Days <= 5)
                     {
-                        notifications = await _notificationService.GetNotifications(user.Id, "soonexpireprofile");
+                        notifications = await _notificationService.GetNotifications(user.Id, NotificationTypeEnum.SoonExpireProfile);
 
                         if (notifications.Any(n => n.CreatedDate.Date.Equals(DateTime.UtcNow.Date)) == false)
                         {
-                            await _notificationService.Create(user.Id, "soonexpireprofile", "subscription-pack", "reminder", "reminder", "reminder", "soonexpireprofile");
+                            await _notificationService.Create(user.Id, "soonexpireprofile", "subscription-pack", "reminder", "reminder", "reminder", Shared.ViewModels.NotificationTypeEnum.SoonExpireProfile);
                             await SendEmailTemplate(user, "soonexpireprofile", "soonexpireprofile");
                         }
                     }
@@ -125,19 +140,6 @@ namespace Abeer.Services
                 AddClaim(context, ClaimNames.PinCode, user.PinCode);
                 AddClaim(context, ClaimNames.SubscriptionStart, user.SubscriptionStartDate);
                 AddClaim(context, ClaimNames.SubscriptionEnd, user.SubscriptionEndDate);
-
-                if(!user.IsAdmin && !user.IsUnlimited)
-                {
-                    var subscription = await _functionalUnitOfWork.SubscriptionRepository.GetLatestSubscriptionForUser(user.Id);
-
-                    if (subscription != null && subscription.SubscriptionPackId != Guid.Empty)
-                    {
-                        var pack = await _functionalUnitOfWork.SubscriptionPackRepository.FirstOrDefault(s => s.Id == subscription.SubscriptionPackId);
-
-                        if (subscription != null)
-                            AddClaim(context, ClaimNames.Subscription, pack.Label.ToLower());
-                    }
-                }
 
                 AddClaim(context, ClaimNames.IsReadOnly, user.SubscriptionEndDate.HasValue && user.SubscriptionEndDate.Value <= DateTime.UtcNow);
             }

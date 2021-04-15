@@ -27,7 +27,7 @@ namespace Abeer.UI_Ads
         public ViewApplicationUser User { get; set; } = new ViewApplicationUser();
 
         private AdViewModel Ad { get; set; }
-
+        public string AdUrl => Navigation.ToAbsoluteUri($"/ads/details/{Ad.Id}").ToString();
         public int CurrentImageIndex { get; set; } = 0;
         public ViewApplicationUser Author { get; set; }
         private bool DisplayModalQrCode;

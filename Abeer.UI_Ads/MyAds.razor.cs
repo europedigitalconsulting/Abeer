@@ -48,7 +48,7 @@ namespace Abeer.UI_Ads
             getAds.EnsureSuccessStatusCode();
             var json = await getAds.Content.ReadAsStringAsync();
             RefAds = JsonConvert.DeserializeObject<MyAdsViewModel>(json);
-            AdsTmp = RefAds.Ads.Where(x => x.OwnerId != User.Id).ToList();
+            AdsTmp = RefAds.Ads.Where(a=>a.OwnerId == User.Id).ToList();
             await base.OnInitializedAsync();
         }
         [JSInvokable]

@@ -1,0 +1,25 @@
+﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<RemoveContactDialog> Loc
+
+@code
+{
+    [Parameter]
+    public ClaimsPrincipal User { get; set; }
+
+    [Parameter]
+    public EventCallback Close { get; set; }
+
+    [Parameter]
+    public EventCallback<string> Navigate { get; set; }
+
+    [Parameter]
+    public Notification Notification { get; set; }
+
+}
+
+<div class="card">
+    <div class="card-body text-center">
+        <img src="assets/img/trophy.png">
+        <h4>@Loc["Title"]</h4>
+        <p>@Loc["CatchPhrase"]</p> 
+    </div>
+</div>

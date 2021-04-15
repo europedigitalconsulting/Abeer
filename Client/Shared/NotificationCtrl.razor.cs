@@ -2,6 +2,7 @@
 using Abeer.Shared.ClientHub;
 using Abeer.Shared.EventNotification;
 using Abeer.Shared.Functional;
+using Abeer.Shared.ViewModels;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Rendering;
@@ -15,6 +16,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Abeer.Shared.ViewModels;
 
 namespace Abeer.Client.Shared
 {
@@ -30,15 +32,18 @@ namespace Abeer.Client.Shared
         Notification _next;
 
         (TouchPoint ReferencePoint, DateTime StartTime) startPoint;
-        public Dictionary<string, Type> DialogTypes = new()
+        public Dictionary<NotificationTypeEnum, Type> DialogTypes = new()
         {
-            { "welcome", typeof(WelcomeDialog) },
-            { "daily-reminder", typeof(DailyReminderDialog) },
-            { "expiredprofile", typeof(ExpiredProfileDialog) },
-            { "soonexpireprofile", typeof(SoonExpiredProfileDialog) },
-            { "add-contact", typeof(AddContactDialog) },
-            { "ad-startpublishing", typeof(StartPublishingDialog) },
-            { "ad-endpublishing", typeof(EndPublishingDialog) }
+            { NotificationTypeEnum.Welcome, typeof(WelcomeDialog) },
+            { NotificationTypeEnum.DailyReminder, typeof(DailyReminderDialog) },
+            { NotificationTypeEnum.ExpiredProfile, typeof(ExpiredProfileDialog) },
+            { NotificationTypeEnum.SoonExpireProfile, typeof(SoonExpiredProfileDialog) },
+            { NotificationTypeEnum.AddContact, typeof(AddContactDialog) },
+            { NotificationTypeEnum.AdStartPublished, typeof(StartPublishingDialog) },
+            { NotificationTypeEnum.AdEndPublished, typeof(EndPublishingDialog) },
+            { NotificationTypeEnum.RemoveContact, typeof(RemoveContactDialog)},
+            { NotificationTypeEnum.SendProfile, typeof(SendProfileDialog) },
+            { NotificationTypeEnum.ValidateAd, typeof(ValidateAdDialog) }
         };
 
         public Notification NextNotification
@@ -147,7 +152,7 @@ namespace Abeer.Client.Shared
 
         public RenderFragment RenderDialog(string type) => builder =>
         {
-            builder.OpenComponent(0, DialogTypes[type]);
+            builder.OpenComponent(0, DialogTypes[type.ConvertAsNotificationType()]);
             builder.AddAttribute(1, "User", User);
             builder.AddAttribute(2, "Close", EventCallback.Factory.Create(this, async() => await SetDisplayedNotification()));
             builder.AddAttribute(3, "Navigate", EventCallback.Factory.Create<string>(this, (url) => Goto(url)));

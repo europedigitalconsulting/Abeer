@@ -1,7 +1,7 @@
 ﻿@page "/ads/list"
 @using System.Security.Claims
 @using Abeer.UI_Ads.Components
-@attribute [Authorize(Policy = "OnlySubscribers")]
+@attribute [Authorize]
 @inject IHttpClientFactory HttpClientFactory
 @inject Microsoft.Extensions.Localization.IStringLocalizer<ListAds> Loc
 @inject NavigationManager NavigationManager

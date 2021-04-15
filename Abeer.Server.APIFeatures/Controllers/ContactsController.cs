@@ -162,7 +162,7 @@ namespace Abeer.Server.Controllers
 
                 await SendEmailTemplate(userContact);
 
-                Notification notif = await _notificationService.Create(contactId, "Demande de contact", "contact/list", "reminder", "reminder", "reminder", "add-contact");
+                Notification notif = await _notificationService.Create(contactId, "Demande de contact", "contact/list", "reminder", "reminder", "reminder", NotificationTypeEnum.AddContact);
                 return Ok(new ContactViewModel() { ViewContact = new ViewContact(user, userContact), Notification = notif });
             }
             return Conflict();
@@ -180,7 +180,7 @@ namespace Abeer.Server.Controllers
 
             _UnitOfWork.ContactRepository.Remove(contact);
 
-            await _notificationService.Create(contact.UserId, "Suppression de contact", "contact/list", "reminder", "reminder", "reminder", "remove-contact");
+            await _notificationService.Create(contact.UserId, "Suppression de contact", "contact/list", "reminder", "reminder", "reminder", NotificationTypeEnum.RemoveContact);
             return Ok();
         }
 
@@ -776,8 +776,9 @@ namespace Abeer.Server.Controllers
 
             await _UnitOfWork.MessageRepository.Add(message);
             await SendProfileEmail(message, user, sendTo);
-            await _notificationService.Create(sendTo.Id, $"{sendTo.DisplayName} a partagé avec vous le profil de {user.DisplayName}", viewModel.TargetUrl, 
-                "sendProfile", "sendProfile", "sendProfile", "sendProfile");
+            await _eventTrackingService.Create(user.Id, "SendProfile", sendTo.Id);
+            await _notificationService.Create(sendTo.Id, $"{sendTo.DisplayName} vous porpose de voir le profil {user.DisplayName}", viewModel.TargetUrl, 
+                "sendProfile", "sendProfile", "sendProfile", NotificationTypeEnum.SendProfile);
 
             return Ok();
         }

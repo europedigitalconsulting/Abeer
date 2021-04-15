@@ -1,0 +1,27 @@
+﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<ValidateAdDialog> Loc
+
+@code
+{
+    [Parameter]
+    public ClaimsPrincipal User { get; set; }
+
+    [Parameter]
+    public EventCallback Close { get; set; }
+
+    [Parameter]
+    public EventCallback<string> Navigate { get; set; }
+
+    [Parameter]
+    public Notification Notification { get; set; }
+
+}
+
+<div class="card">
+    <div class="card-body text-center">
+        <img src="assets/img/trophy.png">
+        <h4>@Loc["Title"]</h4>
+        <h5>@Loc["CatchPhrase"]</h5>
+        <p>@Notification.MessageTitle</p> 
+        <button class="btn btn-success" @onclick="@(async ()=>await Navigate.InvokeAsync(Notification.NotificationUrl))">@Loc["Continue"]</button>
+    </div>
+</div>

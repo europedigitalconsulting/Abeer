@@ -324,7 +324,7 @@ namespace Abeer.Server.Controllers
                 await functionalUnitOfWork.AdRepository.Update(current);
                 functionalUnitOfWork.SaveChanges();
                 await _eventTrackingService.Create(current.OwnerId, "Ad", "validate");
-                await _notificationService.Create(current.OwnerId, "validateAd", "/ad/myads");
+                await _notificationService.Create(current.OwnerId, $"Votre annonce {current.Title} a été validée !", $"/ads/details/{current.Id}", "reminder", "reminder", "reminder", NotificationTypeEnum.ValidateAd);
 
                 await SendEmailTemplate(current);
 

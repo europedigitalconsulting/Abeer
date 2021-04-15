@@ -151,6 +151,10 @@
                         <a href="@($"/api/rss/{Author.Id}")" target="_blank"><i class="fas fa-rss-square"></i></a>
                     }
                 }
+                @if (User.IsAdmin || User.IsUltimate || User.IsUnlimited || User.IsPayable)
+                {
+                    <Abeer.Client.UISdk.SendToContact Loc="Loc" TargetUrl="AdUrl" User="User"></Abeer.Client.UISdk.SendToContact>
+                }
             </div>
         </div>
     </div>
