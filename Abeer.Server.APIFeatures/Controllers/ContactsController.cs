@@ -312,7 +312,7 @@ namespace Abeer.Server.Controllers
             if (suggestions == null)
                 return NotFound();
 
-            List<ViewContact> contacts = new List<ViewContact>();
+            List<ViewContact> contacts = new();
             var allUserContacts = await _UnitOfWork.ContactRepository.Where(x => x.UserId == User.NameIdentifier() || x.OwnerId == User.NameIdentifier());
             suggestions = suggestions.Where(u => !allUserContacts.Any(c => u.Id == c.OwnerId || u.Id == c.UserId || u.Id == User.NameIdentifier())).ToList();
 
@@ -328,6 +328,31 @@ namespace Abeer.Server.Controllers
             }
 
             return Ok(contacts);
+        }
+
+        [HttpGet("find")]
+        public async Task<ActionResult<IEnumerable<ApplicationUser>>> Find(string term)
+        {
+            if (string.IsNullOrEmpty(term))
+                return BadRequest();
+
+            var user = await _userManager.FindByIdAsync(User.NameIdentifier());
+            var contacts = await _UnitOfWork.ContactRepository.GetContacts(user.Id, EnumUserAccepted.NO_REQUEST);
+
+            var suggestions = await Task.Run(() => _userManager?.Users.ToList().Where(c => 
+                (c.FirstName != null && c.FirstName.Contains(term, StringComparison.OrdinalIgnoreCase)
+                || c.LastName != null && c.LastName.Contains(term, StringComparison.OrdinalIgnoreCase)
+                || c.Description != null && c.Description.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+                c.DisplayName != null && c.DisplayName.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+                c.Email != null && c.Email.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+                c.Title != null && c.Title.Contains(term, StringComparison.OrdinalIgnoreCase))));
+
+            if (suggestions == null || contacts.Any() == false)
+                return NotFound();
+
+            suggestions = suggestions.Where(s => contacts.Any(c => c.UserId == s.Id)).ToList();
+
+            return Ok(suggestions);
         }
 
         // GET: api/Contacts/5
@@ -730,6 +755,62 @@ namespace Abeer.Server.Controllers
             }
 
             return Ok(contacts);
+        }
+
+        [HttpPost("send")]
+        public async Task<IActionResult> SendProfile(SendProfileViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var message = new Message
+            {
+                DateSent = DateTime.UtcNow,
+                Text = viewModel.Subject + Environment.NewLine + viewModel.Body + Environment.NewLine + viewModel.TargetUrl,
+                UserIdFrom = Guid.Parse(User.NameIdentifier()),
+                UserIdTo = Guid.Parse(viewModel.SendToId)
+            };
+
+            var user = await _userManager.FindByIdAsync(User.NameIdentifier());
+            var sendTo = await _userManager.FindByIdAsync(viewModel.SendToId);
+
+            await _UnitOfWork.MessageRepository.Add(message);
+            await SendProfileEmail(message, user, sendTo);
+            await _notificationService.Create(sendTo.Id, $"{sendTo.DisplayName} a partagé avec vous le profil de {user.DisplayName}", viewModel.TargetUrl, 
+                "sendProfile", "sendProfile", "sendProfile", "sendProfile");
+
+            return Ok();
+        }
+
+        private async Task SendProfileEmail(Message message, ApplicationUser user, ApplicationUser sendTo)
+        {
+            var code = "";
+
+            if (!string.IsNullOrEmpty(sendTo.PinDigit))
+                code = sendTo.PinDigit;
+            else
+                code = sendTo.Id;
+
+            var callbackUrl = $"{Request.Scheme}://{Request.Host}/viewProfile/{code}";
+
+            var frontWebSite = UriHelper.BuildAbsolute(Request.Scheme, Request.Host);
+            var logoUrl = UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/assets/img/logo_full.png");
+            var unSubscribeUrl = UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/Account/UnSubscribe");
+            var login = $"{user.DisplayName}";
+
+            var parameters = new Dictionary<string, string>()
+                        {
+                            {"login", login },
+                            {"frontWebSite", frontWebSite },
+                            {"logoUrl", logoUrl },
+                            {"unSubscribeUrl", unSubscribeUrl },
+                            {"callbackUrl", callbackUrl },
+                            {"sendTo", sendTo.DisplayName },
+                            {"sendFrom", user.DisplayName }
+                        };
+
+            var html = GenerateHtmlTemplate(_serviceProvider, _env.WebRootPath, "sendprofile", parameters);
+            await _emailSender.SendEmailAsync(sendTo.Email, $"{user.DisplayName} partage avec vous un profil meetag {sendTo.DisplayName}", html);
         }
     }
 }

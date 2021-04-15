@@ -1,9 +1,9 @@
 ﻿using Abeer.Shared;
 using Abeer.Shared.Functional;
 using Abeer.Shared.ViewModels;
+using AutoMapper;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 using MixERP.Net.VCards;
 using MixERP.Net.VCards.Models;
@@ -15,9 +15,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Security.Claims;
-using System.Security.Cryptography.Xml;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 
@@ -653,7 +651,7 @@ namespace Abeer.Client.Pages
         {
             EditManager = true;
             NotFoundManager = false;
-            SearchManager = Manager.DisplayName;
+            SearchManager = Manager?.DisplayName;
         }
 
         void SetManager(ViewApplicationUser manager)

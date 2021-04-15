@@ -267,6 +267,9 @@
   <data name="Manager" xml:space="preserve">
     <value>Manageur</value>
   </data>
+  <data name="Message" xml:space="preserve">
+    <value>Message</value>
+  </data>
   <data name="ModifyPinCode" xml:space="preserve">
     <value>Modifier mon code pin et mon numéro de carte</value>
   </data>
@@ -339,6 +342,12 @@
   <data name="SaveOrganization" xml:space="preserve">
     <value>Enregistrer</value>
   </data>
+  <data name="Send" xml:space="preserve">
+    <value>Envoyer</value>
+  </data>
+  <data name="SendToContact" xml:space="preserve">
+    <value>Envoyer le profil à un contact</value>
+  </data>
   <data name="ShareIt" xml:space="preserve">
     <value>Partager le profil</value>
   </data>
@@ -383,6 +392,9 @@
   </data>
   <data name="StartSubscription" xml:space="preserve">
     <value>Démarré le {0}</value>
+  </data>
+  <data name="Subject" xml:space="preserve">
+    <value>Sujet</value>
   </data>
   <data name="Team" xml:space="preserve">
     <value>Equipe</value>

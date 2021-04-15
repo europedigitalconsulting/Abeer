@@ -5,6 +5,11 @@ namespace Abeer.Shared
 {
     public class Message
     {
+        public Message()
+        {
+            Id = Guid.NewGuid();
+        }
+
         [Key]
         public Guid Id { get; set; }
         public Guid UserIdFrom { get; set; }

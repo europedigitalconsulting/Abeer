@@ -22,9 +22,9 @@ namespace Abeer.Data.Repositories
         {
             return Task.Run(() => _context.Contacts.ToList());
         }
-        public Task<IList<Contact>> GetContacts(string ownerId)
+        public Task<IList<Contact>> GetContacts(string ownerId, EnumUserAccepted state = EnumUserAccepted.ACCEPTED)
         {
-            return Task.Run(() => _context.Contacts.Where(c => c.OwnerId == ownerId && c.UserAccepted == EnumUserAccepted.ACCEPTED));
+            return Task.Run(() => _context.Contacts.Where(c => c.OwnerId == ownerId && (state == EnumUserAccepted.NO_REQUEST || c.UserAccepted == state)));
         }
 
         public Task<Contact> GetContact(Guid id)

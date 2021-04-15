@@ -8,6 +8,11 @@ using Abeer.Services;
 using System.Collections.Generic;
 using Abeer.Shared.ViewModels;
 using System.Linq;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using static Abeer.Services.TemplateRenderManager;
 
 namespace Abeer.Server.Controllers
 {
@@ -16,10 +21,22 @@ namespace Abeer.Server.Controllers
     public class TchatController : ControllerBase
     {
         private readonly FunctionalUnitOfWork _functionalUnitOfWork;
-        public TchatController(FunctionalUnitOfWork functionalUnitOfWork)
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IWebHostEnvironment _env;
+        private readonly IServiceProvider _serviceProvider;
+        private readonly IEmailSenderService _emailSender;
+        private readonly IConfiguration _configuration;
+
+        public TchatController(FunctionalUnitOfWork functionalUnitOfWork, UserManager<ApplicationUser> userManager, IWebHostEnvironment env, IServiceProvider serviceProvider, IEmailSenderService emailSender, IConfiguration configuration)
         {
             _functionalUnitOfWork = functionalUnitOfWork;
+            _userManager = userManager;
+            _env = env;
+            _serviceProvider = serviceProvider;
+            _emailSender = emailSender;
+            _configuration = configuration;
         }
+
         [HttpGet("{contactId}")]
         public async Task<ActionResult<List<Message>>> Getsync(Guid contactId)
         {
@@ -53,6 +70,7 @@ namespace Abeer.Server.Controllers
             await _functionalUnitOfWork.MessageRepository.Update(message);
             return Ok(message);
         }
+        
         [HttpPost]
         public async Task<IActionResult> PostAsync(TchatViewModel model)
         {
@@ -71,7 +89,43 @@ namespace Abeer.Server.Controllers
             };
 
             msg = await _functionalUnitOfWork.MessageRepository.Add(msg);
+
+            var userFrom = await _userManager.FindByIdAsync(msg.UserIdFrom.ToString());
+            var userTo = await _userManager.FindByIdAsync(model.ContactId.ToString());
+
+            await SendMessageEmail(userFrom, userTo);
+
             return Ok(msg);
+        }
+
+        private async Task SendMessageEmail(ApplicationUser userFrom, ApplicationUser userTo)
+        {
+            var code = "";
+
+            if (!string.IsNullOrEmpty(userFrom.PinDigit))
+                code = userFrom.PinDigit;
+            else
+                code = userFrom.Id;
+
+            var callbackUrl = $"{Request.Scheme}://{Request.Host}/viewProfile/{code}";
+
+            var frontWebSite = UriHelper.BuildAbsolute(Request.Scheme, Request.Host);
+            var logoUrl = UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/assets/img/logo_full.png");
+            var unSubscribeUrl = UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/Account/UnSubscribe");
+            var login = $"{userFrom.DisplayName}";
+
+            var parameters = new Dictionary<string, string>()
+                        {
+                            {"login", login },
+                            {"frontWebSite", frontWebSite },
+                            {"logoUrl", logoUrl },
+                            {"unSubscribeUrl", unSubscribeUrl },
+                            {"callbackUrl", callbackUrl },
+                            {"userFrom", userFrom.DisplayName }
+                        };
+
+            var html = GenerateHtmlTemplate(_serviceProvider, _env.WebRootPath, "msg_received", parameters);
+            await _emailSender.SendEmailAsync(userTo.Email, $"{userFrom.DisplayName} vous a envoyé un message sur meetag.co", html);
         }
     }
 }
