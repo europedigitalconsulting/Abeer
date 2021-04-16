@@ -26,6 +26,11 @@ namespace Abeer.Services
         public async Task<IList<Notification>> GetNotifications(string userId, NotificationTypeEnum notificationType) =>
             await _UnitOfWork.NotificationRepository.GetNotifications(userId, notificationType.GetName());
 
+        public async Task<IList<Notification>> GetNotifications(string ownerId, NotificationTypeEnum notificationType, DateTime createdDate, string callbackUrl) =>
+            await _UnitOfWork.NotificationRepository.Where(a => a.UserId == ownerId && a.NotificationType == NotificationTypeEnum.AdStartPublished.GetName() && a.CreatedDate > createdDate &&
+                    a.NotificationUrl == callbackUrl);
+
+
         public async Task<Notification> Create(Notification notification)
         {
             return await _UnitOfWork.NotificationRepository.Add(notification);
@@ -35,8 +40,6 @@ namespace Abeer.Services
         {
             await _UnitOfWork.NotificationRepository.Update(notification);
         }
-
-        public Task<IList<Notification>> Where(Expression<Func<Notification, bool>> filter) => _UnitOfWork.NotificationRepository.Where(filter);
 
         public async Task<Notification> Create(string userId, string title, string notificationUrl, string cssClass, string imageUrl, string notificationIcon, NotificationTypeEnum notificationType)
         {

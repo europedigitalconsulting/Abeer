@@ -36,7 +36,7 @@ namespace Abeer.Services
             var msg = new SendGridMessage()
             {
                 From = new EmailAddress(Options.SendGridUser, Options.MailFromDisplayName),
-                Subject = subject,
+                Subject = "meetag.co - " + subject,
                 PlainTextContent = message,
                 HtmlContent = message
             };

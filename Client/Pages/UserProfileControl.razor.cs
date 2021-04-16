@@ -1,4 +1,5 @@
-﻿using Abeer.Shared;
+﻿using Abeer.Client.UISdk;
+using Abeer.Shared;
 using Abeer.Shared.Functional;
 using Abeer.Shared.ViewModels;
 using AutoMapper;
@@ -97,6 +98,7 @@ namespace Abeer.Client.Pages
         private bool IsNewTeam;
         ViewApplicationUser Manager;
         bool NotFoundManager;
+        private SendToContact SendToControl;
 
         IList<Organization> ListOrganizations { get; set; } = new List<Organization>();
         ProfileOrganizationViewModel ProfileOrganization { get; set; }
@@ -674,6 +676,21 @@ namespace Abeer.Client.Pages
             DisplayListManager = false;
             NotFoundManager = false;
             EditManager = false;
+        }
+
+        async Task SendProfile()
+        {
+            var response = await HttpClient.PostAsJsonAsync<SendProfileViewModel>("api/contacts/send", new SendProfileViewModel
+            {
+                Body = SendToControl.Body,
+                Subject = SendToControl.Subject,
+                UserId = SendToControl.User.Id,
+                TargetUrl = SendToControl.TargetUrl,
+                SendToId = SendToControl.Contact.Id
+            });
+
+            response.EnsureSuccessStatusCode();
+            await SendToControl.Close();
         }
     }
 }

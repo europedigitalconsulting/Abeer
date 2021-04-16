@@ -135,6 +135,9 @@
   <data name="reviews" xml:space="preserve">
     <value>vues</value>
   </data>
+  <data name="SendToContact" xml:space="preserve">
+    <value>Envoyer à un contact</value>
+  </data>
   <data name="ShareIt" xml:space="preserve">
     <value>Partager</value>
   </data>
@@ -167,5 +170,8 @@
   </data>
   <data name="ShareTitle" xml:space="preserve">
     <value>meetag.co&amp;eactue;&amp;eacute;{0}</value>
+  </data>
+  <data name="Since" xml:space="preserve">
+    <value>Il y'a</value>
   </data>
 </root>

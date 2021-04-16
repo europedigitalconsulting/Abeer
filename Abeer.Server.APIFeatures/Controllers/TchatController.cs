@@ -124,7 +124,7 @@ namespace Abeer.Server.Controllers
                             {"userFrom", userFrom.DisplayName }
                         };
 
-            var html = GenerateHtmlTemplate(_serviceProvider, _env.WebRootPath, "msg_received", parameters);
+            var html = GenerateHtmlTemplate(_serviceProvider, _env.WebRootPath, EmailTemplateEnum.MessageReceived, parameters);
             await _emailSender.SendEmailAsync(userTo.Email, $"{userFrom.DisplayName} vous a envoyé un message sur meetag.co", html);
         }
     }

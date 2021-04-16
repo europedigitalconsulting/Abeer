@@ -184,7 +184,7 @@
                                     <Abeer.Client.UISdk.SocialShareLinks Text="@Loc["ShareText", Profile.DisplayName]" Content="@Profile.Description" Source="@Loc["ShareSource"]" TargetUrl="@NavigationManager.ToAbsoluteUri($"/ViewProfile/{Profile.Id}").ToString()" Title="@Loc["ShareTitle", Profile.DisplayName]" Loc="Loc"></Abeer.Client.UISdk.SocialShareLinks>
                                     @if (Profile.IsAdmin || Profile.IsUltimate || Profile.IsUnlimited || Profile.IsPayable)
                                     {
-                                        <Abeer.Client.UISdk.SendToContact Loc="Loc" TargetUrl="ProfileUrl" User="Profile"></Abeer.Client.UISdk.SendToContact>
+                                        <Abeer.Client.UISdk.SendToContact @ref="SendToControl" Loc="Loc" TargetUrl="ProfileUrl" User="Profile" SendClicked="SendProfile"></Abeer.Client.UISdk.SendToContact>
                                     }
                                     <button class="btn btn-primary" @onclick="DownloadVCard"><i class="fas fa-address-card"></i>&nbsp;@Loc["DownloadProfile"]</button>
                                 }

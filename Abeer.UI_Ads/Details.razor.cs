@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Abeer.Client.UISdk;
 using Abeer.Shared;
 using Abeer.Shared.Functional;
 using Abeer.Shared.ViewModels;
@@ -31,6 +33,7 @@ namespace Abeer.UI_Ads
         public int CurrentImageIndex { get; set; } = 0;
         public ViewApplicationUser Author { get; set; }
         private bool DisplayModalQrCode;
+        private SendToContact SendToControl;
 
         protected override async Task OnInitializedAsync()
         {
@@ -60,6 +63,22 @@ namespace Abeer.UI_Ads
         public async Task GoToProfilAd()
         {
             NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri($"/viewprofile/{Ad.OwnerId}").ToString(), true);
+        }
+
+        public async Task SendAd()
+        {
+            var response = await HttpClient.PostAsJsonAsync<SendAdViewModel>("api/ads/send", new SendAdViewModel
+            {
+                Body = SendToControl.Body,
+                Subject = SendToControl.Subject,
+                UserId = SendToControl.User.Id,
+                TargetUrl = SendToControl.TargetUrl,
+                SendToId = SendToControl.Contact.Id, 
+                AdId = Ad.Id 
+            });
+
+            response.EnsureSuccessStatusCode();
+            await SendToControl.Close();
         }
     }
 }

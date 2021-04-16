@@ -89,7 +89,7 @@ namespace Abeer.Services
                         {
                             await _notificationService.Create(user.Id, "expiredprofile", "subscription-pack", "reminder", "reminder", "reminder", Shared.ViewModels.NotificationTypeEnum.ExpiredProfile);
                             isReadonly = true;
-                            await SendEmailTemplate(user, "expiredprofile", "expiredprofile");
+                            await SendEmailTemplate(user, EmailTemplateEnum.ExpiredProfile, "expiredprofile");
                         }
                     }
                     else if (user.SubscriptionEndDate.HasValue && user.SubscriptionEndDate.Value.Subtract(DateTime.UtcNow).Days <= 5)
@@ -99,7 +99,7 @@ namespace Abeer.Services
                         if (notifications.Any(n => n.CreatedDate.Date.Equals(DateTime.UtcNow.Date)) == false)
                         {
                             await _notificationService.Create(user.Id, "soonexpireprofile", "subscription-pack", "reminder", "reminder", "reminder", Shared.ViewModels.NotificationTypeEnum.SoonExpireProfile);
-                            await SendEmailTemplate(user, "soonexpireprofile", "soonexpireprofile");
+                            await SendEmailTemplate(user, EmailTemplateEnum.SoonExpiredProfile, "soonexpireprofile");
                         }
                     }
                 }
@@ -181,7 +181,7 @@ namespace Abeer.Services
             return Task.CompletedTask;
         }
 
-        private async Task SendEmailTemplate(ApplicationUser user, string emailTemplate, string emailSubject)
+        private async Task SendEmailTemplate(ApplicationUser user, EmailTemplateEnum emailTemplate, string emailSubject)
         {
             var longUrl = $"{_configuration["Service:FrontOffice:Url"].TrimEnd('/')}/subscription-pack";
 

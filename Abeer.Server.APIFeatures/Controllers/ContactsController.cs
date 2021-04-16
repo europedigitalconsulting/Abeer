@@ -160,7 +160,7 @@ namespace Abeer.Server.Controllers
 
                 await _UnitOfWork.InvitationRepository.Add(invitation);
 
-                await SendEmailTemplate(userContact);
+                await SendInvitationEmailTemplate(userContact);
 
                 Notification notif = await _notificationService.Create(contactId, "Demande de contact", "contact/list", "reminder", "reminder", "reminder", NotificationTypeEnum.AddContact);
                 return Ok(new ContactViewModel() { ViewContact = new ViewContact(user, userContact), Notification = notif });
@@ -268,7 +268,7 @@ namespace Abeer.Server.Controllers
             return Ok(contact);
         }
 
-        private async Task SendEmailTemplate(ApplicationUser user)
+        private async Task SendInvitationEmailTemplate(ApplicationUser user)
         {
             string data1 = CryptHelper.Rijndael.Encrypt($"{user.Id}", _configuration["QrCode:Key"]);
             string data2 = CryptHelper.Rijndael.Encrypt($"{User.NameIdentifier()}", _configuration["QrCode:Key"]);
@@ -289,7 +289,7 @@ namespace Abeer.Server.Controllers
                             {"callbackUrl", callbackUrl }
                         };
 
-            var message = GenerateHtmlTemplate(_serviceProvider, _env.WebRootPath, "contact-confirmation", parameters);
+            var message = GenerateHtmlTemplate(_serviceProvider, _env.WebRootPath, EmailTemplateEnum.ContactInvitationAdded, parameters);
             await _emailSender.SendEmailAsync(user.Email, "Add Contact", message);
         }
 
@@ -810,8 +810,8 @@ namespace Abeer.Server.Controllers
                             {"sendFrom", user.DisplayName }
                         };
 
-            var html = GenerateHtmlTemplate(_serviceProvider, _env.WebRootPath, "sendprofile", parameters);
-            await _emailSender.SendEmailAsync(sendTo.Email, $"{user.DisplayName} partage avec vous un profil meetag {sendTo.DisplayName}", html);
+            var html = GenerateHtmlTemplate(_serviceProvider, _env.WebRootPath, EmailTemplateEnum.ContactSent, parameters);
+            await _emailSender.SendEmailAsync(sendTo.Email, $"{user.DisplayName} partage avec vous un profil {sendTo.DisplayName}", html);
         }
     }
 }

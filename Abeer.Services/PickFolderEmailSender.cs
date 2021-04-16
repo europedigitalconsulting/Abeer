@@ -36,7 +36,7 @@ namespace Abeer.Services
                 Body = message, 
                 BodyEncoding =  new UTF8Encoding(),
                 IsBodyHtml=true,
-                Subject = subject
+                Subject = "meetag.co - " + subject
             };
 
             mailMessage.To.Add(email);

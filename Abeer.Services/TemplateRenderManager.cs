@@ -1,5 +1,5 @@
 ﻿using Abeer.Shared;
-
+using Abeer.Shared.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
 using System;
@@ -10,10 +10,10 @@ namespace Abeer.Services
 {
     public static class TemplateRenderManager
     {
-        public static string GenerateHtmlTemplate(IServiceProvider serviceProvider, string rootPath, string templatePatern, Dictionary<string, string> keyValuePairs)
+        public static string GenerateHtmlTemplate(IServiceProvider serviceProvider, string rootPath, EmailTemplateEnum emailTemplate, Dictionary<string, string> keyValuePairs)
         {
             
-            var htmlBody = LoadTemplate(serviceProvider, rootPath, templatePatern);
+            var htmlBody = LoadTemplate(serviceProvider, rootPath, emailTemplate);
 
             foreach (var keyValue in keyValuePairs)
             {
@@ -23,10 +23,10 @@ namespace Abeer.Services
             return htmlBody;
         }
 
-        private static string LoadTemplate(IServiceProvider serviceProvider, string rootPath, string templatePatern)
+        private static string LoadTemplate(IServiceProvider serviceProvider, string rootPath, EmailTemplateEnum emailTemplate)
         {
             var reader = ActivatorUtilities.GetServiceOrCreateInstance<ITemplateFileReader>(serviceProvider);
-            var templateFilePath = reader.GetFileName(rootPath, templatePatern, CultureInfo.CurrentCulture.TwoLetterISOLanguageName.ToLower());
+            var templateFilePath = reader.GetFileName(rootPath, emailTemplate.GetName(), CultureInfo.CurrentCulture.TwoLetterISOLanguageName.ToLower());
             
             if (string.IsNullOrEmpty(templateFilePath))
                 return string.Empty;

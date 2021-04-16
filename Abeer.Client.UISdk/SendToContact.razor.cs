@@ -12,14 +12,12 @@ namespace Abeer.Client.UISdk
 {
     public partial class SendToContact
     {
-        [Parameter]
-        public string TargetUrl { get; set; }
-        [Parameter]
-        public ViewApplicationUser User { get; set; }
-        [Parameter]
-        public Microsoft.Extensions.Localization.IStringLocalizer Loc { get; set; }
-        string Subject { get; set; }
-        string Body { get; set; }
+        [Parameter]public string TargetUrl { get; set; }
+        [Parameter]public ViewApplicationUser User { get; set; }
+        [Parameter]public Microsoft.Extensions.Localization.IStringLocalizer Loc { get; set; }
+        [Parameter]public EventCallback SendClicked { get; set; }
+        public string Subject { get; set; }
+        public string Body { get; set; }
 
         [Inject] private NavigationManager NavigationManager { get; set; }
         [Inject] private HttpClient HttpClient { get; set; }
@@ -34,7 +32,7 @@ namespace Abeer.Client.UISdk
         bool Show;
 
         IList<ViewApplicationUser> ListContacts { get; set; } = new List<ViewApplicationUser>();
-        ViewApplicationUser Contact { get; set; }
+        public ViewApplicationUser Contact { get; set; }
 
         string SearchContactInput
         {
@@ -77,14 +75,13 @@ namespace Abeer.Client.UISdk
             EditContact = false;
         }
 
-        async Task SendProfile()
+        async Task Send()
         {
-            var response = await HttpClient.PostAsJsonAsync<SendProfileViewModel>("api/contacts/send", new SendProfileViewModel
-            {
-                Body = Body, Subject = Subject, UserId = User.Id, TargetUrl = TargetUrl, SendToId = Contact.Id
-            });
+            await SendClicked.InvokeAsync();
+        }
 
-            response.EnsureSuccessStatusCode();
+        public async Task Close()
+        {
             Show = false;
             await InvokeAsync(StateHasChanged);
         }

@@ -239,7 +239,7 @@ namespace Abeer.Server.Controllers
                 var logoUrl = UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/assets/img/logo_full.png");
                 var unSubscribeUrl = UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/Account/UnSubscribe");
 
-                await SendEmailTemplate(changeMailViewModel.NewMail, "email-confirmation", new Dictionary<string, string>()
+                await SendEmailConfirmation(changeMailViewModel.NewMail, EmailTemplateEnum.EmailConfirmation, new Dictionary<string, string>()
                         {
                             {"frontWebSite", frontWebSite },
                             {"logoUrl", logoUrl },
@@ -292,7 +292,7 @@ namespace Abeer.Server.Controllers
             return BadRequest();
         }
 
-        private async Task SendEmailTemplate(string newMail, string templatePattern, Dictionary<string, string> parameters)
+        private async Task SendEmailConfirmation(string newMail, EmailTemplateEnum templatePattern, Dictionary<string, string> parameters)
         {
             var message = GenerateHtmlTemplate(_serviceProvider, _env.WebRootPath, templatePattern, parameters);
             await _emailSender.SendEmailAsync(newMail, "Confirm your email", message);

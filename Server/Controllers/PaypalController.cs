@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Identity;
 using Abeer.Shared;
 using Microsoft.AspNetCore.Hosting;
 using static Abeer.Services.TemplateRenderManager;
+using Abeer.Shared.ViewModels;
 
 namespace Abeer.Server.Controllers
 {
@@ -176,7 +177,7 @@ namespace Abeer.Server.Controllers
 
                 _logger.LogInformation($"The paypal controller has a new response '{result}' from the Paypal API");
 
-                await SendEmailTemplate(user, subscription.Id, "subscription", "subscription");
+                await SendSubscriptionPaymentEmail(user, subscription.Id, EmailTemplateEnum.SubscriptionPayed, "subscription");
 
                 return Redirect($"{_configuration["Service:FrontOffice:Url"].TrimEnd('/')}/ConfirmPayment/Success/{subscription.Id}");
             }
@@ -193,7 +194,7 @@ namespace Abeer.Server.Controllers
             return BadRequest();
         }
 
-        private async Task SendEmailTemplate(ApplicationUser user, Guid subscriptionId, string emailTemplate, string emailSubject)
+        private async Task SendSubscriptionPaymentEmail(ApplicationUser user, Guid subscriptionId, EmailTemplateEnum emailTemplate, string emailSubject)
         {
             var longUrl = $"{_configuration["Service:FrontOffice:Url"].TrimEnd('/')}/ConfirmPayment/Success/{subscriptionId}";
 

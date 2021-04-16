@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using static Abeer.Services.TemplateRenderManager;
 using Abeer.Services;
+using Abeer.Shared.ViewModels;
 
 namespace Abeer.Server.Areas.Identity.Pages.Account
 {
@@ -109,7 +110,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
                 var logoUrl = UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/assets/img/logo_full.png");
                 var unSubscribeUrl = UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/Account/UnSubscribe");
 
-                await SendEmailTemplate("Password-reset", new Dictionary<string, string>()
+                await SendForgetPasswordEmail(EmailTemplateEnum.ForgotPassword, new Dictionary<string, string>()
                     {
                         {"frontWebSite", frontWebSite },
                         {"logoUrl", logoUrl },
@@ -123,9 +124,9 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
             return Page();
         }
 
-        private async Task SendEmailTemplate(string templatePattern, Dictionary<string, string> parameters)
+        private async Task SendForgetPasswordEmail(EmailTemplateEnum emailTemplate, Dictionary<string, string> parameters)
         {
-            var message = GenerateHtmlTemplate(_serviceProvider, _env.WebRootPath, templatePattern, parameters);
+            var message = GenerateHtmlTemplate(_serviceProvider, _env.WebRootPath, emailTemplate, parameters);
             await _emailSender.SendEmailAsync(Input.Email, "Reset Password", message);
         }
 

@@ -10,151 +10,123 @@
 @inject IJSRuntime jsRuntime
 
 @{
-    var list = new List<string>();
+    var images = new List<string>();
 
     @if (Ad != null)
     {
         if (!string.IsNullOrEmpty(Ad.ImageUrl1))
-            list.Add(Ad.ImageUrl1);
+            images.Add(Ad.ImageUrl1);
 
         if (!string.IsNullOrEmpty(Ad.ImageUrl2))
-            list.Add(Ad.ImageUrl2);
+            images.Add(Ad.ImageUrl2);
 
         if (!string.IsNullOrEmpty(Ad.ImageUrl3))
-            list.Add(Ad.ImageUrl3);
+            images.Add(Ad.ImageUrl3);
 
         if (!string.IsNullOrEmpty(Ad.ImageUrl4))
-            list.Add(Ad.ImageUrl4);
+            images.Add(Ad.ImageUrl4);
     }
 }
 
 @if (Ad != null)
 {
-    <div class="card col-12">
-        <span class="pt-5" @onclick="@(()=>NavigationManager.NavigateTo("/ads/MyAds"))">
-            <i style="font-size:25px" class="fas fa-arrow-left"></i>
-        </span>
-        <div style="line-height: 60px;" class="row p-3 pt-0">
-            <div class="col-8 pt-2">
-                <h4 style="color:black;font-size:18px;font-weight:600;">
-                    @Ad.Title <span class="badge badge-primary">@Ad.ViewCount</span>
-                </h4>
-            </div>
-            <div class="col-4 m-0 p-0 text-right">
-                <span style="color:lightgray">Il y'a @((int)((DateTime.Now- Ad.ValidateDate).TotalDays)) jour(s)</span>
-            </div>
-        </div>
-        <div class="card-body">
-            @if (!string.IsNullOrEmpty(Ad.Family))
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/ads/list">@Loc["Home"]</a></li>
+            @if (Ad.Family != null)
             {
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">
-                            <a href="/ads/list">
-                                @Loc["Home"]
-                            </a>
-                        </li>
-                        <li class="breadcrumb-item">
-                            <a href="/ads/listbyfamily/@Ad.Family">
-                                @LocFamilies[Ad.Family]
-                            </a>
-                        </li>
-                        @if (Ad.Categories != null)
+                <li class="breadcrumb-item"><a href="/ads/listbyfamily/@Ad.Family">@LocFamilies[Ad.Family]</a>&nbsp;&gt;&nbsp;</li>
+            }
+            @if (Ad.Categories != null)
+            {
+                <Virtualize Items="Ad.Categories" Context="category">
+                    <li class="breadcrumb-item"><a href="/ads/listByCategory/@category">@LocFamilies[category]</a></li>
+                </Virtualize>
+            }
+            <li class="breadcrumb-item active">&nbsp;&gt;&nbsp;@Ad.Title</li>
+        </ol>
+    </nav><div class="container">
+        <div class="card">
+            <div class="container-fliud">
+                <div class="wrapper row">
+                    <div class="preview col-md-6">
+                        @if (images.Any())
                         {
-                            foreach (var category in Ad.Categories)
+                            <div class="preview-pic tab-content">
+                                <div class="tab-pane active" id="pic-1"><img src="@images[0]" /></div>
+                                @for (int i = 1; i < images.Count; i++)
+                                {
+                                    <div class="tab-pane" id="@($"pic-{i+1}")"><img src="@images[i]" /></div>
+                                }
+                            </div>
+                            <ul class="preview-thumbnail nav nav-tabs">
+                                <li class="active"><a data-target="#pic-1" data-toggle="tab"><img src="@images[0]" /></a></li>
+                                @for (int i = 1; i < images.Count; i++)
+                                {
+                                    <li><a data-target="@($"#pic-{i+1}")" data-toggle="tab"><img src="@images[i]" /></a></li>
+                                }
+                            </ul>
+                        }
+                    </div>
+                    <div class="details col-md-6">
+                        <h3 class="product-title">@Ad.Title</h3>
+                        <div class="rating">
+                            <span class="review-no">@Ad.ViewCount @Loc["Views"]</span>
+
+                            @{
+                                var v = 0;
+                            }
+
+                            @foreach (var viewer in Ad.LastViewers)
                             {
-                                <li class="breadcrumb-item">
-                                    <a href="/ads/listByCategory/@category">
-                                        @LocFamilies[category]
-                                    </a>
-                                </li>
+                                var left = 35 * v;
+                                <div style="position:relative;left:@($"{120+left}px")">
+                                    <a href="/viewprofile/@viewer.Id"><UserPhotoControl Loc="Loc" Height="35" Width="35" User="viewer" Left="0"></UserPhotoControl></a>
+                                </div>
+
+                                v++;
+                            }
+                            @if (Ad.IsValid)
+                            {
+                                <span style="color:lightgray">@Loc["Since"] @((int)((DateTime.Now - Ad.ValidateDate).TotalDays)) jour(s)</span>
+                            }
+                        </div>
+                        <h4 class="price">@Loc["currentprice"]: <span>@Ad.Price @Ad.Currency</span></h4>
+                        <p class="product-description">@Ad.Description @User.DisplayName</p>
+                        <hr />
+                        <Abeer.Client.UISdk.SocialShareLinks Text="@Loc["ShareText", Ad.Title]" Content="@Ad.Description" Source="@Loc["ShareSource"]" TargetUrl="@NavigationManager.ToAbsoluteUri($"/ad/details/{Ad.Id}").ToString()" Title="@Loc["ShareTitle", Ad.Title]" Loc="Loc"></Abeer.Client.UISdk.SocialShareLinks>
+                        @if (User.IsAdmin || User.IsUltimate || User.IsUnlimited || User.IsPayable)
+                        {
+                            <Abeer.Client.UISdk.SendToContact @ref="SendToControl" Loc="Loc" TargetUrl="AdUrl" User="User" SendClicked="SendAd"></Abeer.Client.UISdk.SendToContact>
+                        }
+                        @if (Author != null && Author.Id == User?.Id)
+                        {
+                            <button class="btn btn-primary" @onclick="@(()=>NavigationManager.NavigateTo($"/ads/activities/{Ad.Id}", true))"><i class="fas fa-chart-line"></i></button>
+
+                            if (Author.IsUltimate || Author.IsAdmin || Author.IsUnlimited)
+                            {
+                                <button class="btn btn-secondary" @onclick="@(()=>DisplayModalQrCode=true)"><i class="fas fa-qrcode"></i></button>
+                                <a href="@($"/api/sitemap/{Author.Id}")" target="_blank"><i class="fas fa-sitemap"></i></a>
+                                <a href="@($"/api/rss/{Author.Id}")" target="_blank"><i class="fas fa-rss-square"></i></a>
                             }
                         }
-                    </ol>
-                </nav>
-            }
-            @if (Ad.LastViewers != null)
-            {
-                <div class="col d-flex align-items-start">
-                    @foreach (var viewer in Ad.LastViewers)
-                    {
-                        <UserPhotoControl Loc="Loc" Height="35" Width="35" User="viewer"></UserPhotoControl>
-                    }
+                        @if (!Ad.IsValid && User.IsAdmin)
+                        {
+                            <a href="/ads/ValidAd/@Ad.Id" class="btn btn-primary"><i class="fas fa-check-square"></i>@Loc["ValidAd"]</a>
+                        }
+                    <div class="row pt-3 mb-2">
+                        <hr />
+                        <div class="col-6 text-dark"><h6><UserPhotoControl Loc="Loc" Height="35" Width="35" User="Author" Left="0"></UserPhotoControl>@Author.DisplayName</h6></div>
+                        <div class="row ">
+                            <button style="background:#F28064;color:white;font-weight:300; font-size: 15px;" class="py-2 btn btn-xl col-12 mb-2">Prendre Contact</button>
+                        </div>
+                        <div class="row">
+                            <button style="background:#1478D9;color:white;font-weight:300;" class="py-2 btn btn-xl col-6">Ses Annonces</button>
+                            <button style="background:#1FBF8A;color:white;font-weight:300;" class="py-2 btn btn-xl col-6" @onclick="GoToProfilAd">Afficher son profil</button>
+                        </div>
+                    </div>
+                    </div>
                 </div>
-            }
-            <div class="col-12 mb-2">
-                <div class="gallery gallery-md">
-                    @if (!string.IsNullOrEmpty(Ad.ImageUrl1))
-                    {
-                        <img class="col-12" src="@Ad.ImageUrl1" />
-                    }
-                    @if (!string.IsNullOrEmpty(Ad.ImageUrl2))
-                    {
-                        <img class="col-12" src="@Ad.ImageUrl2" />
-                    }
-                    @if (!string.IsNullOrEmpty(Ad.ImageUrl3))
-                    {
-                        <img class="col-12" src="@Ad.ImageUrl3" />
-                    }
-                    @if (!string.IsNullOrEmpty(Ad.ImageUrl4))
-                    {
-                        <img class="col-12" src="@Ad.ImageUrl4" />
-                    }
-                </div>
-            </div>
-            <div class="row pt-3 mb-2">
-                <div class="col-6 text-dark"><h6>@User.DisplayName</h6></div>
-                <div style="color:#F27F63" class="col-6 text-right"><h6>@Ad.Price @Ad.Currency</h6></div>
-            </div>
-            <p class="mb-2 " style="font-weight: 300;">
-                @Ad.Description
-            </p>
-            <div class="row col-12">
-                @if (!string.IsNullOrEmpty(Ad.Url1))
-                {
-                    <a href="@Ad.Url1" class="mr-2">@Ad.Url1</a>
-                }
-                @if (!string.IsNullOrEmpty(Ad.Url2))
-                {
-                    <a href="@Ad.Url2" class="mr-2">@Ad.Url2</a>
-                }
-                @if (!string.IsNullOrEmpty(Ad.Url3))
-                {
-                    <a href="@Ad.Url3" class="mr-2">@Ad.Url3</a>
-                }
-                @if (!string.IsNullOrEmpty(Ad.Url4))
-                {
-                    <a href="@Ad.Url4" class="mr-2">@Ad.Url4</a>
-                }
-            </div>
-
-            @if (!Ad.IsValid && User.IsAdmin)
-            {
-                <a href="/ads/ValidAd/@Ad.Id" class="btn btn-primary"><i class="fas fa-check-square"></i>@Loc["ValidAd"]</a>
-            }
-
-            <div class="row ">
-                <button style="background:#F28064;color:white;font-weight:300; font-size: 15px;" class="py-2 btn btn-xl col-12 mb-2">Prendre Contact</button>
-            </div>
-            <div class="row">
-                <button style="background:#1478D9;color:white;font-weight:300;" class="py-2 btn btn-xl col-6">Ses Annonces</button>
-                <button style="background:#1FBF8A;color:white;font-weight:300;" class="py-2 btn btn-xl col-6" @onclick="GoToProfilAd">Afficher son profil</button>
-                <Abeer.Client.UISdk.SocialShareLinks Text="@Loc["ShareText", Ad.Title]" Content="@Ad.Description" Source="@Loc["ShareSource"]" TargetUrl="@NavigationManager.ToAbsoluteUri($"/ad/details/{Ad.Id}").ToString()" Title="@Loc["ShareTitle", Ad.Title]" Loc="Loc"></Abeer.Client.UISdk.SocialShareLinks>
-                @if (Author != null && Author.Id == User?.Id)
-                {
-                    <button class="btn btn-primary" @onclick="@(()=>NavigationManager.NavigateTo($"/ads/activities/{Ad.Id}", true))"><i class="fas fa-chart-line"></i></button>
-
-                    if (Author.IsUltimate || Author.IsAdmin || Author.IsUnlimited)
-                    {
-                        <button class="btn btn-secondary" @onclick="@(()=>DisplayModalQrCode=true)"><i class="fas fa-qrcode"></i></button>
-                        <a href="@($"/api/sitemap/{Author.Id}")" target="_blank"><i class="fas fa-sitemap"></i></a>
-                        <a href="@($"/api/rss/{Author.Id}")" target="_blank"><i class="fas fa-rss-square"></i></a>
-                    }
-                }
-                @if (User.IsAdmin || User.IsUltimate || User.IsUnlimited || User.IsPayable)
-                {
-                    <Abeer.Client.UISdk.SendToContact Loc="Loc" TargetUrl="AdUrl" User="User"></Abeer.Client.UISdk.SendToContact>
-                }
             </div>
         </div>
     </div>

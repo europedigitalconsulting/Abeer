@@ -2,6 +2,7 @@
 using Abeer.Services;
 using Abeer.Shared;
 using Abeer.Shared.Functional;
+using Abeer.Shared.ViewModels;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -73,11 +74,10 @@ namespace Abeer.Server.APIFeatures.Jobs
             {
                 var callbackUrl = $"{_configuration["Service:FrontOffice:Url"].TrimEnd('/')}/ads/details/{ad.Id}";
 
-                var notifications = await _notificationService.Where(a => a.UserId == ad.OwnerId && a.NotificationType == "ad-startpublishing" && a.CreatedDate > today &&
-                    a.NotificationUrl == callbackUrl);
+                var notifications = await _notificationService.GetNotifications(ad.OwnerId, NotificationTypeEnum.AdStartPublished, today, callbackUrl);
 
                 if (!notifications?.Any() == true)
-                    await NotifyAd(ad, "startAdPublishing", "ad-startpublishing", callbackUrl);
+                    await NotifyAd(ad, "startAdPublishing", EmailTemplateEnum.AdStartPublished, NotificationTypeEnum.AdStartPublished, callbackUrl);
             }
 
             var ads2 = await _functionalUnitOfWork.AdRepository.Where(a => a.EndDisplayTime <= tommorrow && a.IsValid);
@@ -86,15 +86,14 @@ namespace Abeer.Server.APIFeatures.Jobs
             {
                 var callbackUrl = $"{_configuration["Service:FrontOffice:Url"].TrimEnd('/')}/ads/details/{ad.Id}";
 
-                var notifications = await _notificationService.Where(a => a.UserId == ad.OwnerId && a.NotificationType == "ad-endpublishing" && a.CreatedDate == today &&
-                    a.NotificationUrl == callbackUrl);
+                var notifications = await _notificationService.GetNotifications(ad.OwnerId, NotificationTypeEnum.AdEndPublished, today, callbackUrl);
 
                 if (!notifications?.Any() == true)
-                    await NotifyAd(ad, "endAdPublishing", "ad-endpublishing", callbackUrl);
+                    await NotifyAd(ad, "endAdPublishing", EmailTemplateEnum.AdEndPublished, NotificationTypeEnum.AdEndPublished, callbackUrl);
             }
         }
 
-        private async Task NotifyAd(Shared.Functional.AdModel ad, string eventType, string notificationType, string callbackUrl)
+        private async Task NotifyAd(Shared.Functional.AdModel ad, string eventType, EmailTemplateEnum emailTemplate, NotificationTypeEnum notificationType, string callbackUrl)
         {
             _logger.LogInformation($"notify user {ad.OwnerId} for ad {ad.Id}");
 
@@ -108,7 +107,7 @@ namespace Abeer.Server.APIFeatures.Jobs
                 ImageUrl = "alert-advalidate",
                 MessageTitle = eventType,
                 NotificationIcon = "alert-advalidate",
-                NotificationType = notificationType,
+                NotificationType = notificationType.GetName(),
                 NotificationUrl = callbackUrl,
                 UserId = ad.OwnerId,
                 DisplayMax = 1,
@@ -116,10 +115,10 @@ namespace Abeer.Server.APIFeatures.Jobs
             };
 
             await _notificationService.Create(notification);
-            await SendEmailTemplate(ad, notificationType, callbackUrl);
+            await SendEmailTemplate(ad, emailTemplate, callbackUrl);
         }
 
-        private async Task SendEmailTemplate(Shared.Functional.AdModel ad, string emailType, string callbackUrl)
+        private async Task SendEmailTemplate(Shared.Functional.AdModel ad, EmailTemplateEnum emailType, string callbackUrl)
         {
             _logger.LogInformation($"send email {emailType} to user {ad.OwnerId}");
 
@@ -136,7 +135,7 @@ namespace Abeer.Server.APIFeatures.Jobs
                             {"callbackUrl", callbackUrl }
                         };
 
-            if(emailType == "ad-endpublishing")
+            if(emailType == EmailTemplateEnum.AdEndPublished)
             {
                 parameters.Add("EndPublishingDate", ad.EndDisplayTime.Value.ToLongDateString());
                 parameters.Add("ViewCount", ad.ViewCount.ToString());

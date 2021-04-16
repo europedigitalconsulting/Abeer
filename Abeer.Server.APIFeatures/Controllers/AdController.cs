@@ -351,7 +351,7 @@ namespace Abeer.Server.Controllers
                             {"callbackUrl", callbackUrl }
                         };
 
-            var message = GenerateHtmlTemplate(_serviceProvider, _env.WebRootPath, "valid-ad", parameters);
+            var message = GenerateHtmlTemplate(_serviceProvider, _env.WebRootPath, EmailTemplateEnum.AdValidated, parameters);
             var user = await _userManager.FindByIdAsync(adModel.OwnerId);
 
             await _emailSender.SendEmailAsync(user.Email, adModel.Title, message);
@@ -512,5 +512,57 @@ namespace Abeer.Server.Controllers
             return Ok(repartitions);
         }
 
+        [HttpPost("send")]
+        public async Task<IActionResult> SendAdTo(SendAdViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var message = new Message
+            {
+                DateSent = DateTime.UtcNow,
+                Text = viewModel.Subject + Environment.NewLine + viewModel.Body + Environment.NewLine + viewModel.TargetUrl,
+                UserIdFrom = Guid.Parse(User.NameIdentifier()),
+                UserIdTo = Guid.Parse(viewModel.SendToId)
+            };
+
+            var user = await _userManager.FindByIdAsync(User.NameIdentifier());
+            var sendTo = await _userManager.FindByIdAsync(viewModel.SendToId);
+            var ad = await functionalUnitOfWork.AdRepository.FirstOrDefault(a => a.Id == viewModel.AdId);
+
+            await functionalUnitOfWork.MessageRepository.Add(message);
+            await SendProfileEmail(message, user, sendTo, ad);
+
+            await _eventTrackingService.Create(user.Id, "SendAd", sendTo.Id + "+" + viewModel.AdId);
+            await _notificationService.Create(sendTo.Id, $"{sendTo.DisplayName} vous porpose de consulter l'annonce {ad.Title}", viewModel.TargetUrl,
+                "sendAd", "sendAd", "sendAd", NotificationTypeEnum.SendAd);
+
+            return Ok();
+        }
+
+        private async Task SendProfileEmail(Message message, ApplicationUser user, ApplicationUser sendTo, AdModel ad)
+        {
+            var callbackUrl = $"{Request.Scheme}://{Request.Host}/ads/details/{ad.Id}";
+
+            var frontWebSite = UriHelper.BuildAbsolute(Request.Scheme, Request.Host);
+            var logoUrl = UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/assets/img/logo_full.png");
+            var unSubscribeUrl = UriHelper.BuildAbsolute(Request.Scheme, Request.Host, "/Account/UnSubscribe");
+            var login = $"{user.DisplayName}";
+
+            var parameters = new Dictionary<string, string>()
+            {
+                {"login", login },
+                {"frontWebSite", frontWebSite },
+                {"logoUrl", logoUrl },
+                {"unSubscribeUrl", unSubscribeUrl },
+                {"callbackUrl", callbackUrl },
+                {"sendTo", sendTo.DisplayName },
+                {"sendFrom", user.DisplayName },
+                {"adTitle", ad.Title}
+            };
+
+            var html = GenerateHtmlTemplate(_serviceProvider, _env.WebRootPath, EmailTemplateEnum.AdSent, parameters);
+            await _emailSender.SendEmailAsync(sendTo.Email, $"{user.DisplayName} partage avec vous l'annonce {ad.Title}", html);
+        }
     }
 }

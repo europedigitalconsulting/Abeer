@@ -22,6 +22,7 @@ using static Abeer.Services.TemplateRenderManager;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Abeer.Data.UnitOfworks;
 using Abeer.Shared.Security;
+using Abeer.Shared.ViewModels;
 
 namespace Abeer.Server.Areas.Identity.Pages.Account
 {
@@ -232,7 +233,7 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
 
                 _logger.LogInformation($"Send Email confirmation to {Input.Email}.");
 
-                await SendEmailTemplate("email-confirmation", new Dictionary<string, string>()
+                await SendRegisterEmail(EmailTemplateEnum.RegisteredProfil, new Dictionary<string, string>()
                         {
                             {"login", login },
                             {"frontWebSite", frontWebSite },
@@ -266,9 +267,9 @@ namespace Abeer.Server.Areas.Identity.Pages.Account
             return Page();
         }
 
-        private async Task SendEmailTemplate(string templatePattern, Dictionary<string, string> parameters)
+        private async Task SendRegisterEmail(EmailTemplateEnum emailTemplate, Dictionary<string, string> parameters)
         {
-            var message = GenerateHtmlTemplate(_serviceProvider, _env.WebRootPath, templatePattern, parameters);
+            var message = GenerateHtmlTemplate(_serviceProvider, _env.WebRootPath, emailTemplate, parameters);
             await _emailSender.SendEmailAsync(Input.Email, "Confirm your email", message);
         }
 

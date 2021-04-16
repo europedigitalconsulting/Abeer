@@ -18,7 +18,8 @@ namespace Abeer.Shared.ViewModels
         AdEndPublished = 6,
         RemoveContact = 7,
         SendProfile = 8,
-        ValidateAd = 9
+        ValidateAd = 9,
+        SendAd = 10
     }
 
     public static class NotificationTypeEnumExt
